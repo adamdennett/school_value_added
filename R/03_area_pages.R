@@ -40,7 +40,8 @@ write_area <- function(a) {
   t <- readLines(here::here("templates", "area.qmd"), encoding = "UTF-8")
   rep <- c("@@TITLE@@" = a$title, "@@SUBTITLE@@" = a$subtitle, "@@NAME@@" = a$name, "@@TIER@@" = a$tier,
            "@@LAS@@" = paste0("c(", paste0('"', a$las, '"', collapse = ", "), ")"),
-           "@@PARENT@@" = a$parent, "@@V1DOC@@" = v1_doc(a$name, a$tier), "@@ROOT@@" = a$root)
+           "@@PARENT@@" = a$parent, "@@V1DOC@@" = v1_doc(a$name, a$tier), "@@ROOT@@" = a$root,
+           "@@SLUG@@" = slug(a$name))
   for (k in names(rep)) t <- gsub(k, rep[[k]], t, fixed = TRUE)
   dir.create(dirname(here::here(a$file)), showWarnings = FALSE, recursive = TRUE)
   writeLines(t, here::here(a$file), useBytes = TRUE)

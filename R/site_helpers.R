@@ -139,6 +139,7 @@ MAP_VARS <- tribble(
   "va_shrunk_girls", "Value added v2, girls",                                    "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_boys",  "Value added v2, boys",                                     "Value added",    "div",  "high", 1,   " pts",
   "v1_all",          "Value added v1 (published, within the LA), all pupils",    "Value added",    "div",  "high", 1,   " pts",
+  "abs_excess",      "Absence above or below what the intake predicts, 2021/22 to 2024/25", "Attendance", "div", "low", 1, " pp",
   "att8",            "Attainment 8, all pupils",                                 "Results",        "seq",  "",     1,   "",
   "fsm",             "Disadvantaged pupils (FSM6) %",                            "Intake",         "seq",  "",     1,   "%",
   "ks2_c",           "Prior attainment at KS2 (centred)",                        "Intake",         "seq",  "",     1,   "",
@@ -163,7 +164,7 @@ map_schools <- function(w, lads, height = 520) {
   dat <- w |>
     mutate(pupils = coalesce(pupils, 900),
            tip = sprintf(paste0("<b>%s</b> (%s)<br>Value added v2: all %s, disadvantaged %s, girls %s, boys %s",
-                                "<br>Value added v1 (published): %s<br>Attainment 8 %.1f, FSM %.0f%%, absence %.1f%%",
+                                "<br>Value added v1 (published): %s<br>Attainment 8 %.1f, FSM %.0f%%, absence %.1f%%%s",
                                 "<br>Ofsted latest: %s%s"),
                          SCHNAME, coalesce(lad, LANAME),
                          ifelse(is.na(va_shrunk_all), "n/a", sgn(va_shrunk_all)),
@@ -171,6 +172,8 @@ map_schools <- function(w, lads, height = 520) {
                          ifelse(is.na(va_shrunk_girls), "n/a", sgn(va_shrunk_girls)),
                          ifelse(is.na(va_shrunk_boys), "n/a", sgn(va_shrunk_boys)),
                          ifelse(is.na(v1_all), "n/a", sgn(v1_all)), att8, fsm, absence,
+                         if ("abs_excess" %in% names(w)) ifelse(is.na(abs_excess), "",
+                           sprintf(" (%s pp against intake)", sgn(abs_excess))) else "",
                          coalesce(ofsted_latest, "not known"),
                          ifelse(is.na(run_by), "", paste0("<br>Run by (2024/25): ", run_by)))) |>
     select(SCHNAME, lon, lat, pupils, tip, any_of(MAP_VARS$var))

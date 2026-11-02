@@ -1,0 +1,156 @@
+---
+title: "The districts of East and West Sussex"
+subtitle: "All twelve districts side by side on Value Added v2.0, with absence against intake, the district test and practice."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+source(here::here("R", "area_helpers.R"))
+V <- load_va(); P <- load_place(); SX <- load_area_v1("sussex")
+DISTRICTS <- list(
+  "East Sussex" = c("Eastbourne", "Hastings", "Lewes", "Rother", "Wealden"),
+  "West Sussex" = c("Adur", "Arun", "Chichester", "Crawley", "Horsham", "Mid Sussex", "Worthing"))
+D <- bind_rows(lapply(names(DISTRICTS), function(la) tibble(lad = DISTRICTS[[la]], la = la)))
+XD <- setNames(lapply(D$lad, function(d) load_area_v1(slug(d))), D$lad)
+js <- P$abs_schools |> left_join(P$va_m2 |> filter(group == "all") |> select(URN, va_m2), by = "URN")
+W <- va_wide(V) |> left_join(js, by = "URN")
+latest <- SX$latest_panel
+prof <- SX$lad_profiles |> filter(year_label == latest)
+rk <- function(l, col) sapply(l, function(x) district_rank(SX$lad_profiles, latest, x, col)$r)
+n_rank <- district_rank(SX$lad_profiles, latest, "Crawley", "att8")$n
+abs_last <- tail(SX$abs_years, 1)
+exa <- bind_rows(lapply(D$lad, function(d) XD[[d]]$excl$area |> filter(la_name == d)),
+                 SX$excl$area |> filter(la_name == "England"))
+ex_last <- max(exa$time_period)
+ex_at <- function(a, col = "susp_rate") sapply(a, function(x) exa[[col]][exa$la_name == x & exa$time_period == ex_last])
+rs <- bind_rows(lapply(D$lad, function(d) XD[[d]]$reasons |> filter(area == d)),
+                SX$reasons |> filter(area == "England")) |> filter(time_period == abs_last)
+r_at <- function(a, r) sapply(a, function(x) rs$pp[rs$area == x & rs$reason == r])
+dec <- bind_rows(lapply(D$lad, function(d) decompose(V, W$URN[W$lad %in% d], d)))
+TAB <- D |>
+  left_join(prof |> select(lad, schools, att8, att8_dis, gap, fsm), by = "lad") |>
+  left_join(W |> filter(!is.na(lad)) |> group_by(lad) |>
+              summarise(va = mean(va_shrunk_all, na.rm = TRUE), va_dis = mean(va_shrunk_disadvantaged, na.rm = TRUE),
+                        va_girls = mean(va_shrunk_girls, na.rm = TRUE), va_boys = mean(va_shrunk_boys, na.rm = TRUE),
+                        abs_ex = mean(abs_excess, na.rm = TRUE), above = sum(va_lo_all > 0, na.rm = TRUE),
+                        below = sum(va_hi_all < 0, na.rm = TRUE), .groups = "drop"), by = "lad") |>
+  mutate(r_att8 = rk(lad, "att8"), r_dis = rk(lad, "att8_dis"), r_gap = rk(lad, "gap"),
+         susp = ex_at(lad), pupils_susp = ex_at(lad, "pupil_rate"), reduced = r_at(lad, "Reduced timetable"),
+         link = sprintf('<a href="areas/%s.html">%s</a>', slug(lad), lad))
+deff <- P$district$effects |> filter(lad %in% D$lad)
+sig_txt <- function(l, s) deff |> filter(lad == l, spec == s, sig) |>
+  mutate(t = sprintf("%s (%+.1f%%)", tolower(sub(" \\(intake-adjusted\\)", "", outcome)), pct(effect))) |> pull(t)
+```
+
+# Summary {.unnumbered}
+
+```{r summary}
+#| results: asis
+top <- TAB |> arrange(desc(va)); ab <- TAB |> arrange(desc(abs_ex))
+pub <- unique(deff$lad[deff$spec == "Published specification" & deff$sig])
+sch <- unique(deff$lad[deff$spec == "With a school term" & deff$sig])
+cat(paste0("- ", c(
+  sprintf("**Value added v2.0 ranges from %+.1f points in %s to %+.1f in %s**, averaged over each district's schools.",
+          top$va[1], top$lad[1], top$va[nrow(top)], top$lad[nrow(top)]),
+  sprintf("**Disadvantaged pupils' value added is below zero in %d of the twelve districts.**", sum(TAB$va_dis < 0, na.rm = TRUE)),
+  sprintf("**Absence against intake runs from %+.1f points in %s to %+.1f in %s.**",
+          ab$abs_ex[1], ab$lad[1], ab$abs_ex[nrow(ab)], ab$lad[nrow(ab)]),
+  if (length(pub)) sprintf("**%s differ from their county on the v2.0 model; %s.**", and_list(pub),
+                           if (length(sch)) paste("only", and_list(sch), "survives each school's own record")
+                           else "none survives each school's own record") else "**No district differs from its county.**",
+  sprintf("**Suspensions run from %.1f to %.1f episodes per 100 pupils** (England %.1f).",
+          min(TAB$susp), max(TAB$susp), ex_at("England"))), collapse = "\n"), "\n")
+```
+
+# The districts side by side
+
+```{r tbl-profile}
+#| tbl-cap: !expr paste0("The twelve districts, ", yl(latest), ". Ranks (1 = highest; for the gap, 1 = widest) among the ", n_rank, " districts in England with five or more schools. Value added v2.0 (Attainment 8 points) and absence against intake (percentage points) are means over each district's schools, 2021/22 to 2024/25.")
+TAB |> arrange(desc(va)) |>
+  transmute(District = link, County = la, Schools = schools, `FSM %` = sprintf("%.1f", fsm),
+            `Att 8` = sprintf("%.1f (%s)", att8, ord(r_att8)), `Att 8 disadv.` = sprintf("%.1f (%s)", att8_dis, ord(r_dis)),
+            Gap = sprintf("%.1f (%s)", gap, ord(r_gap)),
+            `VA v2.0` = sprintf("%+.1f", va), `VA disadv.` = sprintf("%+.1f", va_dis),
+            `VA girls / boys` = sprintf("%+.1f / %+.1f", va_girls, va_boys),
+            `Absence vs intake` = sprintf("%+.1f", abs_ex), `Above / below` = paste(above, "/", below)) |>
+  kt(align = "llrrrrrrrrrl", escape = FALSE)
+```
+
+# What explains each district's results
+
+```{r fig-heat}
+#| fig-cap: "Why each district's average Attainment 8 differs from England's on the v2.0 model, in approximate Attainment 8 points. Purple lifts a district above England; blue pulls it below."
+#| fig-height: 6.5
+grp <- c("Absence" = "Absence", "Prior attainment (KS2)" = "Prior attainment", "Disadvantage" = "Disadvantage",
+         "English as an additional language" = "Other intake", "Special educational needs" = "Other intake",
+         "Pupil mobility" = "Other intake", "Single-sex school" = "Other intake",
+         "Neighbourhood education" = "Neighbourhood", "Admissions (selection)" = "Other",
+         "Region" = "Place", "Local authority" = "Place", "Year" = "Other", "Unexplained (school)" = "Schools")
+hd <- dec |> mutate(piece = factor(grp[component], c("Absence", "Prior attainment", "Disadvantage", "Other intake",
+                                                     "Neighbourhood", "Place", "Other", "Schools"))) |>
+  group_by(area, group, piece) |> summarise(points = sum(points), .groups = "drop")
+bind_rows(hd, hd |> group_by(area, group) |> summarise(points = sum(points), .groups = "drop") |> mutate(piece = "Total")) |>
+  mutate(piece = factor(piece, c(levels(hd$piece), "Total")), area = factor(area, TAB$lad[order(TAB$att8)])) |>
+  ggplot(aes(piece, area, fill = points)) +
+  geom_tile(colour = "white", linewidth = 0.8) +
+  geom_text(aes(label = sprintf("%+.1f", points)), size = 2.9, colour = INK) +
+  facet_wrap(~group) +
+  scale_fill_gradient2(low = "#5fa8c2", mid = "#f4f2f8", high = MPURPLE, midpoint = 0, limits = c(-5, 5),
+                       oob = scales::squish, name = "Points") +
+  labs(x = NULL, y = NULL, title = "Different districts, different reasons") +
+  theme_note(10) + theme(axis.text.x = element_text(angle = 40, hjust = 1), panel.grid = element_blank())
+```
+
+# Is there a district effect?
+
+```{r fig-effects}
+#| fig-cap: "District effects over and above each county's on the v2.0 model, with 95% intervals, without and with a school term."
+#| fig-height: 7
+fig_effects(deff |> filter(outcome != "Non-disadvantaged"), "Most district effects vanish once schools are counted")
+```
+
+```{r effects-list}
+#| results: asis
+for (l in TAB$lad) {
+  p <- sig_txt(l, "Published specification"); s <- sig_txt(l, "With a school term")
+  if (length(p)) cat(sprintf("- **%s:** %s without a school term; %s.\n", l, and_list(p),
+    if (length(s)) paste("with one,", and_list(s), "remains") else "none survives a school term"))
+}
+```
+
+# Absence and practice
+
+```{r tbl-absence}
+#| tbl-cap: !expr paste0("Absence against what the intake predicts (v2.0, mean 2021/22 to 2024/25); reduced timetables as a percentage of sessions, autumn and spring ", yr(abs_last), "; suspension episodes and pupils suspended at least once per 100 pupils, ", yr(ex_last), ".")
+bind_rows(
+  TAB |> arrange(la, desc(abs_ex)) |>
+    transmute(District = link, County = la, ex = abs_ex, red = reduced, sus = susp, pup = pupils_susp),
+  tibble(District = "England", County = "", ex = 0, red = r_at("England", "Reduced timetable"),
+         sus = ex_at("England"), pup = ex_at("England", "pupil_rate"))) |>
+  transmute(District, County, `Absence vs intake` = sprintf("%+.1f", ex), `Reduced timetable %` = sprintf("%.2f", red),
+            `Suspension episodes per 100` = sprintf("%.1f", sus), `Pupils suspended per 100` = sprintf("%.1f", pup)) |>
+  kt(align = "llrrrr", escape = FALSE)
+```
+
+# District by district
+
+```{r each}
+#| results: asis
+for (la in names(DISTRICTS)) {
+  cat("\n##", la, "\n\n")
+  for (l in DISTRICTS[[la]]) {
+    t <- TAB |> filter(lad == l)
+    s <- sig_txt(l, "With a school term"); p <- sig_txt(l, "Published specification")
+    cat(sprintf(paste0("**%s** (%d schools). Value added v2.0 %+.1f for all pupils, %+.1f for disadvantaged pupils, ",
+                       "%+.1f for girls and %+.1f for boys; %d schools significantly above expectation and %d below. ",
+                       "Absence %s what the intake predicts by %.1f points. Attainment 8 %.1f, %s of %d districts. %s ",
+                       "[Read the %s page](areas/%s.html).\n\n"),
+                l, t$schools, t$va, t$va_dis, t$va_girls, t$va_boys, t$above, t$below,
+                ifelse(t$abs_ex >= 0, "above", "below"), abs(t$abs_ex), t$att8, ord(t$r_att8), n_rank,
+                if (length(s)) paste0("A district effect survives each school's own record (", and_list(s), ").")
+                else if (length(p)) "Its district effect disappears once each school's record is counted."
+                else "No district effect.", l, slug(l)))
+  }
+}
+```

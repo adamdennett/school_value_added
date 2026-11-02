@@ -148,6 +148,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../areas/west_sussex.html">
  <span class="dropdown-text">West Sussex</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -185,9 +189,19 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
-  <li><a href="#the-schools" id="toc-the-schools" class="nav-link" data-scroll-target="#the-schools">The schools</a></li>
-  <li><a href="#what-explains-the-areas-results" id="toc-what-explains-the-areas-results" class="nav-link" data-scroll-target="#what-explains-the-areas-results">What explains the area’s results</a></li>
-  <li><a href="#districts" id="toc-districts" class="nav-link" data-scroll-target="#districts">Districts</a></li>
+  <li><a href="#the-schools" id="toc-the-schools" class="nav-link" data-scroll-target="#the-schools">The schools</a>
+  <ul class="collapse">
+  <li><a href="#who-runs-them" id="toc-who-runs-them" class="nav-link" data-scroll-target="#who-runs-them">Who runs them</a></li>
+  </ul></li>
+  <li><a href="#how-east-sussex-compares" id="toc-how-east-sussex-compares" class="nav-link" data-scroll-target="#how-east-sussex-compares">How East Sussex compares</a></li>
+  <li><a href="#what-explains-attainment-in-east-sussex" id="toc-what-explains-attainment-in-east-sussex" class="nav-link" data-scroll-target="#what-explains-attainment-in-east-sussex">What explains attainment in East Sussex</a></li>
+  <li><a href="#place-authorities-and-districts" id="toc-place-authorities-and-districts" class="nav-link" data-scroll-target="#place-authorities-and-districts">Place: authorities and districts</a></li>
+  <li><a href="#trusts" id="toc-trusts" class="nav-link" data-scroll-target="#trusts">Trusts</a></li>
+  <li><a href="#the-disadvantaged-gap-and-girls-and-boys" id="toc-the-disadvantaged-gap-and-girls-and-boys" class="nav-link" data-scroll-target="#the-disadvantaged-gap-and-girls-and-boys">The disadvantaged gap, and girls and boys</a></li>
+  <li><a href="#absence" id="toc-absence" class="nav-link" data-scroll-target="#absence">Absence</a></li>
+  <li><a href="#school-by-school" id="toc-school-by-school" class="nav-link" data-scroll-target="#school-by-school">School by school</a></li>
+  <li><a href="#contextual-league-tables" id="toc-contextual-league-tables" class="nav-link" data-scroll-target="#contextual-league-tables">Contextual league tables</a></li>
+  <li><a href="#questions-for-discussion" id="toc-questions-for-discussion" class="nav-link" data-scroll-target="#questions-for-discussion">Questions for discussion</a></li>
   <li><a href="#notes-on-method" id="toc-notes-on-method" class="nav-link" data-scroll-target="#notes-on-method">Notes on method</a></li>
   </ul>
 </nav>
@@ -219,7 +233,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<!-- GENERATED from templates/area.qmd by R/03_area_pages.R. Edit the template, not this file. -->
+<!-- GENERATED from templates/area.qmd by R/03_area_pages.R. Edit the template, not this file. The format is described in AREA_REPORTS.md. -->
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -230,63 +244,37 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Value Added v2.0 for East Sussex’s state-funded secondary schools, 2021/22 to 2024/25, measured against England: see <a href="../method.html">the method</a>. The original analysis, with absence, suspensions and trusts in depth, is <a href="https://adamdennett.github.io/school_attainment_tool/east_sussex.html">here</a>. Built from published DfE and Ofsted data; nothing uses pupil-level records.</p>
+<p>Value Added v2.0 for East Sussex’s state-funded secondary schools, 2021/22 to 2024/25, measured against England (see <a href="../method.html">the method</a>), with the analyses of the original <a href="https://adamdennett.github.io/school_attainment_tool/east_sussex.html">Sussex document</a> refitted on the v2.0 model. Built from published DfE and Ofsted data; nothing uses pupil-level records.</p>
 </div>
 </div>
 <section id="summary" class="level1 unnumbered">
 <h1 class="unnumbered">Summary</h1>
 <ul>
-<li><strong>26 schools with value added for all pupils averaging +0.1 points</strong> against England: 7 significantly above significantly above expectation and 3 below.</li>
-<li><strong>Disadvantaged pupils: -0.6 points; non-disadvantaged pupils: +0.2.</strong></li>
-<li><strong>Girls: -0.1 points; boys: +0.3.</strong></li>
+<li><strong>26 schools, with value added for all pupils averaging +0.1 points against England</strong>: 7 significantly above expectation and 3 below.</li>
+<li><strong>Disadvantaged pupils -0.6, non-disadvantaged +0.2; girls -0.1, boys +0.3.</strong></li>
 <li><strong>Strongest: Priory School (+5.0). Weakest: The St Leonards Academy (-5.5).</strong></li>
-<li><strong>The authority’s own effect is +1.0% (51st of 152) for all pupils, and +0.5% (66th) for disadvantaged pupils.</strong> Value added against England includes it.</li>
-<li><strong>Against the published v1 measure</strong>, the area’s schools move by -0.1 points on average (v2 against England minus v1 within the authority).</li>
-<li><strong>Latest Ofsted:</strong> 6 report cards, 5 inspection with no overall grades, 9 graded inspections and 6 ungraded visit only.</li>
+<li><strong>Absence runs 0.3 points above what the intake predicts</strong> on average over 2021/22 to 2024/25 (55th highest of 152 authorities); The St Leonards Academy, The Hastings Academy, Seahaven Academy, The Turing School, Rye College, Uckfield College and Priory School more than a point above.</li>
+<li><strong>The authority’s own effect is +1.0% (51st of 152) for all pupils, and +0.5% (66th) for disadvantaged pupils.</strong></li>
+<li><strong>District effects on the v2.0 model (Hastings for all pupils (-4.4%), Lewes for all pupils (+4.9%), Hastings for disadvantaged pupils (-5.4%) and Hastings for absence (+8.5%)) disappear once each school’s own record is counted:</strong> they belong to schools, not places.</li>
+<li><strong>Suspensions: 28.0 episodes per 100 pupils (England 21.2); 8.8 pupils per 100 suspended at least once (England 7.3).</strong> Reduced timetables run at 1.3 times the national rate.</li>
+<li><strong>Trusts that stand out nationally on v2.0:</strong> Ark Schools (disadvantaged pupils +4.4% and absence -9.0%) and United Learning Trust (all pupils +6.3% and disadvantaged pupils +8.6%).</li>
+<li><strong>Latest Ofsted:</strong> 6 report cards, 5 inspections with no overall grade, 9 graded inspections and 6 ungraded visits only.</li>
 </ul>
 </section>
 <section id="the-schools" class="level1">
 <h1>The schools</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="htmlwidget-8520bb800e1214092caf" style="width:100%;height:374px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8520bb800e1214092caf">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[0.339200663555106,0.310001677741741,0.266410952319476,0.260355755024803,0.209966414954202,0.20982317648327,0.216419303137371,0.233877609327566,0.227722839634515,0.245877996801349,0.258804521819086,0.267350514506759,0.276900346944744,0.289414548084779,0.339200663555106],"lat":[50.7990560682182,50.7766843325662,50.7432318987171,50.7385798209278,50.7384858720271,50.7385342101675,50.7747197053076,50.7954152216043,50.8008717398551,50.8054892310664,50.7993756189042,50.8105620426303,50.8047664446665,50.8130639012093,50.7990560682182]}]],[[{"lng":[0.65792155011398,0.645773323728388,0.5248726222353201,0.502771650799913,0.508573338553853,0.521188998821682,0.519897089615978,0.53695003209693,0.603722187482836,0.620897942218763,0.65792155011398],"lat":[50.8697584816614,50.8667481319542,50.8452211645608,50.8425137278528,50.8508696516726,50.8517435590174,50.8771884687461,50.8948246021293,50.8785656220813,50.884184339299,50.8697584816614]}]],[[{"lng":[0.149983559854032,0.148939334951743,0.121967265897583,0.1069477214802,0.0683542962557273,0.0595460086957589,0.0583360841416422,0.0583519359338695,0.0558055595737416,0.0577942848772261,0.0337330452782453,-0.0149577234926783,-0.0384766634233576,-0.0160023583696679,-0.02042837615218,-0.0459683931136427,-0.0368600534958184,-0.0734523413829599,-0.08492763424304429,-0.09751926362199451,-0.12179965145279,-0.135279339082157,-0.135004643104498,-0.119788174827145,-0.104207686196339,-0.115147503567339,-0.0736194177331807,-0.0615918410922555,-0.0246042590087526,-0.0163504990982534,0.00383575755450229,0.0111529720260843,0.0273550821828603,0.038956754299803,0.0536959017819025,0.0482299035890433,0.0573042911212614,0.121913595707189,0.091881452118935,0.0984976573399234,0.11458534956577,0.127270405087256,0.09793380595902811,0.119229803475203,0.143685958735401,0.149983559854032],"lat":[50.758704281008,50.7590558328119,50.7583042969194,50.7639367046569,50.7818192921581,50.7816913365409,50.7821441041508,50.7816739411115,50.7816368028859,50.7760767866365,50.7818297072258,50.7934519659899,50.7990565193982,50.8148750643628,50.8218303547022,50.8218246608082,50.8411732461155,50.8412145625525,50.8731196285537,50.8779454244635,50.8734281543555,50.8780983575218,50.8866504956811,50.9422851177541,50.9464681224634,50.9761166833068,50.9916752625057,50.9784204152431,50.9800251733024,51.0024963848289,50.9936082103596,50.977588472179,50.980907867108,50.9666041528457,50.9676652882829,50.9465116142727,50.9260708001773,50.9152809823868,50.8849473988944,50.8699934606811,50.8706860771558,50.8567836656353,50.8203197546112,50.7942342996234,50.7927675579582,50.758704281008]}]],[[{"lng":[0.605390823945922,0.661399802568737,0.676955919326293,0.706770603419155,0.74061137766967,0.7789567049721809,0.777134928696756,0.784327858018418,0.812941746895733,0.841401377893081,0.855967970123694,0.867891381774926,0.8547052876079529,0.844462311257057,0.772008514930815,0.774905803197715,0.759065635329044,0.758684275808103,0.758455358840504,0.729731338646439,0.65857681641057,0.65792155011398,0.620897942218763,0.603722187482836,0.53695003209693,0.519897089615978,0.521188998821682,0.508573338553853,0.502771650799913,0.500712476210745,0.377817833812518,0.37541342272816,0.441196831362921,0.449085367631327,0.435503334595761,0.416084010052589,0.379053948874133,0.367896482111999,0.374302835573211,0.35776195415492,0.366797455394097,0.342689856803908,0.335932708623537,0.343584189463465,0.324024938278467,0.321585740673585,0.328658782105634,0.354012040310152,0.346599966421665,0.361353436327948,0.395772076313833,0.396496475173542,0.418266860755534,0.463267138803114,0.472319209676434,0.537568517875719,0.5417197606759649,0.570801043736655,0.605390823945922],"lat":[51.0120699748884,51.0177718605919,51.0032987849983,50.9936018222235,51.0006767077396,50.9894920242148,50.9754283490881,50.9772296862947,50.9419995743143,50.9576088277997,50.9531286056838,50.9332622947202,50.9239435833678,50.9248519212637,50.9312500094122,50.9273356672682,50.9224589246449,50.9223934837748,50.9222709741153,50.9134192560575,50.8699208100169,50.8697584816614,50.884184339299,50.8785656220813,50.8948246021293,50.8771884687461,50.8517435590174,50.8508696516726,50.8425137278528,50.8422612216686,50.8204117877254,50.8406045063904,50.8678297592527,50.8789513119326,50.8938987052304,50.8969114008603,50.8835359053039,50.8879521744983,50.8983928166642,50.9173026341051,50.9329577519134,50.9394409150915,50.9530437333312,50.9591466317135,50.9629210981029,50.9966843427025,51.0128817929601,51.017527978175,51.0240996276742,51.0652765586671,51.0739134327331,51.0831316875627,51.0626269704324,51.0547870164556,51.030436087866,51.0216392169297,51.0111085114966,51.003482315489,51.0120699748884]}]],[[{"lng":[0.160718236048252,0.151187333045437,0.171472727638366,0.226255230233864,0.244577828429569,0.275613215976201,0.274874930408996,0.32516510810618,0.335077206061616,0.358976559646714,0.350831195947389,0.373840828926189,0.396496475173542,0.395772076313833,0.361353436327948,0.346599966421665,0.354012040310152,0.328658782105634,0.321585740673585,0.324024938278467,0.343584189463465,0.335932708623537,0.342689856803908,0.366797455394097,0.35776195415492,0.374302835573211,0.367896482111999,0.379053948874133,0.416084010052589,0.435503334595761,0.449085367631327,0.441196831362921,0.37541342272816,0.377817833812518,0.377491650431505,0.339307150730746,0.339200663555106,0.289414548084779,0.276900346944744,0.267350514506759,0.258804521819086,0.245877996801349,0.227722839634515,0.233877609327566,0.216419303137371,0.20982317648327,0.155531852840607,0.149983559854032,0.143685958735401,0.119229803475203,0.09793380595902811,0.127270405087256,0.11458534956577,0.0984976573399234,0.091881452118935,0.121913595707189,0.0573042911212614,0.0482299035890433,0.0536959017819025,0.038956754299803,0.0273550821828603,0.0111529720260843,0.00383575755450229,-0.0163504990982534,-0.0218747081717486,-0.00156549234049123,-0.00300172769009489,0.0137406414730299,-0.00854815740438445,-0.0132566088248517,-0.0268520992180162,-0.036213376436162,0.0105434061785564,0.00950504621663548,0.0185609090480791,0.0445094045788558,0.0281472617745816,0.0273600610344932,0.0500165286936347,0.133117086399998,0.160718236048252],"lat":[51.1373289183326,51.1238205523104,51.1154149017039,51.1244861151575,51.1148342403232,51.1122985162925,51.120651771133,51.1229560786704,51.1054658900485,51.1045306536867,51.0840559147529,51.0884605021197,51.0831316875627,51.0739134327331,51.0652765586671,51.0240996276742,51.017527978175,51.0128817929601,50.9966843427025,50.9629210981029,50.9591466317135,50.9530437333312,50.9394409150915,50.9329577519134,50.9173026341051,50.8983928166642,50.8879521744983,50.8835359053039,50.8969114008603,50.8938987052304,50.8789513119326,50.8678297592527,50.8406045063904,50.8204117877254,50.8203535951709,50.7991376029796,50.7990560682182,50.8130639012093,50.8047664446665,50.8105620426303,50.7993756189042,50.8054892310664,50.8008717398551,50.7954152216043,50.7747197053076,50.7385342101675,50.7568361316885,50.758704281008,50.7927675579582,50.7942342996234,50.8203197546112,50.8567836656353,50.8706860771558,50.8699934606811,50.8849473988944,50.9152809823868,50.9260708001773,50.9465116142727,50.9676652882829,50.9666041528457,50.980907867108,50.977588472179,50.9936082103596,51.0024963848289,51.0265033539165,51.0357549868715,51.0475643226305,51.0569963600632,51.0564579871026,51.0739671019924,51.0751128703829,51.0934295225111,51.1021625577146,51.1103919555841,51.1035920015529,51.1106132994909,51.1177116859783,51.1398479920559,51.142650015856,51.147278518653,51.1373289183326]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,["Eastbourne","Hastings","Lewes","Rother","Wealden"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[[50.7757020189369,50.8682533068078,50.8815228782081,50.94752165382275,50.9429762646821],[0.2629848104003158,0.5860990948448299,-0.02088637469356751,0.5735662478917587,0.1953665267249388],{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Eastbourne","Hastings","Lewes","Rother","Wealden"],{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[50.7384858720271,51.147278518653],"lng":[-0.135279339082157,0.867891381774926]},"fitBounds":[50.7384858720271,-0.135279339082157,51.147278518653,0.867891381774926,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Priory School","lon":0.0162,"lat":50.8691,"pupils":1163,"tip":"<b>Priory School<\/b> (Lewes)<br>Value added v2: all +5.0, disadvantaged -1.7, girls +4.7, boys +5.0<br>Value added v1 (published): +5.0<br>Attainment 8 46.3, FSM 21%, absence 12.1%<br>Ofsted latest: Remains Good (Nov 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":5.0266,"va_shrunk_disadvantaged":-1.6755,"va_shrunk_non_disadvantaged":5.9704,"va_shrunk_girls":4.7171,"va_shrunk_boys":4.996,"v1_all":4.989,"att8":46.3,"fsm":20.9,"ks2_c":5.3,"absence":12.07,"mobile":3.6,"l4":40.0485,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Beacon Academy","lon":0.172,"lat":51.0555,"pupils":1662,"tip":"<b>Beacon Academy<\/b> (Wealden)<br>Value added v2: all +4.3, disadvantaged +4.7, girls +4.4, boys +3.8<br>Value added v1 (published): +3.0<br>Attainment 8 50.2, FSM 16%, absence 9.1%<br>Ofsted latest: Outstanding (Apr 2024)<br>Run by (2024/25): Mark Education Trust","va_shrunk_all":4.2665,"va_shrunk_disadvantaged":4.723,"va_shrunk_non_disadvantaged":3.4214,"va_shrunk_girls":4.3617,"va_shrunk_boys":3.7854,"v1_all":2.9679,"att8":50.2,"fsm":15.5,"ks2_c":4.7,"absence":9.09,"mobile":3.2,"l4":37.3935,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"King's Academy Ringmer","lon":0.0672,"lat":50.8955,"pupils":642,"tip":"<b>King's Academy Ringmer<\/b> (Lewes)<br>Value added v2: all +3.6, disadvantaged +4.2, girls +2.7, boys +3.8<br>Value added v1 (published): +5.3<br>Attainment 8 47.5, FSM 24%, absence 10.0%<br>Ofsted latest: Standards maintained (Nov 2024, ungraded visit)<br>Run by (2024/25): King's Group Academies","va_shrunk_all":3.6437,"va_shrunk_disadvantaged":4.2098,"va_shrunk_non_disadvantaged":3.0225,"va_shrunk_girls":2.7302,"va_shrunk_boys":3.8205,"v1_all":5.3352,"att8":47.5,"fsm":24.2,"ks2_c":2.7,"absence":9.99,"mobile":2,"l4":41.907,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"St Richard's Catholic College","lon":0.4887,"lat":50.8431,"pupils":1033,"tip":"<b>St Richard's Catholic College<\/b> (Rother)<br>Value added v2: all +3.5, disadvantaged +1.5, girls +3.7, boys +2.5<br>Value added v1 (published): +3.9<br>Attainment 8 58.4, FSM 16%, absence 5.7%<br>Ofsted latest: Good (Oct 2021)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":3.5481,"va_shrunk_disadvantaged":1.4664,"va_shrunk_non_disadvantaged":3.7101,"va_shrunk_girls":3.7079,"va_shrunk_boys":2.5274,"v1_all":3.9106,"att8":58.4,"fsm":16.3,"ks2_c":6.1,"absence":5.66,"mobile":1,"l4":25.7764,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Seahaven Academy","lon":0.0408,"lat":50.7872,"pupils":745,"tip":"<b>Seahaven Academy<\/b> (Lewes)<br>Value added v2: all +3.3, disadvantaged +2.7, girls +1.4, boys +4.9<br>Value added v1 (published): +3.1<br>Attainment 8 40.2, FSM 30%, absence 12.6%<br>Ofsted latest: Report card (Nov 2025): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): United Learning Trust","va_shrunk_all":3.3423,"va_shrunk_disadvantaged":2.7148,"va_shrunk_non_disadvantaged":2.9115,"va_shrunk_girls":1.3548,"va_shrunk_boys":4.8617,"v1_all":3.0578,"att8":40.2,"fsm":30.2,"ks2_c":1.7,"absence":12.64,"mobile":4.3,"l4":26.5764,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Expected standard"},{"SCHNAME":"Uckfield College","lon":0.1023,"lat":50.9745,"pupils":1602,"tip":"<b>Uckfield College<\/b> (Wealden)<br>Value added v2: all +3.0, disadvantaged -0.6, girls +3.0, boys +2.9<br>Value added v1 (published): +1.4<br>Attainment 8 46.9, FSM 14%, absence 10.6%<br>Ofsted latest: Outstanding (Apr 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":3.0368,"va_shrunk_disadvantaged":-0.6009,"va_shrunk_non_disadvantaged":2.9411,"va_shrunk_girls":3.0033,"va_shrunk_boys":2.8762,"v1_all":1.3587,"att8":46.9,"fsm":13.9,"ks2_c":4.8,"absence":10.59,"mobile":5,"l4":35.2687,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Seaford Head School","lon":0.1179,"lat":50.7708,"pupils":1448,"tip":"<b>Seaford Head School<\/b> (Lewes)<br>Value added v2: all +2.8, disadvantaged +1.7, girls +1.7, boys +3.4<br>Value added v1 (published): +0.6<br>Attainment 8 49.4, FSM 14%, absence 8.6%<br>Ofsted latest: Remains Outstanding (Nov 2023, ungraded visit)<br>Run by (2024/25): Seaford Learning Trust","va_shrunk_all":2.8177,"va_shrunk_disadvantaged":1.6841,"va_shrunk_non_disadvantaged":2.3234,"va_shrunk_girls":1.6618,"va_shrunk_boys":3.3572,"v1_all":0.5721,"att8":49.4,"fsm":14.2,"ks2_c":3.9,"absence":8.63,"mobile":3.9,"l4":29.8935,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Heathfield Community College","lon":0.2781,"lat":50.9669,"pupils":1437,"tip":"<b>Heathfield Community College<\/b> (Wealden)<br>Value added v2: all +2.1, disadvantaged +4.7, girls +1.0, boys +2.7<br>Value added v1 (published): +2.2<br>Attainment 8 50.5, FSM 18%, absence 10.5%<br>Ofsted latest: Good (May 2023)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":2.0623,"va_shrunk_disadvantaged":4.6565,"va_shrunk_non_disadvantaged":1.0971,"va_shrunk_girls":1.0416,"va_shrunk_boys":2.6879,"v1_all":2.1666,"att8":50.5,"fsm":17.7,"ks2_c":4.7,"absence":10.48,"mobile":1.7,"l4":33.9583,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"St Catherine's College","lon":0.3173,"lat":50.7986,"pupils":1072,"tip":"<b>St Catherine's College<\/b> (Eastbourne)<br>Value added v2: all +1.4, disadvantaged +2.1, girls +0.9, boys +1.8<br>Value added v1 (published): +1.3<br>Attainment 8 47.4, FSM 22%, absence 8.7%<br>Ofsted latest: Good (Nov 2019); Standards maintained (May 2025)<br>Run by (2024/25): Diocese of Chichester Academy Trust","va_shrunk_all":1.4444,"va_shrunk_disadvantaged":2.124,"va_shrunk_non_disadvantaged":0.7429,"va_shrunk_girls":0.8848,"va_shrunk_boys":1.7778,"v1_all":1.2614,"att8":47.4,"fsm":21.9,"ks2_c":4.8,"absence":8.69,"mobile":2.3,"l4":23.5557,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Claverham Community College","lon":0.467,"lat":50.9159,"pupils":1148,"tip":"<b>Claverham Community College<\/b> (Rother)<br>Value added v2: all +1.2, disadvantaged +0.6, girls +0.9, boys +1.4<br>Value added v1 (published): +1.0<br>Attainment 8 50.2, FSM 22%, absence 7.2%<br>Ofsted latest: Remains Good (Improving) (Apr 2024, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":1.2075,"va_shrunk_disadvantaged":0.5818,"va_shrunk_non_disadvantaged":1.4689,"va_shrunk_girls":0.904,"va_shrunk_boys":1.4368,"v1_all":1.0369,"att8":50.2,"fsm":21.6,"ks2_c":4.8,"absence":7.16,"mobile":3.2,"l4":26.5401,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Peacehaven Community School","lon":0.003,"lat":50.7961,"pupils":903,"tip":"<b>Peacehaven Community School<\/b> (Lewes)<br>Value added v2: all +1.2, disadvantaged -1.3, girls +0.4, boys +1.4<br>Value added v1 (published): +0.6<br>Attainment 8 39.7, FSM 29%, absence 11.2%<br>Ofsted latest: Good (Oct 2023)<br>Run by (2024/25): Swale Academies Trust","va_shrunk_all":1.1517,"va_shrunk_disadvantaged":-1.3148,"va_shrunk_non_disadvantaged":1.9403,"va_shrunk_girls":0.437,"va_shrunk_boys":1.3606,"v1_all":0.5813,"att8":39.7,"fsm":28.7,"ks2_c":-0.1,"absence":11.24,"mobile":4,"l4":28.8435,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Ratton School","lon":0.2595,"lat":50.791,"pupils":1197,"tip":"<b>Ratton School<\/b> (Eastbourne)<br>Value added v2: all -0.4, disadvantaged -2.2, girls +0.6, boys -1.2<br>Value added v1 (published): -0.7<br>Attainment 8 42.9, FSM 23%, absence 9.1%<br>Ofsted latest: Report card (May 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): South Downs Learning Trust","va_shrunk_all":-0.4077,"va_shrunk_disadvantaged":-2.1796,"va_shrunk_non_disadvantaged":-0.4354,"va_shrunk_girls":0.6099,"va_shrunk_boys":-1.1893,"v1_all":-0.6816,"att8":42.9,"fsm":23.3,"ks2_c":2.4,"absence":9.11,"mobile":3.8,"l4":30.9559,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Expected standard"},{"SCHNAME":"Rye College","lon":0.7317,"lat":50.9551,"pupils":616,"tip":"<b>Rye College<\/b> (Rother)<br>Value added v2: all -0.6, disadvantaged -2.1, girls -1.1, boys -0.1<br>Value added v1 (published): -1.6<br>Attainment 8 36.7, FSM 31%, absence 12.9%<br>Ofsted latest: Good (Jan 2023)<br>Run by (2024/25): Aquinas Church of England Education Trust","va_shrunk_all":-0.6441,"va_shrunk_disadvantaged":-2.0691,"va_shrunk_non_disadvantaged":0.093,"va_shrunk_girls":-1.1136,"va_shrunk_boys":-0.07,"v1_all":-1.5726,"att8":36.7,"fsm":31.1,"ks2_c":3.7,"absence":12.9,"mobile":5.8,"l4":27.7619,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Uplands Academy","lon":0.3402,"lat":51.0603,"pupils":736,"tip":"<b>Uplands Academy<\/b> (Wealden)<br>Value added v2: all -0.8, disadvantaged +2.2, girls +0.2, boys -1.7<br>Value added v1 (published): -0.9<br>Attainment 8 42.5, FSM 29%, absence 9.0%<br>Ofsted latest: Standards maintained (Jan 2025, ungraded visit)<br>Run by (2024/25): Mark Education Trust","va_shrunk_all":-0.7617,"va_shrunk_disadvantaged":2.2483,"va_shrunk_non_disadvantaged":-1.7417,"va_shrunk_girls":0.2205,"va_shrunk_boys":-1.7427,"v1_all":-0.8894,"att8":42.5,"fsm":29.4,"ks2_c":4.6,"absence":9.04,"mobile":6.7,"l4":43.4976,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Eastbourne Academy","lon":0.2689,"lat":50.8017,"pupils":800,"tip":"<b>The Eastbourne Academy<\/b> (Eastbourne)<br>Value added v2: all -0.9, disadvantaged -0.3, girls -1.0, boys -0.6<br>Value added v1 (published): -0.0<br>Attainment 8 37.7, FSM 42%, absence 10.8%<br>Ofsted latest: No overall grade (Jan 2025): quality of education Inadequate<br>Run by (2024/25): Swale Academies Trust","va_shrunk_all":-0.9392,"va_shrunk_disadvantaged":-0.3491,"va_shrunk_non_disadvantaged":-1.1108,"va_shrunk_girls":-0.9665,"va_shrunk_boys":-0.5886,"v1_all":-0.0268,"att8":37.7,"fsm":41.9,"ks2_c":-0.1,"absence":10.85,"mobile":6.2,"l4":26.3454,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"Chailey School","lon":-0.0269,"lat":50.9392,"pupils":855,"tip":"<b>Chailey School<\/b> (Lewes)<br>Value added v2: all -1.0, disadvantaged -4.2, girls -3.1, boys +0.8<br>Value added v1 (published): -1.1<br>Attainment 8 49.2, FSM 11%, absence 6.8%<br>Ofsted latest: Report card (Feb 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.0363,"va_shrunk_disadvantaged":-4.2268,"va_shrunk_non_disadvantaged":-0.7616,"va_shrunk_girls":-3.146,"va_shrunk_boys":0.759,"v1_all":-1.1442,"att8":49.2,"fsm":10.7,"ks2_c":5.6,"absence":6.85,"mobile":4.2,"l4":40.6018,"gov":"Maintained","ofsted_rc":"Expected standard"},{"SCHNAME":"The Cavendish School","lon":0.2606,"lat":50.7804,"pupils":1372,"tip":"<b>The Cavendish School<\/b> (Eastbourne)<br>Value added v2: all -1.1, disadvantaged +0.2, girls -0.1, boys -1.8<br>Value added v1 (published): +0.3<br>Attainment 8 47.2, FSM 26%, absence 6.4%<br>Ofsted latest: No overall grade (Jan 2025): quality of education Outstanding<br>Run by (2024/25): Cavendish Education Trust","va_shrunk_all":-1.078,"va_shrunk_disadvantaged":0.2423,"va_shrunk_non_disadvantaged":-1.3718,"va_shrunk_girls":-0.0884,"va_shrunk_boys":-1.8229,"v1_all":0.2847,"att8":47.2,"fsm":25.9,"ks2_c":4.1,"absence":6.4,"mobile":0.6,"l4":35.5553,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Turing School","lon":0.2905,"lat":50.8076,"pupils":765,"tip":"<b>The Turing School<\/b> (Eastbourne)<br>Value added v2: all -1.5, disadvantaged -2.5, girls -1.1, boys -1.7<br>Value added v1 (published): -0.9<br>Attainment 8 34.5, FSM 45%, absence 15.0%<br>Ofsted latest: Report card (Feb 2026): achievement Needs attention, curriculum and teaching Needs attention<br>Run by (2024/25): Swale Academies Trust","va_shrunk_all":-1.483,"va_shrunk_disadvantaged":-2.5476,"va_shrunk_non_disadvantaged":0.1886,"va_shrunk_girls":-1.0519,"va_shrunk_boys":-1.7426,"v1_all":-0.9218,"att8":34.5,"fsm":44.8,"ks2_c":0.7,"absence":15.03,"mobile":10.4,"l4":22.6434,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Needs attention"},{"SCHNAME":"Ark Alexandra Academy","lon":0.5688,"lat":50.8761,"pupils":1431,"tip":"<b>Ark Alexandra Academy<\/b> (Hastings)<br>Value added v2: all -1.7, disadvantaged -3.0, girls -1.0, boys -2.3<br>Value added v1 (published): -1.9<br>Attainment 8 42.4, FSM 32%, absence 8.9%<br>Ofsted latest: Report card (Jun 2026): achievement Strong standard, curriculum and teaching Strong standard<br>Run by (2024/25): Ark Schools","va_shrunk_all":-1.697,"va_shrunk_disadvantaged":-2.9523,"va_shrunk_non_disadvantaged":-0.7186,"va_shrunk_girls":-0.9826,"va_shrunk_boys":-2.334,"v1_all":-1.9129,"att8":42.4,"fsm":32.1,"ks2_c":4.1,"absence":8.95,"mobile":2.7,"l4":26.3129,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Strong standard"},{"SCHNAME":"Bexhill High Academy","lon":0.4552,"lat":50.8552,"pupils":1454,"tip":"<b>Bexhill High Academy<\/b> (Rother)<br>Value added v2: all -1.9, disadvantaged -2.4, girls -2.3, boys -1.3<br>Value added v1 (published): -1.6<br>Attainment 8 41.6, FSM 33%, absence 8.9%<br>Ofsted latest: No overall grade (May 2025): quality of education Good<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-1.8604,"va_shrunk_disadvantaged":-2.3737,"va_shrunk_non_disadvantaged":-1.5488,"va_shrunk_girls":-2.2735,"va_shrunk_boys":-1.2522,"v1_all":-1.6438,"att8":41.6,"fsm":33,"ks2_c":4.7,"absence":8.88,"mobile":3.8,"l4":26.8753,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"Willingdon Community School","lon":0.2407,"lat":50.8116,"pupils":1093,"tip":"<b>Willingdon Community School<\/b> (Wealden)<br>Value added v2: all -1.9, disadvantaged -2.9, girls -2.6, boys -1.0<br>Value added v1 (published): -2.3<br>Attainment 8 45.0, FSM 18%, absence 7.4%<br>Ofsted latest: Remains Good (Jun 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.8925,"va_shrunk_disadvantaged":-2.9097,"va_shrunk_non_disadvantaged":-1.5769,"va_shrunk_girls":-2.5901,"va_shrunk_boys":-1.0347,"v1_all":-2.2516,"att8":45,"fsm":18.2,"ks2_c":4.8,"absence":7.37,"mobile":2.5,"l4":26.3962,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Robertsbridge Community College","lon":0.462,"lat":50.9861,"pupils":733,"tip":"<b>Robertsbridge Community College<\/b> (Rother)<br>Value added v2: all -2.1, disadvantaged -0.7, girls -0.1, boys -3.4<br>Value added v1 (published): -1.3<br>Attainment 8 40.2, FSM 26%, absence 12.3%<br>Ofsted latest: Inadequate (Apr 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-2.1462,"va_shrunk_disadvantaged":-0.7032,"va_shrunk_non_disadvantaged":-2.7946,"va_shrunk_girls":-0.058,"va_shrunk_boys":-3.3863,"v1_all":-1.2925,"att8":40.2,"fsm":26,"ks2_c":6.6,"absence":12.32,"mobile":10.3,"l4":35.1279,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Gildredge House","lon":0.269,"lat":50.7695,"pupils":1168,"tip":"<b>Gildredge House<\/b> (Eastbourne)<br>Value added v2: all -2.4, disadvantaged -5.5, girls -3.6, boys -1.1<br>Value added v1 (published): -2.1<br>Attainment 8 46.6, FSM 22%, absence 6.3%<br>Ofsted latest: No overall grade (Oct 2024): quality of education Good<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-2.3827,"va_shrunk_disadvantaged":-5.5068,"va_shrunk_non_disadvantaged":-1.4793,"va_shrunk_girls":-3.6017,"va_shrunk_boys":-1.0616,"v1_all":-2.1141,"att8":46.6,"fsm":22.3,"ks2_c":4.1,"absence":6.35,"mobile":6.8,"l4":36.7502,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"The Hastings Academy","lon":0.6148,"lat":50.8805,"pupils":808,"tip":"<b>The Hastings Academy<\/b> (Hastings)<br>Value added v2: all -2.9, disadvantaged -2.0, girls -2.7, boys -2.5<br>Value added v1 (published): -3.5<br>Attainment 8 38.0, FSM 34%, absence 10.2%<br>Ofsted latest: Report card (Jan 2026): achievement Needs attention, curriculum and teaching Expected standard<br>Run by (2024/25): University of Brighton Academies Trust","va_shrunk_all":-2.8592,"va_shrunk_disadvantaged":-1.9671,"va_shrunk_non_disadvantaged":-2.3085,"va_shrunk_girls":-2.6852,"va_shrunk_boys":-2.4719,"v1_all":-3.5121,"att8":38,"fsm":33.8,"ks2_c":4.4,"absence":10.24,"mobile":8.8,"l4":29.3392,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Needs attention"},{"SCHNAME":"Hailsham Community College","lon":0.2559,"lat":50.8663,"pupils":1615,"tip":"<b>Hailsham Community College<\/b> (Wealden)<br>Value added v2: all -3.3, disadvantaged -3.2, girls -3.2, boys -3.3<br>Value added v1 (published): -2.5<br>Attainment 8 35.4, FSM 26%, absence 10.0%<br>Ofsted latest: Inadequate (Mar 2023)<br>Run by (2024/25): Academy, trust not recorded","va_shrunk_all":-3.302,"va_shrunk_disadvantaged":-3.2171,"va_shrunk_non_disadvantaged":-3.6487,"va_shrunk_girls":-3.1818,"va_shrunk_boys":-3.2846,"v1_all":-2.5353,"att8":35.4,"fsm":25.5,"ks2_c":2.8,"absence":10.04,"mobile":3.8,"l4":25.4484,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"The St Leonards Academy","lon":0.5339,"lat":50.8573,"pupils":1322,"tip":"<b>The St Leonards Academy<\/b> (Hastings)<br>Value added v2: all -5.5, disadvantaged -5.2, girls -5.6, boys -4.7<br>Value added v1 (published): -5.3<br>Attainment 8 33.1, FSM 39%, absence 11.1%<br>Ofsted latest: No overall grade (Jan 2025): quality of education Inadequate<br>Run by (2024/25): University of Brighton Academies Trust","va_shrunk_all":-5.4722,"va_shrunk_disadvantaged":-5.2037,"va_shrunk_non_disadvantaged":-4.6815,"va_shrunk_girls":-5.5875,"va_shrunk_boys":-4.7218,"v1_all":-5.3078,"att8":33.1,"fsm":39.3,"ks2_c":2.7,"absence":11.1,"mobile":7,"l4":28.4041,"gov":"Multi-academy trust, sponsored","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
-<p>Each school coloured by Value Added v2.0 for all pupils (choose another measure from the menu). Circle size is the school’s roll; hover for every group’s value added, the published v1 figure, and Ofsted.</p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-va" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="east_sussex_files/figure-html/fig-va-1.png" class="img-fluid figure-img" width="972">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Each school’s Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-gb" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="east_sussex_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk.
-</figcaption>
-</figure>
-</div>
+<div id="htmlwidget-b684fca811fb1593e665" style="width:100%;height:374px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b684fca811fb1593e665">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[0.339200663555106,0.310001677741741,0.266410952319476,0.260355755024803,0.209966414954202,0.20982317648327,0.216419303137371,0.233877609327566,0.227722839634515,0.245877996801349,0.258804521819086,0.267350514506759,0.276900346944744,0.289414548084779,0.339200663555106],"lat":[50.7990560682182,50.7766843325662,50.7432318987171,50.7385798209278,50.7384858720271,50.7385342101675,50.7747197053076,50.7954152216043,50.8008717398551,50.8054892310664,50.7993756189042,50.8105620426303,50.8047664446665,50.8130639012093,50.7990560682182]}]],[[{"lng":[0.65792155011398,0.645773323728388,0.5248726222353201,0.502771650799913,0.508573338553853,0.521188998821682,0.519897089615978,0.53695003209693,0.603722187482836,0.620897942218763,0.65792155011398],"lat":[50.8697584816614,50.8667481319542,50.8452211645608,50.8425137278528,50.8508696516726,50.8517435590174,50.8771884687461,50.8948246021293,50.8785656220813,50.884184339299,50.8697584816614]}]],[[{"lng":[0.149983559854032,0.148939334951743,0.121967265897583,0.1069477214802,0.0683542962557273,0.0595460086957589,0.0583360841416422,0.0583519359338695,0.0558055595737416,0.0577942848772261,0.0337330452782453,-0.0149577234926783,-0.0384766634233576,-0.0160023583696679,-0.02042837615218,-0.0459683931136427,-0.0368600534958184,-0.0734523413829599,-0.08492763424304429,-0.09751926362199451,-0.12179965145279,-0.135279339082157,-0.135004643104498,-0.119788174827145,-0.104207686196339,-0.115147503567339,-0.0736194177331807,-0.0615918410922555,-0.0246042590087526,-0.0163504990982534,0.00383575755450229,0.0111529720260843,0.0273550821828603,0.038956754299803,0.0536959017819025,0.0482299035890433,0.0573042911212614,0.121913595707189,0.091881452118935,0.0984976573399234,0.11458534956577,0.127270405087256,0.09793380595902811,0.119229803475203,0.143685958735401,0.149983559854032],"lat":[50.758704281008,50.7590558328119,50.7583042969194,50.7639367046569,50.7818192921581,50.7816913365409,50.7821441041508,50.7816739411115,50.7816368028859,50.7760767866365,50.7818297072258,50.7934519659899,50.7990565193982,50.8148750643628,50.8218303547022,50.8218246608082,50.8411732461155,50.8412145625525,50.8731196285537,50.8779454244635,50.8734281543555,50.8780983575218,50.8866504956811,50.9422851177541,50.9464681224634,50.9761166833068,50.9916752625057,50.9784204152431,50.9800251733024,51.0024963848289,50.9936082103596,50.977588472179,50.980907867108,50.9666041528457,50.9676652882829,50.9465116142727,50.9260708001773,50.9152809823868,50.8849473988944,50.8699934606811,50.8706860771558,50.8567836656353,50.8203197546112,50.7942342996234,50.7927675579582,50.758704281008]}]],[[{"lng":[0.605390823945922,0.661399802568737,0.676955919326293,0.706770603419155,0.74061137766967,0.7789567049721809,0.777134928696756,0.784327858018418,0.812941746895733,0.841401377893081,0.855967970123694,0.867891381774926,0.8547052876079529,0.844462311257057,0.772008514930815,0.774905803197715,0.759065635329044,0.758684275808103,0.758455358840504,0.729731338646439,0.65857681641057,0.65792155011398,0.620897942218763,0.603722187482836,0.53695003209693,0.519897089615978,0.521188998821682,0.508573338553853,0.502771650799913,0.500712476210745,0.377817833812518,0.37541342272816,0.441196831362921,0.449085367631327,0.435503334595761,0.416084010052589,0.379053948874133,0.367896482111999,0.374302835573211,0.35776195415492,0.366797455394097,0.342689856803908,0.335932708623537,0.343584189463465,0.324024938278467,0.321585740673585,0.328658782105634,0.354012040310152,0.346599966421665,0.361353436327948,0.395772076313833,0.396496475173542,0.418266860755534,0.463267138803114,0.472319209676434,0.537568517875719,0.5417197606759649,0.570801043736655,0.605390823945922],"lat":[51.0120699748884,51.0177718605919,51.0032987849983,50.9936018222235,51.0006767077396,50.9894920242148,50.9754283490881,50.9772296862947,50.9419995743143,50.9576088277997,50.9531286056838,50.9332622947202,50.9239435833678,50.9248519212637,50.9312500094122,50.9273356672682,50.9224589246449,50.9223934837748,50.9222709741153,50.9134192560575,50.8699208100169,50.8697584816614,50.884184339299,50.8785656220813,50.8948246021293,50.8771884687461,50.8517435590174,50.8508696516726,50.8425137278528,50.8422612216686,50.8204117877254,50.8406045063904,50.8678297592527,50.8789513119326,50.8938987052304,50.8969114008603,50.8835359053039,50.8879521744983,50.8983928166642,50.9173026341051,50.9329577519134,50.9394409150915,50.9530437333312,50.9591466317135,50.9629210981029,50.9966843427025,51.0128817929601,51.017527978175,51.0240996276742,51.0652765586671,51.0739134327331,51.0831316875627,51.0626269704324,51.0547870164556,51.030436087866,51.0216392169297,51.0111085114966,51.003482315489,51.0120699748884]}]],[[{"lng":[0.160718236048252,0.151187333045437,0.171472727638366,0.226255230233864,0.244577828429569,0.275613215976201,0.274874930408996,0.32516510810618,0.335077206061616,0.358976559646714,0.350831195947389,0.373840828926189,0.396496475173542,0.395772076313833,0.361353436327948,0.346599966421665,0.354012040310152,0.328658782105634,0.321585740673585,0.324024938278467,0.343584189463465,0.335932708623537,0.342689856803908,0.366797455394097,0.35776195415492,0.374302835573211,0.367896482111999,0.379053948874133,0.416084010052589,0.435503334595761,0.449085367631327,0.441196831362921,0.37541342272816,0.377817833812518,0.377491650431505,0.339307150730746,0.339200663555106,0.289414548084779,0.276900346944744,0.267350514506759,0.258804521819086,0.245877996801349,0.227722839634515,0.233877609327566,0.216419303137371,0.20982317648327,0.155531852840607,0.149983559854032,0.143685958735401,0.119229803475203,0.09793380595902811,0.127270405087256,0.11458534956577,0.0984976573399234,0.091881452118935,0.121913595707189,0.0573042911212614,0.0482299035890433,0.0536959017819025,0.038956754299803,0.0273550821828603,0.0111529720260843,0.00383575755450229,-0.0163504990982534,-0.0218747081717486,-0.00156549234049123,-0.00300172769009489,0.0137406414730299,-0.00854815740438445,-0.0132566088248517,-0.0268520992180162,-0.036213376436162,0.0105434061785564,0.00950504621663548,0.0185609090480791,0.0445094045788558,0.0281472617745816,0.0273600610344932,0.0500165286936347,0.133117086399998,0.160718236048252],"lat":[51.1373289183326,51.1238205523104,51.1154149017039,51.1244861151575,51.1148342403232,51.1122985162925,51.120651771133,51.1229560786704,51.1054658900485,51.1045306536867,51.0840559147529,51.0884605021197,51.0831316875627,51.0739134327331,51.0652765586671,51.0240996276742,51.017527978175,51.0128817929601,50.9966843427025,50.9629210981029,50.9591466317135,50.9530437333312,50.9394409150915,50.9329577519134,50.9173026341051,50.8983928166642,50.8879521744983,50.8835359053039,50.8969114008603,50.8938987052304,50.8789513119326,50.8678297592527,50.8406045063904,50.8204117877254,50.8203535951709,50.7991376029796,50.7990560682182,50.8130639012093,50.8047664446665,50.8105620426303,50.7993756189042,50.8054892310664,50.8008717398551,50.7954152216043,50.7747197053076,50.7385342101675,50.7568361316885,50.758704281008,50.7927675579582,50.7942342996234,50.8203197546112,50.8567836656353,50.8706860771558,50.8699934606811,50.8849473988944,50.9152809823868,50.9260708001773,50.9465116142727,50.9676652882829,50.9666041528457,50.980907867108,50.977588472179,50.9936082103596,51.0024963848289,51.0265033539165,51.0357549868715,51.0475643226305,51.0569963600632,51.0564579871026,51.0739671019924,51.0751128703829,51.0934295225111,51.1021625577146,51.1103919555841,51.1035920015529,51.1106132994909,51.1177116859783,51.1398479920559,51.142650015856,51.147278518653,51.1373289183326]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,["Eastbourne","Hastings","Lewes","Rother","Wealden"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[[50.7757020189369,50.8682533068078,50.8815228782081,50.94752165382275,50.9429762646821],[0.2629848104003158,0.5860990948448299,-0.02088637469356751,0.5735662478917587,0.1953665267249388],{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Eastbourne","Hastings","Lewes","Rother","Wealden"],{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[50.7384858720271,51.147278518653],"lng":[-0.135279339082157,0.867891381774926]},"fitBounds":[50.7384858720271,-0.135279339082157,51.147278518653,0.867891381774926,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Priory School","lon":0.0162,"lat":50.8691,"pupils":1163,"tip":"<b>Priory School<\/b> (Lewes)<br>Value added v2: all +5.0, disadvantaged -1.7, girls +4.7, boys +5.0<br>Value added v1 (published): +5.0<br>Attainment 8 46.3, FSM 21%, absence 12.1% (+1.3 pp against intake)<br>Ofsted latest: Remains Good (Nov 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":5.0266,"va_shrunk_disadvantaged":-1.6755,"va_shrunk_non_disadvantaged":5.9704,"va_shrunk_girls":4.7171,"va_shrunk_boys":4.996,"v1_all":4.989,"abs_excess":1.3262,"att8":46.3,"fsm":20.9,"ks2_c":5.3,"absence":12.07,"mobile":3.6,"l4":40.0485,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Beacon Academy","lon":0.172,"lat":51.0555,"pupils":1662,"tip":"<b>Beacon Academy<\/b> (Wealden)<br>Value added v2: all +4.3, disadvantaged +4.7, girls +4.4, boys +3.8<br>Value added v1 (published): +3.0<br>Attainment 8 50.2, FSM 16%, absence 9.1% (+0.9 pp against intake)<br>Ofsted latest: Outstanding (Apr 2024)<br>Run by (2024/25): Mark Education Trust","va_shrunk_all":4.2665,"va_shrunk_disadvantaged":4.723,"va_shrunk_non_disadvantaged":3.4214,"va_shrunk_girls":4.3617,"va_shrunk_boys":3.7854,"v1_all":2.9679,"abs_excess":0.9248,"att8":50.2,"fsm":15.5,"ks2_c":4.7,"absence":9.09,"mobile":3.2,"l4":37.3935,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"King's Academy Ringmer","lon":0.0672,"lat":50.8955,"pupils":642,"tip":"<b>King's Academy Ringmer<\/b> (Lewes)<br>Value added v2: all +3.6, disadvantaged +4.2, girls +2.7, boys +3.8<br>Value added v1 (published): +5.3<br>Attainment 8 47.5, FSM 24%, absence 10.0% (-1.3 pp against intake)<br>Ofsted latest: Standards maintained (Nov 2024, ungraded visit)<br>Run by (2024/25): King's Group Academies","va_shrunk_all":3.6437,"va_shrunk_disadvantaged":4.2098,"va_shrunk_non_disadvantaged":3.0225,"va_shrunk_girls":2.7302,"va_shrunk_boys":3.8205,"v1_all":5.3352,"abs_excess":-1.299,"att8":47.5,"fsm":24.2,"ks2_c":2.7,"absence":9.99,"mobile":2,"l4":41.907,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"St Richard's Catholic College","lon":0.4887,"lat":50.8431,"pupils":1033,"tip":"<b>St Richard's Catholic College<\/b> (Rother)<br>Value added v2: all +3.5, disadvantaged +1.5, girls +3.7, boys +2.5<br>Value added v1 (published): +3.9<br>Attainment 8 58.4, FSM 16%, absence 5.7% (-1.7 pp against intake)<br>Ofsted latest: Good (Oct 2021)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":3.5481,"va_shrunk_disadvantaged":1.4664,"va_shrunk_non_disadvantaged":3.7101,"va_shrunk_girls":3.7079,"va_shrunk_boys":2.5274,"v1_all":3.9106,"abs_excess":-1.7356,"att8":58.4,"fsm":16.3,"ks2_c":6.1,"absence":5.66,"mobile":1,"l4":25.7764,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Seahaven Academy","lon":0.0408,"lat":50.7872,"pupils":745,"tip":"<b>Seahaven Academy<\/b> (Lewes)<br>Value added v2: all +3.3, disadvantaged +2.7, girls +1.4, boys +4.9<br>Value added v1 (published): +3.1<br>Attainment 8 40.2, FSM 30%, absence 12.6% (+3.1 pp against intake)<br>Ofsted latest: Report card (Nov 2025): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): United Learning Trust","va_shrunk_all":3.3423,"va_shrunk_disadvantaged":2.7148,"va_shrunk_non_disadvantaged":2.9115,"va_shrunk_girls":1.3548,"va_shrunk_boys":4.8617,"v1_all":3.0578,"abs_excess":3.1188,"att8":40.2,"fsm":30.2,"ks2_c":1.7,"absence":12.64,"mobile":4.3,"l4":26.5764,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Expected standard"},{"SCHNAME":"Uckfield College","lon":0.1023,"lat":50.9745,"pupils":1602,"tip":"<b>Uckfield College<\/b> (Wealden)<br>Value added v2: all +3.0, disadvantaged -0.6, girls +3.0, boys +2.9<br>Value added v1 (published): +1.4<br>Attainment 8 46.9, FSM 14%, absence 10.6% (+1.6 pp against intake)<br>Ofsted latest: Outstanding (Apr 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":3.0368,"va_shrunk_disadvantaged":-0.6009,"va_shrunk_non_disadvantaged":2.9411,"va_shrunk_girls":3.0033,"va_shrunk_boys":2.8762,"v1_all":1.3587,"abs_excess":1.6446,"att8":46.9,"fsm":13.9,"ks2_c":4.8,"absence":10.59,"mobile":5,"l4":35.2687,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Seaford Head School","lon":0.1179,"lat":50.7708,"pupils":1448,"tip":"<b>Seaford Head School<\/b> (Lewes)<br>Value added v2: all +2.8, disadvantaged +1.7, girls +1.7, boys +3.4<br>Value added v1 (published): +0.6<br>Attainment 8 49.4, FSM 14%, absence 8.6% (-0.3 pp against intake)<br>Ofsted latest: Remains Outstanding (Nov 2023, ungraded visit)<br>Run by (2024/25): Seaford Learning Trust","va_shrunk_all":2.8177,"va_shrunk_disadvantaged":1.6841,"va_shrunk_non_disadvantaged":2.3234,"va_shrunk_girls":1.6618,"va_shrunk_boys":3.3572,"v1_all":0.5721,"abs_excess":-0.3451,"att8":49.4,"fsm":14.2,"ks2_c":3.9,"absence":8.63,"mobile":3.9,"l4":29.8935,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Heathfield Community College","lon":0.2781,"lat":50.9669,"pupils":1437,"tip":"<b>Heathfield Community College<\/b> (Wealden)<br>Value added v2: all +2.1, disadvantaged +4.7, girls +1.0, boys +2.7<br>Value added v1 (published): +2.2<br>Attainment 8 50.5, FSM 18%, absence 10.5% (+0.9 pp against intake)<br>Ofsted latest: Good (May 2023)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":2.0623,"va_shrunk_disadvantaged":4.6565,"va_shrunk_non_disadvantaged":1.0971,"va_shrunk_girls":1.0416,"va_shrunk_boys":2.6879,"v1_all":2.1666,"abs_excess":0.919,"att8":50.5,"fsm":17.7,"ks2_c":4.7,"absence":10.48,"mobile":1.7,"l4":33.9583,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"St Catherine's College","lon":0.3173,"lat":50.7986,"pupils":1072,"tip":"<b>St Catherine's College<\/b> (Eastbourne)<br>Value added v2: all +1.4, disadvantaged +2.1, girls +0.9, boys +1.8<br>Value added v1 (published): +1.3<br>Attainment 8 47.4, FSM 22%, absence 8.7% (+0.7 pp against intake)<br>Ofsted latest: Good (Nov 2019); Standards maintained (May 2025)<br>Run by (2024/25): Diocese of Chichester Academy Trust","va_shrunk_all":1.4444,"va_shrunk_disadvantaged":2.124,"va_shrunk_non_disadvantaged":0.7429,"va_shrunk_girls":0.8848,"va_shrunk_boys":1.7778,"v1_all":1.2614,"abs_excess":0.6785,"att8":47.4,"fsm":21.9,"ks2_c":4.8,"absence":8.69,"mobile":2.3,"l4":23.5557,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Claverham Community College","lon":0.467,"lat":50.9159,"pupils":1148,"tip":"<b>Claverham Community College<\/b> (Rother)<br>Value added v2: all +1.2, disadvantaged +0.6, girls +0.9, boys +1.4<br>Value added v1 (published): +1.0<br>Attainment 8 50.2, FSM 22%, absence 7.2% (-1.8 pp against intake)<br>Ofsted latest: Remains Good (Improving) (Apr 2024, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":1.2075,"va_shrunk_disadvantaged":0.5818,"va_shrunk_non_disadvantaged":1.4689,"va_shrunk_girls":0.904,"va_shrunk_boys":1.4368,"v1_all":1.0369,"abs_excess":-1.84,"att8":50.2,"fsm":21.6,"ks2_c":4.8,"absence":7.16,"mobile":3.2,"l4":26.5401,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Peacehaven Community School","lon":0.003,"lat":50.7961,"pupils":903,"tip":"<b>Peacehaven Community School<\/b> (Lewes)<br>Value added v2: all +1.2, disadvantaged -1.3, girls +0.4, boys +1.4<br>Value added v1 (published): +0.6<br>Attainment 8 39.7, FSM 29%, absence 11.2% (-0.9 pp against intake)<br>Ofsted latest: Good (Oct 2023)<br>Run by (2024/25): Swale Academies Trust","va_shrunk_all":1.1517,"va_shrunk_disadvantaged":-1.3148,"va_shrunk_non_disadvantaged":1.9403,"va_shrunk_girls":0.437,"va_shrunk_boys":1.3606,"v1_all":0.5813,"abs_excess":-0.8935,"att8":39.7,"fsm":28.7,"ks2_c":-0.1,"absence":11.24,"mobile":4,"l4":28.8435,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Ratton School","lon":0.2595,"lat":50.791,"pupils":1197,"tip":"<b>Ratton School<\/b> (Eastbourne)<br>Value added v2: all -0.4, disadvantaged -2.2, girls +0.6, boys -1.2<br>Value added v1 (published): -0.7<br>Attainment 8 42.9, FSM 23%, absence 9.1% (-1.1 pp against intake)<br>Ofsted latest: Report card (May 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): South Downs Learning Trust","va_shrunk_all":-0.4077,"va_shrunk_disadvantaged":-2.1796,"va_shrunk_non_disadvantaged":-0.4354,"va_shrunk_girls":0.6099,"va_shrunk_boys":-1.1893,"v1_all":-0.6816,"abs_excess":-1.0756,"att8":42.9,"fsm":23.3,"ks2_c":2.4,"absence":9.11,"mobile":3.8,"l4":30.9559,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Expected standard"},{"SCHNAME":"Rye College","lon":0.7317,"lat":50.9551,"pupils":616,"tip":"<b>Rye College<\/b> (Rother)<br>Value added v2: all -0.6, disadvantaged -2.1, girls -1.1, boys -0.1<br>Value added v1 (published): -1.6<br>Attainment 8 36.7, FSM 31%, absence 12.9% (+2.4 pp against intake)<br>Ofsted latest: Good (Jan 2023)<br>Run by (2024/25): Aquinas Church of England Education Trust","va_shrunk_all":-0.6441,"va_shrunk_disadvantaged":-2.0691,"va_shrunk_non_disadvantaged":0.093,"va_shrunk_girls":-1.1136,"va_shrunk_boys":-0.07,"v1_all":-1.5726,"abs_excess":2.3655,"att8":36.7,"fsm":31.1,"ks2_c":3.7,"absence":12.9,"mobile":5.8,"l4":27.7619,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Uplands Academy","lon":0.3402,"lat":51.0603,"pupils":736,"tip":"<b>Uplands Academy<\/b> (Wealden)<br>Value added v2: all -0.8, disadvantaged +2.2, girls +0.2, boys -1.7<br>Value added v1 (published): -0.9<br>Attainment 8 42.5, FSM 29%, absence 9.0% (+0.3 pp against intake)<br>Ofsted latest: Standards maintained (Jan 2025, ungraded visit)<br>Run by (2024/25): Mark Education Trust","va_shrunk_all":-0.7617,"va_shrunk_disadvantaged":2.2483,"va_shrunk_non_disadvantaged":-1.7417,"va_shrunk_girls":0.2205,"va_shrunk_boys":-1.7427,"v1_all":-0.8894,"abs_excess":0.2512,"att8":42.5,"fsm":29.4,"ks2_c":4.6,"absence":9.04,"mobile":6.7,"l4":43.4976,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Eastbourne Academy","lon":0.2689,"lat":50.8017,"pupils":800,"tip":"<b>The Eastbourne Academy<\/b> (Eastbourne)<br>Value added v2: all -0.9, disadvantaged -0.3, girls -1.0, boys -0.6<br>Value added v1 (published): -0.0<br>Attainment 8 37.7, FSM 42%, absence 10.8% (+0.7 pp against intake)<br>Ofsted latest: No overall grade (Jan 2025): quality of education Inadequate<br>Run by (2024/25): Swale Academies Trust","va_shrunk_all":-0.9392,"va_shrunk_disadvantaged":-0.3491,"va_shrunk_non_disadvantaged":-1.1108,"va_shrunk_girls":-0.9665,"va_shrunk_boys":-0.5886,"v1_all":-0.0268,"abs_excess":0.6855,"att8":37.7,"fsm":41.9,"ks2_c":-0.1,"absence":10.85,"mobile":6.2,"l4":26.3454,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"Chailey School","lon":-0.0269,"lat":50.9392,"pupils":855,"tip":"<b>Chailey School<\/b> (Lewes)<br>Value added v2: all -1.0, disadvantaged -4.2, girls -3.1, boys +0.8<br>Value added v1 (published): -1.1<br>Attainment 8 49.2, FSM 11%, absence 6.8% (-1.4 pp against intake)<br>Ofsted latest: Report card (Feb 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.0363,"va_shrunk_disadvantaged":-4.2268,"va_shrunk_non_disadvantaged":-0.7616,"va_shrunk_girls":-3.146,"va_shrunk_boys":0.759,"v1_all":-1.1442,"abs_excess":-1.3836,"att8":49.2,"fsm":10.7,"ks2_c":5.6,"absence":6.85,"mobile":4.2,"l4":40.6018,"gov":"Maintained","ofsted_rc":"Expected standard"},{"SCHNAME":"The Cavendish School","lon":0.2606,"lat":50.7804,"pupils":1372,"tip":"<b>The Cavendish School<\/b> (Eastbourne)<br>Value added v2: all -1.1, disadvantaged +0.2, girls -0.1, boys -1.8<br>Value added v1 (published): +0.3<br>Attainment 8 47.2, FSM 26%, absence 6.4% (-2.9 pp against intake)<br>Ofsted latest: No overall grade (Jan 2025): quality of education Outstanding<br>Run by (2024/25): Cavendish Education Trust","va_shrunk_all":-1.078,"va_shrunk_disadvantaged":0.2423,"va_shrunk_non_disadvantaged":-1.3718,"va_shrunk_girls":-0.0884,"va_shrunk_boys":-1.8229,"v1_all":0.2847,"abs_excess":-2.8703,"att8":47.2,"fsm":25.9,"ks2_c":4.1,"absence":6.4,"mobile":0.6,"l4":35.5553,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Turing School","lon":0.2905,"lat":50.8076,"pupils":765,"tip":"<b>The Turing School<\/b> (Eastbourne)<br>Value added v2: all -1.5, disadvantaged -2.5, girls -1.1, boys -1.7<br>Value added v1 (published): -0.9<br>Attainment 8 34.5, FSM 45%, absence 15.0% (+2.8 pp against intake)<br>Ofsted latest: Report card (Feb 2026): achievement Needs attention, curriculum and teaching Needs attention<br>Run by (2024/25): Swale Academies Trust","va_shrunk_all":-1.483,"va_shrunk_disadvantaged":-2.5476,"va_shrunk_non_disadvantaged":0.1886,"va_shrunk_girls":-1.0519,"va_shrunk_boys":-1.7426,"v1_all":-0.9218,"abs_excess":2.7695,"att8":34.5,"fsm":44.8,"ks2_c":0.7,"absence":15.03,"mobile":10.4,"l4":22.6434,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Needs attention"},{"SCHNAME":"Ark Alexandra Academy","lon":0.5688,"lat":50.8761,"pupils":1431,"tip":"<b>Ark Alexandra Academy<\/b> (Hastings)<br>Value added v2: all -1.7, disadvantaged -3.0, girls -1.0, boys -2.3<br>Value added v1 (published): -1.9<br>Attainment 8 42.4, FSM 32%, absence 8.9% (+0.2 pp against intake)<br>Ofsted latest: Report card (Jun 2026): achievement Strong standard, curriculum and teaching Strong standard<br>Run by (2024/25): Ark Schools","va_shrunk_all":-1.697,"va_shrunk_disadvantaged":-2.9523,"va_shrunk_non_disadvantaged":-0.7186,"va_shrunk_girls":-0.9826,"va_shrunk_boys":-2.334,"v1_all":-1.9129,"abs_excess":0.2369,"att8":42.4,"fsm":32.1,"ks2_c":4.1,"absence":8.95,"mobile":2.7,"l4":26.3129,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Strong standard"},{"SCHNAME":"Bexhill High Academy","lon":0.4552,"lat":50.8552,"pupils":1454,"tip":"<b>Bexhill High Academy<\/b> (Rother)<br>Value added v2: all -1.9, disadvantaged -2.4, girls -2.3, boys -1.3<br>Value added v1 (published): -1.6<br>Attainment 8 41.6, FSM 33%, absence 8.9% (+0.4 pp against intake)<br>Ofsted latest: No overall grade (May 2025): quality of education Good<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-1.8604,"va_shrunk_disadvantaged":-2.3737,"va_shrunk_non_disadvantaged":-1.5488,"va_shrunk_girls":-2.2735,"va_shrunk_boys":-1.2522,"v1_all":-1.6438,"abs_excess":0.398,"att8":41.6,"fsm":33,"ks2_c":4.7,"absence":8.88,"mobile":3.8,"l4":26.8753,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"Willingdon Community School","lon":0.2407,"lat":50.8116,"pupils":1093,"tip":"<b>Willingdon Community School<\/b> (Wealden)<br>Value added v2: all -1.9, disadvantaged -2.9, girls -2.6, boys -1.0<br>Value added v1 (published): -2.3<br>Attainment 8 45.0, FSM 18%, absence 7.4% (-2.2 pp against intake)<br>Ofsted latest: Remains Good (Jun 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.8925,"va_shrunk_disadvantaged":-2.9097,"va_shrunk_non_disadvantaged":-1.5769,"va_shrunk_girls":-2.5901,"va_shrunk_boys":-1.0347,"v1_all":-2.2516,"abs_excess":-2.1985,"att8":45,"fsm":18.2,"ks2_c":4.8,"absence":7.37,"mobile":2.5,"l4":26.3962,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Robertsbridge Community College","lon":0.462,"lat":50.9861,"pupils":733,"tip":"<b>Robertsbridge Community College<\/b> (Rother)<br>Value added v2: all -2.1, disadvantaged -0.7, girls -0.1, boys -3.4<br>Value added v1 (published): -1.3<br>Attainment 8 40.2, FSM 26%, absence 12.3% (+0.7 pp against intake)<br>Ofsted latest: Inadequate (Apr 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-2.1462,"va_shrunk_disadvantaged":-0.7032,"va_shrunk_non_disadvantaged":-2.7946,"va_shrunk_girls":-0.058,"va_shrunk_boys":-3.3863,"v1_all":-1.2925,"abs_excess":0.7071,"att8":40.2,"fsm":26,"ks2_c":6.6,"absence":12.32,"mobile":10.3,"l4":35.1279,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Gildredge House","lon":0.269,"lat":50.7695,"pupils":1168,"tip":"<b>Gildredge House<\/b> (Eastbourne)<br>Value added v2: all -2.4, disadvantaged -5.5, girls -3.6, boys -1.1<br>Value added v1 (published): -2.1<br>Attainment 8 46.6, FSM 22%, absence 6.3% (-2.4 pp against intake)<br>Ofsted latest: No overall grade (Oct 2024): quality of education Good<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-2.3827,"va_shrunk_disadvantaged":-5.5068,"va_shrunk_non_disadvantaged":-1.4793,"va_shrunk_girls":-3.6017,"va_shrunk_boys":-1.0616,"v1_all":-2.1141,"abs_excess":-2.3992,"att8":46.6,"fsm":22.3,"ks2_c":4.1,"absence":6.35,"mobile":6.8,"l4":36.7502,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"The Hastings Academy","lon":0.6148,"lat":50.8805,"pupils":808,"tip":"<b>The Hastings Academy<\/b> (Hastings)<br>Value added v2: all -2.9, disadvantaged -2.0, girls -2.7, boys -2.5<br>Value added v1 (published): -3.5<br>Attainment 8 38.0, FSM 34%, absence 10.2% (+3.3 pp against intake)<br>Ofsted latest: Report card (Jan 2026): achievement Needs attention, curriculum and teaching Expected standard<br>Run by (2024/25): University of Brighton Academies Trust","va_shrunk_all":-2.8592,"va_shrunk_disadvantaged":-1.9671,"va_shrunk_non_disadvantaged":-2.3085,"va_shrunk_girls":-2.6852,"va_shrunk_boys":-2.4719,"v1_all":-3.5121,"abs_excess":3.3357,"att8":38,"fsm":33.8,"ks2_c":4.4,"absence":10.24,"mobile":8.8,"l4":29.3392,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Needs attention"},{"SCHNAME":"Hailsham Community College","lon":0.2559,"lat":50.8663,"pupils":1615,"tip":"<b>Hailsham Community College<\/b> (Wealden)<br>Value added v2: all -3.3, disadvantaged -3.2, girls -3.2, boys -3.3<br>Value added v1 (published): -2.5<br>Attainment 8 35.4, FSM 26%, absence 10.0% (+0.9 pp against intake)<br>Ofsted latest: Inadequate (Mar 2023)<br>Run by (2024/25): Academy, trust not recorded","va_shrunk_all":-3.302,"va_shrunk_disadvantaged":-3.2171,"va_shrunk_non_disadvantaged":-3.6487,"va_shrunk_girls":-3.1818,"va_shrunk_boys":-3.2846,"v1_all":-2.5353,"abs_excess":0.9457,"att8":35.4,"fsm":25.5,"ks2_c":2.8,"absence":10.04,"mobile":3.8,"l4":25.4484,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"The St Leonards Academy","lon":0.5339,"lat":50.8573,"pupils":1322,"tip":"<b>The St Leonards Academy<\/b> (Hastings)<br>Value added v2: all -5.5, disadvantaged -5.2, girls -5.6, boys -4.7<br>Value added v1 (published): -5.3<br>Attainment 8 33.1, FSM 39%, absence 11.1% (+3.8 pp against intake)<br>Ofsted latest: No overall grade (Jan 2025): quality of education Inadequate<br>Run by (2024/25): University of Brighton Academies Trust","va_shrunk_all":-5.4722,"va_shrunk_disadvantaged":-5.2037,"va_shrunk_non_disadvantaged":-4.6815,"va_shrunk_girls":-5.5875,"va_shrunk_boys":-4.7218,"v1_all":-5.3078,"abs_excess":3.7969,"att8":33.1,"fsm":39.3,"ks2_c":2.7,"absence":11.1,"mobile":7,"l4":28.4041,"gov":"Multi-academy trust, sponsored","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"abs_excess","label":"Absence above or below what the intake predicts, 2021/22 to 2024/25","group":"Attendance","scale":"div","good":"low","dp":1,"unit":" pp"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
+<p>Each school coloured by Value Added v2.0 for all pupils; choose another measure, including absence against intake, from the menu. Circle size is the school’s roll; hover for every group’s value added, absence against intake, the published v1 figure, and Ofsted.</p>
 </div>
 </div>
 <div class="cell">
 <div id="tbl-schools" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 points with 95% interval for all pupils; v1 is the published measure, within the authority. Ofsted is the latest judgement as at 30 September 2026.
+Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, and the latest Ofsted judgement as at 30 September 2026.
 </figcaption>
 <div aria-describedby="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -300,6 +288,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence vs intake</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">v1</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Ofsted latest</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Run by (2024/25)</th>
@@ -314,6 +303,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+6.0</td>
 <td style="text-align: right;">+4.7</td>
 <td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+1.3</td>
 <td style="text-align: right;">+5.0</td>
 <td style="text-align: left;">Remains Good (Nov 2023, ungraded visit)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -326,6 +316,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+3.4</td>
 <td style="text-align: right;">+4.4</td>
 <td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+0.9</td>
 <td style="text-align: right;">+3.0</td>
 <td style="text-align: left;">Outstanding (Apr 2024)</td>
 <td style="text-align: left;">Mark Education Trust</td>
@@ -338,6 +329,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+3.0</td>
 <td style="text-align: right;">+2.7</td>
 <td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">-1.3</td>
 <td style="text-align: right;">+5.3</td>
 <td style="text-align: left;">Standards maintained (Nov 2024, ungraded visit)</td>
 <td style="text-align: left;">King's Group Academies</td>
@@ -350,6 +342,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+3.7</td>
 <td style="text-align: right;">+3.7</td>
 <td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">-1.7</td>
 <td style="text-align: right;">+3.9</td>
 <td style="text-align: left;">Good (Oct 2021)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -363,6 +356,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+1.4</td>
 <td style="text-align: right;">+4.9</td>
 <td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+3.1</td>
 <td style="text-align: left;">Report card (Nov 2025): achievement Expected standard, curriculum and teaching Expected standard</td>
 <td style="text-align: left;">United Learning Trust</td>
 </tr>
@@ -374,6 +368,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+2.9</td>
 <td style="text-align: right;">+3.0</td>
 <td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+1.6</td>
 <td style="text-align: right;">+1.4</td>
 <td style="text-align: left;">Outstanding (Apr 2024)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -386,6 +381,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+2.3</td>
 <td style="text-align: right;">+1.7</td>
 <td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">-0.3</td>
 <td style="text-align: right;">+0.6</td>
 <td style="text-align: left;">Remains Outstanding (Nov 2023, ungraded visit)</td>
 <td style="text-align: left;">Seaford Learning Trust</td>
@@ -398,6 +394,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+1.1</td>
 <td style="text-align: right;">+1.0</td>
 <td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+0.9</td>
 <td style="text-align: right;">+2.2</td>
 <td style="text-align: left;">Good (May 2023)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -410,6 +407,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">+0.9</td>
 <td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">+1.3</td>
 <td style="text-align: left;">Good (Nov 2019); Standards maintained (May 2025)</td>
 <td style="text-align: left;">Diocese of Chichester Academy Trust</td>
@@ -422,6 +420,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+1.5</td>
 <td style="text-align: right;">+0.9</td>
 <td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.8</td>
 <td style="text-align: right;">+1.0</td>
 <td style="text-align: left;">Remains Good (Improving) (Apr 2024, ungraded visit)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -434,6 +433,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+1.9</td>
 <td style="text-align: right;">+0.4</td>
 <td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-0.9</td>
 <td style="text-align: right;">+0.6</td>
 <td style="text-align: left;">Good (Oct 2023)</td>
 <td style="text-align: left;">Swale Academies Trust</td>
@@ -446,6 +446,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-0.4</td>
 <td style="text-align: right;">+0.6</td>
 <td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-1.1</td>
 <td style="text-align: right;">-0.7</td>
 <td style="text-align: left;">Report card (May 2026): achievement Expected standard, curriculum and teaching Expected standard</td>
 <td style="text-align: left;">South Downs Learning Trust</td>
@@ -458,6 +459,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+0.1</td>
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">+2.4</td>
 <td style="text-align: right;">-1.6</td>
 <td style="text-align: left;">Good (Jan 2023)</td>
 <td style="text-align: left;">Aquinas Church of England Education Trust</td>
@@ -470,6 +472,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-1.7</td>
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">+0.3</td>
 <td style="text-align: right;">-0.9</td>
 <td style="text-align: left;">Standards maintained (Jan 2025, ungraded visit)</td>
 <td style="text-align: left;">Mark Education Trust</td>
@@ -482,6 +485,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: right;">-1.0</td>
 <td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">-0.0</td>
 <td style="text-align: left;">No overall grade (Jan 2025): quality of education Inadequate</td>
 <td style="text-align: left;">Swale Academies Trust</td>
@@ -494,6 +498,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-0.8</td>
 <td style="text-align: right;">-3.1</td>
 <td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-1.4</td>
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: left;">Report card (Feb 2026): achievement Expected standard, curriculum and teaching Expected standard</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -506,6 +511,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-1.4</td>
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-2.9</td>
 <td style="text-align: right;">+0.3</td>
 <td style="text-align: left;">No overall grade (Jan 2025): quality of education Outstanding</td>
 <td style="text-align: left;">Cavendish Education Trust</td>
@@ -518,6 +524,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">+2.8</td>
 <td style="text-align: right;">-0.9</td>
 <td style="text-align: left;">Report card (Feb 2026): achievement Needs attention, curriculum and teaching Needs attention</td>
 <td style="text-align: left;">Swale Academies Trust</td>
@@ -530,6 +537,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-0.7</td>
 <td style="text-align: right;">-1.0</td>
 <td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">-1.9</td>
 <td style="text-align: left;">Report card (Jun 2026): achievement Strong standard, curriculum and teaching Strong standard</td>
 <td style="text-align: left;">Ark Schools</td>
@@ -542,6 +550,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-1.5</td>
 <td style="text-align: right;">-2.3</td>
 <td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">+0.4</td>
 <td style="text-align: right;">-1.6</td>
 <td style="text-align: left;">No overall grade (May 2025): quality of education Good</td>
 <td style="text-align: left;">Single-academy trust</td>
@@ -554,6 +563,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-1.6</td>
 <td style="text-align: right;">-2.6</td>
 <td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-2.2</td>
 <td style="text-align: right;">-2.3</td>
 <td style="text-align: left;">Remains Good (Jun 2023, ungraded visit)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -566,6 +576,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-2.8</td>
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">-1.3</td>
 <td style="text-align: left;">Inadequate (Apr 2024)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -578,6 +589,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-1.5</td>
 <td style="text-align: right;">-3.6</td>
 <td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-2.4</td>
 <td style="text-align: right;">-2.1</td>
 <td style="text-align: left;">No overall grade (Oct 2024): quality of education Good</td>
 <td style="text-align: left;">Single-academy trust</td>
@@ -590,6 +602,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-2.3</td>
 <td style="text-align: right;">-2.7</td>
 <td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">+3.3</td>
 <td style="text-align: right;">-3.5</td>
 <td style="text-align: left;">Report card (Jan 2026): achievement Needs attention, curriculum and teaching Expected standard</td>
 <td style="text-align: left;">University of Brighton Academies Trust</td>
@@ -602,6 +615,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-3.6</td>
 <td style="text-align: right;">-3.2</td>
 <td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">+0.9</td>
 <td style="text-align: right;">-2.5</td>
 <td style="text-align: left;">Inadequate (Mar 2023)</td>
 <td style="text-align: left;">Academy, trust not recorded</td>
@@ -614,6 +628,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-4.7</td>
 <td style="text-align: right;">-5.6</td>
 <td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">+3.8</td>
 <td style="text-align: right;">-5.3</td>
 <td style="text-align: left;">No overall grade (Jan 2025): quality of education Inadequate</td>
 <td style="text-align: left;">University of Brighton Academies Trust</td>
@@ -625,9 +640,139 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 </figure>
 </div>
 </div>
+<section id="who-runs-them" class="level2">
+<h2 class="anchored" data-anchor-id="who-runs-them">Who runs them</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-governance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-governance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-governance-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-governance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Who ran each school in 2024/25, and its Value Added v2.0 for all pupils. Each panel is a governing body; the shape is how the school came to be run that way.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="what-explains-the-areas-results" class="level1">
-<h1>What explains the area’s results</h1>
+</section>
+<section id="how-east-sussex-compares" class="level1">
+<h1>How East Sussex compares</h1>
+<div class="cell">
+<div id="tbl-profile" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: East Sussex against West Sussex and Brighton and Hove and England, 2024/25. Means of school-level figures; ranks among all local authorities (1 = highest). Value added and absence against intake are v2.0, 2021/22 to 2024/25.
+</figcaption>
+<div aria-describedby="tbl-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">East Sussex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">West Sussex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Brighton and Hove</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">England</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Attainment 8, all pupils</td>
+<td style="text-align: right;">43.8 (120th)</td>
+<td style="text-align: right;">46.4</td>
+<td style="text-align: right;">45.5</td>
+<td style="text-align: right;">46.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Attainment 8, disadvantaged</td>
+<td style="text-align: right;">33.0 (135th)</td>
+<td style="text-align: right;">33.5</td>
+<td style="text-align: right;">33.9</td>
+<td style="text-align: right;">37.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Attainment 8, non-disadvantaged</td>
+<td style="text-align: right;">47.5 (118th)</td>
+<td style="text-align: right;">48.9</td>
+<td style="text-align: right;">49.6</td>
+<td style="text-align: right;">49.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantage gap (points)</td>
+<td style="text-align: right;">14.5 (29th)</td>
+<td style="text-align: right;">15.4</td>
+<td style="text-align: right;">15.7</td>
+<td style="text-align: right;">12.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged (FSM6) %</td>
+<td style="text-align: right;">25.5 (89th)</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">28.8</td>
+<td style="text-align: right;">28.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Overall absence %</td>
+<td style="text-align: right;">9.7 (27th)</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">8.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Persistent absence %</td>
+<td style="text-align: right;">26.4 (31st)</td>
+<td style="text-align: right;">23.9</td>
+<td style="text-align: right;">30.6</td>
+<td style="text-align: right;">23.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mean KS2 (centred)</td>
+<td style="text-align: right;">3.79 (112th)</td>
+<td style="text-align: right;">4.26</td>
+<td style="text-align: right;">4.71</td>
+<td style="text-align: right;">4.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EAL %</td>
+<td style="text-align: right;">6.3 (130th)</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">18.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Value added v2.0, all pupils</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Value added v2.0, disadvantaged</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Absence against intake (pp)</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="what-explains-attainment-in-east-sussex" class="level1">
+<h1>What explains attainment in East Sussex</h1>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-decomp" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -636,20 +781,151 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <img src="east_sussex_files/figure-html/fig-decomp-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all school-years, on the v2.0 model. Approximate Attainment 8 points; the pieces sum to each panel’s gap. ‘Unexplained (school)’ is the schools’ own residual, before shrinkage and net of the authority and region effects, so it differs from the value added above.
+Figure&nbsp;2: Why average Attainment 8 differs from England’s, by factor, all school-years, on the v2.0 model, for East Sussex, West Sussex and Brighton and Hove. Approximate Attainment 8 points; the pieces sum to each panel’s gap. ‘Unexplained (school)’ is the schools’ own residual, before shrinkage and net of the authority and region effects.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>For all pupils, East Sussex’s two largest pieces are absence (-1.2) and prior attainment (KS2) (-0.9), and its schools themselves account for +0.1 points. For disadvantaged pupils the two largest are absence (-1.4) and region (-1.2), and the schools +0.0.</p>
-</section>
-<section id="districts" class="level1">
-<h1>Districts</h1>
-<div class="cell" data-tbl-cap="Mean Value Added v2.0 by district, Attainment 8 points against England.">
+<div class="cell">
+<div id="tbl-decomp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: The decomposition for East Sussex, Attainment 8 points.
+</figcaption>
+<div aria-describedby="tbl-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table table-striped table-hover table-condensed caption-top table-sm small">
-<caption>Mean Value Added v2.0 by district, Attainment 8 points against England.</caption>
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Factor</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Absence</td>
+<td style="text-align: right;">-1.22</td>
+<td style="text-align: right;">-1.35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prior attainment (KS2)</td>
+<td style="text-align: right;">-0.86</td>
+<td style="text-align: right;">-0.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">English as an additional language</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">-0.79</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood education</td>
+<td style="text-align: right;">-0.23</td>
+<td style="text-align: right;">-0.06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Single-sex school</td>
+<td style="text-align: right;">-0.15</td>
+<td style="text-align: right;">-0.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Place (region and local authority)</td>
+<td style="text-align: right;">-0.03</td>
+<td style="text-align: right;">-1.05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Special educational needs</td>
+<td style="text-align: right;">-0.03</td>
+<td style="text-align: right;">+0.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pupil mobility</td>
+<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unexplained (school)</td>
+<td style="text-align: right;">+0.07</td>
+<td style="text-align: right;">+0.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantage</td>
+<td style="text-align: right;">+0.07</td>
+<td style="text-align: right;">-0.06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Other model terms</td>
+<td style="text-align: right;">+0.13</td>
+<td style="text-align: right;">-0.27</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>For all pupils</strong>, East Sussex is 2.6 points below England. The pieces of at least a quarter of a point:</p>
+<ul>
+<li>absence (-1.22);</li>
+<li>prior attainment (KS2) (-0.86);</li>
+<li>region (-0.47);</li>
+<li>local authority (+0.43);</li>
+<li>English as an additional language (-0.29);</li>
+<li>and the schools themselves (+0.07).</li>
+</ul>
+<p><strong>For disadvantaged pupils</strong>, East Sussex is 4.2 points below England. The pieces of at least a quarter of a point:</p>
+<ul>
+<li>absence (-1.35);</li>
+<li>region (-1.22);</li>
+<li>English as an additional language (-0.79);</li>
+<li>prior attainment (KS2) (-0.54);</li>
+<li>admissions (selection) (-0.27);</li>
+<li>and the schools themselves (+0.02).</li>
+</ul>
+</section>
+<section id="place-authorities-and-districts" class="level1">
+<h1>Place: authorities and districts</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-la" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-la-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Local authority effects on the v2.0 model, all and disadvantaged pupils, every authority in England with a 95% interval. Sussex’s authorities picked out.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The district test adds a district level to the v2.0 model, with and without each school’s own record. An effect that disappears once schools are counted belongs to particular schools; one that survives is something the district’s schools share.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-districts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-districts-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: District effects over and above each authority’s, on the v2.0 model, with 95% intervals, without and with a school term.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Without each school’s own record: Hastings for all pupils (-4.4%), Lewes for all pupils (+4.9%), Hastings for disadvantaged pupils (-5.4%) and Hastings for absence (+8.5%). With it, none remains: the differences belong to particular schools, not to the districts as places.</p>
+<div class="cell">
+<div id="tbl-districts" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Mean Value Added v2.0 and absence against intake by district (Attainment 8 points; percentage points).
+</figcaption>
+<div aria-describedby="tbl-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">District</th>
@@ -658,6 +934,7 @@ Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all
 <th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence vs intake</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Above / below</th>
 </tr>
 </thead>
@@ -669,6 +946,7 @@ Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all
 <td style="text-align: right;">-1.4</td>
 <td style="text-align: right;">-0.7</td>
 <td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-0.4</td>
 <td style="text-align: right;">0 / 0</td>
 </tr>
 <tr class="even">
@@ -678,6 +956,7 @@ Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all
 <td style="text-align: right;">-3.4</td>
 <td style="text-align: right;">-3.1</td>
 <td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">+2.5</td>
 <td style="text-align: right;">0 / 2</td>
 </tr>
 <tr class="odd">
@@ -687,6 +966,7 @@ Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">+1.3</td>
 <td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+0.1</td>
 <td style="text-align: right;">4 / 0</td>
 </tr>
 <tr class="even">
@@ -696,6 +976,7 @@ Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all
 <td style="text-align: right;">-0.6</td>
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-0.0</td>
 <td style="text-align: right;">1 / 0</td>
 </tr>
 <tr class="odd">
@@ -705,16 +986,2066 @@ Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all
 <td style="text-align: right;">+0.8</td>
 <td style="text-align: right;">+0.5</td>
 <td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+0.4</td>
 <td style="text-align: right;">2 / 1</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+</figure>
+</div>
+</div>
+</section>
+<section id="trusts" class="level1">
+<h1>Trusts</h1>
+<p>The v2.0 model with a multi-academy trust level, allowing for each school’s own record and for how it came to be an academy, so trusts that take on struggling schools are not penalised for it. Nationally a trust moves results by about 2.4%, and absence by about 6.5%.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trusts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trusts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-trusts-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trusts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The v2.0 effect of each trust that ran one of the area’s schools in 2024/25, with 95% intervals; its number of schools in the national data in brackets.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-disadvantaged-gap-and-girls-and-boys" class="level1">
+<h1>The disadvantaged gap, and girls and boys</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-va" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-va-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Each school’s Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The Turing School, Rye College, Priory School and Peacehaven Community School are above expectation for non-disadvantaged pupils and more than a point below it for disadvantaged ones. Beacon Academy, King’s Academy Ringmer, St Richard’s Catholic College, Seahaven Academy, Seaford Head School, Heathfield Community College, St Catherine’s College and Claverham Community College are above expectation for both groups. Girls’ and boys’ value added differ by more than two points at Seahaven Academy (girls +1.4, boys +4.9), Chailey School (girls -3.1, boys +0.8), Robertsbridge Community College (girls -0.1, boys -3.4) and Gildredge House (girls -3.6, boys -1.1).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-gb" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="absence" class="level1">
+<h1>Absence</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-abs-series" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-abs-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-abs-series-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-abs-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Overall absence, autumn and spring terms, 2016/17 to 2025/26. Sessions-weighted; 2019/20 not collected.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>8.9% absence</strong> in autumn and spring 2025/26 (9.2% a year earlier), against 8.0% for England.</li>
+<li><strong>Against its intake</strong>, on the v2.0 intake terms, the area’s schools ran 0.31 points above what their pupils’ profiles predict over 2021/22 to 2024/25 (West Sussex -0.27 and Brighton and Hove +1.64).</li>
+<li><strong>The St Leonards Academy, The Hastings Academy, Seahaven Academy, The Turing School, Rye College, Uckfield College and Priory School</strong> each run more than a point above their predictions.</li>
+<li><strong>The Cavendish School, Gildredge House, Willingdon Community School, Claverham Community College, St Richard’s Catholic College, Chailey School, King’s Academy Ringmer and Ratton School</strong> run more than a point below.</li>
+</ul>
+<div class="cell">
+<div id="tbl-absence" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Each school’s absence against what its intake predicts (v2.0 intake terms, mean 2021/22 to 2024/25), and its reasons in autumn and spring 2025/26 (percentage of sessions).
+</figcaption>
+<div aria-describedby="tbl-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Predicted by intake %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above prediction</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Illness</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Unauthorised</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Reduced timetable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Suspended</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">14.2</td>
+<td style="text-align: right;">10.4</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">2.7</td>
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.09</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">11.6</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">13.9</td>
+<td style="text-align: right;">10.7</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.69</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">14.3</td>
+<td style="text-align: right;">11.6</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">5.3</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">10.9</td>
+<td style="text-align: right;">9.5</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">0.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">4.2</td>
+<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">0.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">10.6</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">5.5</td>
+<td style="text-align: right;">2.4</td>
+<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">0.45</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">12.2</td>
+<td style="text-align: right;">11.5</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">1.22</td>
+<td style="text-align: right;">1.28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">4.2</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">10.6</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">9.9</td>
+<td style="text-align: right;">9.7</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">4.1</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">10.5</td>
+<td style="text-align: right;">10.3</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">8.4</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">10.5</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">9.7</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.55</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">7.4</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">7.3</td>
+<td style="text-align: right;">9.2</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.1</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.02</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-reasons" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-reasons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-reasons-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reasons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Absence by register reason, autumn and spring 2025/26, percentage of possible sessions. The ten largest reasons nationally.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Suspensions</strong> were 28.0 episodes per 100 pupils in 2024/25, against 21.2 for England. One pupil can be suspended several times: 8.8 pupils per 100 were suspended at least once, about 3.2 times each, against 7.3 per 100 and 2.9 times in England. Reduced timetables take 0.39% of sessions, 1.3 times England’s rate.</p>
+<div class="cell">
+<div id="tbl-susp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-susp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Suspension episodes and pupils suspended at least once, per 100 pupils, and permanent exclusions, by school, 2024/25.
+</figcaption>
+<div aria-describedby="tbl-susp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Suspension episodes per 100</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils suspended per 100</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Permanent exclusions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">808</td>
+<td style="text-align: right;">89.9</td>
+<td style="text-align: right;">20.4</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">1431</td>
+<td style="text-align: right;">74.7</td>
+<td style="text-align: right;">19.8</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">1322</td>
+<td style="text-align: right;">73.7</td>
+<td style="text-align: right;">19.4</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">736</td>
+<td style="text-align: right;">53.4</td>
+<td style="text-align: right;">14.7</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">800</td>
+<td style="text-align: right;">48.9</td>
+<td style="text-align: right;">13.8</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">745</td>
+<td style="text-align: right;">47.9</td>
+<td style="text-align: right;">13.6</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">1072</td>
+<td style="text-align: right;">44.1</td>
+<td style="text-align: right;">12.2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">765</td>
+<td style="text-align: right;">34.0</td>
+<td style="text-align: right;">9.9</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">642</td>
+<td style="text-align: right;">32.7</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">616</td>
+<td style="text-align: right;">29.1</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">1602</td>
+<td style="text-align: right;">26.8</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">1454</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">1197</td>
+<td style="text-align: right;">22.9</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">1163</td>
+<td style="text-align: right;">22.5</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">1615</td>
+<td style="text-align: right;">19.4</td>
+<td style="text-align: right;">8.5</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">1093</td>
+<td style="text-align: right;">17.3</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">1148</td>
+<td style="text-align: right;">16.7</td>
+<td style="text-align: right;">7.1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">1437</td>
+<td style="text-align: right;">14.9</td>
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">1662</td>
+<td style="text-align: right;">14.5</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">903</td>
+<td style="text-align: right;">13.8</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">855</td>
+<td style="text-align: right;">12.2</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">1033</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">5.5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">1372</td>
+<td style="text-align: right;">7.8</td>
+<td style="text-align: right;">2.8</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">1168</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">1448</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">733</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-scenario" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-scenario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7: Predicted Attainment 8 gain if each school’s absence fell to England’s school average (8.6%, 2024/25), on the v2.0 absence coefficients. Indicative only.
+</figcaption>
+<div aria-describedby="tbl-scenario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gain, all pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gain, disadvantaged</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+4.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">12.1</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">12.6</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+4.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">12.9</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+3.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">12.3</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+3.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">11.2</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+2.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">10.5</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+3.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">10.6</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">10.8</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">11.1</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+1.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">9.1</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">9.1</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+0.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+0.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">+0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+0.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="school-by-school" class="level1">
+<h1>School by school</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-plane" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plane-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="east_sussex_files/figure-html/fig-plane-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plane-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: absence above or below what its intake predicts, and Value Added v2.0 with attendance counted in (the model without its absence term). The area’s schools are named. Grey: every school in England.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Across England the two signals move together: schools whose absence runs below what their intake predicts tend to add more. Across East Sussex’s schools the correlation between the two is -0.61 (-0.54 across England).</p>
+</section>
+<section id="contextual-league-tables" class="level1">
+<h1>Contextual league tables</h1>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">All pupils</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Disadvantaged</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Non-disadvantaged</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Girls</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Boys</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">+6.3</td>
+<td style="text-align: right;">+5.2</td>
+<td style="text-align: right;">+8.1</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+2.4 to +7.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">+5.1</td>
+<td style="text-align: right;">+5.3</td>
+<td style="text-align: right;">+5.3</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">+1.6 to +7.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+1.2 to +6.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">+6.2</td>
+<td style="text-align: right;">+4.2</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+4.2</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+0.5 to +6.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">+6.1</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+1.2 to +5.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">+6.9</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+0.4 to +5.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+4.5</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+0.2 to +5.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">-5.8</td>
+<td style="text-align: right;">+5.7</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-0.5 to +4.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.0 to +4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">-1.4 to +3.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">-0.9 to +3.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-2.7 to +2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-2.6 to +1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-3.1 to +1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-2.8 to +1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-3.6 to +1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-3.6 to +1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-3.2 to +0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-3.8 to +0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-3.9 to +0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-4.1</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-4.4 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-6.7</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-4.3 to +0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-4.8 to +0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-4.4</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-4.7 to -1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-5.7</td>
+<td style="text-align: right;">-6.1</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-5.3 to -1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-7.2</td>
+<td style="text-align: right;">-6.5</td>
+<td style="text-align: right;">-5.5</td>
+<td style="text-align: right;">-7.2 to -3.7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, disadvantaged pupils. Small groups: read across years.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, disadvantaged pupils. Small groups: read across years.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">+7.5</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+11.0</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+1.6 to +8.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">-7.8</td>
+<td style="text-align: right;">+10.4</td>
+<td style="text-align: right;">+8.6</td>
+<td style="text-align: right;">+14.0</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+1.6 to +8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+9.4</td>
+<td style="text-align: right;">+9.4</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+4.2</td>
+<td style="text-align: right;">+1.4 to +7.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+4.8</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+0.2 to +5.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">+9.6</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">-0.6 to +5.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">+7.8</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-0.9 to +5.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">+5.7</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-1.3 to +4.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-2.1 to +5.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">+4.6</td>
+<td style="text-align: right;">-3.8</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-2.5 to +3.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-3.0 to +3.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-2.7 to +2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">+4.6</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">-8.9</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-3.3 to +2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-3.2 to +2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-4.9</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-3.6 to +1.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-6.3</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-4.2 to +1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-3.9</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-4.1 to +0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-4.3 to +0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-4.9 to +0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-5.4</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-4.8 to +0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-4.4</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-4.6 to -0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">-7.2</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">-8.6</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-5.7 to +0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-5.5</td>
+<td style="text-align: right;">-5.6</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-3.0</td>
+<td style="text-align: right;">-5.4 to -0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">-5.9</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-5.2</td>
+<td style="text-align: right;">-4.6</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-5.4 to -0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">-6.3</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-11.0</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-6.8 to -1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">-7.9</td>
+<td style="text-align: right;">-7.6</td>
+<td style="text-align: right;">-5.6</td>
+<td style="text-align: right;">-6.0</td>
+<td style="text-align: right;">-5.2</td>
+<td style="text-align: right;">-7.2 to -3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">-10.9</td>
+<td style="text-align: right;">-10.2</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-5.5</td>
+<td style="text-align: right;">-8.2 to -2.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, non-disadvantaged pupils.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, non-disadvantaged pupils.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">+7.6</td>
+<td style="text-align: right;">+6.2</td>
+<td style="text-align: right;">+9.0</td>
+<td style="text-align: right;">+4.5</td>
+<td style="text-align: right;">+6.0</td>
+<td style="text-align: right;">+3.6 to +8.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">+6.9</td>
+<td style="text-align: right;">+4.5</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+4.9</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+1.1 to +6.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">+5.4</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+1.1 to +5.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+6.4</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+0.9 to +5.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">+6.7</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+0.6 to +5.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">+7.3</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+1.0 to +4.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+0.1 to +4.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+4.0</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+0.0 to +3.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-0.8 to +3.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">+4.8</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">-1.1 to +3.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-1.4 to +3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">-5.9</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">+7.3</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-1.6 to +2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-1.8 to +2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-2.5 to +1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-2.7 to +1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-3.1 to +1.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-5.1</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-2.8 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-3.6 to +1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-3.7 to +0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-3.5 to +0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-3.8 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-4.1</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-3.8 to +0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-4.0 to -0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-7.5</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-4.7 to -0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-6.4</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-5.4 to -1.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">-6.0</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-7.1</td>
+<td style="text-align: right;">-5.8</td>
+<td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">-6.3 to -3.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, girls.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, girls.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">+6.3</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+7.7</td>
+<td style="text-align: right;">+4.2</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+1.8 to +7.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">+4.9</td>
+<td style="text-align: right;">+7.2</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">+1.3 to +7.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">+7.2</td>
+<td style="text-align: right;">+6.7</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+0.3 to +7.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">+8.6</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+4.6</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+0.0 to +6.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+0.0 to +5.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-1.2 to +4.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.0 to +3.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">-7.5</td>
+<td style="text-align: right;">+5.2</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+4.6</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-1.9 to +4.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-2.0 to +4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-1.9 to +3.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-2.1 to +3.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-1.9 to +2.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-2.5 to +3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">-5.2</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-2.6 to +2.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-3.1 to +3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-4.1</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-3.1 to +1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-3.4 to +1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-3.1 to +1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-3.0</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-3.4 to +1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-4.1</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-4.6 to +0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-4.4</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">-5.4 to +0.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-4.4</td>
+<td style="text-align: right;">-3.8</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-4.8 to -0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">-5.4</td>
+<td style="text-align: right;">-5.6</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">-5.6</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-6.0 to -0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-5.1</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-5.4 to -0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">-6.3</td>
+<td style="text-align: right;">-4.8</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-6.3 to -0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">-7.9</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-8.6</td>
+<td style="text-align: right;">-7.7</td>
+<td style="text-align: right;">-5.6</td>
+<td style="text-align: right;">-7.5 to -3.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, boys.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, boys.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: right;">+6.5</td>
+<td style="text-align: right;">+6.8</td>
+<td style="text-align: right;">+8.3</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+1.8 to +8.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: right;">+7.6</td>
+<td style="text-align: right;">+7.6</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+4.6</td>
+<td style="text-align: right;">+4.9</td>
+<td style="text-align: right;">+2.2 to +7.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: right;">+5.9</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+4.9</td>
+<td style="text-align: right;">+6.0</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+0.9 to +7.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: right;">+5.5</td>
+<td style="text-align: right;">+5.8</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+0.6 to +7.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+8.2</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+0.2 to +6.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: right;">+5.4</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">-0.3 to +6.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: right;">-4.6</td>
+<td style="text-align: right;">+6.0</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+5.2</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">-0.5 to +6.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">+5.8</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">-1.0 to +6.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: right;">+6.5</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">-1.2 to +4.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.7 to +4.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+5.5</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.1 to +4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">+4.8</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-2.5 to +4.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-2.5 to +2.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-2.8 to +1.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-4.0 to +2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-4.1 to +2.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-3.9 to +1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-3.8 to +1.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-3.8 to +0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-3.8</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-4.5 to +1.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-4.9 to +1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-3.8</td>
+<td style="text-align: right;">-3.9</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-4.8 to +0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-4.4</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-4.7 to -0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-9.5</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-5.6 to -0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: right;">-3.8</td>
+<td style="text-align: right;">-7.4</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-5.9 to -0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: right;">-5.9</td>
+<td style="text-align: right;">-6.1</td>
+<td style="text-align: right;">-5.7</td>
+<td style="text-align: right;">-5.1</td>
+<td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">-6.8 to -2.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="questions-for-discussion" class="level1">
+<h1>Questions for discussion</h1>
+<ol type="1">
+<li><strong>Disadvantaged pupils.</strong> Their value added averages -0.6 points across East Sussex’s schools against +0.2 for other pupils. What do Beacon Academy, Heathfield Community College and King’s Academy Ringmer, above expectation for them, do that others could share?</li>
+<li><strong>Attendance is a lever here.</strong> Absence costs 1.2 points against England, and the area’s schools run 0.3 points above what their intakes predict.</li>
+<li><strong>Schools, not the place.</strong> No district effect survives each school’s own record on v2.0: the differences that matter are between schools.</li>
+<li><strong>Practice.</strong> In East Sussex, suspension episodes run at 1.3 times the national rate. These are choices made within schools.</li>
+<li><strong>The authority.</strong> East Sussex’s own v2.0 effect for disadvantaged pupils is +0.5% (66th of 151), not distinguishable from zero.</li>
+</ol>
 </section>
 <section id="notes-on-method" class="level1 unnumbered">
 <h1 class="unnumbered">Notes on method</h1>
-<p>Value added v2.0 is described on <a href="../method.html">the method page</a>. School districts come from each school’s postcode. The decomposition splits each area’s mean log Attainment 8 against England’s into one piece per model term, exactly, and converts to points at England’s mean. This page is generated from <code>templates/area.qmd</code> by <code>R/03_area_pages.R</code>.</p>
+<p>Value Added v2.0 is described on <a href="../method.html">the method page</a>. The absence-against-intake measure, the district test, the trust analysis, the attendance-counted-in value added and the scenarios are refitted on the v2.0 specification by <code>R/04_place_and_absence.R</code>. The absence series, reasons and suspensions are the original project’s (<code>R/17_area_analysis.R</code>). School districts come from each school’s postcode. The decomposition splits each area’s mean log Attainment 8 against England’s into one piece per model term, exactly, and converts to points at England’s mean. This page is generated from <code>templates/area.qmd</code> by <code>R/03_area_pages.R</code>; the format is recorded in <code>AREA_REPORTS.md</code>.</p>
 
 
 </section>

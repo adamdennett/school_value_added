@@ -148,6 +148,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../areas/west_sussex.html">
  <span class="dropdown-text">West Sussex</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -185,8 +189,19 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
-  <li><a href="#the-schools" id="toc-the-schools" class="nav-link" data-scroll-target="#the-schools">The schools</a></li>
-  <li><a href="#what-explains-the-areas-results" id="toc-what-explains-the-areas-results" class="nav-link" data-scroll-target="#what-explains-the-areas-results">What explains the area’s results</a></li>
+  <li><a href="#the-schools" id="toc-the-schools" class="nav-link" data-scroll-target="#the-schools">The schools</a>
+  <ul class="collapse">
+  <li><a href="#who-runs-them" id="toc-who-runs-them" class="nav-link" data-scroll-target="#who-runs-them">Who runs them</a></li>
+  </ul></li>
+  <li><a href="#how-horsham-compares" id="toc-how-horsham-compares" class="nav-link" data-scroll-target="#how-horsham-compares">How Horsham compares</a></li>
+  <li><a href="#what-explains-attainment-in-horsham" id="toc-what-explains-attainment-in-horsham" class="nav-link" data-scroll-target="#what-explains-attainment-in-horsham">What explains attainment in Horsham</a></li>
+  <li><a href="#place-authorities-and-districts" id="toc-place-authorities-and-districts" class="nav-link" data-scroll-target="#place-authorities-and-districts">Place: authorities and districts</a></li>
+  <li><a href="#trusts" id="toc-trusts" class="nav-link" data-scroll-target="#trusts">Trusts</a></li>
+  <li><a href="#the-disadvantaged-gap-and-girls-and-boys" id="toc-the-disadvantaged-gap-and-girls-and-boys" class="nav-link" data-scroll-target="#the-disadvantaged-gap-and-girls-and-boys">The disadvantaged gap, and girls and boys</a></li>
+  <li><a href="#absence" id="toc-absence" class="nav-link" data-scroll-target="#absence">Absence</a></li>
+  <li><a href="#school-by-school" id="toc-school-by-school" class="nav-link" data-scroll-target="#school-by-school">School by school</a></li>
+  <li><a href="#contextual-league-tables" id="toc-contextual-league-tables" class="nav-link" data-scroll-target="#contextual-league-tables">Contextual league tables</a></li>
+  <li><a href="#questions-for-discussion" id="toc-questions-for-discussion" class="nav-link" data-scroll-target="#questions-for-discussion">Questions for discussion</a></li>
   <li><a href="#notes-on-method" id="toc-notes-on-method" class="nav-link" data-scroll-target="#notes-on-method">Notes on method</a></li>
   </ul>
 </nav>
@@ -218,7 +233,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<!-- GENERATED from templates/area.qmd by R/03_area_pages.R. Edit the template, not this file. -->
+<!-- GENERATED from templates/area.qmd by R/03_area_pages.R. Edit the template, not this file. The format is described in AREA_REPORTS.md. -->
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -229,17 +244,18 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Value Added v2.0 for Horsham’s state-funded secondary schools, 2021/22 to 2024/25, measured against England: see <a href="../method.html">the method</a>. The original analysis, with absence, suspensions and trusts in depth, is <a href="https://adamdennett.github.io/school_attainment_tool/district_horsham.html">here</a>. Built from published DfE and Ofsted data; nothing uses pupil-level records.</p>
+<p>Value Added v2.0 for Horsham’s state-funded secondary schools, 2021/22 to 2024/25, measured against England (see <a href="../method.html">the method</a>), with the analyses of the original <a href="https://adamdennett.github.io/school_attainment_tool/district_horsham.html">Sussex document</a> refitted on the v2.0 model. Built from published DfE and Ofsted data; nothing uses pupil-level records.</p>
 </div>
 </div>
 <section id="summary" class="level1 unnumbered">
 <h1 class="unnumbered">Summary</h1>
 <ul>
-<li><strong>6 schools with value added for all pupils averaging +0.4 points</strong> against England: none significantly above significantly above expectation and none below.</li>
-<li><strong>Disadvantaged pupils: -1.6 points; non-disadvantaged pupils: +0.1.</strong></li>
-<li><strong>Girls: +0.9 points; boys: +0.6.</strong></li>
+<li><strong>6 schools, with value added for all pupils averaging +0.4 points against England</strong>: none significantly above expectation and none below.</li>
+<li><strong>Disadvantaged pupils -1.6, non-disadvantaged +0.1; girls +0.9, boys +0.6.</strong></li>
 <li><strong>Strongest: Tanbridge House School (+2.1). Weakest: The Forest School (-1.8).</strong></li>
-<li><strong>Against the published v1 measure</strong>, the area’s schools move by -0.5 points on average (v2 against England minus v1 within the authority).</li>
+<li><strong>Absence runs 0.4 points below what the intake predicts</strong> on average over 2021/22 to 2024/25.</li>
+<li><strong>No district effect can be found</strong> on the v2.0 model.</li>
+<li><strong>Suspensions: 13.6 episodes per 100 pupils (England 21.2); 5.3 pupils per 100 suspended at least once (England 7.3).</strong> Reduced timetables run at 2.6 times the national rate.</li>
 <li><strong>Latest Ofsted:</strong> 1 report card, 1 inspection with no overall grade, 3 graded inspections and 1 ungraded visit only.</li>
 </ul>
 </section>
@@ -247,44 +263,16 @@ ul.task-list li input[type="checkbox"] {
 <h1>The schools</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="htmlwidget-f45217b7e141dfd7a9ae" style="width:100%;height:294px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f45217b7e141dfd7a9ae">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[-0.212074998918325,-0.211841715023835,-0.222753793447392,-0.226757883310084,-0.2191588962465,-0.24693749454031,-0.249081348544969,-0.236638554380843,-0.245296732216148,-0.232015221809748,-0.240869656719023,-0.224759521957669,-0.231962650535538,-0.223741457396218,-0.244154461994183,-0.248659770651226,-0.239238286310074,-0.244970867103618,-0.255303084256952,-0.256579131963737,-0.340900799159014,-0.364597872567908,-0.363896226067984,-0.380064174941901,-0.392697262002647,-0.413160900377152,-0.411683990466897,-0.43035388904012,-0.440083310489553,-0.451502334771634,-0.464939256035887,-0.476586541875026,-0.482977703454624,-0.493116801617838,-0.499918002526275,-0.524791780450509,-0.538178804166781,-0.548874388887642,-0.561114294398945,-0.542964813476796,-0.553103369727624,-0.551488910780269,-0.536969271661823,-0.5560664841928979,-0.5685720090723601,-0.549606040797453,-0.533749334088352,-0.524857296093485,-0.507268466407569,-0.517645475452731,-0.510680386474117,-0.486220867919728,-0.475855112121638,-0.473194275922599,-0.483927399071397,-0.475638537554662,-0.484127197017171,-0.478352212835099,-0.492109150908277,-0.419197682354686,-0.391524793518279,-0.300346786136933,-0.254625028845736,-0.200274263901966,-0.236873003807449,-0.232521955647978,-0.219371621174042,-0.212074998918325],"lat":[51.0866134856262,51.0644829643435,51.0601645974617,51.0415682326607,51.0379219301315,51.033507205938,51.0249473497977,51.0210180286561,51.0123316661642,51.0108472771043,50.9527154339549,50.9484481827557,50.9357906578706,50.9117764567532,50.9073634497127,50.8730707778583,50.8678855958754,50.8638089034715,50.871551452502,50.8623352663962,50.8626233691327,50.8745257735289,50.88847967362,50.8855934491064,50.893305380255,50.8795880473086,50.8865178423069,50.8929814554583,50.8775717892826,50.8954674960465,50.8839878146581,50.8850478486728,50.8991157150674,50.8852631731332,50.8998827892368,50.8829842194156,50.8862228607238,50.8800890027504,50.8878216903971,50.8912162092171,50.9015170620917,50.9132167548438,50.9167536576,50.9234771412879,50.9426025404098,50.9539506205424,50.9502449012333,50.9870384382733,50.9905300560656,50.9985535021341,51.0078176723453,51.0101060802594,51.020957290258,51.0338500038702,51.0409915180555,51.0563778656832,51.0568110042883,51.066467946391,51.094442697917,51.1051906183192,51.1165107854723,51.1247356959145,51.1390994430562,51.1390924653301,51.1094769468914,51.0973777366437,51.0995655549787,51.0866134856262]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,"Horsham",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[51.0031855872397,-0.3736725770165831,{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Horsham",{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[50.8623352663962,51.1390994430562],"lng":[-0.5685720090723601,-0.200274263901966]},"fitBounds":[50.8623352663962,-0.5685720090723601,51.1390994430562,-0.200274263901966,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Tanbridge House School","lon":-0.3511,"lat":51.0647,"pupils":1524,"tip":"<b>Tanbridge House School<\/b> (Horsham)<br>Value added v2: all +2.1, disadvantaged -2.6, girls +1.9, boys +2.1<br>Value added v1 (published): +0.8<br>Attainment 8 54.2, FSM 10%, absence 7.0%<br>Ofsted latest: Outstanding (Jun 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":2.0823,"va_shrunk_disadvantaged":-2.6036,"va_shrunk_non_disadvantaged":2.2229,"va_shrunk_girls":1.9004,"va_shrunk_boys":2.088,"v1_all":0.7754,"att8":54.2,"fsm":9.7,"ks2_c":5.5,"absence":7.01,"mobile":3.7,"l4":38.3934,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Weald School, The","lon":-0.4543,"lat":51.0168,"pupils":1784,"tip":"<b>Weald School, The<\/b> (Horsham)<br>Value added v2: all +1.5, disadvantaged -2.1, girls +2.2, boys +0.6<br>Value added v1 (published): -0.8<br>Attainment 8 47.1, FSM 16%, absence 8.0%<br>Ofsted latest: No overall grade (Oct 2024): quality of education Good<br>Run by (2024/25): Maintained by the council","va_shrunk_all":1.5363,"va_shrunk_disadvantaged":-2.1013,"va_shrunk_non_disadvantaged":1.5518,"va_shrunk_girls":2.1974,"va_shrunk_boys":0.6482,"v1_all":-0.8326,"att8":47.1,"fsm":16.2,"ks2_c":4.8,"absence":7.97,"mobile":6.4,"l4":36.3182,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Steyning Grammar School","lon":-0.3294,"lat":50.8934,"pupils":1944,"tip":"<b>Steyning Grammar School<\/b> (Horsham)<br>Value added v2: all +1.4, disadvantaged -1.4, girls +1.7, boys +0.8<br>Value added v1 (published): +2.9<br>Attainment 8 48.6, FSM 14%, absence 9.3%<br>Ofsted latest: Report card (Mar 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":1.3563,"va_shrunk_disadvantaged":-1.4032,"va_shrunk_non_disadvantaged":0.9825,"va_shrunk_girls":1.6957,"va_shrunk_boys":0.8271,"v1_all":2.9477,"att8":48.6,"fsm":13.6,"ks2_c":3.8,"absence":9.29,"mobile":2.8,"l4":31.223,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Expected standard"},{"SCHNAME":"Millais School","lon":-0.3073,"lat":51.0638,"pupils":1055,"tip":"<b>Millais School<\/b> (Horsham)<br>Value added v2: all +0.7, disadvantaged -1.0, girls +0.5, boys n/a<br>Value added v1 (published): +3.0<br>Attainment 8 51.5, FSM 13%, absence 8.6%<br>Ofsted latest: Good (Sep 2022)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.6977,"va_shrunk_disadvantaged":-1.0191,"va_shrunk_non_disadvantaged":0.1989,"va_shrunk_girls":0.4768,"va_shrunk_boys":null,"v1_all":3.0057,"att8":51.5,"fsm":12.8,"ks2_c":6.4,"absence":8.65,"mobile":3.8,"l4":37.7853,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Bohunt Horsham","lon":-0.2986,"lat":51.0916,"pupils":1121,"tip":"<b>Bohunt Horsham<\/b> (Horsham)<br>Value added v2: all -1.4, disadvantaged -0.9, girls -2.0, boys -0.4<br>Value added v1 (published): -0.9<br>Attainment 8 49.4, FSM 12%, absence 7.3%<br>Ofsted latest: Good (Oct 2023)<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":-1.3933,"va_shrunk_disadvantaged":-0.9048,"va_shrunk_non_disadvantaged":-2.0058,"va_shrunk_girls":-1.9573,"va_shrunk_boys":-0.4443,"v1_all":-0.8533,"att8":49.4,"fsm":12,"ks2_c":6.7,"absence":7.35,"mobile":2.4,"l4":37.6791,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Forest School","lon":-0.3067,"lat":51.0595,"pupils":1095,"tip":"<b>The Forest School<\/b> (Horsham)<br>Value added v2: all -1.8, disadvantaged -1.3, girls n/a, boys -0.3<br>Value added v1 (published): -0.6<br>Attainment 8 46.9, FSM 7%, absence 7.8%<br>Ofsted latest: Remains Good (Jan 2022, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.7567,"va_shrunk_disadvantaged":-1.3084,"va_shrunk_non_disadvantaged":-2.5494,"va_shrunk_girls":null,"va_shrunk_boys":-0.2948,"v1_all":-0.6012,"att8":46.9,"fsm":7.4,"ks2_c":5,"absence":7.79,"mobile":1.5,"l4":37.7649,"gov":"Maintained","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
-<p>Each school coloured by Value Added v2.0 for all pupils (choose another measure from the menu). Circle size is the school’s roll; hover for every group’s value added, the published v1 figure, and Ofsted.</p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-va" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="horsham_files/figure-html/fig-va-1.png" class="img-fluid figure-img" width="972">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Each school’s Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-gb" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="horsham_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk.
-</figcaption>
-</figure>
-</div>
+<div id="htmlwidget-82b2c4562dfb1c3a6a28" style="width:100%;height:294px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-82b2c4562dfb1c3a6a28">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[-0.212074998918325,-0.211841715023835,-0.222753793447392,-0.226757883310084,-0.2191588962465,-0.24693749454031,-0.249081348544969,-0.236638554380843,-0.245296732216148,-0.232015221809748,-0.240869656719023,-0.224759521957669,-0.231962650535538,-0.223741457396218,-0.244154461994183,-0.248659770651226,-0.239238286310074,-0.244970867103618,-0.255303084256952,-0.256579131963737,-0.340900799159014,-0.364597872567908,-0.363896226067984,-0.380064174941901,-0.392697262002647,-0.413160900377152,-0.411683990466897,-0.43035388904012,-0.440083310489553,-0.451502334771634,-0.464939256035887,-0.476586541875026,-0.482977703454624,-0.493116801617838,-0.499918002526275,-0.524791780450509,-0.538178804166781,-0.548874388887642,-0.561114294398945,-0.542964813476796,-0.553103369727624,-0.551488910780269,-0.536969271661823,-0.5560664841928979,-0.5685720090723601,-0.549606040797453,-0.533749334088352,-0.524857296093485,-0.507268466407569,-0.517645475452731,-0.510680386474117,-0.486220867919728,-0.475855112121638,-0.473194275922599,-0.483927399071397,-0.475638537554662,-0.484127197017171,-0.478352212835099,-0.492109150908277,-0.419197682354686,-0.391524793518279,-0.300346786136933,-0.254625028845736,-0.200274263901966,-0.236873003807449,-0.232521955647978,-0.219371621174042,-0.212074998918325],"lat":[51.0866134856262,51.0644829643435,51.0601645974617,51.0415682326607,51.0379219301315,51.033507205938,51.0249473497977,51.0210180286561,51.0123316661642,51.0108472771043,50.9527154339549,50.9484481827557,50.9357906578706,50.9117764567532,50.9073634497127,50.8730707778583,50.8678855958754,50.8638089034715,50.871551452502,50.8623352663962,50.8626233691327,50.8745257735289,50.88847967362,50.8855934491064,50.893305380255,50.8795880473086,50.8865178423069,50.8929814554583,50.8775717892826,50.8954674960465,50.8839878146581,50.8850478486728,50.8991157150674,50.8852631731332,50.8998827892368,50.8829842194156,50.8862228607238,50.8800890027504,50.8878216903971,50.8912162092171,50.9015170620917,50.9132167548438,50.9167536576,50.9234771412879,50.9426025404098,50.9539506205424,50.9502449012333,50.9870384382733,50.9905300560656,50.9985535021341,51.0078176723453,51.0101060802594,51.020957290258,51.0338500038702,51.0409915180555,51.0563778656832,51.0568110042883,51.066467946391,51.094442697917,51.1051906183192,51.1165107854723,51.1247356959145,51.1390994430562,51.1390924653301,51.1094769468914,51.0973777366437,51.0995655549787,51.0866134856262]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,"Horsham",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[51.0031855872397,-0.3736725770165831,{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Horsham",{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[50.8623352663962,51.1390994430562],"lng":[-0.5685720090723601,-0.200274263901966]},"fitBounds":[50.8623352663962,-0.5685720090723601,51.1390994430562,-0.200274263901966,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Tanbridge House School","lon":-0.3511,"lat":51.0647,"pupils":1524,"tip":"<b>Tanbridge House School<\/b> (Horsham)<br>Value added v2: all +2.1, disadvantaged -2.6, girls +1.9, boys +2.1<br>Value added v1 (published): +0.8<br>Attainment 8 54.2, FSM 10%, absence 7.0% (-1.5 pp against intake)<br>Ofsted latest: Outstanding (Jun 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":2.0823,"va_shrunk_disadvantaged":-2.6036,"va_shrunk_non_disadvantaged":2.2229,"va_shrunk_girls":1.9004,"va_shrunk_boys":2.088,"v1_all":0.7754,"abs_excess":-1.5079,"att8":54.2,"fsm":9.7,"ks2_c":5.5,"absence":7.01,"mobile":3.7,"l4":38.3934,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Weald School, The","lon":-0.4543,"lat":51.0168,"pupils":1784,"tip":"<b>Weald School, The<\/b> (Horsham)<br>Value added v2: all +1.5, disadvantaged -2.1, girls +2.2, boys +0.6<br>Value added v1 (published): -0.8<br>Attainment 8 47.1, FSM 16%, absence 8.0% (-1.7 pp against intake)<br>Ofsted latest: No overall grade (Oct 2024): quality of education Good<br>Run by (2024/25): Maintained by the council","va_shrunk_all":1.5363,"va_shrunk_disadvantaged":-2.1013,"va_shrunk_non_disadvantaged":1.5518,"va_shrunk_girls":2.1974,"va_shrunk_boys":0.6482,"v1_all":-0.8326,"abs_excess":-1.6526,"att8":47.1,"fsm":16.2,"ks2_c":4.8,"absence":7.97,"mobile":6.4,"l4":36.3182,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Steyning Grammar School","lon":-0.3294,"lat":50.8934,"pupils":1944,"tip":"<b>Steyning Grammar School<\/b> (Horsham)<br>Value added v2: all +1.4, disadvantaged -1.4, girls +1.7, boys +0.8<br>Value added v1 (published): +2.9<br>Attainment 8 48.6, FSM 14%, absence 9.3% (+0.1 pp against intake)<br>Ofsted latest: Report card (Mar 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":1.3563,"va_shrunk_disadvantaged":-1.4032,"va_shrunk_non_disadvantaged":0.9825,"va_shrunk_girls":1.6957,"va_shrunk_boys":0.8271,"v1_all":2.9477,"abs_excess":0.118,"att8":48.6,"fsm":13.6,"ks2_c":3.8,"absence":9.29,"mobile":2.8,"l4":31.223,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Expected standard"},{"SCHNAME":"Millais School","lon":-0.3073,"lat":51.0638,"pupils":1055,"tip":"<b>Millais School<\/b> (Horsham)<br>Value added v2: all +0.7, disadvantaged -1.0, girls +0.5, boys n/a<br>Value added v1 (published): +3.0<br>Attainment 8 51.5, FSM 13%, absence 8.6% (+0.7 pp against intake)<br>Ofsted latest: Good (Sep 2022)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.6977,"va_shrunk_disadvantaged":-1.0191,"va_shrunk_non_disadvantaged":0.1989,"va_shrunk_girls":0.4768,"va_shrunk_boys":null,"v1_all":3.0057,"abs_excess":0.6599,"att8":51.5,"fsm":12.8,"ks2_c":6.4,"absence":8.65,"mobile":3.8,"l4":37.7853,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Bohunt Horsham","lon":-0.2986,"lat":51.0916,"pupils":1121,"tip":"<b>Bohunt Horsham<\/b> (Horsham)<br>Value added v2: all -1.4, disadvantaged -0.9, girls -2.0, boys -0.4<br>Value added v1 (published): -0.9<br>Attainment 8 49.4, FSM 12%, absence 7.3% (-0.1 pp against intake)<br>Ofsted latest: Good (Oct 2023)<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":-1.3933,"va_shrunk_disadvantaged":-0.9048,"va_shrunk_non_disadvantaged":-2.0058,"va_shrunk_girls":-1.9573,"va_shrunk_boys":-0.4443,"v1_all":-0.8533,"abs_excess":-0.0815,"att8":49.4,"fsm":12,"ks2_c":6.7,"absence":7.35,"mobile":2.4,"l4":37.6791,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Forest School","lon":-0.3067,"lat":51.0595,"pupils":1095,"tip":"<b>The Forest School<\/b> (Horsham)<br>Value added v2: all -1.8, disadvantaged -1.3, girls n/a, boys -0.3<br>Value added v1 (published): -0.6<br>Attainment 8 46.9, FSM 7%, absence 7.8% (+0.3 pp against intake)<br>Ofsted latest: Remains Good (Jan 2022, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.7567,"va_shrunk_disadvantaged":-1.3084,"va_shrunk_non_disadvantaged":-2.5494,"va_shrunk_girls":null,"va_shrunk_boys":-0.2948,"v1_all":-0.6012,"abs_excess":0.3283,"att8":46.9,"fsm":7.4,"ks2_c":5,"absence":7.79,"mobile":1.5,"l4":37.7649,"gov":"Maintained","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"abs_excess","label":"Absence above or below what the intake predicts, 2021/22 to 2024/25","group":"Attendance","scale":"div","good":"low","dp":1,"unit":" pp"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
+<p>Each school coloured by Value Added v2.0 for all pupils; choose another measure, including absence against intake, from the menu. Circle size is the school’s roll; hover for every group’s value added, absence against intake, the published v1 figure, and Ofsted.</p>
 </div>
 </div>
 <div class="cell">
 <div id="tbl-schools" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 points with 95% interval for all pupils; v1 is the published measure, within the authority. Ofsted is the latest judgement as at 30 September 2026.
+Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, and the latest Ofsted judgement as at 30 September 2026.
 </figcaption>
 <div aria-describedby="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -298,6 +286,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence vs intake</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">v1</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Ofsted latest</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Run by (2024/25)</th>
@@ -312,6 +301,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+2.2</td>
 <td style="text-align: right;">+1.9</td>
 <td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-1.5</td>
 <td style="text-align: right;">+0.8</td>
 <td style="text-align: left;">Outstanding (Jun 2024)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -324,6 +314,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+1.6</td>
 <td style="text-align: right;">+2.2</td>
 <td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-1.7</td>
 <td style="text-align: right;">-0.8</td>
 <td style="text-align: left;">No overall grade (Oct 2024): quality of education Good</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -336,6 +327,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+1.0</td>
 <td style="text-align: right;">+1.7</td>
 <td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+0.1</td>
 <td style="text-align: right;">+2.9</td>
 <td style="text-align: left;">Report card (Mar 2026): achievement Expected standard, curriculum and teaching Expected standard</td>
 <td style="text-align: left;">Bohunt Education Trust</td>
@@ -348,6 +340,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">+0.5</td>
 <td style="text-align: right;"></td>
+<td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">+3.0</td>
 <td style="text-align: left;">Good (Sep 2022)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -360,6 +353,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-2.0</td>
 <td style="text-align: right;">-2.0</td>
 <td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-0.9</td>
 <td style="text-align: left;">Good (Oct 2023)</td>
 <td style="text-align: left;">Bohunt Education Trust</td>
@@ -372,6 +366,7 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <td style="text-align: right;">-2.5</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+0.3</td>
 <td style="text-align: right;">-0.6</td>
 <td style="text-align: left;">Remains Good (Jan 2022, ungraded visit)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -383,9 +378,139 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 </figure>
 </div>
 </div>
+<section id="who-runs-them" class="level2">
+<h2 class="anchored" data-anchor-id="who-runs-them">Who runs them</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-governance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-governance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-governance-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-governance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Who ran each school in 2024/25, and its Value Added v2.0 for all pupils. Each panel is a governing body; the shape is how the school came to be run that way.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="what-explains-the-areas-results" class="level1">
-<h1>What explains the area’s results</h1>
+</section>
+<section id="how-horsham-compares" class="level1">
+<h1>How Horsham compares</h1>
+<div class="cell">
+<div id="tbl-profile" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Horsham against West Sussex and Brighton and Hove and England, 2024/25. Means of school-level figures; ranks among England’s districts with five or more schools (1 = highest). Value added and absence against intake are v2.0, 2021/22 to 2024/25.
+</figcaption>
+<div aria-describedby="tbl-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Horsham</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">West Sussex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Brighton and Hove</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">England</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Attainment 8, all pupils</td>
+<td style="text-align: right;">49.6 (58th)</td>
+<td style="text-align: right;">46.4</td>
+<td style="text-align: right;">45.5</td>
+<td style="text-align: right;">46.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Attainment 8, disadvantaged</td>
+<td style="text-align: right;">34.6 (188th)</td>
+<td style="text-align: right;">33.5</td>
+<td style="text-align: right;">33.9</td>
+<td style="text-align: right;">37.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Attainment 8, non-disadvantaged</td>
+<td style="text-align: right;">51.7 (72nd)</td>
+<td style="text-align: right;">48.9</td>
+<td style="text-align: right;">49.6</td>
+<td style="text-align: right;">49.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantage gap (points)</td>
+<td style="text-align: right;">17.1 (16th)</td>
+<td style="text-align: right;">15.4</td>
+<td style="text-align: right;">15.7</td>
+<td style="text-align: right;">12.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged (FSM6) %</td>
+<td style="text-align: right;">11.9 (263rd)</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">28.8</td>
+<td style="text-align: right;">28.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Overall absence %</td>
+<td style="text-align: right;">8.0 (183rd)</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">8.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Persistent absence %</td>
+<td style="text-align: right;">21.7 (185th)</td>
+<td style="text-align: right;">23.9</td>
+<td style="text-align: right;">30.6</td>
+<td style="text-align: right;">23.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mean KS2 (centred)</td>
+<td style="text-align: right;">5.37 (47th)</td>
+<td style="text-align: right;">4.26</td>
+<td style="text-align: right;">4.71</td>
+<td style="text-align: right;">4.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EAL %</td>
+<td style="text-align: right;">6.4 (197th)</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">18.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Value added v2.0, all pupils</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Value added v2.0, disadvantaged</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Absence against intake (pp)</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="what-explains-attainment-in-horsham" class="level1">
+<h1>What explains attainment in Horsham</h1>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-decomp" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -394,17 +519,833 @@ Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 p
 <img src="horsham_files/figure-html/fig-decomp-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all school-years, on the v2.0 model. Approximate Attainment 8 points; the pieces sum to each panel’s gap. ‘Unexplained (school)’ is the schools’ own residual, before shrinkage and net of the authority and region effects, so it differs from the value added above.
+Figure&nbsp;2: Why average Attainment 8 differs from England’s, by factor, all school-years, on the v2.0 model, for Horsham, West Sussex and Brighton and Hove. Approximate Attainment 8 points; the pieces sum to each panel’s gap. ‘Unexplained (school)’ is the schools’ own residual, before shrinkage and net of the authority and region effects.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>For all pupils, Horsham’s two largest pieces are disadvantage (+1.4) and prior attainment (KS2) (+1.0), and its schools themselves account for +0.8 points. For disadvantaged pupils the two largest are region (-1.2) and local authority (-1.0), and the schools +0.1.</p>
+<div class="cell">
+<div id="tbl-decomp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: The decomposition for Horsham, Attainment 8 points.
+</figcaption>
+<div aria-describedby="tbl-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Factor</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Special educational needs</td>
+<td style="text-align: right;">-0.41</td>
+<td style="text-align: right;">-0.07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">-0.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Place (region and local authority)</td>
+<td style="text-align: right;">-0.10</td>
+<td style="text-align: right;">-2.26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other model terms</td>
+<td style="text-align: right;">+0.04</td>
+<td style="text-align: right;">-0.38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pupil mobility</td>
+<td style="text-align: right;">+0.21</td>
+<td style="text-align: right;">+0.19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Single-sex school</td>
+<td style="text-align: right;">+0.28</td>
+<td style="text-align: right;">+0.34</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbourhood education</td>
+<td style="text-align: right;">+0.38</td>
+<td style="text-align: right;">+0.09</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Absence</td>
+<td style="text-align: right;">+0.64</td>
+<td style="text-align: right;">+0.78</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unexplained (school)</td>
+<td style="text-align: right;">+0.77</td>
+<td style="text-align: right;">+0.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prior attainment (KS2)</td>
+<td style="text-align: right;">+1.04</td>
+<td style="text-align: right;">+0.81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantage</td>
+<td style="text-align: right;">+1.40</td>
+<td style="text-align: right;">-0.81</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>For all pupils</strong>, Horsham is 4.0 points above England. The pieces of at least a quarter of a point:</p>
+<ul>
+<li>disadvantage (+1.40);</li>
+<li>prior attainment (KS2) (+1.04);</li>
+<li>absence (+0.64);</li>
+<li>region (-0.47);</li>
+<li>special educational needs (-0.41);</li>
+<li>neighbourhood education (+0.38);</li>
+<li>local authority (+0.37);</li>
+<li>single-sex school (+0.28);</li>
+<li>and the schools themselves (+0.77).</li>
+</ul>
+<p><strong>For disadvantaged pupils</strong>, Horsham is 1.9 points below England. The pieces of at least a quarter of a point:</p>
+<ul>
+<li>region (-1.22);</li>
+<li>local authority (-1.04);</li>
+<li>prior attainment (KS2) (+0.81);</li>
+<li>disadvantage (-0.81);</li>
+<li>absence (+0.78);</li>
+<li>English as an additional language (-0.66);</li>
+<li>single-sex school (+0.34);</li>
+<li>admissions (selection) (-0.27);</li>
+<li>and the schools themselves (+0.10).</li>
+</ul>
+</section>
+<section id="place-authorities-and-districts" class="level1">
+<h1>Place: authorities and districts</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-la" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-la-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Local authority effects on the v2.0 model, all and disadvantaged pupils, every authority in England with a 95% interval. Sussex’s authorities picked out.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The district test adds a district level to the v2.0 model, with and without each school’s own record. An effect that disappears once schools are counted belongs to particular schools; one that survives is something the district’s schools share.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-districts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-districts-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: District effects over and above each authority’s, on the v2.0 model, with 95% intervals, without and with a school term.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>None of Horsham has a district effect distinguishable from zero on the v2.0 model.</p>
+</section>
+<section id="trusts" class="level1">
+<h1>Trusts</h1>
+<p>The v2.0 model with a multi-academy trust level, allowing for each school’s own record and for how it came to be an academy, so trusts that take on struggling schools are not penalised for it. Nationally a trust moves results by about 2.4%, and absence by about 6.5%.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trusts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trusts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-trusts-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trusts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The v2.0 effect of each trust that ran one of the area’s schools in 2024/25, with 95% intervals; its number of schools in the national data in brackets.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-disadvantaged-gap-and-girls-and-boys" class="level1">
+<h1>The disadvantaged gap, and girls and boys</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-va" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-va-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Each school’s Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Tanbridge House School, Weald School, The, Steyning Grammar School and Millais School are above expectation for non-disadvantaged pupils and more than a point below it for disadvantaged ones.</p>
+<p>In no school do girls’ and boys’ value added differ by more than two points.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-gb" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="absence" class="level1">
+<h1>Absence</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-abs-series" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-abs-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-abs-series-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-abs-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Overall absence, autumn and spring terms, 2016/17 to 2025/26. Sessions-weighted; 2019/20 not collected.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>8.1% absence</strong> in autumn and spring 2025/26 (7.6% a year earlier), against 8.0% for England.</li>
+<li><strong>Against its intake</strong>, on the v2.0 intake terms, the area’s schools ran 0.36 points below what their pupils’ profiles predict over 2021/22 to 2024/25 (West Sussex -0.27 and Brighton and Hove +1.64).</li>
+<li><strong>No school</strong> runs more than a point above its predicted absence.</li>
+<li><strong>Weald School, The and Tanbridge House School</strong> run more than a point below.</li>
+</ul>
+<div class="cell">
+<div id="tbl-absence" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Each school’s absence against what its intake predicts (v2.0 intake terms, mean 2021/22 to 2024/25), and its reasons in autumn and spring 2025/26 (percentage of sessions).
+</figcaption>
+<div aria-describedby="tbl-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Predicted by intake %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above prediction</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Illness</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Unauthorised</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Reduced timetable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Suspended</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">4.1</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">9.2</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;">7.8</td>
+<td style="text-align: right;">7.9</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">4.3</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">8.3</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">1.2</td>
+<td style="text-align: right;">1.36</td>
+<td style="text-align: right;">0.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">7.9</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.18</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-reasons" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-reasons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-reasons-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reasons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Absence by register reason, autumn and spring 2025/26, percentage of possible sessions. The ten largest reasons nationally.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Suspensions</strong> were 13.6 episodes per 100 pupils in 2024/25, against 21.2 for England. One pupil can be suspended several times: 5.3 pupils per 100 were suspended at least once, about 2.6 times each, against 7.3 per 100 and 2.9 times in England. Reduced timetables take 0.75% of sessions, 2.6 times England’s rate.</p>
+<div class="cell">
+<div id="tbl-susp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-susp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Suspension episodes and pupils suspended at least once, per 100 pupils, and permanent exclusions, by school, 2024/25.
+</figcaption>
+<div aria-describedby="tbl-susp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Suspension episodes per 100</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils suspended per 100</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Permanent exclusions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">1944</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">1524</td>
+<td style="text-align: right;">13.9</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: right;">1095</td>
+<td style="text-align: right;">13.4</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">1055</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">1784</td>
+<td style="text-align: right;">12.7</td>
+<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;">1121</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-scenario" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-scenario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Predicted Attainment 8 gain if each school’s absence fell to England’s school average (8.6%, 2024/25), on the v2.0 absence coefficients. Indicative only.
+</figcaption>
+<div aria-describedby="tbl-scenario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gain, all pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gain, disadvantaged</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+0.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="school-by-school" class="level1">
+<h1>School by school</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-plane" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plane-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="horsham_files/figure-html/fig-plane-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plane-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: absence above or below what its intake predicts, and Value Added v2.0 with attendance counted in (the model without its absence term). The area’s schools are named. Grey: every school in England.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Across England the two signals move together: schools whose absence runs below what their intake predicts tend to add more. Across Horsham’s schools the correlation between the two is -0.83 (-0.54 across England).</p>
+</section>
+<section id="contextual-league-tables" class="level1">
+<h1>Contextual league tables</h1>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">All pupils</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Disadvantaged</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Non-disadvantaged</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Girls</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Boys</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+4.2</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-0.8 to +5.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-1.0 to +4.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">+4.0</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-1.1 to +3.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-2.1 to +3.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-4.9 to +2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-4.2 to +0.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, disadvantaged pupils. Small groups: read across years.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, disadvantaged pupils. Small groups: read across years.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-4.7 to +3.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">-6.6</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-4.1 to +2.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-5.2</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-4.1 to +1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-5.5</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-3.9 to +1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">-5.8</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">-5.1</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-4.7 to +0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">-5.5 to +0.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, non-disadvantaged pupils.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, non-disadvantaged pupils.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+4.5</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">-0.2 to +4.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">-0.7 to +3.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-1.2 to +3.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-2.2 to +2.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-3.9</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-5.0 to +1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-4.7 to -0.3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, girls.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, girls.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+5.1</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">-0.8 to +5.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">-1.3 to +5.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-1.1 to +4.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-2.6 to +3.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-5.8 to +2.2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell" data-tbl-cap="Value Added v2.0, boys.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Value Added v2.0, boys.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2021/22</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+6.2</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-1.4 to +5.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-2.1 to +3.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-2.4 to +3.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-3.4 to +3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-4.6 to +4.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="questions-for-discussion" class="level1">
+<h1>Questions for discussion</h1>
+<ol type="1">
+<li><strong>Disadvantaged pupils.</strong> Their value added averages -1.6 points across Horsham’s schools against +0.1 for other pupils. No school here is above expectation for them; what do schools elsewhere with similar intakes do differently?</li>
+<li><strong>Attendance is not the area’s main lever</strong>, though individual schools above their predicted absence are worth a look.</li>
+<li><strong>Schools, not the place.</strong> No district effect survives each school’s own record on v2.0: the differences that matter are between schools.</li>
+<li><strong>Practice.</strong> In Horsham, reduced timetables run at 2.6 times the national rate. These are choices made within schools.</li>
+<li><strong>The authority.</strong> West Sussex’s own v2.0 effect for disadvantaged pupils is -2.6% (124th of 151), distinguishable from zero.</li>
+</ol>
 </section>
 <section id="notes-on-method" class="level1 unnumbered">
 <h1 class="unnumbered">Notes on method</h1>
-<p>Value added v2.0 is described on <a href="../method.html">the method page</a>. School districts come from each school’s postcode. The decomposition splits each area’s mean log Attainment 8 against England’s into one piece per model term, exactly, and converts to points at England’s mean. This page is generated from <code>templates/area.qmd</code> by <code>R/03_area_pages.R</code>.</p>
+<p>Value Added v2.0 is described on <a href="../method.html">the method page</a>. The absence-against-intake measure, the district test, the trust analysis, the attendance-counted-in value added and the scenarios are refitted on the v2.0 specification by <code>R/04_place_and_absence.R</code>. The absence series, reasons and suspensions are the original project’s (<code>R/17_area_analysis.R</code>). School districts come from each school’s postcode. The decomposition splits each area’s mean log Attainment 8 against England’s into one piece per model term, exactly, and converts to points at England’s mean. This page is generated from <code>templates/area.qmd</code> by <code>R/03_area_pages.R</code>; the format is recorded in <code>AREA_REPORTS.md</code>.</p>
 
 
 </section>

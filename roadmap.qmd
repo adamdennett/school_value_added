@@ -14,6 +14,12 @@ subtitle: "What v2.0 does now, and what comes next."
       map, the girls/boys split, a v2.0 decomposition and the latest Ofsted
       judgement
 - [x] Comparison with the published v1 measure throughout
+- [x] Absence above or below what the intake predicts, on the v2 intake
+      terms, on every map and in every profile
+- [x] The original Sussex documents' analyses refitted on v2.0: the
+      decomposition, the district test, trusts, the joint-signal plane,
+      absence scenarios, comparator profiles, league tables and questions
+      for discussion; a district summary page
 
 ## Next
 
@@ -34,9 +40,6 @@ subtitle: "What v2.0 does now, and what comes next."
       are out, but its census, SEN and mobility data are not yet; predict
       from the fitted model once they are, as the original project did for
       v1.
-- [ ] **Absence, suspensions and trusts on v2.0.** The original area
-      documents' absence-by-reason, suspension and trust sections, and the
-      district effect test, refitted on the v2.0 model.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [ ] **Monthly Ofsted refresh.** Pick up Ofsted's new monthly release

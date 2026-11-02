@@ -7,6 +7,7 @@ project:
     - schools.qmd
     - review.qmd
     - sussex.qmd
+    - districts.qmd
     - areas/*.qmd
     - roadmap.qmd
   resources:
@@ -39,6 +40,8 @@ website:
             text: "East Sussex"
           - href: areas/west_sussex.qmd
             text: "West Sussex"
+          - href: districts.qmd
+            text: "All twelve districts"
       - href: review.qmd
         text: "The review"
       - href: roadmap.qmd
