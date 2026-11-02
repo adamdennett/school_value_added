@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Adam Dennett">
+<meta name="dcterms.date" content="2026-11-02">
+
+<title>The Value-Added Review – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-36c9bf196519df77a4e3d84cd0b4122a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./method.html"> 
+<span class="menu-text">Value Added v2.0</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./schools.html"> 
+<span class="menu-text">Every school</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="./review.html" aria-current="page"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#what-the-measure-is" id="toc-what-the-measure-is" class="nav-link" data-scroll-target="#what-the-measure-is">What the measure is</a></li>
+  <li><a href="#sec-importance" id="toc-sec-importance" class="nav-link" data-scroll-target="#sec-importance">How much each term matters</a></li>
+  <li><a href="#sec-omissions" id="toc-sec-omissions" class="nav-link" data-scroll-target="#sec-omissions">What the measure leaves out</a></li>
+  <li><a href="#sec-variants" id="toc-sec-variants" class="nav-link" data-scroll-target="#sec-variants">The alternatives</a>
+  <ul class="collapse">
+  <li><a href="#things-schools-partly-control-workforce-and-ofsted" id="toc-things-schools-partly-control-workforce-and-ofsted" class="nav-link" data-scroll-target="#things-schools-partly-control-workforce-and-ofsted">Things schools partly control: workforce and Ofsted</a></li>
+  <li><a href="#intake-the-model-misses-mobility-gender-sen" id="toc-intake-the-model-misses-mobility-gender-sen" class="nav-link" data-scroll-target="#intake-the-model-misses-mobility-gender-sen">Intake the model misses: mobility, gender, SEN</a></li>
+  <li><a href="#sec-l4" id="toc-sec-l4" class="nav-link" data-scroll-target="#sec-l4">Neighbourhood education</a></li>
+  <li><a href="#who-runs-the-school-route-and-trusts" id="toc-who-runs-the-school-route-and-trusts" class="nav-link" data-scroll-target="#who-runs-the-school-route-and-trusts">Who runs the school: route and trusts</a></li>
+  <li><a href="#size-and-religious-character" id="toc-size-and-religious-character" class="nav-link" data-scroll-target="#size-and-religious-character">Size and religious character</a></li>
+  <li><a href="#absence" id="toc-absence" class="nav-link" data-scroll-target="#absence">Absence</a></li>
+  </ul></li>
+  <li><a href="#sec-design" id="toc-sec-design" class="nav-link" data-scroll-target="#sec-design">Two design choices</a>
+  <ul class="collapse">
+  <li><a href="#sec-national" id="toc-sec-national" class="nav-link" data-scroll-target="#sec-national">Against the authority, or against England</a></li>
+  <li><a href="#sec-signal" id="toc-sec-signal" class="nav-link" data-scroll-target="#sec-signal">How much of value added is the school</a></li>
+  </ul></li>
+  <li><a href="#what-it-would-mean-in-sussex" id="toc-what-it-would-mean-in-sussex" class="nav-link" data-scroll-target="#what-it-would-mean-in-sussex">What it would mean in Sussex</a></li>
+  <li><a href="#sec-recommendations" id="toc-sec-recommendations" class="nav-link" data-scroll-target="#sec-recommendations">Recommendations</a></li>
+  <li><a href="#notes-on-method" id="toc-notes-on-method" class="nav-link" data-scroll-target="#notes-on-method">Notes on method</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Value-Added Review</h1>
+<p class="subtitle lead">Is the school-level residual of the national model specified well enough to lean on? The review that Value Added v2.0 was built from.</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adam Dennett </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Bartlett Centre for Advanced Spatial Analysis, University College London
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 2, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Where this led
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Every recommendation below has been adopted in <a href="./method.html">Value Added v2.0</a>.</strong> This page is the review as written, with its figures recomputed from the same analysis (<code>R/21_value_added_review.R</code> in the original repository).</p>
+<p>A review of the value-added measure used across the <a href="https://adamdennett.github.io/school_attainment_tool/pulling_the_right_lever_v2.html">How to Pull the Right Lever</a> work and the Sussex documents. Every figure comes from refitting the published national model on its own data, 12,195 school-years for 3,300 schools, 2021/22 to 2024/25. Nothing uses pupil-level records.</p>
+</div>
+</div>
+<section id="summary" class="level1 unnumbered">
+<h1 class="unnumbered">Summary</h1>
+<p><strong>The measure is sound, and its core should stay as it is.</strong> A school-level residual from a multilevel model of Attainment 8 is the right construction. The intake terms that do the work are the right ones, and with four years of data a school’s average value added is a reliable signal (reliability 0.85 for all pupils, 0.67 for disadvantaged pupils).</p>
+<p><strong>But three things in the specification credit or penalise schools for the wrong reasons, and fixing them would change the picture for a meaningful minority of schools.</strong></p>
+<ol type="1">
+<li><strong>The Ofsted rating is in the expectation.</strong> A school’s expected result is set higher if Ofsted rated it highly, but Ofsted’s judgement is partly based on those same results. Taking it out moves 34% of schools into a different value-added quintile.</li>
+<li><strong>The workforce terms are things schools partly control.</strong> They add little to the model, and teacher retention is the only one that moves schools noticeably (13% change quintile without it). They are better treated as possible explanations of value added than as part of its baseline.</li>
+<li><strong>Value added is measured within each local authority.</strong> The expectation includes the authority’s own effect, so a school in a strong authority is held to a higher bar. Measured against England instead, 41% of schools change quintile.</li>
+</ol>
+<p><strong>Four additions are worth making</strong>, all of them intake or context rather than things a school controls:</p>
+<ul>
+<li><strong>pupil mobility</strong>, the strongest new term (AIC -293); value added at present penalises schools whose pupils arrive mid-phase;</li>
+<li><strong>a girls’ school term</strong>, since girls’ schools currently gain +5.4% from their intake’s gender alone;</li>
+<li><strong>SEN support and EHCP rates</strong>, which matter most for disadvantaged pupils;</li>
+<li><strong>neighbourhood education</strong> (% with degree-level qualifications around the school), for all pupils. It removes value added’s tilt towards schools in educated places and accounts for 30% of the remaining local authority variance. Brighton and Hove’s effect falls from 5th to 10th in England. It makes no difference for disadvantaged pupils.</li>
+</ul>
+<p><strong>Governance (academy route, trust membership), school size and religious character should stay out.</strong> Who runs a school is part of what value added should measure, not part of its baseline, and in any case these terms barely move it.</p>
+<p>Taken together the changes are substantial: the candidate measure correlates 0.86 with the published one across schools, and 48% of schools change quintile. Most of that is the Ofsted decision. The recommendations are in <a href="#sec-recommendations" class="quarto-xref">Section&nbsp;7</a>.</p>
+</section>
+<section id="what-the-measure-is" class="level1">
+<h1>What the measure is</h1>
+<p>Value added is the residual of the published model, averaged over a school’s years:</p>
+<p><span class="math display">\[\text{VA} = \text{Attainment 8} - \exp(\hat{y})\,e^{\sigma^2/2}\]</span></p>
+<p>where <span class="math inline">\(\hat{y}\)</span> is the model’s prediction of log Attainment 8 and the second factor is the lognormal back-transformation. The model is</p>
+<pre><code>log(Attainment 8) ~ log(% FSM6) + log(absence) + log(% EAL) + KS2 (centred)
+                    + admissions (selective) + segregation (LA)
+                    + teacher retention + % teachers on leadership pay
+                    + log(teacher sickness days)
+                    + (1 | year) + (1 | Ofsted rating) + (1 | region / local authority)</code></pre>
+<p>fitted separately for all, disadvantaged and non-disadvantaged pupils. Two features of the prediction matter for what follows:</p>
+<ul>
+<li><strong>It includes every random effect</strong>, so the expectation for a school already contains its Ofsted grade’s effect and its local authority’s effect. Value added is therefore “relative to schools with the same Ofsted grade in the same authority”.</li>
+<li><strong>It is a residual, not a separately estimated school effect.</strong> Each school-year’s residual is averaged. <a href="#sec-signal" class="quarto-xref">Section&nbsp;5.2</a> checks that this is close to what a school random intercept would give.</li>
+</ul>
+</section>
+<section id="sec-importance" class="level1">
+<h1>How much each term matters</h1>
+<p>Each term was dropped in turn. Two things were recorded: how much worse the model fits (the rise in AIC, fitted by maximum likelihood), and how much schools’ value added moves.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-importance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="review_files/figure-html/fig-importance-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Each term of the published model dropped in turn. Left, the loss of fit (rise in AIC; bigger means the term matters more to the model). Right, the share of schools whose value added moves into a different quintile without it. All pupils and disadvantaged pupils.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-importance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: The published model’s terms, all pupils: standardised effect (the change in Attainment 8 for one standard deviation of the term, or the random effect’s standard deviation), loss of fit without it, and how far school value added moves without it.
+</figcaption>
+<div aria-describedby="tbl-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Standardised effect</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Loss of fit (AIC)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">VA correlation without it</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean VA change (points)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools changing quintile</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Prior attainment (KS2)</td>
+<td style="text-align: right;">+8.9%</td>
+<td style="text-align: right;">2136</td>
+<td style="text-align: right;">0.870</td>
+<td style="text-align: right;">1.24</td>
+<td style="text-align: right;">46%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Absence</td>
+<td style="text-align: right;">-5.8%</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: right;">0.873</td>
+<td style="text-align: right;">1.22</td>
+<td style="text-align: right;">45%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ofsted rating (random)</td>
+<td style="text-align: right;">+4.2%</td>
+<td style="text-align: right;">557</td>
+<td style="text-align: right;">0.949</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">34%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Local authority (random)</td>
+<td style="text-align: right;">+2.6%</td>
+<td style="text-align: right;">522</td>
+<td style="text-align: right;">0.939</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">36%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantage (% FSM6)</td>
+<td style="text-align: right;">-3.1%</td>
+<td style="text-align: right;">325</td>
+<td style="text-align: right;">0.975</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">22%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Teacher retention</td>
+<td style="text-align: right;">+0.9%</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">0.993</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">13%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">English as an additional language</td>
+<td style="text-align: right;">+0.8%</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Teacher sickness days</td>
+<td style="text-align: right;">-0.5%</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Teachers on leadership pay</td>
+<td style="text-align: right;">-0.4%</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0.999</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Admissions (selective)</td>
+<td style="text-align: right;">+0.9%</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Segregation (LA)</td>
+<td style="text-align: right;">+0.1%</td>
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">1%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The ranking is clear:</p>
+<ul>
+<li><strong>Prior attainment and absence</strong> are by far the most important terms. Each moves nearly half of schools a quintile when dropped.</li>
+<li><strong>The Ofsted grade and the local authority</strong> come next. Both are random effects in the expectation, and both are questioned below.</li>
+<li><strong>Disadvantage</strong> matters less than might be expected for all pupils, because prior attainment carries much of the same information.</li>
+<li><strong>The low end.</strong> Segregation adds nothing (AIC -1.7): it is measured at authority level, and the authority’s own random effect already captures it. Leadership pay and sickness days each move fewer than one school in 18 a quintile. Teacher retention is the only workforce term that matters at all, moving 13% of schools. For disadvantaged pupils none of the three workforce terms matters (retention’s AIC change is -1.8).</li>
+</ul>
+</section>
+<section id="sec-omissions" class="level1">
+<h1>What the measure leaves out</h1>
+<p>If value added correlates with something outside a school’s control, schools are being credited or penalised for it. The published value added was correlated with each candidate the model leaves out.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-omissions" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-omissions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="review_files/figure-html/fig-omissions-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-omissions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Correlation across schools between published value added (mean 2021/22 to 2024/25) and variables the model does not include. Teacher retention, disadvantage and prior attainment are in the model and shown for reference; their correlations are near zero by construction.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Three omissions stand out:</p>
+<ul>
+<li><strong>Girls’ schools</strong> have higher value added (r = 0.17 for all pupils, 0.18 for disadvantaged). Girls outperform boys at GCSE nationally, and the model has no term for an intake’s gender. Part of what reads as a girls’ school’s added value is its intake.</li>
+<li><strong>Pupil mobility</strong>, the share of pupils who joined the school during the key stage, correlates -0.14 with value added. Schools that take mid-phase arrivals are penalised for an intake they did not choose.</li>
+<li><strong>Neighbourhood education</strong> correlates 0.11 for all pupils and -0.00 for disadvantaged pupils. Schools in educated places gain a little credit for where they are, and only for their non-disadvantaged pupils.</li>
+</ul>
+<p>SEN rates, size, governance and religious character are close to uncorrelated with value added.</p>
+</section>
+<section id="sec-variants" class="level1">
+<h1>The alternatives</h1>
+<p>Each variant was fitted on the same school-years and compared with the published value added school by school.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-variants" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-variants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="review_files/figure-html/fig-variants-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-variants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Each variant against the published model. Across, the change in fit (AIC; left of zero fits better). Up, the share of schools whose value added moves into a different quintile. Removals in red, additions in teal, the combined candidate in purple.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-variants" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-variants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Every variant, all pupils. Fit (AIC change, marginal R²), the local authority variation left (SD of the LA effect, log scale) and Brighton and Hove’s rank, and how far school value added moves from the published measure.
+</figcaption>
+<div aria-describedby="tbl-variants-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variant</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC change</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Marginal R²</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LA SD</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">B&amp;H rank</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">VA correlation</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean change (points)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Changing quintile</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Bottom decile kept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Published model</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.653</td>
+<td style="text-align: right;">0.0262</td>
+<td style="text-align: right;">5th of 152</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Without the three workforce terms</td>
+<td style="text-align: right;">168</td>
+<td style="text-align: right;">0.642</td>
+<td style="text-align: right;">0.0267</td>
+<td style="text-align: right;">4th of 152</td>
+<td style="text-align: right;">0.986</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">19%</td>
+<td style="text-align: right;">87%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Without the Ofsted rating</td>
+<td style="text-align: right;">557</td>
+<td style="text-align: right;">0.706</td>
+<td style="text-align: right;">0.0285</td>
+<td style="text-align: right;">7th of 152</td>
+<td style="text-align: right;">0.948</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">34%</td>
+<td style="text-align: right;">77%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Without workforce or Ofsted (intake and context only)</td>
+<td style="text-align: right;">814</td>
+<td style="text-align: right;">0.702</td>
+<td style="text-align: right;">0.0291</td>
+<td style="text-align: right;">6th of 152</td>
+<td style="text-align: right;">0.927</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">39%</td>
+<td style="text-align: right;">74%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Without absence</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: right;">0.547</td>
+<td style="text-align: right;">0.0279</td>
+<td style="text-align: right;">30th of 152</td>
+<td style="text-align: right;">0.873</td>
+<td style="text-align: right;">1.22</td>
+<td style="text-align: right;">45%</td>
+<td style="text-align: right;">63%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + neighbourhood education</td>
+<td style="text-align: right;">-239</td>
+<td style="text-align: right;">0.674</td>
+<td style="text-align: right;">0.0219</td>
+<td style="text-align: right;">10th of 152</td>
+<td style="text-align: right;">0.978</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">22%</td>
+<td style="text-align: right;">86%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + governance route</td>
+<td style="text-align: right;">-70</td>
+<td style="text-align: right;">0.651</td>
+<td style="text-align: right;">0.0266</td>
+<td style="text-align: right;">4th of 152</td>
+<td style="text-align: right;">0.993</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">12%</td>
+<td style="text-align: right;">94%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + multi-academy trust</td>
+<td style="text-align: right;">-28</td>
+<td style="text-align: right;">0.653</td>
+<td style="text-align: right;">0.0267</td>
+<td style="text-align: right;">4th of 152</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">94%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + SEN (EHCP and support)</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">0.654</td>
+<td style="text-align: right;">0.0264</td>
+<td style="text-align: right;">4th of 152</td>
+<td style="text-align: right;">0.992</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">14%</td>
+<td style="text-align: right;">91%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + pupil mobility</td>
+<td style="text-align: right;">-293</td>
+<td style="text-align: right;">0.661</td>
+<td style="text-align: right;">0.0256</td>
+<td style="text-align: right;">5th of 152</td>
+<td style="text-align: right;">0.987</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">15%</td>
+<td style="text-align: right;">90%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + single-sex school</td>
+<td style="text-align: right;">-191</td>
+<td style="text-align: right;">0.663</td>
+<td style="text-align: right;">0.0263</td>
+<td style="text-align: right;">5th of 152</td>
+<td style="text-align: right;">0.973</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">13%</td>
+<td style="text-align: right;">90%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + share of girls</td>
+<td style="text-align: right;">-178</td>
+<td style="text-align: right;">0.660</td>
+<td style="text-align: right;">0.0265</td>
+<td style="text-align: right;">5th of 152</td>
+<td style="text-align: right;">0.975</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">12%</td>
+<td style="text-align: right;">91%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + school size</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">0.651</td>
+<td style="text-align: right;">0.0267</td>
+<td style="text-align: right;">5th of 152</td>
+<td style="text-align: right;">0.992</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">12%</td>
+<td style="text-align: right;">93%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + religious character</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.653</td>
+<td style="text-align: right;">0.0262</td>
+<td style="text-align: right;">5th of 152</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">1%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Candidate: intake and context, + neighbourhood education, SEN, mobility, single-sex</td>
+<td style="text-align: right;">-200</td>
+<td style="text-align: right;">0.741</td>
+<td style="text-align: right;">0.0229</td>
+<td style="text-align: right;">7th of 152</td>
+<td style="text-align: right;">0.857</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">48%</td>
+<td style="text-align: right;">64%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-variants-dis" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-variants-dis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: The same for disadvantaged pupils.
+</figcaption>
+<div aria-describedby="tbl-variants-dis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variant</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC change</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LA SD</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">B&amp;H rank</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">VA correlation</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean change (points)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Changing quintile</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Published model</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0370</td>
+<td style="text-align: right;">14th of 151</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Without the three workforce terms</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">0.0370</td>
+<td style="text-align: right;">14th of 151</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Without the Ofsted rating</td>
+<td style="text-align: right;">457</td>
+<td style="text-align: right;">0.0391</td>
+<td style="text-align: right;">19th of 151</td>
+<td style="text-align: right;">0.963</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">26%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Without workforce or Ofsted (intake and context only)</td>
+<td style="text-align: right;">530</td>
+<td style="text-align: right;">0.0394</td>
+<td style="text-align: right;">19th of 151</td>
+<td style="text-align: right;">0.958</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">28%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Without absence</td>
+<td style="text-align: right;">2383</td>
+<td style="text-align: right;">0.0453</td>
+<td style="text-align: right;">69th of 151</td>
+<td style="text-align: right;">0.857</td>
+<td style="text-align: right;">1.42</td>
+<td style="text-align: right;">45%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + neighbourhood education</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0368</td>
+<td style="text-align: right;">15th of 151</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + governance route</td>
+<td style="text-align: right;">-10</td>
+<td style="text-align: right;">0.0372</td>
+<td style="text-align: right;">13th of 151</td>
+<td style="text-align: right;">0.999</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + multi-academy trust</td>
+<td style="text-align: right;">-12</td>
+<td style="text-align: right;">0.0374</td>
+<td style="text-align: right;">13th of 151</td>
+<td style="text-align: right;">0.999</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + SEN (EHCP and support)</td>
+<td style="text-align: right;">-93</td>
+<td style="text-align: right;">0.0369</td>
+<td style="text-align: right;">9th of 151</td>
+<td style="text-align: right;">0.994</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">11%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + pupil mobility</td>
+<td style="text-align: right;">-241</td>
+<td style="text-align: right;">0.0364</td>
+<td style="text-align: right;">16th of 151</td>
+<td style="text-align: right;">0.990</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">12%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + single-sex school</td>
+<td style="text-align: right;">-222</td>
+<td style="text-align: right;">0.0367</td>
+<td style="text-align: right;">12th of 151</td>
+<td style="text-align: right;">0.970</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">12%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + share of girls</td>
+<td style="text-align: right;">-165</td>
+<td style="text-align: right;">0.0374</td>
+<td style="text-align: right;">13th of 151</td>
+<td style="text-align: right;">0.976</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">11%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Published + school size</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0371</td>
+<td style="text-align: right;">14th of 151</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published + religious character</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0369</td>
+<td style="text-align: right;">15th of 151</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Candidate: intake and context, + neighbourhood education, SEN, mobility, single-sex</td>
+<td style="text-align: right;">-32</td>
+<td style="text-align: right;">0.0365</td>
+<td style="text-align: right;">14th of 151</td>
+<td style="text-align: right;">0.916</td>
+<td style="text-align: right;">0.93</td>
+<td style="text-align: right;">34%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>A lower AIC is not the test here. Taking out a term the model uses always worsens the fit. The question for each term is whether it belongs in the <em>expectation</em> a school is measured against.</p>
+<section id="things-schools-partly-control-workforce-and-ofsted" class="level2">
+<h2 class="anchored" data-anchor-id="things-schools-partly-control-workforce-and-ofsted">Things schools partly control: workforce and Ofsted</h2>
+<p><strong>The workforce terms.</strong> Retention, leadership pay and sickness absence are shaped by a school’s leadership as well as by its circumstances. In the baseline, a school that keeps its teachers is expected to do better, so the credit for doing so is netted off its value added. Dropping all three moves 19% of schools a quintile for all pupils, nearly all of it retention, and 7% for disadvantaged pupils. The fit loss is small (AIC 168).</p>
+<p><strong>The Ofsted grade.</strong> This is the more serious problem. Ofsted’s judgements draw on a school’s results, so putting the grade in the expectation partly conditions value added on its own outcome. An Outstanding school’s bar is raised (the grade’s random effect has a standard deviation of 4.2%), and some of its added value disappears into it. Removing the grade:</p>
+<ul>
+<li>moves 34% of schools a quintile (26% for disadvantaged pupils);</li>
+<li>changes value added by 0.7 points on average, and by more than 1.6 for one school in ten;</li>
+<li>raises the fixed effects’ share of variance (marginal R² from 0.65 to 0.71), because the intake terms take back what the grade had absorbed.</li>
+</ul>
+<p>The grade was useful for the Lever report’s purpose, which was to explain attainment. It is the wrong thing to hold constant when the aim is to measure a school against its intake.</p>
+</section>
+<section id="intake-the-model-misses-mobility-gender-sen" class="level2">
+<h2 class="anchored" data-anchor-id="intake-the-model-misses-mobility-gender-sen">Intake the model misses: mobility, gender, SEN</h2>
+<ul>
+<li><strong>Mobility</strong> is the best single addition: AIC -293 for all pupils and -241 for disadvantaged. Each extra percentage point of mobile pupils costs 0.5% of Attainment 8. It moves 15% of schools.</li>
+<li><strong>Gender.</strong> A girls’ school scores +5.4% above an otherwise identical mixed school (boys’ schools do not differ, at -0.1%). A single-sex flag (AIC -191) fits better than the share of girls as a continuous term (AIC -178): the effect is a girls’-school effect, not a gradient across mixed schools.</li>
+<li><strong>SEN.</strong> SEN support and EHCP rates improve the fit modestly for all pupils (AIC -99) and more clearly for disadvantaged pupils (-93), and move few schools. They belong in the expectation on principle: a school’s SEN intake is not of its making.</li>
+</ul>
+</section>
+<section id="sec-l4" class="level2">
+<h2 class="anchored" data-anchor-id="sec-l4">Neighbourhood education</h2>
+<p>The preliminary work (Analysis F in the model experiments) found that the share of adults with degree-level qualifications in the 150 census output areas nearest a school, about a 2.5 km radius, improved the model and explained part of the local authority effect. In this review’s terms:</p>
+<ul>
+<li><strong>For all pupils</strong> it is a strong addition: AIC -239, and one standard deviation of neighbourhood education is worth +2.2%. The local authority standard deviation falls from 0.0262 to 0.0219: it accounts for 30% of the authority variance. Brighton and Hove’s effect falls from +4.5% (5th) to +2.9% (10th). Part of what looked like a Brighton and Hove effect is the city’s educated neighbourhoods.</li>
+<li><strong>For disadvantaged pupils</strong> it does nothing (AIC +1.4, effect +0.1%). Brighton and Hove’s rank barely moves, from 14th to 15th. Living near educated households does not raise disadvantaged pupils’ results; it is non-disadvantaged pupils, many of whose parents are those households, who carry the effect.</li>
+</ul>
+<p>That pattern is what one would expect if neighbourhood education stands in for <strong>parental education</strong>, which no school-level source measures directly. On that reading it is intake, and belongs in the expectation. Two cautions:</p>
+<ul>
+<li>it describes the area around the school, not where its pupils live, so schools with wide or unusual catchments are measured imperfectly;</li>
+<li>it is fixed at the 2021 Census, so it cannot track change.</li>
+</ul>
+</section>
+<section id="who-runs-the-school-route-and-trusts" class="level2">
+<h2 class="anchored" data-anchor-id="who-runs-the-school-route-and-trusts">Who runs the school: route and trusts</h2>
+<p>Converter academies score +0.9% against maintained schools, free schools, UTCs and studio schools -2.2%, and sponsor-led academies +0.2%. Schools in a multi-academy trust score +1.1%. None of this moves value added much (correlations 0.99 and 1.00).</p>
+<p>More importantly, <strong>governance should not be in the expectation at all</strong>. Who runs a school is one of the things value added is meant to reveal: a trust that improves its schools should see that in their value added, not have it netted off. The worry about selection, that trusts take on schools in difficult circumstances, is met by measuring those circumstances directly (disadvantage, prior attainment, mobility, SEN), not by adjusting for governance. The trust analysis in the <a href="https://adamdennett.github.io/school_attainment_tool/east_sussex.html#sec-trusts">East Sussex document</a> is the right place for the governance question.</p>
+<div class="cell">
+<div id="tbl-route" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-route-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Mean value added by governance route (each school’s most common route over the four years), under the published model, without workforce and Ofsted, and under the candidate. Attainment 8 points.
+</figcaption>
+<div aria-describedby="tbl-route-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Route</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Published</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">– workforce – Ofsted</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Candidate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">Converter academy</td>
+<td style="text-align: right;">1623</td>
+<td style="text-align: right;">+0.03</td>
+<td style="text-align: right;">+0.04</td>
+<td style="text-align: right;">-0.03</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">Free school, UTC or studio</td>
+<td style="text-align: right;">247</td>
+<td style="text-align: right;">-0.39</td>
+<td style="text-align: right;">-0.86</td>
+<td style="text-align: right;">-0.42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">Maintained</td>
+<td style="text-align: right;">643</td>
+<td style="text-align: right;">-0.27</td>
+<td style="text-align: right;">-0.27</td>
+<td style="text-align: right;">-0.35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">Sponsor-led academy</td>
+<td style="text-align: right;">787</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">+0.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">Converter academy</td>
+<td style="text-align: right;">1617</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">-0.09</td>
+<td style="text-align: right;">-0.15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">Free school, UTC or studio</td>
+<td style="text-align: right;">245</td>
+<td style="text-align: right;">+0.24</td>
+<td style="text-align: right;">+0.26</td>
+<td style="text-align: right;">+0.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">Maintained</td>
+<td style="text-align: right;">640</td>
+<td style="text-align: right;">-0.27</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">-0.37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">Sponsor-led academy</td>
+<td style="text-align: right;">786</td>
+<td style="text-align: right;">+0.18</td>
+<td style="text-align: right;">+0.15</td>
+<td style="text-align: right;">+0.22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="size-and-religious-character" class="level2">
+<h2 class="anchored" data-anchor-id="size-and-religious-character">Size and religious character</h2>
+<p>School size improves the fit for all pupils (AIC -99) but should stay out: popular, successful schools grow, so size is partly a consequence of value added. Religious character makes no difference (AIC +1.9).</p>
+</section>
+<section id="absence" class="level2">
+<h2 class="anchored" data-anchor-id="absence">Absence</h2>
+<p>Absence is the model’s second most important term. Dropping it moves 45% of schools a quintile, and Brighton and Hove’s authority effect from 5th in England to 30th. It is partly intake (illness, deprivation) and partly practice. The Lever report’s argument rests on keeping it in, and the joint-signal plane already shows the other view, value added with attendance counted in. That pairing is the right answer and needs no change: keep absence in the core measure, and keep publishing the attendance-counted-in version beside it.</p>
+</section>
+</section>
+<section id="sec-design" class="level1">
+<h1>Two design choices</h1>
+<section id="sec-national" class="level2">
+<h2 class="anchored" data-anchor-id="sec-national">Against the authority, or against England</h2>
+<p>The published value added includes the local authority’s random effect in the expectation. With ten or twenty schools in an authority, that effect is largely the average of those schools’ own results, so part of each school’s added value is attributed to its authority and netted off. Measuring against England instead (leaving the authority and region effects out of the prediction):</p>
+<ul>
+<li>correlates 0.91 with the published value added across schools, and moves 41% of schools a quintile (42% for disadvantaged pupils);</li>
+<li>shifts every school in an authority by the same amount, so it changes comparisons <em>between</em> authorities, not within them.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-national" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-national-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="review_files/figure-html/fig-national-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-national-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Each school’s published value added (within its local authority) against its value added measured against England, all pupils, mean 2021/22 to 2024/25. Sussex schools coloured by authority.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Both views are legitimate, but they answer different questions:</p>
+<ul>
+<li><strong>Within the authority:</strong> “how does this school do compared with similar schools <em>in the same place</em>?”</li>
+<li><strong>Against England:</strong> “how does this school do compared with similar schools anywhere?”</li>
+</ul>
+<p>For the Sussex documents, which compare schools across three authorities, the national version is the right one, and the authority effect should be reported beside it rather than inside it.</p>
+</section>
+<section id="sec-signal" class="level2">
+<h2 class="anchored" data-anchor-id="sec-signal">How much of value added is the school</h2>
+<p>A version of the published model with a school random intercept splits the unexplained variation into a persistent school part and year-to-year noise:</p>
+<ul>
+<li><strong>All pupils:</strong> the school part has a standard deviation of 0.074 (log scale) against 0.057 for the year-to-year noise. 63% of the unexplained variation is persistent. A four-year average has a reliability of 0.85.</li>
+<li><strong>Disadvantaged pupils:</strong> 37% persistent, and a four-year average reliability of 0.67. The groups are small, and single years are noisy.</li>
+</ul>
+<p>The shrunken school effects from that model correlate 0.90 with the averaged residuals for all pupils, and 0.96 for disadvantaged pupils. The simple average is a good approximation. The shrunken estimate is better for small schools and should be preferred where single schools are singled out.</p>
+</section>
+</section>
+<section id="what-it-would-mean-in-sussex" class="level1">
+<h1>What it would mean in Sussex</h1>
+<div class="cell">
+<div id="tbl-sussex" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sussex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Value added for each Sussex school, all pupils, mean 2021/22 to 2024/25, Attainment 8 points: as published (within its local authority), against England, and under the candidate measure against England. Ordered by authority and published value added.
+</figcaption>
+<div aria-describedby="tbl-sussex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Authority</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Published</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Against England</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Candidate, against England</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dorothy Stringer School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+0.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Varndean School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+4.2</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brighton Aldridge Community Academy</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+0.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portslade Aldridge Community Academy</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+2.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hove Park School and Sixth Form Centre</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+1.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blatchington Mill School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cardinal Newman Catholic School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Longhill High School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Patcham High School</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's Academy Ringmer</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+5.3</td>
+<td style="text-align: right;">+5.4</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">-1.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Priory School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+5.5</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Richard's Catholic College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">-0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seahaven Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Beacon Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+4.6</td>
+<td style="text-align: right;">+1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heathfield Community College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uckfield College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+1.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Catherine's College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claverham Community College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peacehaven Community School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seaford Head School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+2.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Cavendish School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Eastbourne Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ratton School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uplands Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Turing School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chailey School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Robertsbridge Community College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">-1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rye College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bexhill High Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-0.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ark Alexandra Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gildredge House</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-0.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Willingdon Community School</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hailsham Community College</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-3.8</td>
+<td style="text-align: right;">-1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Hastings Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">+0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The St Leonards Academy</td>
+<td style="text-align: left;">East Sussex</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-6.4</td>
+<td style="text-align: right;">-1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Oscar Romero Catholic School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+6.4</td>
+<td style="text-align: right;">+5.1</td>
+<td style="text-align: right;">+5.2</td>
+<td style="text-align: right;">-1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Downlands Community School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">-1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Shoreham Academy</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+5.4</td>
+<td style="text-align: right;">+1.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Worthing High School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">-0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Durrington High School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Regis School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Davison Church of England High School for Girls, Worthing</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Andrew's CofE High School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Oathall Community College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Midhurst Rother College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sackville School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Philip Howard Catholic School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+2.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Imberhorne School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+0.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Warden Park Secondary Academy</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ormiston Six Villages Academy</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Burgess Hill Academy</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bourne Community College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Sir Robert Woodard Academy</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-1.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chichester High School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+2.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+0.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Academy, Selsey</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bishop Luffa School, Chichester</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hazelwick School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">+1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bohunt School Worthing</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-0.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Oriel High School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Felpham Community College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">+0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Paul's Catholic College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ifield Community College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Angmering School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chichester Free School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">-1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Littlehampton Academy</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: right;">-0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-5.4</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">+0.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Gatwick School</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-4.6</td>
+<td style="text-align: right;">-5.6</td>
+<td style="text-align: right;">-4.8</td>
+<td style="text-align: right;">-0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Thomas Bennett Community College</td>
+<td style="text-align: left;">West Sussex</td>
+<td style="text-align: right;">-6.0</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">-5.4</td>
+<td style="text-align: right;">+0.7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Measured against England, Brighton and Hove’s schools gain +1.6 points on average, East Sussex’s +0.0 and West Sussex’s -1.2: the published measure nets each authority’s effect off its own schools. Under the candidate measure against England the average changes are +1.0, -0.1 and -0.1. The Sussex documents’ comparisons across authorities would change in that direction.</p>
+</section>
+<section id="sec-recommendations" class="level1">
+<h1>Recommendations</h1>
+<ol type="1">
+<li><strong>Keep the construction.</strong> A school-level residual of a multilevel model of log Attainment 8, by pupil group, is the right measure. Keep prior attainment, absence, disadvantage, EAL and selective admissions at its core.</li>
+<li><strong>Take the Ofsted rating out of the value-added model.</strong> It conditions value added on a judgement made partly from the same results. This is the most consequential change. Ofsted can stay in explanatory models (and the area decompositions) where the aim is to describe attainment rather than to measure schools.</li>
+<li><strong>Take the workforce terms out of the value-added model.</strong> Leadership pay and sickness add almost nothing. Retention adds a little, but it is partly an outcome of how a school is led. All three are better used to <em>explain</em> value added than to set its baseline.</li>
+<li><strong>Drop LA segregation.</strong> It adds nothing once the authority’s own effect is in the model.</li>
+<li><strong>Add pupil mobility, a girls’ school term, and SEN support and EHCP rates.</strong> All are intake, all improve the fit, and mobility and gender remove clear biases in the current measure. A single-sex flag fits better than the share of girls.</li>
+<li><strong>Add neighbourhood education for all-pupil and non-disadvantaged value added.</strong> It stands in for parental education, removes the current tilt towards schools in educated places, and accounts for 30% of the local authority variance. Including it for disadvantaged pupils is harmless but makes no difference, so the specification can be shared across the three groups for simplicity.</li>
+<li><strong>Leave governance, size and religious character out.</strong> Who runs a school is something value added should reveal, not absorb. Size is partly a consequence of success.</li>
+<li><strong>Report value added against England as well as within the authority</strong>, and use the national version wherever schools in different authorities are compared. Report the authority effect separately.</li>
+<li><strong>Keep absence in, and keep publishing the attendance-counted-in view beside it</strong>, as the joint-signal plane already does.</li>
+<li><strong>Use shrunken school effects, with intervals, where single schools are named</strong>, especially for disadvantaged pupils, whose four-year reliability is 0.67.</li>
+</ol>
+<p>Recommendations 2, 3, 5 and 6 together are the “candidate” measured in this review (it keeps segregation, which makes no difference either way). Recommendation 8 is a reporting choice and can be applied to either model.</p>
+<p><strong>Effect on the published work.</strong> The Lever report’s argument rests on the model’s explanatory terms, chiefly absence, and the candidate leaves those intact. What would change is the ranking of individual schools and the comparisons between authorities. If adopted, the change should be introduced as a new, labelled measure alongside the published one, not as a silent revision. The Sussex documents would move to it, with a note.</p>
+</section>
+<section id="notes-on-method" class="level1 unnumbered">
+<h1 class="unnumbered">Notes on method</h1>
+<p>All models are fitted to the published model’s own data (<code>data/model_data_imputed.rds</code>): 2021/22 to 2024/25, with 2024/25’s workforce and prior-attainment terms carried forward as in the published model. The common sample drops the 15 school-years with no neighbourhood or mobility figure. Value added is computed exactly as published (bias-corrected back-transformation, every random effect in the prediction) unless stated. AIC comparisons use maximum likelihood; value added uses REML fits. Neighbourhood education is the share of adults with level 4+ qualifications in the 150 nearest 2021 Census output areas (<code>R/13_census_context.R</code>). Mobility is 100 minus the share of pupils who were at the school throughout the key stage. Trust membership is by year, from the DfE exclusions file (<code>R/19_trust_effects.R</code>). The analysis is <code>R/21_value_added_review.R</code>; this document is <code>value_added_review.qmd</code>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

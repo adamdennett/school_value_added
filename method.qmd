@@ -1,0 +1,196 @@
+---
+title: "Value Added v2.0"
+subtitle: "The specification, the model for each pupil group, and how it compares with the published measure."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+V <- load_va()
+S <- V$summary
+s_at <- function(g, col) S[[col]][S$group == g]
+cf <- function(g, trm) V$coefs |> filter(group == g, term == trm)
+j <- V$va |> inner_join(V$v1, by = c("URN", "group"))
+cmp <- j |> group_by(group) |>
+  summarise(r = cor(va_nat, va_v1), r_la = cor(va_la, va_v1),
+            moved = mean(ntile(va_v1, 5) != ntile(va_shrunk, 5)), n = n(), .groups = "drop")
+c_at <- function(g, col) cmp[[col]][cmp$group == g]
+gb <- V$va |> filter(group %in% c("girls", "boys")) |> select(URN, group, va_shrunk, sig) |>
+  pivot_wider(names_from = group, values_from = c(va_shrunk, sig)) |> filter(!is.na(va_shrunk_girls), !is.na(va_shrunk_boys))
+yrs <- V$spec$years
+```
+
+::: {.callout-note appearance="simple"}
+## In one line
+
+Value added v2.0 is each school's Attainment 8 above or below what a
+multilevel model expects from its intake and context, measured against
+England, for five groups of pupils, `r yl(min(yrs))` to `r yl(max(yrs))`.
+:::
+
+# What changed from v1
+
+v2.0 adopts every recommendation of [the review](review.qmd):
+
+| | v1 (published) | v2.0 |
+|---|---|---|
+| Ofsted grade in the expectation | Yes (random effect) | **No**: it is judged partly on the same results |
+| Teacher retention, leadership pay, sickness | Yes | **No**: partly in a school's own hands |
+| LA segregation | Yes | **No**: added nothing |
+| Pupil mobility | No | **Yes** |
+| Single-sex school | No | **Yes**: girls' schools gained ~5% from intake alone |
+| SEN support and EHCP rates | No | **Yes** |
+| Neighbourhood education (% level 4+, 150 nearest output areas) | No | **Yes** |
+| Measured against | Schools in the same local authority | **England**, with the within-authority view kept beside it |
+| Estimate | Mean residual | Mean residual, **shrunk by its reliability, with a 95% interval** |
+| Pupil groups | All, disadvantaged, non-disadvantaged | **+ girls and boys** |
+
+Kept from v1: the construction (a school-level residual of a model of log
+Attainment 8), prior attainment, absence, disadvantage, EAL and selective
+admissions, and random intercepts for year and for region and local
+authority.
+
+# The model
+
+$$\log(\text{Att8}) = \beta\,\text{intake and context} + u_\text{year} + u_\text{region} + u_\text{LA} + e$$
+
+Value added for a school-year is observed Attainment 8 minus
+$\exp(\hat y)\,e^{\sigma^2/2}$. Against England, $\hat y$ carries only the
+year effect; within the authority it carries every random effect. A
+school's value added is the mean over its years, shrunk towards zero by
+its reliability, $\tau^2 / (\tau^2 + \sigma^2 / n)$, where $\tau^2$ is the
+persistent between-school variance (from a fit with a school random
+intercept) and $n$ its number of years.
+
+```{r tbl-coefs}
+#| tbl-cap: "Fixed effects by pupil group, as the percentage change in Attainment 8 (t statistic in brackets). Neighbourhood education is per standard deviation; SEN, mobility are per percentage point; disadvantage, absence and EAL are elasticities (per 1% change)."
+lab <- TERM_LABELS
+V$coefs |>
+  filter(term != "(Intercept)") |>
+  mutate(v = ifelse(grepl("^log", term), sprintf("%+.3f (%.0f)", estimate, t),
+                    sprintf("%+.2f%% (%.0f)", pct(estimate), t)),
+         term = coalesce(unname(lab[term]), term),
+         group = GROUP_LABELS[group]) |>
+  select(Term = term, group, v) |>
+  pivot_wider(names_from = group, values_from = v, values_fill = "") |>
+  kt(align = "lrrrrr")
+```
+
+```{r tbl-summary}
+#| tbl-cap: "Each group's model: data, fit, and how much of the unexplained variation is a persistent school effect."
+S |>
+  transmute(Group = GROUP_LABELS[group], `School-years` = format(rows, big.mark = ","),
+            Schools = format(schools, big.mark = ","), `Mean Att 8` = sprintf("%.1f", mean_att8),
+            `Marginal R²` = sprintf("%.2f", r2_marginal), `Conditional R²` = sprintf("%.2f", r2_conditional),
+            `School SD (vs England)` = sprintf("%.3f", tau_school_nat), `Residual SD` = sprintf("%.3f", sigma),
+            `Reliability, 4 years` = sprintf("%.2f", reliability_4yr)) |>
+  kt(align = "lrrrrrrrr")
+```
+
+Every term is intake or context. The largest are prior attainment and
+absence, as in v1. The new terms all matter: each percentage point of
+mobile pupils costs `r sprintf("%.1f%%", abs(pct(cf("all", "mobile")$estimate)))`
+of Attainment 8, a standard deviation of neighbourhood education is worth
+`r sprintf("%+.1f%%", pct(cf("all", "z_l4")$estimate))` for all pupils but
+only `r sprintf("%+.1f%%", pct(cf("disadvantaged", "z_l4")$estimate))` for
+disadvantaged pupils, and a girls' school
+`r sprintf("%+.1f%%", pct(cf("all", "girls_schoolTRUE")$estimate))`. Four
+years of value added are reliable for every group, from
+`r sprintf("%.2f", s_at("disadvantaged", "reliability_4yr"))` for
+disadvantaged pupils to `r sprintf("%.2f", s_at("all", "reliability_4yr"))`
+for all pupils.
+
+# How v2.0 compares with v1
+
+```{r fig-v1}
+#| fig-cap: "Each school's value added, v1 as published (within its local authority) against v2.0 (against England, shrunk), all pupils, mean over the four years."
+#| fig-height: 6
+jj <- j |> filter(group == "all")
+ggplot(jj, aes(va_v1, va_shrunk)) +
+  geom_abline(colour = GREY, linetype = "dashed") +
+  geom_point(colour = MPURPLE, alpha = 0.35, size = 0.9) +
+  geom_smooth(method = "lm", se = FALSE, colour = DPURPLE, linewidth = 0.8) +
+  coord_cartesian(xlim = quantile(jj$va_v1, c(.002, .998)), ylim = quantile(jj$va_shrunk, c(.002, .998))) +
+  labs(x = "v1 value added (published, within the LA)", y = "v2.0 value added (against England, shrunk)",
+       title = sprintf("v1 and v2.0 agree broadly (r = %.2f) but rank many schools differently", c_at("all", "r"))) +
+  theme_note()
+```
+
+```{r tbl-v1}
+#| tbl-cap: "Agreement between v1 and v2.0 across schools, by group. v1 has no girls or boys measure."
+cmp |> transmute(Group = GROUP_LABELS[group], Schools = format(n, big.mark = ","),
+                 `r, v2 against England` = sprintf("%.2f", r),
+                 `r, v2 within the LA` = sprintf("%.2f", r_la),
+                 `Schools changing quintile` = sprintf("%.0f%%", 100 * moved)) |>
+  kt(align = "lrrrr")
+```
+
+The two measures agree broadly but not closely: `r sprintf("%.0f%%", 100 * c_at("all", "moved"))`
+of schools fall in a different quintile on v2.0 for all pupils. Measured
+within the authority, as v1 was, the correlation is
+`r sprintf("%.2f", c_at("all", "r_la"))`. The remaining difference is the
+specification: the Ofsted grade and workforce terms coming out, and the
+new intake terms going in. The [review](review.qmd) sets out how much
+each change contributes.
+
+# Girls and boys
+
+```{r fig-gb}
+#| fig-cap: "Each mixed school's value added for its girls and for its boys (v2.0, shrunk, against England). Schools far from the diagonal do markedly better by one group."
+#| fig-height: 6
+ggplot(gb, aes(va_shrunk_boys, va_shrunk_girls)) +
+  geom_abline(colour = GREY, linetype = "dashed") +
+  geom_point(colour = DPURPLE, alpha = 0.3, size = 0.9) +
+  coord_fixed() +
+  labs(x = "Value added, boys", y = "Value added, girls",
+       title = sprintf("Girls' and boys' value added go together (r = %.2f), with real exceptions",
+                       cor(gb$va_shrunk_girls, gb$va_shrunk_boys))) +
+  theme_note()
+```
+
+Girls' and boys' value added correlate
+`r sprintf("%.2f", cor(gb$va_shrunk_girls, gb$va_shrunk_boys))` across the
+`r format(nrow(gb), big.mark = ",")` schools with both. In
+`r sum(abs(gb$va_shrunk_girls - gb$va_shrunk_boys) > 3)` schools the two
+differ by more than three points. The girls' and boys' models use the same
+intake terms, measured for the whole school; the DfE publishes Attainment 8
+by sex but not intake by sex, so a school's intake of girls and of boys is
+assumed alike.
+
+# Local authorities
+
+```{r fig-la}
+#| fig-cap: "Local authority effects in v2.0, all pupils and disadvantaged pupils, with 95% intervals. Sussex's three authorities highlighted."
+#| fig-height: 6
+V$la |>
+  filter(group %in% c("all", "disadvantaged")) |>
+  mutate(group = GROUP_LABELS[group], hl = ifelse(LANAME %in% SUSSEX_LAS, LANAME, "Other")) |>
+  group_by(group) |> mutate(o = rank(effect)) |> ungroup() |>
+  ggplot(aes(o, pct(effect))) +
+  geom_hline(yintercept = 0, colour = GREY) +
+  geom_errorbar(aes(ymin = pct(lo), ymax = pct(hi)), colour = LIGHT, width = 0, linewidth = 0.3) +
+  geom_point(colour = LIGHT, size = 1) +
+  geom_point(data = \(d) filter(d, hl != "Other"), aes(fill = hl), shape = 21, colour = "white", size = 3.2) +
+  ggrepel::geom_text_repel(data = \(d) filter(d, hl != "Other"), aes(label = hl), size = 3, nudge_y = 3,
+                           segment.colour = GREY) +
+  facet_wrap(~group) +
+  scale_fill_manual(values = AREA_COL, guide = "none") +
+  labs(x = "Local authorities, ordered", y = "Effect (%)", title = "Brighton and Hove remains near the top") +
+  theme_note(10) + theme(axis.text.x = element_blank(), panel.grid.major.x = element_blank())
+```
+
+The authority effect is reported here, beside value added, rather than
+inside it: value added against England includes whatever the authority
+contributes. The within-authority value added (as v1) is kept in the data
+for anyone who wants it.
+
+# Data
+
+Every school's v2.0 value added, for every group, with intervals and the
+within-authority version, is in
+[va_v2_schools.csv](data/va_v2_schools.csv). Inputs are the DfE
+performance tables, school census and absence data, the 2021 Census and
+Ofsted's monthly management information, assembled by the
+[original project](https://github.com/adamdennett/school_attainment_tool).
+The build is described in the
+[repository README](https://github.com/adamdennett/school_value_added#readme).

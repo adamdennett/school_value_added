@@ -1,0 +1,602 @@
+---
+title: "The Value-Added Review"
+subtitle: "Is the school-level residual of the national model specified well enough to lean on? The review that Value Added v2.0 was built from."
+author:
+  - name: Adam Dennett
+    affiliations:
+      - name: Bartlett Centre for Advanced Spatial Analysis, University College London
+date: 2026-11-02
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+R <- readRDS(here::here("data", "value_added_review.rds"))   # R/21_value_added_review.R
+A <- R$all; D <- R$disadvantaged
+
+vs  <- function(x, s) x$variants$summary |> filter(spec == s)
+imp <- function(x, lab) x$importance |> filter(label == lab)
+om  <- function(x, v) x$omissions$r[x$omissions$var == v]
+# (the coefficient table has a column called t, so the term argument is not)
+cf  <- function(x, s, trm) x$variants$coefs |> filter(spec == s, term == trm)
+pc  <- function(x, d = 0) sprintf(paste0("%.", d, "f%%"), 100 * x)
+# share of the local authority variance a variant accounts for
+la_var <- function(x, s) 1 - (vs(x, s)$sd_la / vs(x, "published")$sd_la)^2
+r2  <- function(x) sprintf("%.2f", x)
+pe  <- function(b) sprintf("%+.1f%%", pct(b))         # a log-scale coefficient as a percentage
+wn  <- function(x) x$design$within_vs_national
+SPEC_LAB <- c(published = "Published", no_workforce = "– workforce", no_ofsted = "– Ofsted",
+              intake_context = "– workforce – Ofsted", no_absence = "– absence",
+              plus_l4 = "+ neighbourhood education", plus_route = "+ governance route",
+              plus_mat = "+ trust membership", plus_sen = "+ SEN", plus_mobility = "+ mobility",
+              plus_single_sex = "+ single-sex", plus_girls_pct = "+ share of girls",
+              plus_size = "+ size", plus_religious = "+ religious character",
+              candidate = "Candidate")
+```
+
+::: {.callout-warning appearance="simple"}
+## Where this led
+
+**Every recommendation below has been adopted in [Value Added v2.0](method.qmd).**
+This page is the review as written, with its figures recomputed from the same analysis
+(`R/21_value_added_review.R` in the original repository).
+
+A review of the value-added measure used across the
+[How to Pull the Right Lever](https://adamdennett.github.io/school_attainment_tool/pulling_the_right_lever_v2.html)
+work and the Sussex documents. Every figure comes from refitting the
+published national model on its own data, `r format(R$n, big.mark = ",")`
+school-years for `r format(R$n_schools, big.mark = ",")` schools,
+2021/22 to 2024/25. Nothing uses pupil-level records.
+:::
+
+# Summary {.unnumbered}
+
+**The measure is sound, and its core should stay as it is.** A
+school-level residual from a multilevel model of Attainment 8 is the
+right construction. The intake terms that do the work are the right
+ones, and with four years of data a school's average value added is a
+reliable signal (reliability `r r2(A$design$reliability_mean)` for all
+pupils, `r r2(D$design$reliability_mean)` for disadvantaged pupils).
+
+**But three things in the specification credit or penalise schools for
+the wrong reasons, and fixing them would change the picture for a
+meaningful minority of schools.**
+
+1. **The Ofsted rating is in the expectation.** A school's expected
+   result is set higher if Ofsted rated it highly, but Ofsted's
+   judgement is partly based on those same results. Taking it out moves
+   `r pc(vs(A, "no_ofsted")$moved_quintile)` of schools into a different
+   value-added quintile.
+2. **The workforce terms are things schools partly control.** They add
+   little to the model, and teacher retention is the only one that moves
+   schools noticeably (`r pc(imp(A, "Teacher retention")$moved_quintile)`
+   change quintile without it). They are better treated as possible
+   explanations of value added than as part of its baseline.
+3. **Value added is measured within each local authority.** The
+   expectation includes the authority's own effect, so a school in a
+   strong authority is held to a higher bar. Measured against England
+   instead, `r pc(wn(A)$moved_quintile[1])` of schools change quintile.
+
+**Four additions are worth making**, all of them intake or context
+rather than things a school controls:
+
+- **pupil mobility**, the strongest new term (AIC
+  `r round(vs(A, "plus_mobility")$delta_aic)`); value added at present
+  penalises schools whose pupils arrive mid-phase;
+- **a girls' school term**, since girls' schools currently gain
+  `r pe(cf(A, "plus_single_sex", "single_sexGirls")$estimate)` from
+  their intake's gender alone;
+- **SEN support and EHCP rates**, which matter most for disadvantaged
+  pupils;
+- **neighbourhood education** (% with degree-level qualifications around
+  the school), for all pupils. It removes value added's tilt towards
+  schools in educated places and accounts for
+  `r pc(la_var(A, "plus_l4"))` of the remaining local authority
+  variance. Brighton and Hove's effect falls
+  from `r ord(vs(A, "published")$bh_rank)` to
+  `r ord(vs(A, "plus_l4")$bh_rank)` in England. It makes no difference
+  for disadvantaged pupils.
+
+**Governance (academy route, trust membership), school size and
+religious character should stay out.** Who runs a school is part of
+what value added should measure, not part of its baseline, and in any
+case these terms barely move it.
+
+Taken together the changes are substantial: the candidate measure
+correlates `r r2(vs(A, "candidate")$r)` with the published one across
+schools, and `r pc(vs(A, "candidate")$moved_quintile)` of schools
+change quintile. Most of that is the Ofsted decision. The recommendations
+are in @sec-recommendations.
+
+# What the measure is
+
+Value added is the residual of the published model, averaged over a
+school's years:
+
+$$\text{VA} = \text{Attainment 8} - \exp(\hat{y})\,e^{\sigma^2/2}$$
+
+where $\hat{y}$ is the model's prediction of log Attainment 8 and the
+second factor is the lognormal back-transformation. The model is
+
+```
+log(Attainment 8) ~ log(% FSM6) + log(absence) + log(% EAL) + KS2 (centred)
+                    + admissions (selective) + segregation (LA)
+                    + teacher retention + % teachers on leadership pay
+                    + log(teacher sickness days)
+                    + (1 | year) + (1 | Ofsted rating) + (1 | region / local authority)
+```
+
+fitted separately for all, disadvantaged and non-disadvantaged pupils.
+Two features of the prediction matter for what follows:
+
+- **It includes every random effect**, so the expectation for a school
+  already contains its Ofsted grade's effect and its local authority's
+  effect. Value added is therefore "relative to schools with the same
+  Ofsted grade in the same authority".
+- **It is a residual, not a separately estimated school effect.** Each
+  school-year's residual is averaged. @sec-signal checks that this is
+  close to what a school random intercept would give.
+
+# How much each term matters {#sec-importance}
+
+Each term was dropped in turn. Two things were recorded: how much worse
+the model fits (the rise in AIC, fitted by maximum likelihood), and how
+much schools' value added moves.
+
+```{r fig-importance}
+#| fig-cap: "Each term of the published model dropped in turn. Left, the loss of fit (rise in AIC; bigger means the term matters more to the model). Right, the share of schools whose value added moves into a different quintile without it. All pupils and disadvantaged pupils."
+#| fig-height: 6
+bind_rows(A$importance |> mutate(group = "All pupils"),
+          D$importance |> mutate(group = "Disadvantaged pupils")) |>
+  mutate(label = factor(label, rev(A$importance$label))) |>
+  select(group, label, `Loss of fit (AIC)` = delta_aic, `Schools changing quintile (%)` = moved_quintile) |>
+  mutate(`Schools changing quintile (%)` = 100 * `Schools changing quintile (%)`) |>
+  pivot_longer(-c(group, label)) |>
+  ggplot(aes(value, label, fill = group)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+  facet_wrap(~name, scales = "free_x") +
+  scale_fill_manual(values = c(`All pupils` = TEAL, `Disadvantaged pupils` = WARM), name = NULL) +
+  labs(x = NULL, y = NULL, title = "Prior attainment and absence carry the model; the workforce terms barely register") +
+  theme_note(10)
+```
+
+```{r tbl-importance}
+#| tbl-cap: "The published model's terms, all pupils: standardised effect (the change in Attainment 8 for one standard deviation of the term, or the random effect's standard deviation), loss of fit without it, and how far school value added moves without it."
+A$importance |>
+  transmute(Term = label, `Standardised effect` = sprintf("%+.1f%%", std_effect_pct),
+            `Loss of fit (AIC)` = round(delta_aic), `VA correlation without it` = sprintf("%.3f", r_va),
+            `Mean VA change (points)` = sprintf("%.2f", mean_abs_change),
+            `Schools changing quintile` = pc(moved_quintile)) |>
+  kt(align = "lrrrrr")
+```
+
+The ranking is clear:
+
+- **Prior attainment and absence** are by far the most important terms.
+  Each moves nearly half of schools a quintile when dropped.
+- **The Ofsted grade and the local authority** come next. Both are
+  random effects in the expectation, and both are questioned below.
+- **Disadvantage** matters less than might be expected for all pupils,
+  because prior attainment carries much of the same information.
+- **The low end.** Segregation adds nothing (AIC
+  `r sprintf("%+.1f", imp(A, "Segregation (LA)")$delta_aic)`): it is
+  measured at authority level, and the authority's own random effect
+  already captures it. Leadership pay and sickness days each move fewer
+  than one school in
+  `r round(1 / max(imp(A, "Teachers on leadership pay")$moved_quintile, imp(A, "Teacher sickness days")$moved_quintile))`
+  a quintile. Teacher retention is the only workforce term that matters
+  at all, moving `r pc(imp(A, "Teacher retention")$moved_quintile)` of
+  schools. For disadvantaged pupils none of the three workforce terms
+  matters (retention's AIC change is
+  `r sprintf("%+.1f", imp(D, "Teacher retention")$delta_aic)`).
+
+# What the measure leaves out {#sec-omissions}
+
+If value added correlates with something outside a school's control,
+schools are being credited or penalised for it. The published value
+added was correlated with each candidate the model leaves out.
+
+```{r fig-omissions}
+#| fig-cap: "Correlation across schools between published value added (mean 2021/22 to 2024/25) and variables the model does not include. Teacher retention, disadvantage and prior attainment are in the model and shown for reference; their correlations are near zero by construction."
+#| fig-height: 5.2
+bind_rows(A$omissions |> mutate(group = "All pupils"),
+          D$omissions |> mutate(group = "Disadvantaged pupils")) |>
+  mutate(label = factor(label, A$omissions$label[order(A$omissions$r)]),
+         kind = ifelse(in_model, "In the model", "Left out")) |>
+  ggplot(aes(r, label, fill = group, alpha = kind)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+  scale_fill_manual(values = c(`All pupils` = TEAL, `Disadvantaged pupils` = WARM), name = NULL) +
+  scale_alpha_manual(values = c(`Left out` = 1, `In the model` = 0.35), name = NULL) +
+  labs(x = "Correlation with value added", y = NULL,
+       title = "Value added tracks girls' schools, pupil mobility and neighbourhood education") +
+  theme_note(10)
+```
+
+Three omissions stand out:
+
+- **Girls' schools** have higher value added (r =
+  `r r2(om(A, "girls"))` for all pupils, `r r2(om(D, "girls"))` for
+  disadvantaged). Girls outperform boys at GCSE nationally, and the model
+  has no term for an intake's gender. Part of what reads as a girls'
+  school's added value is its intake.
+- **Pupil mobility**, the share of pupils who joined the school during
+  the key stage, correlates `r r2(om(A, "mobile"))` with value added.
+  Schools that take mid-phase arrivals are penalised for an intake they
+  did not choose.
+- **Neighbourhood education** correlates `r r2(om(A, "l4"))` for all
+  pupils and `r r2(om(D, "l4"))` for disadvantaged pupils. Schools in
+  educated places gain a little credit for where they are, and only for
+  their non-disadvantaged pupils.
+
+SEN rates, size, governance and religious character are close to
+uncorrelated with value added.
+
+# The alternatives {#sec-variants}
+
+Each variant was fitted on the same school-years and compared with the
+published value added school by school.
+
+```{r fig-variants}
+#| fig-cap: "Each variant against the published model. Across, the change in fit (AIC; left of zero fits better). Up, the share of schools whose value added moves into a different quintile. Removals in red, additions in teal, the combined candidate in purple."
+#| fig-height: 6.5
+bind_rows(A$variants$summary |> mutate(group = "All pupils"),
+          D$variants$summary |> mutate(group = "Disadvantaged pupils")) |>
+  filter(spec != "published") |>
+  mutate(kind = case_when(spec == "candidate" ~ "Candidate",
+                          startsWith(spec, "plus") ~ "Addition", TRUE ~ "Removal"),
+         lab = SPEC_LAB[spec]) |>
+  ggplot(aes(delta_aic, 100 * moved_quintile, colour = kind)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_point(size = 2.8) +
+  ggrepel::geom_text_repel(aes(label = lab), size = 2.8, max.overlaps = 30, show.legend = FALSE) +
+  facet_wrap(~group) +
+  scale_colour_manual(values = c(Removal = BAD, Addition = TEAL, Candidate = PURPLE), name = NULL) +
+  labs(x = "Change in AIC against the published model", y = "Schools changing quintile (%)",
+       title = "Removing Ofsted or absence moves schools most; mobility and gender are the best additions") +
+  theme_note(10)
+```
+
+```{r tbl-variants}
+#| tbl-cap: "Every variant, all pupils. Fit (AIC change, marginal R²), the local authority variation left (SD of the LA effect, log scale) and Brighton and Hove's rank, and how far school value added moves from the published measure."
+A$variants$summary |>
+  transmute(Variant = what, `AIC change` = round(delta_aic), `Marginal R²` = sprintf("%.3f", r2_marginal),
+            `LA SD` = sprintf("%.4f", sd_la), `B&H rank` = paste(ord(bh_rank), "of", n_la),
+            `VA correlation` = sprintf("%.3f", r),
+            `Mean change (points)` = sprintf("%.2f", mean_abs_change),
+            `Changing quintile` = pc(moved_quintile),
+            `Bottom decile kept` = pc(bottom_decile_kept)) |>
+  kt(align = "lrrrrrrrr")
+```
+
+```{r tbl-variants-dis}
+#| tbl-cap: "The same for disadvantaged pupils."
+D$variants$summary |>
+  transmute(Variant = what, `AIC change` = round(delta_aic), `LA SD` = sprintf("%.4f", sd_la),
+            `B&H rank` = paste(ord(bh_rank), "of", n_la), `VA correlation` = sprintf("%.3f", r),
+            `Mean change (points)` = sprintf("%.2f", mean_abs_change),
+            `Changing quintile` = pc(moved_quintile)) |>
+  kt(align = "lrrrrrr")
+```
+
+A lower AIC is not the test here. Taking out a term the model uses
+always worsens the fit. The question for each term is whether it belongs
+in the *expectation* a school is measured against.
+
+## Things schools partly control: workforce and Ofsted
+
+**The workforce terms.** Retention, leadership pay and sickness absence
+are shaped by a school's leadership as well as by its circumstances. In
+the baseline, a school that keeps its teachers is expected to do better,
+so the credit for doing so is netted off its value added. Dropping all
+three moves `r pc(vs(A, "no_workforce")$moved_quintile)` of schools a
+quintile for all pupils, nearly all of it retention, and
+`r pc(vs(D, "no_workforce")$moved_quintile)` for disadvantaged pupils.
+The fit loss is small (AIC
+`r round(vs(A, "no_workforce")$delta_aic)`).
+
+**The Ofsted grade.** This is the more serious problem. Ofsted's
+judgements draw on a school's results, so putting the grade in the
+expectation partly conditions value added on its own outcome. An
+Outstanding school's bar is raised (the grade's random effect has a
+standard deviation of
+`r sprintf("%.1f%%", imp(A, "Ofsted rating (random)")$std_effect_pct)`),
+and some of its added value disappears into it. Removing the grade:
+
+- moves `r pc(vs(A, "no_ofsted")$moved_quintile)` of schools a quintile
+  (`r pc(vs(D, "no_ofsted")$moved_quintile)` for disadvantaged pupils);
+- changes value added by `r sprintf("%.1f", vs(A, "no_ofsted")$mean_abs_change)`
+  points on average, and by more than
+  `r sprintf("%.1f", vs(A, "no_ofsted")$p90_abs_change)` for one school
+  in ten;
+- raises the fixed effects' share of variance (marginal R² from
+  `r sprintf("%.2f", vs(A, "published")$r2_marginal)` to
+  `r sprintf("%.2f", vs(A, "no_ofsted")$r2_marginal)`), because the
+  intake terms take back what the grade had absorbed.
+
+The grade was useful for the Lever report's purpose, which was to
+explain attainment. It is the wrong thing to hold constant when the aim
+is to measure a school against its intake.
+
+## Intake the model misses: mobility, gender, SEN
+
+- **Mobility** is the best single addition: AIC
+  `r round(vs(A, "plus_mobility")$delta_aic)` for all pupils and
+  `r round(vs(D, "plus_mobility")$delta_aic)` for disadvantaged. Each
+  extra percentage point of mobile pupils costs
+  `r sprintf("%.1f%%", abs(pct(cf(A, "plus_mobility", "mobile")$estimate)))` of Attainment 8.
+  It moves `r pc(vs(A, "plus_mobility")$moved_quintile)` of schools.
+- **Gender.** A girls' school scores
+  `r pe(cf(A, "plus_single_sex", "single_sexGirls")$estimate)` above an
+  otherwise identical mixed school (boys' schools do not differ, at
+  `r pe(cf(A, "plus_single_sex", "single_sexBoys")$estimate)`). A
+  single-sex flag (AIC `r round(vs(A, "plus_single_sex")$delta_aic)`)
+  fits `r ifelse(vs(A, "plus_single_sex")$delta_aic < vs(A, "plus_girls_pct")$delta_aic, "better", "less well")`
+  than the share of girls as a continuous term (AIC
+  `r round(vs(A, "plus_girls_pct")$delta_aic)`): the effect is a
+  girls'-school effect, not a gradient across mixed schools.
+- **SEN.** SEN support and EHCP rates improve the fit modestly for all
+  pupils (AIC `r round(vs(A, "plus_sen")$delta_aic)`) and more clearly
+  for disadvantaged pupils (`r round(vs(D, "plus_sen")$delta_aic)`), and
+  move few schools. They belong in the expectation on principle: a
+  school's SEN intake is not of its making.
+
+## Neighbourhood education {#sec-l4}
+
+The preliminary work (Analysis F in the model experiments) found that
+the share of adults with degree-level qualifications in the 150 census
+output areas nearest a school, about a 2.5 km radius, improved the
+model and explained part of the local authority effect. In this
+review's terms:
+
+- **For all pupils** it is a strong addition: AIC
+  `r round(vs(A, "plus_l4")$delta_aic)`, and one standard deviation of
+  neighbourhood education is worth
+  `r pe(cf(A, "plus_l4", "z_l4")$estimate)`. The local authority
+  standard deviation falls from `r sprintf("%.4f", vs(A, "published")$sd_la)`
+  to `r sprintf("%.4f", vs(A, "plus_l4")$sd_la)`: it accounts for
+  `r pc(la_var(A, "plus_l4"))` of the authority variance. Brighton and Hove's effect falls from
+  `r pe(vs(A, "published")$bh_eff)` (`r ord(vs(A, "published")$bh_rank)`)
+  to `r pe(vs(A, "plus_l4")$bh_eff)` (`r ord(vs(A, "plus_l4")$bh_rank)`).
+  Part of what looked like a Brighton and Hove effect is the city's
+  educated neighbourhoods.
+- **For disadvantaged pupils** it does nothing (AIC
+  `r sprintf("%+.1f", vs(D, "plus_l4")$delta_aic)`, effect
+  `r pe(cf(D, "plus_l4", "z_l4")$estimate)`). Brighton and Hove's rank
+  barely moves, from `r ord(vs(D, "published")$bh_rank)` to
+  `r ord(vs(D, "plus_l4")$bh_rank)`. Living near educated households does
+  not raise disadvantaged pupils' results; it is non-disadvantaged
+  pupils, many of whose parents are those households, who carry the
+  effect.
+
+That pattern is what one would expect if neighbourhood education stands
+in for **parental education**, which no school-level source measures
+directly. On that reading it is intake, and belongs in the expectation.
+Two cautions:
+
+- it describes the area around the school, not where its pupils live, so
+  schools with wide or unusual catchments are measured imperfectly;
+- it is fixed at the 2021 Census, so it cannot track change.
+
+## Who runs the school: route and trusts
+
+Converter academies score `r pe(cf(A, "plus_route", "routeConverter academy")$estimate)`
+against maintained schools, free schools, UTCs and studio schools
+`r pe(cf(A, "plus_route", "routeFree school, UTC or studio")$estimate)`,
+and sponsor-led academies
+`r pe(cf(A, "plus_route", "routeSponsor-led academy")$estimate)`.
+Schools in a multi-academy trust score
+`r pe(cf(A, "plus_mat", "in_mat")$estimate)`. None of this moves value
+added much (correlations `r r2(vs(A, "plus_route")$r)` and
+`r r2(vs(A, "plus_mat")$r)`).
+
+More importantly, **governance should not be in the expectation at all**.
+Who runs a school is one of the things value added is meant to reveal:
+a trust that improves its schools should see that in their value added,
+not have it netted off. The worry about selection, that trusts take on
+schools in difficult circumstances, is met by measuring those
+circumstances directly (disadvantage, prior attainment, mobility, SEN),
+not by adjusting for governance. The trust analysis in the
+[East Sussex document](https://adamdennett.github.io/school_attainment_tool/east_sussex.html#sec-trusts) is the right place
+for the governance question.
+
+```{r tbl-route}
+#| tbl-cap: "Mean value added by governance route (each school's most common route over the four years), under the published model, without workforce and Ofsted, and under the candidate. Attainment 8 points."
+bind_rows(A$route_va |> mutate(group = "All pupils"), D$route_va |> mutate(group = "Disadvantaged")) |>
+  mutate(spec = SPEC_LAB[spec], va = sprintf("%+.2f", va)) |>
+  pivot_wider(names_from = spec, values_from = va) |>
+  select(Group = group, Route = route, Schools = schools, all_of(unname(SPEC_LAB[c("published", "intake_context", "candidate")]))) |>
+  kt(align = "llrrrr")
+```
+
+## Size and religious character
+
+School size improves the fit for all pupils (AIC
+`r round(vs(A, "plus_size")$delta_aic)`) but should stay out: popular,
+successful schools grow, so size is partly a consequence of value added.
+Religious character makes no difference (AIC
+`r sprintf("%+.1f", vs(A, "plus_religious")$delta_aic)`).
+
+## Absence
+
+Absence is the model's second most important term. Dropping it moves
+`r pc(vs(A, "no_absence")$moved_quintile)` of schools a quintile, and
+Brighton and Hove's authority effect from `r ord(vs(A, "published")$bh_rank)`
+in England to `r ord(vs(A, "no_absence")$bh_rank)`. It is partly intake (illness, deprivation) and partly practice.
+The Lever report's argument rests on keeping it in, and the joint-signal
+plane already shows the other view, value added with attendance counted
+in. That pairing is the right answer and needs no change: keep absence
+in the core measure, and keep publishing the attendance-counted-in
+version beside it.
+
+# Two design choices {#sec-design}
+
+## Against the authority, or against England {#sec-national}
+
+The published value added includes the local authority's random effect
+in the expectation. With ten or twenty schools in an authority, that
+effect is largely the average of those schools' own results, so part of
+each school's added value is attributed to its authority and netted off.
+Measuring against England instead (leaving the authority and region
+effects out of the prediction):
+
+- correlates `r r2(wn(A)$r[1])` with the published value added across
+  schools, and moves `r pc(wn(A)$moved_quintile[1])` of schools a
+  quintile (`r pc(wn(D)$moved_quintile[1])` for disadvantaged pupils);
+- shifts every school in an authority by the same amount, so it changes
+  comparisons *between* authorities, not within them.
+
+```{r fig-national}
+#| fig-cap: "Each school's published value added (within its local authority) against its value added measured against England, all pupils, mean 2021/22 to 2024/25. Sussex schools coloured by authority."
+#| fig-height: 6
+s <- A$design$schools |>
+  mutate(area = ifelse(LANAME %in% c("Brighton and Hove", "East Sussex", "West Sussex"), LANAME, "Rest of England"))
+ggplot(s, aes(pub_la, pub_nat)) +
+  geom_abline(colour = GREY, linetype = "dashed") +
+  geom_point(data = filter(s, area == "Rest of England"), colour = LIGHT, size = 0.7, alpha = 0.6) +
+  geom_point(data = filter(s, area != "Rest of England"), aes(fill = area), shape = 21,
+             colour = "white", size = 2.8) +
+  scale_fill_manual(values = AREA_COL, name = NULL) +
+  coord_cartesian(xlim = quantile(s$pub_la, c(0.002, 0.998)), ylim = quantile(s$pub_nat, c(0.002, 0.998))) +
+  labs(x = "Published value added, within the local authority (points)",
+       y = "Value added against England (points)",
+       title = "Brighton and Hove's schools sit above the line: their authority effect is netted off") +
+  theme_note(10)
+```
+
+Both views are legitimate, but they answer different questions:
+
+- **Within the authority:** "how does this school do compared with
+  similar schools *in the same place*?"
+- **Against England:** "how does this school do compared with similar
+  schools anywhere?"
+
+For the Sussex documents, which compare schools across three
+authorities, the national version is the right one, and the authority
+effect should be reported beside it rather than inside it.
+
+## How much of value added is the school {#sec-signal}
+
+A version of the published model with a school random intercept splits
+the unexplained variation into a persistent school part and year-to-year
+noise:
+
+- **All pupils:** the school part has a standard deviation of
+  `r sprintf("%.3f", A$design$school_sd)` (log scale) against
+  `r sprintf("%.3f", A$design$resid_sd)` for the year-to-year noise.
+  `r pc(A$design$icc)` of the unexplained variation is persistent. A
+  four-year average has a reliability of
+  `r r2(A$design$reliability_mean)`.
+- **Disadvantaged pupils:** `r pc(D$design$icc)` persistent, and a
+  four-year average reliability of `r r2(D$design$reliability_mean)`.
+  The groups are small, and single years are noisy.
+
+The shrunken school effects from that model correlate
+`r r2(A$design$blup_vs_mean)` with the averaged residuals for all
+pupils, and `r r2(D$design$blup_vs_mean)` for disadvantaged pupils. The
+simple average is a good approximation. The shrunken estimate is better
+for small schools and should be preferred where single schools are
+singled out.
+
+# What it would mean in Sussex
+
+```{r tbl-sussex}
+#| tbl-cap: "Value added for each Sussex school, all pupils, mean 2021/22 to 2024/25, Attainment 8 points: as published (within its local authority), against England, and under the candidate measure against England. Ordered by authority and published value added."
+A$sussex |>
+  arrange(LANAME, desc(pub_la)) |>
+  transmute(School = SCHNAME, Authority = LANAME,
+            Published = sprintf("%+.1f", pub_la), `Against England` = sprintf("%+.1f", pub_nat),
+            `Candidate, against England` = sprintf("%+.1f", cand_nat),
+            Change = sprintf("%+.1f", cand_nat - pub_la)) |>
+  kt(align = "llrrrr")
+```
+
+```{r sussex-notes}
+#| include: false
+sx <- A$sussex |> group_by(LANAME) |>
+  summarise(shift_nat = mean(pub_nat - pub_la), shift_cand = mean(cand_nat - pub_la), .groups = "drop")
+sh <- function(la, col) sx[[col]][sx$LANAME == la]
+```
+
+Measured against England, Brighton and Hove's schools gain
+`r sprintf("%+.1f", sh("Brighton and Hove", "shift_nat"))` points on
+average, East Sussex's `r sprintf("%+.1f", sh("East Sussex", "shift_nat"))`
+and West Sussex's `r sprintf("%+.1f", sh("West Sussex", "shift_nat"))`:
+the published measure nets each authority's effect off its own schools.
+Under the candidate measure against England the average changes are
+`r sprintf("%+.1f", sh("Brighton and Hove", "shift_cand"))`,
+`r sprintf("%+.1f", sh("East Sussex", "shift_cand"))` and
+`r sprintf("%+.1f", sh("West Sussex", "shift_cand"))`. The Sussex
+documents' comparisons across authorities would change in that
+direction.
+
+# Recommendations {#sec-recommendations}
+
+1. **Keep the construction.** A school-level residual of a multilevel
+   model of log Attainment 8, by pupil group, is the right measure. Keep
+   prior attainment, absence, disadvantage, EAL and selective admissions
+   at its core.
+2. **Take the Ofsted rating out of the value-added model.** It
+   conditions value added on a judgement made partly from the same
+   results. This is the most consequential change. Ofsted can stay in
+   explanatory models (and the area decompositions) where the aim is to
+   describe attainment rather than to measure schools.
+3. **Take the workforce terms out of the value-added model.** Leadership
+   pay and sickness add almost nothing. Retention adds a little, but it
+   is partly an outcome of how a school is led. All three are better used
+   to *explain* value added than to set its baseline.
+4. **Drop LA segregation.** It adds nothing once the authority's own
+   effect is in the model.
+5. **Add pupil mobility, a girls' school term, and SEN support and EHCP
+   rates.** All are intake, all improve the fit, and mobility and gender
+   remove clear biases in the current measure. A single-sex flag fits
+   better than the share of girls.
+6. **Add neighbourhood education for all-pupil and non-disadvantaged
+   value added.** It stands in for parental education, removes the
+   current tilt towards schools in educated places, and accounts for
+   `r pc(la_var(A, "plus_l4"))` of the local authority variance. Including it for
+   disadvantaged pupils is harmless but makes no difference, so the
+   specification can be shared across the three groups for simplicity.
+7. **Leave governance, size and religious character out.** Who runs a
+   school is something value added should reveal, not absorb. Size is
+   partly a consequence of success.
+8. **Report value added against England as well as within the
+   authority**, and use the national version wherever schools in
+   different authorities are compared. Report the authority effect
+   separately.
+9. **Keep absence in, and keep publishing the attendance-counted-in
+   view beside it**, as the joint-signal plane already does.
+10. **Use shrunken school effects, with intervals, where single schools
+    are named**, especially for disadvantaged pupils, whose four-year
+    reliability is `r r2(D$design$reliability_mean)`.
+
+Recommendations 2, 3, 5 and 6 together are the "candidate" measured in
+this review (it keeps segregation, which makes no difference either
+way). Recommendation 8 is a reporting choice and can be applied to
+either model.
+
+**Effect on the published work.** The Lever report's argument rests on
+the model's explanatory terms, chiefly absence, and the candidate leaves
+those intact. What would change is the ranking of individual schools and
+the comparisons between authorities. If adopted, the change should be
+introduced as a new, labelled measure alongside the published one,
+not as a silent revision. The Sussex documents would move to it, with a
+note.
+
+# Notes on method {.unnumbered}
+
+All models are fitted to the published model's own data
+(`data/model_data_imputed.rds`): 2021/22 to 2024/25, with 2024/25's
+workforce and prior-attainment terms carried forward as in the published
+model. The common sample drops the
+`r format(12210 - R$n, big.mark = ",")` school-years with no
+neighbourhood or mobility figure. Value added is computed exactly as
+published (bias-corrected back-transformation, every random effect in
+the prediction) unless stated. AIC comparisons use maximum likelihood;
+value added uses REML fits. Neighbourhood education is the share of
+adults with level 4+ qualifications in the 150 nearest 2021 Census
+output areas (`R/13_census_context.R`). Mobility is 100 minus the share
+of pupils who were at the school throughout the key stage. Trust
+membership is by year, from the DfE exclusions file
+(`R/19_trust_effects.R`). The analysis is `R/21_value_added_review.R`;
+this document is `value_added_review.qmd`.

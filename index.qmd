@@ -1,0 +1,72 @@
+---
+pagetitle: "School Value Added"
+toc: false
+page-layout: full
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+V <- load_va()
+S <- V$summary
+```
+
+::: {.hero}
+# How much does a school add?
+
+<p class="lead">Value Added v2.0 measures each secondary school in England
+against what its intake and context would lead us to expect: for all
+pupils, for disadvantaged and non-disadvantaged pupils, and now for girls
+and boys. It is the next step from
+<a href="https://adamdennett.github.io/school_attainment_tool/">How to Pull the Right Lever</a>,
+rebuilt on the recommendations of a <a href="review.html">review of the
+original measure</a>.</p>
+:::
+
+::: {.stat-row}
+::: {.stat}
+<div class="num">`r format(S$schools[S$group == "all"], big.mark = ",")`</div>
+<div class="lab">schools, `r yl(min(V$spec$years))` to `r yl(max(V$spec$years))`</div>
+:::
+::: {.stat}
+<div class="num">5</div>
+<div class="lab">pupil groups, including girls and boys</div>
+:::
+::: {.stat}
+<div class="num">`r sprintf("%.2f", S$reliability_4yr[S$group == "all"])`</div>
+<div class="lab">reliability of a school's four-year value added</div>
+:::
+::: {.stat}
+<div class="num">`r format(V$ofsted_as_at, "%b %Y")`</div>
+<div class="lab">latest Ofsted judgements included</div>
+:::
+:::
+
+## What is new in v2.0
+
+- **Measured against intake and context only.** The Ofsted grade and the
+  teacher workforce terms are out of the expectation: they partly reflect
+  the very performance being measured.
+- **Fairer to schools with harder intakes.** Pupil mobility, SEN rates, a
+  single-sex term and neighbourhood education are in.
+- **Against England.** A school is compared with similar schools anywhere,
+  with the local authority's own effect reported beside it.
+- **Honest about uncertainty.** Estimates are shrunk by their reliability
+  and carry 95% intervals.
+- **Girls and boys** have their own value added for the first time.
+- **The latest Ofsted judgement** sits beside every school, including the
+  new report cards.
+
+## Explore
+
+::: {.cards}
+<a class="card-v2" href="method.html"><div class="card-title">Value Added v2.0</div><div class="card-desc">The specification, the model for each pupil group, and how v2.0 compares with the published measure.</div></a>
+<a class="card-v2" href="schools.html"><div class="card-title">Every school</div><div class="card-desc">Search and sort every secondary school in England by value added for each group.</div></a>
+<a class="card-v2" href="sussex.html"><div class="card-title">Sussex</div><div class="card-desc">East Sussex, West Sussex and Brighton and Hove, with a page for each authority and district.</div></a>
+<a class="card-v2" href="review.html"><div class="card-title">The review</div><div class="card-desc">The analysis of the original measure that v2.0 is built on: every term tested, and ten recommendations.</div></a>
+<a class="card-v2" href="roadmap.html"><div class="card-title">Roadmap</div><div class="card-desc">What comes next: a new policy simulator, new years of data as DfE publishes them, and more.</div></a>
+<a class="card-v2" href="https://adamdennett.github.io/school_attainment_tool/"><div class="card-title">The original work</div><div class="card-desc">How to Pull the Right Lever: the national model, Brighton and Hove, and the policy simulator.</div></a>
+:::
+
+Built from published Department for Education and Ofsted data and the
+2021 Census. Nothing uses pupil-level records.

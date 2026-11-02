@@ -1,0 +1,20 @@
+# R
+.Rhistory
+.RData
+.Rproj.user
+
+# Inputs rebuilt from the original project
+data/inputs.rds
+
+# Generated from templates/area.qmd by R/03_area_pages.R
+areas/*.qmd
+sussex.qmd
+
+# Quarto
+/.quarto/
+*_files/
+
+**/*.quarto_ipynb
+
+# Local tooling
+.claude/

@@ -1,0 +1,77 @@
+/*-- scss:defaults --*/
+
+// The current UCL palette, led by its lighter purples. Text stays on dark
+// purple for contrast; the pale and light purples carry the surfaces.
+$ucl-dark-purple:   #361a54;
+$ucl-bright-purple: #993bff;
+$ucl-mid-purple:    #ba82ff;
+$ucl-light-purple:  #ddbdff;
+$ucl-pale-purple:   #eedeff;
+$ucl-heritage-blue: #30d6ff;
+$ucl-off-white:     #fafafa;
+
+$primary:   $ucl-dark-purple;
+$secondary: $ucl-mid-purple;
+$info:      $ucl-light-purple;
+$light:     $ucl-pale-purple;
+$dark:      $ucl-dark-purple;
+
+$body-bg:    #fdfcff;
+$body-color: #1a1a2e;
+
+$font-family-sans-serif: "UCL Sans", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$headings-font-weight: 600;
+$headings-color: $ucl-dark-purple;
+$link-color: #6b2bb8;          // a deeper bright purple: 6.5:1 on the page
+$link-hover-color: $ucl-dark-purple;
+$toc-color: $ucl-dark-purple;
+$code-color: $ucl-dark-purple;
+$border-radius: 0.5rem;
+
+$navbar-bg: $ucl-pale-purple;
+$navbar-fg: $ucl-dark-purple;
+$navbar-hl: #6b2bb8;
+$footer-bg: $ucl-pale-purple;
+$footer-fg: $ucl-dark-purple;
+
+/*-- scss:rules --*/
+
+@font-face { font-family: "UCL Sans"; src: url("fonts/UCLSans-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "UCL Sans"; src: url("fonts/UCLSans-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "UCL Sans"; src: url("fonts/UCLSans-Italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+
+.navbar { border-bottom: 3px solid $ucl-light-purple; }
+.navbar-brand, .navbar-title { font-weight: 700; color: $ucl-dark-purple !important; }
+
+h1, h2 { letter-spacing: -0.01em; }
+h2 { border-bottom: 2px solid $ucl-light-purple; padding-bottom: 0.25rem; }
+
+.quarto-title-block .title { color: $ucl-dark-purple; }
+.quarto-title-block .subtitle { color: #5b4a73; }
+
+.callout { border-left-color: $ucl-mid-purple !important; background: $ucl-pale-purple; }
+.callout .callout-header { background: $ucl-light-purple !important; }
+
+table thead th { background: $ucl-pale-purple; color: $ucl-dark-purple; }
+
+// Landing page
+.hero {
+  background: linear-gradient(135deg, $ucl-pale-purple 0%, $ucl-light-purple 100%);
+  border-radius: 1rem; padding: 2.2rem 2rem; margin: 0.5rem 0 2rem;
+  h1 { margin-top: 0; font-size: 2.3rem; }
+  p.lead { font-size: 1.15rem; color: #2a1a40; max-width: 46rem; }
+}
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 1rem 0 2rem; }
+.card-v2 {
+  display: block; background: #fff; border: 1px solid $ucl-light-purple; border-radius: 0.8rem;
+  padding: 1rem 1.1rem; text-decoration: none; color: inherit; transition: box-shadow .15s, border-color .15s;
+  &:hover { border-color: $ucl-mid-purple; box-shadow: 0 4px 14px rgba(54, 26, 84, .12); color: inherit; }
+  .card-title { font-weight: 700; color: $ucl-dark-purple; margin-bottom: .3rem; }
+  .card-desc { font-size: .92rem; color: #4a4060; }
+}
+.stat-row { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+.stat {
+  flex: 1 1 10rem; background: $ucl-pale-purple; border-radius: .8rem; padding: .8rem 1rem;
+  .num { font-size: 1.7rem; font-weight: 700; color: $ucl-dark-purple; line-height: 1.1; }
+  .lab { font-size: .85rem; color: #4a4060; }
+}

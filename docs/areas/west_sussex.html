@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>West Sussex – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-36c9bf196519df77a4e3d84cd0b4122a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="../site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="../site_libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="../site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="../site_libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="../site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="../site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="../site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
+
+<script src="../site_libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+
+<script src="../site_libs/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script>
+
+<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../method.html"> 
+<span class="menu-text">Value Added v2.0</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../schools.html"> 
+<span class="menu-text">Every school</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="../sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#the-schools" id="toc-the-schools" class="nav-link" data-scroll-target="#the-schools">The schools</a></li>
+  <li><a href="#what-explains-the-areas-results" id="toc-what-explains-the-areas-results" class="nav-link" data-scroll-target="#what-explains-the-areas-results">What explains the area’s results</a></li>
+  <li><a href="#districts" id="toc-districts" class="nav-link" data-scroll-target="#districts">Districts</a></li>
+  <li><a href="#notes-on-method" id="toc-notes-on-method" class="nav-link" data-scroll-target="#notes-on-method">Notes on method</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">West Sussex</h1>
+<p class="subtitle lead">Value Added v2.0 for West Sussex’s secondary schools.</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- GENERATED from templates/area.qmd by R/03_area_pages.R. Edit the template, not this file. -->
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this page
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Value Added v2.0 for West Sussex’s state-funded secondary schools, 2021/22 to 2024/25, measured against England: see <a href="../method.html">the method</a>. The original analysis, with absence, suspensions and trusts in depth, is <a href="https://adamdennett.github.io/school_attainment_tool/west_sussex.html">here</a>. Built from published DfE and Ofsted data; nothing uses pupil-level records.</p>
+</div>
+</div>
+<section id="summary" class="level1 unnumbered">
+<h1 class="unnumbered">Summary</h1>
+<ul>
+<li><strong>40 schools with value added for all pupils averaging -0.0 points</strong> against England: 6 significantly above significantly above expectation and 5 below.</li>
+<li><strong>Disadvantaged pupils: -1.6 points; non-disadvantaged pupils: -0.4.</strong></li>
+<li><strong>Girls: -0.2 points; boys: +0.1.</strong></li>
+<li><strong>Strongest: Shoreham Academy (+5.0). Weakest: Thomas Bennett Community College (-4.6).</strong></li>
+<li><strong>The authority’s own effect is +0.8% (56th of 152) for all pupils, and -2.6% (124th) for disadvantaged pupils.</strong> Value added against England includes it.</li>
+<li><strong>Against the published v1 measure</strong>, the area’s schools move by -0.1 points on average (v2 against England minus v1 within the authority).</li>
+<li><strong>Latest Ofsted:</strong> 7 report cards, 5 inspection with no overall grades, 17 graded inspections and 11 ungraded visit only.</li>
+</ul>
+</section>
+<section id="the-schools" class="level1">
+<h1>The schools</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="htmlwidget-ab1b478188f1dc545d07" style="width:100%;height:374px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ab1b478188f1dc545d07">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[-0.244970867103618,-0.216816880754834,-0.251484625122936,-0.249062950852583,-0.266789186264082,-0.277874274131206,-0.297658192308241,-0.332640257876154,-0.333122576827798,-0.355465206030984,-0.367453204005458,-0.364597872567908,-0.340900799159014,-0.256579131963737,-0.255303084256952,-0.244970867103618],"lat":[50.8638089034715,50.827640680624,50.8301553255794,50.8263291004056,50.8260223851153,50.8267518849544,50.8233857387888,50.8174242182314,50.8173577686833,50.8270961831802,50.8605318021739,50.8745257735289,50.8626233691327,50.8623352663962,50.871551452502,50.8638089034715]}]],[[{"lng":[-0.553103369727624,-0.542964813476796,-0.561114294398945,-0.548874388887642,-0.538178804166781,-0.524791780450509,-0.499918002526275,-0.493116801617838,-0.482977703454624,-0.476586541875026,-0.464939256035887,-0.451502334771634,-0.440083310489553,-0.43035388904012,-0.411683990466897,-0.413160900377152,-0.392697262002647,-0.380064174941901,-0.363896226067984,-0.364597872567908,-0.367453204005458,-0.381582934820488,-0.409280310594487,-0.422793813030102,-0.422299655454207,-0.446007008879058,-0.435659657168127,-0.43596262264656,-0.54199157629365,-0.556048379890773,-0.56830383143927,-0.626707250357185,-0.702167962459985,-0.7127528884650191,-0.725697018037194,-0.734145310976277,-0.752365849560478,-0.753148355615919,-0.753129376394285,-0.751951988057479,-0.751270418466542,-0.751036777812399,-0.750833410433162,-0.75059676127844,-0.7504308684557079,-0.763040781697462,-0.7637600579887101,-0.764797055835808,-0.749831943663349,-0.7550919933832591,-0.7347600354096681,-0.73474122055306,-0.719106654148629,-0.689896912275325,-0.692031311286889,-0.681124757559029,-0.650345247333325,-0.654944510369044,-0.649201647600831,-0.617385108843538,-0.553103369727624],"lat":[50.9015170620917,50.8912162092171,50.8878216903971,50.8800890027504,50.8862228607238,50.8829842194156,50.8998827892368,50.8852631731332,50.8991157150674,50.8850478486728,50.8839878146581,50.8954674960465,50.8775717892826,50.8929814554583,50.8865178423069,50.8795880473086,50.893305380255,50.8855934491064,50.88847967362,50.8745257735289,50.8605318021739,50.8631684459099,50.8522635893552,50.8602349392697,50.8406771079375,50.8398542053283,50.8031814714269,50.8031394380992,50.8002481377133,50.7982567371974,50.7980363933513,50.7882184727218,50.7774462756161,50.7736930091264,50.7715014852038,50.7661028425028,50.7596331344089,50.7605155399928,50.7605415473715,50.7613478844842,50.7618146401026,50.7619746395467,50.7621138135404,50.7622618911469,50.7626052899424,50.7728709291135,50.7724782103382,50.7736468626916,50.7815064813131,50.7906853967365,50.7936625856481,50.8094428131192,50.8052478333901,50.8128150596971,50.8496595209862,50.863285473821,50.8669446511143,50.9056787567165,50.9000115476229,50.905562049363,50.9015170620917]}]],[[{"lng":[-0.492109150908277,-0.478352212835099,-0.484127197017171,-0.475638537554662,-0.483927399071397,-0.473194275922599,-0.475855112121638,-0.486220867919728,-0.510680386474117,-0.517645475452731,-0.507268466407569,-0.524857296093485,-0.533749334088352,-0.549606040797453,-0.5685720090723601,-0.5560664841928979,-0.536969271661823,-0.551488910780269,-0.553103369727624,-0.617385108843538,-0.649201647600831,-0.654944510369044,-0.650345247333325,-0.681124757559029,-0.692031311286889,-0.689896912275325,-0.719106654148629,-0.73474122055306,-0.7347600354096681,-0.7550919933832591,-0.749831943663349,-0.764797055835808,-0.7637600579887101,-0.786848656450131,-0.771840431792818,-0.761753841792852,-0.751058516372841,-0.749958943416849,-0.784670288599043,-0.789161836237019,-0.818662984750182,-0.823543745033973,-0.844100719296166,-0.859551324439,-0.8807821809436051,-0.906838787259976,-0.915316978373429,-0.915352734007593,-0.908045255728969,-0.912139572391311,-0.910882460757788,-0.90515740849759,-0.892011563610659,-0.877512152475506,-0.86602958180041,-0.844578742256673,-0.825463625323449,-0.807741037020906,-0.813787100751054,-0.8197604766201581,-0.842721720413136,-0.865834567667977,-0.868758523708859,-0.8657524338000639,-0.85118778589647,-0.861226095342326,-0.858412877092022,-0.865179586107666,-0.869928957490676,-0.865479969607855,-0.865361933609206,-0.865492379148921,-0.8767998205565321,-0.892171590313472,-0.894036903561919,-0.913081274840014,-0.907917519215049,-0.942626670545669,-0.932477907919786,-0.934485538895187,-0.9264501869892749,-0.938656962420833,-0.957585094925949,-0.940245276386778,-0.924013258512923,-0.942110087824929,-0.931847105710517,-0.907864084059223,-0.893346615712615,-0.896993034200906,-0.852810677861577,-0.842847950683525,-0.79778120448179,-0.780801795334142,-0.753474893729619,-0.696752296390414,-0.629370733100882,-0.597423052094753,-0.577592603888771,-0.539181493590813,-0.53497929663322,-0.5053771919772519,-0.492109150908277],"lat":[51.094442697917,51.066467946391,51.0568110042883,51.0563778656832,51.0409915180555,51.0338500038702,51.020957290258,51.0101060802594,51.0078176723453,50.9985535021341,50.9905300560656,50.9870384382733,50.9502449012333,50.9539506205424,50.9426025404098,50.9234771412879,50.9167536576,50.9132167548438,50.9015170620917,50.905562049363,50.9000115476229,50.9056787567165,50.8669446511143,50.863285473821,50.8496595209862,50.8128150596971,50.8052478333901,50.8094428131192,50.7936625856481,50.7906853967365,50.7815064813131,50.7736468626916,50.7724782103382,50.759866071389,50.7635213903705,50.7511830187997,50.7572604397924,50.756687780396,50.7263138391583,50.7224843371005,50.7388339014976,50.7437628255586,50.7513143221581,50.7597319017695,50.764773480887,50.7743221907962,50.7806790118225,50.7889917924194,50.7870352090719,50.7834566450258,50.7812907033048,50.7820801356639,50.7942914460425,50.8077506030432,50.8048037994999,50.7992943131775,50.8043970261754,50.8305260319712,50.8339359553087,50.8168596446986,50.8046336316371,50.812857956993,50.813897842596,50.8162507556204,50.8276462791173,50.8280079949458,50.8396774814405,50.8399072946554,50.840068329984,50.8275046364034,50.8271712122007,50.8269921425719,50.811464199296,50.818431007308,50.8380904736532,50.8399520042012,50.798530429224,50.815380752547,50.8460494372293,50.8458652554229,50.8640917198044,50.873714551368,50.8906069913416,50.9180541120271,50.9241990382359,50.9428940851915,50.9455804283938,50.9942411135289,51.002742984694,51.0220101173569,51.0448433191519,51.066886807164,51.0635461216652,51.0793519422747,51.0864535011472,51.0714916858165,51.0889926942457,51.0796770880159,51.0866537658028,51.0820280439358,51.0935789214135,51.0882620379469,51.094442697917]}]],[[{"lng":[-0.140462480803131,-0.132959635268358,-0.137571778320172,-0.145185443413673,-0.173845222306386,-0.212074998918325,-0.219371621174042,-0.232521955647978,-0.236873003807449,-0.200274263901966,-0.254625028845736,-0.255184519970304,-0.214235175126048,-0.212142089174476,-0.17670622529243,-0.140462480803131],"lat":[51.1600473181942,51.1588837311559,51.1421596095868,51.102641282125,51.0893224581091,51.0866134856262,51.0995655549787,51.0973777366437,51.1094769468914,51.1390924653301,51.1390994430562,51.1441908360757,51.1484633096485,51.1554548855593,51.1668499717321,51.1600473181942]}]],[[{"lng":[-0.212074998918325,-0.211841715023835,-0.222753793447392,-0.226757883310084,-0.2191588962465,-0.24693749454031,-0.249081348544969,-0.236638554380843,-0.245296732216148,-0.232015221809748,-0.240869656719023,-0.224759521957669,-0.231962650535538,-0.223741457396218,-0.244154461994183,-0.248659770651226,-0.239238286310074,-0.244970867103618,-0.255303084256952,-0.256579131963737,-0.340900799159014,-0.364597872567908,-0.363896226067984,-0.380064174941901,-0.392697262002647,-0.413160900377152,-0.411683990466897,-0.43035388904012,-0.440083310489553,-0.451502334771634,-0.464939256035887,-0.476586541875026,-0.482977703454624,-0.493116801617838,-0.499918002526275,-0.524791780450509,-0.538178804166781,-0.548874388887642,-0.561114294398945,-0.542964813476796,-0.553103369727624,-0.551488910780269,-0.536969271661823,-0.5560664841928979,-0.5685720090723601,-0.549606040797453,-0.533749334088352,-0.524857296093485,-0.507268466407569,-0.517645475452731,-0.510680386474117,-0.486220867919728,-0.475855112121638,-0.473194275922599,-0.483927399071397,-0.475638537554662,-0.484127197017171,-0.478352212835099,-0.492109150908277,-0.419197682354686,-0.391524793518279,-0.300346786136933,-0.254625028845736,-0.200274263901966,-0.236873003807449,-0.232521955647978,-0.219371621174042,-0.212074998918325],"lat":[51.0866134856262,51.0644829643435,51.0601645974617,51.0415682326607,51.0379219301315,51.033507205938,51.0249473497977,51.0210180286561,51.0123316661642,51.0108472771043,50.9527154339549,50.9484481827557,50.9357906578706,50.9117764567532,50.9073634497127,50.8730707778583,50.8678855958754,50.8638089034715,50.871551452502,50.8623352663962,50.8626233691327,50.8745257735289,50.88847967362,50.8855934491064,50.893305380255,50.8795880473086,50.8865178423069,50.8929814554583,50.8775717892826,50.8954674960465,50.8839878146581,50.8850478486728,50.8991157150674,50.8852631731332,50.8998827892368,50.8829842194156,50.8862228607238,50.8800890027504,50.8878216903971,50.8912162092171,50.9015170620917,50.9132167548438,50.9167536576,50.9234771412879,50.9426025404098,50.9539506205424,50.9502449012333,50.9870384382733,50.9905300560656,50.9985535021341,51.0078176723453,51.0101060802594,51.020957290258,51.0338500038702,51.0409915180555,51.0563778656832,51.0568110042883,51.066467946391,51.094442697917,51.1051906183192,51.1165107854723,51.1247356959145,51.1390994430562,51.1390924653301,51.1094769468914,51.0973777366437,51.0995655549787,51.0866134856262]}]],[[{"lng":[-0.0163504990982534,-0.0246042590087526,-0.0615918410922555,-0.0736194177331807,-0.115147503567339,-0.104207686196339,-0.119788174827145,-0.135004643104498,-0.168124071976243,-0.168577549008713,-0.182416849918432,-0.18773445855603,-0.226719329968901,-0.239238286310074,-0.248659770651226,-0.244154461994183,-0.223741457396218,-0.231962650535538,-0.224759521957669,-0.240869656719023,-0.232015221809748,-0.245296732216148,-0.236638554380843,-0.249081348544969,-0.24693749454031,-0.2191588962465,-0.226757883310084,-0.222753793447392,-0.211841715023835,-0.212074998918325,-0.173845222306386,-0.145185443413673,-0.137571778320172,0.0273600610344932,0.0281472617745816,0.0445094045788558,0.0185609090480791,0.00950504621663548,0.0105434061785564,-0.036213376436162,-0.0268520992180162,-0.0132566088248517,-0.00854815740438445,0.0137406414730299,-0.00300172769009489,-0.00156549234049123,-0.0218747081717486,-0.0163504990982534],"lat":[51.0024963848289,50.9800251733024,50.9784204152431,50.9916752625057,50.9761166833068,50.9464681224634,50.9422851177541,50.8866504956811,50.8807695006235,50.8923794438684,50.8882710466411,50.8685704690734,50.8781806377506,50.8678855958754,50.8730707778583,50.9073634497127,50.9117764567532,50.9357906578706,50.9484481827557,50.9527154339549,51.0108472771043,51.0123316661642,51.0210180286561,51.0249473497977,51.033507205938,51.0379219301315,51.0415682326607,51.0601645974617,51.0644829643435,51.0866134856262,51.0893224581091,51.102641282125,51.1421596095868,51.1398479920559,51.1177116859783,51.1106132994909,51.1035920015529,51.1103919555841,51.1021625577146,51.0934295225111,51.0751128703829,51.0739671019924,51.0564579871026,51.0569963600632,51.0475643226305,51.0357549868715,51.0265033539165,51.0024963848289]}]],[[{"lng":[-0.367453204005458,-0.355465206030984,-0.333122576827798,-0.435659657168127,-0.446007008879058,-0.422299655454207,-0.422793813030102,-0.409280310594487,-0.381582934820488,-0.367453204005458],"lat":[50.8605318021739,50.8270961831802,50.8173577686833,50.8031814714269,50.8398542053283,50.8406771079375,50.8602349392697,50.8522635893552,50.8631684459099,50.8605318021739]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,["Adur","Arun","Chichester","Crawley","Horsham","Mid Sussex","Worthing"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[[50.84534356387665,50.8263346325127,50.90944775578015,51.12428470611075,51.0031855872397,51.0066718309666,50.83347519425425],[-0.2963023681140275,-0.5664362553766302,-0.7488456870935161,-0.1797946100417107,-0.3736725770165831,-0.1249812579298623,-0.4009797407756228],{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Adur","Arun","Chichester","Crawley","Horsham","Mid Sussex","Worthing"],{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[50.7224843371005,51.1668499717321],"lng":[-0.957585094925949,0.0445094045788558]},"fitBounds":[50.7224843371005,-0.957585094925949,51.1668499717321,0.0445094045788558,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Shoreham Academy","lon":-0.2456,"lat":50.8369,"pupils":1777,"tip":"<b>Shoreham Academy<\/b> (Adur)<br>Value added v2: all +5.0, disadvantaged +3.7, girls +3.8, boys +5.6<br>Value added v1 (published): +3.5<br>Attainment 8 54.8, FSM 15%, absence 7.4%<br>Ofsted latest: Outstanding (Feb 2024)<br>Run by (2024/25): United Learning Trust","va_shrunk_all":4.9989,"va_shrunk_disadvantaged":3.7154,"va_shrunk_non_disadvantaged":4.6935,"va_shrunk_girls":3.8059,"va_shrunk_boys":5.6291,"v1_all":3.4648,"att8":54.8,"fsm":15,"ks2_c":4.7,"absence":7.38,"mobile":2.1,"l4":30.969,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"St Oscar Romero Catholic School","lon":-0.4336,"lat":50.8161,"pupils":1075,"tip":"<b>St Oscar Romero Catholic School<\/b> (Worthing)<br>Value added v2: all +4.7, disadvantaged +1.9, girls +3.7, boys +5.3<br>Value added v1 (published): +6.4<br>Attainment 8 55.1, FSM 18%, absence 5.2%<br>Ofsted latest: No overall grade (Apr 2025): quality of education Outstanding<br>Run by (2024/25): Maintained by the council","va_shrunk_all":4.7289,"va_shrunk_disadvantaged":1.9369,"va_shrunk_non_disadvantaged":5.0483,"va_shrunk_girls":3.6874,"va_shrunk_boys":5.3295,"v1_all":6.3949,"att8":55.1,"fsm":18.5,"ks2_c":3.9,"absence":5.15,"mobile":4.1,"l4":29.0835,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"St Philip Howard Catholic School","lon":-0.645,"lat":50.8336,"pupils":1301,"tip":"<b>St Philip Howard Catholic School<\/b> (Arun)<br>Value added v2: all +3.0, disadvantaged -1.8, girls +2.8, boys +2.9<br>Value added v1 (published): +1.0<br>Attainment 8 52.5, FSM 14%, absence 6.9%<br>Ofsted latest: Report card (Apr 2026): achievement Strong standard, curriculum and teaching Strong standard<br>Run by (2024/25): Bosco Catholic Education Trust","va_shrunk_all":2.9649,"va_shrunk_disadvantaged":-1.7593,"va_shrunk_non_disadvantaged":2.9532,"va_shrunk_girls":2.8096,"va_shrunk_boys":2.9072,"v1_all":1.0003,"att8":52.5,"fsm":14.2,"ks2_c":4.6,"absence":6.89,"mobile":4.7,"l4":27.5069,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Strong standard"},{"SCHNAME":"Downlands Community School","lon":-0.1387,"lat":50.9213,"pupils":1250,"tip":"<b>Downlands Community School<\/b> (Mid Sussex)<br>Value added v2: all +3.0, disadvantaged +0.7, girls +2.5, boys +2.8<br>Value added v1 (published): +4.4<br>Attainment 8 57.2, FSM 7%, absence 7.6%<br>Ofsted latest: Report card (Jul 2026): achievement Strong standard, curriculum and teaching Strong standard<br>Run by (2024/25): Maintained by the council","va_shrunk_all":2.9607,"va_shrunk_disadvantaged":0.7049,"va_shrunk_non_disadvantaged":2.7985,"va_shrunk_girls":2.4845,"va_shrunk_boys":2.7659,"v1_all":4.406,"att8":57.2,"fsm":7.4,"ks2_c":5.7,"absence":7.62,"mobile":1.7,"l4":37.5982,"gov":"Maintained","ofsted_rc":"Strong standard"},{"SCHNAME":"The Regis School","lon":-0.6908,"lat":50.7938,"pupils":1665,"tip":"<b>The Regis School<\/b> (Arun)<br>Value added v2: all +2.7, disadvantaged +1.0, girls +3.1, boys +2.3<br>Value added v1 (published): +2.4<br>Attainment 8 43.5, FSM 25%, absence 8.1%<br>Ofsted latest: Remains Good (Mar 2023, ungraded visit)<br>Run by (2024/25): United Learning Trust","va_shrunk_all":2.7341,"va_shrunk_disadvantaged":1.0329,"va_shrunk_non_disadvantaged":2.1197,"va_shrunk_girls":3.0892,"va_shrunk_boys":2.2873,"v1_all":2.4083,"att8":43.5,"fsm":25.3,"ks2_c":2.2,"absence":8.05,"mobile":8.4,"l4":23.4129,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"Durrington High School","lon":-0.4068,"lat":50.8277,"pupils":1606,"tip":"<b>Durrington High School<\/b> (Worthing)<br>Value added v2: all +2.6, disadvantaged -0.5, girls +1.8, boys +3.2<br>Value added v1 (published): +2.7<br>Attainment 8 49.7, FSM 20%, absence 8.8%<br>Ofsted latest: Good (Mar 2022)<br>Run by (2024/25): Durrington Multi Academy Trust","va_shrunk_all":2.6143,"va_shrunk_disadvantaged":-0.5418,"va_shrunk_non_disadvantaged":2.7199,"va_shrunk_girls":1.8354,"va_shrunk_boys":3.1764,"v1_all":2.7172,"att8":49.7,"fsm":19.6,"ks2_c":3.5,"absence":8.85,"mobile":3.8,"l4":28.6973,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Worthing High School","lon":-0.3808,"lat":50.8233,"pupils":1055,"tip":"<b>Worthing High School<\/b> (Worthing)<br>Value added v2: all +2.1, disadvantaged +1.4, girls +0.3, boys +3.5<br>Value added v1 (published): +3.0<br>Attainment 8 48.5, FSM 17%, absence 8.9%<br>Ofsted latest: Standards maintained (Mar 2025, ungraded visit)<br>Run by (2024/25): South Downs Education Trust","va_shrunk_all":2.1159,"va_shrunk_disadvantaged":1.4485,"va_shrunk_non_disadvantaged":1.4585,"va_shrunk_girls":0.2663,"va_shrunk_boys":3.4979,"v1_all":2.9975,"att8":48.5,"fsm":16.7,"ks2_c":4.4,"absence":8.86,"mobile":4.8,"l4":33.7163,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Tanbridge House School","lon":-0.3511,"lat":51.0647,"pupils":1524,"tip":"<b>Tanbridge House School<\/b> (Horsham)<br>Value added v2: all +2.1, disadvantaged -2.6, girls +1.9, boys +2.1<br>Value added v1 (published): +0.8<br>Attainment 8 54.2, FSM 10%, absence 7.0%<br>Ofsted latest: Outstanding (Jun 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":2.0823,"va_shrunk_disadvantaged":-2.6036,"va_shrunk_non_disadvantaged":2.2229,"va_shrunk_girls":1.9004,"va_shrunk_boys":2.088,"v1_all":0.7754,"att8":54.2,"fsm":9.7,"ks2_c":5.5,"absence":7.01,"mobile":3.7,"l4":38.3934,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Midhurst Rother College","lon":-0.7387,"lat":50.9895,"pupils":1158,"tip":"<b>Midhurst Rother College<\/b> (Chichester)<br>Value added v2: all +1.9, disadvantaged +0.7, girls +1.2, boys +2.2<br>Value added v1 (published): +1.4<br>Attainment 8 48.6, FSM 15%, absence 8.1%<br>Ofsted latest: Outstanding (May 2024)<br>Run by (2024/25): United Learning Trust","va_shrunk_all":1.8562,"va_shrunk_disadvantaged":0.7119,"va_shrunk_non_disadvantaged":1.3149,"va_shrunk_girls":1.2475,"va_shrunk_boys":2.1923,"v1_all":1.3547,"att8":48.6,"fsm":14.8,"ks2_c":3.9,"absence":8.11,"mobile":1.9,"l4":41.4166,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"Weald School, The","lon":-0.4543,"lat":51.0168,"pupils":1784,"tip":"<b>Weald School, The<\/b> (Horsham)<br>Value added v2: all +1.5, disadvantaged -2.1, girls +2.2, boys +0.6<br>Value added v1 (published): -0.8<br>Attainment 8 47.1, FSM 16%, absence 8.0%<br>Ofsted latest: No overall grade (Oct 2024): quality of education Good<br>Run by (2024/25): Maintained by the council","va_shrunk_all":1.5363,"va_shrunk_disadvantaged":-2.1013,"va_shrunk_non_disadvantaged":1.5518,"va_shrunk_girls":2.1974,"va_shrunk_boys":0.6482,"v1_all":-0.8326,"att8":47.1,"fsm":16.2,"ks2_c":4.8,"absence":7.97,"mobile":6.4,"l4":36.3182,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Imberhorne School","lon":-0.0346,"lat":51.1344,"pupils":1573,"tip":"<b>Imberhorne School<\/b> (Mid Sussex)<br>Value added v2: all +1.4, disadvantaged -2.9, girls +1.7, boys +0.4<br>Value added v1 (published): +1.0<br>Attainment 8 45.0, FSM 13%, absence 9.5%<br>Ofsted latest: Standards maintained (Oct 2024, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":1.3971,"va_shrunk_disadvantaged":-2.9122,"va_shrunk_non_disadvantaged":0.8382,"va_shrunk_girls":1.7448,"va_shrunk_boys":0.3967,"v1_all":0.9517,"att8":45,"fsm":13.2,"ks2_c":3.6,"absence":9.52,"mobile":4.9,"l4":34.9312,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Steyning Grammar School","lon":-0.3294,"lat":50.8934,"pupils":1944,"tip":"<b>Steyning Grammar School<\/b> (Horsham)<br>Value added v2: all +1.4, disadvantaged -1.4, girls +1.7, boys +0.8<br>Value added v1 (published): +2.9<br>Attainment 8 48.6, FSM 14%, absence 9.3%<br>Ofsted latest: Report card (Mar 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":1.3563,"va_shrunk_disadvantaged":-1.4032,"va_shrunk_non_disadvantaged":0.9825,"va_shrunk_girls":1.6957,"va_shrunk_boys":0.8271,"v1_all":2.9477,"att8":48.6,"fsm":13.6,"ks2_c":3.8,"absence":9.29,"mobile":2.8,"l4":31.223,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Expected standard"},{"SCHNAME":"Davison Church of England High School for Girls, Worthing","lon":-0.356,"lat":50.8194,"pupils":1328,"tip":"<b>Davison Church of England High School for Girls, Worthing<\/b> (Worthing)<br>Value added v2: all +1.0, disadvantaged -1.9, girls +0.6, boys n/a<br>Value added v1 (published): +2.1<br>Attainment 8 52.1, FSM 16%, absence 8.3%<br>Ofsted latest: Outstanding (Jun 2024)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.9866,"va_shrunk_disadvantaged":-1.9372,"va_shrunk_non_disadvantaged":0.9227,"va_shrunk_girls":0.6496,"va_shrunk_boys":null,"v1_all":2.1052,"att8":52.1,"fsm":15.5,"ks2_c":5.2,"absence":8.29,"mobile":7.4,"l4":31.3885,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Sackville School","lon":0.0024,"lat":51.1247,"pupils":1599,"tip":"<b>Sackville School<\/b> (Mid Sussex)<br>Value added v2: all +0.8, disadvantaged -1.1, girls +0.4, boys +0.7<br>Value added v1 (published): +1.0<br>Attainment 8 46.0, FSM 13%, absence 9.9%<br>Ofsted latest: Remains Good (May 2024, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.8364,"va_shrunk_disadvantaged":-1.0795,"va_shrunk_non_disadvantaged":0.0868,"va_shrunk_girls":0.4044,"va_shrunk_boys":0.7026,"v1_all":1.0355,"att8":46,"fsm":12.9,"ks2_c":3.5,"absence":9.86,"mobile":5.2,"l4":36.2195,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Millais School","lon":-0.3073,"lat":51.0638,"pupils":1055,"tip":"<b>Millais School<\/b> (Horsham)<br>Value added v2: all +0.7, disadvantaged -1.0, girls +0.5, boys n/a<br>Value added v1 (published): +3.0<br>Attainment 8 51.5, FSM 13%, absence 8.6%<br>Ofsted latest: Good (Sep 2022)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.6977,"va_shrunk_disadvantaged":-1.0191,"va_shrunk_non_disadvantaged":0.1989,"va_shrunk_girls":0.4768,"va_shrunk_boys":null,"v1_all":3.0057,"att8":51.5,"fsm":12.8,"ks2_c":6.4,"absence":8.65,"mobile":3.8,"l4":37.7853,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"St Andrew's CofE High School","lon":-0.3672,"lat":50.8222,"pupils":739,"tip":"<b>St Andrew's CofE High School<\/b> (Worthing)<br>Value added v2: all +0.7, disadvantaged +1.3, girls n/a, boys +2.0<br>Value added v1 (published): +1.6<br>Attainment 8 41.7, FSM 22%, absence 11.1%<br>Ofsted latest: Good (Apr 2023)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.6917,"va_shrunk_disadvantaged":1.332,"va_shrunk_non_disadvantaged":-0.5134,"va_shrunk_girls":null,"va_shrunk_boys":1.9703,"v1_all":1.6327,"att8":41.7,"fsm":21.5,"ks2_c":3.2,"absence":11.06,"mobile":2.8,"l4":33.9642,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Oathall Community College","lon":-0.0923,"lat":51.0064,"pupils":1303,"tip":"<b>Oathall Community College<\/b> (Mid Sussex)<br>Value added v2: all +0.4, disadvantaged -5.1, girls +0.9, boys -0.6<br>Value added v1 (published): +1.5<br>Attainment 8 51.5, FSM 17%, absence 7.9%<br>Ofsted latest: Remains Good (Sep 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":0.3638,"va_shrunk_disadvantaged":-5.1026,"va_shrunk_non_disadvantaged":0.7845,"va_shrunk_girls":0.896,"va_shrunk_boys":-0.5971,"v1_all":1.4832,"att8":51.5,"fsm":16.9,"ks2_c":5.2,"absence":7.92,"mobile":3,"l4":43.9275,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"The Sir Robert Woodard Academy","lon":-0.3304,"lat":50.8359,"pupils":1412,"tip":"<b>The Sir Robert Woodard Academy<\/b> (Adur)<br>Value added v2: all +0.1, disadvantaged +0.5, girls +0.4, boys +0.1<br>Value added v1 (published): -0.6<br>Attainment 8 42.0, FSM 25%, absence 9.3%<br>Ofsted latest: Report card (Jan 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Woodard Academies Trust","va_shrunk_all":0.1424,"va_shrunk_disadvantaged":0.5411,"va_shrunk_non_disadvantaged":-0.4667,"va_shrunk_girls":0.4207,"va_shrunk_boys":0.1141,"v1_all":-0.5952,"att8":42,"fsm":24.9,"ks2_c":4.4,"absence":9.26,"mobile":4.2,"l4":26.0465,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Expected standard"},{"SCHNAME":"Warden Park Secondary Academy","lon":-0.1334,"lat":51.0041,"pupils":1538,"tip":"<b>Warden Park Secondary Academy<\/b> (Mid Sussex)<br>Value added v2: all +0.1, disadvantaged -4.6, girls +1.1, boys -0.9<br>Value added v1 (published): +0.8<br>Attainment 8 52.3, FSM 8%, absence 7.7%<br>Ofsted latest: Report card (Jun 2026): achievement Expected standard, curriculum and teaching Expected standard<br>Run by (2024/25): Sussex Learning Trust","va_shrunk_all":0.0735,"va_shrunk_disadvantaged":-4.6159,"va_shrunk_non_disadvantaged":0.1152,"va_shrunk_girls":1.0573,"va_shrunk_boys":-0.8675,"v1_all":0.8216,"att8":52.3,"fsm":8.2,"ks2_c":6.5,"absence":7.73,"mobile":4.1,"l4":43.1409,"gov":"Multi-academy trust, converter or free school","ofsted_rc":"Expected standard"},{"SCHNAME":"Hazelwick School","lon":-0.1664,"lat":51.1253,"pupils":1890,"tip":"<b>Hazelwick School<\/b> (Crawley)<br>Value added v2: all -0.0, disadvantaged -2.1, girls +0.2, boys -0.1<br>Value added v1 (published): -1.5<br>Attainment 8 50.1, FSM 20%, absence 6.6%<br>Ofsted latest: Outstanding (Oct 2023)<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-0.0357,"va_shrunk_disadvantaged":-2.1327,"va_shrunk_non_disadvantaged":-0.0776,"va_shrunk_girls":0.1511,"va_shrunk_boys":-0.0992,"v1_all":-1.4566,"att8":50.1,"fsm":20.5,"ks2_c":4.5,"absence":6.58,"mobile":3,"l4":31.7701,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"Ormiston Six Villages Academy","lon":-0.6641,"lat":50.8406,"pupils":698,"tip":"<b>Ormiston Six Villages Academy<\/b> (Arun)<br>Value added v2: all -0.0, disadvantaged -2.7, girls -1.7, boys +1.4<br>Value added v1 (published): +0.7<br>Attainment 8 42.8, FSM 15%, absence 7.8%<br>Ofsted latest: Good (Nov 2022)<br>Run by (2024/25): Ormiston Academies Trust","va_shrunk_all":-0.0443,"va_shrunk_disadvantaged":-2.6706,"va_shrunk_non_disadvantaged":-0.0746,"va_shrunk_girls":-1.7248,"va_shrunk_boys":1.3949,"v1_all":0.68,"att8":42.8,"fsm":15.3,"ks2_c":2.6,"absence":7.82,"mobile":1.8,"l4":27.0782,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"Holy Trinity CofE Secondary School, Crawley","lon":-0.2096,"lat":51.1056,"pupils":1359,"tip":"<b>Holy Trinity CofE Secondary School, Crawley<\/b> (Crawley)<br>Value added v2: all -0.2, disadvantaged -1.8, girls -0.1, boys -0.4<br>Value added v1 (published): -1.1<br>Attainment 8 41.6, FSM 27%, absence 11.9%<br>Ofsted latest: Good (Nov 2023)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-0.1707,"va_shrunk_disadvantaged":-1.8053,"va_shrunk_non_disadvantaged":-0.6806,"va_shrunk_girls":-0.0773,"va_shrunk_boys":-0.4019,"v1_all":-1.0702,"att8":41.6,"fsm":27.2,"ks2_c":4.1,"absence":11.95,"mobile":4.4,"l4":24.8263,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"The Burgess Hill Academy","lon":-0.1333,"lat":50.9521,"pupils":1018,"tip":"<b>The Burgess Hill Academy<\/b> (Mid Sussex)<br>Value added v2: all -0.6, disadvantaged -2.5, girls -0.8, boys -0.9<br>Value added v1 (published): -0.2<br>Attainment 8 44.6, FSM 19%, absence 10.0%<br>Ofsted latest: Some aspects not as strong (Dec 2024, ungraded visit)<br>Run by (2024/25): University of Brighton Academies Trust","va_shrunk_all":-0.6262,"va_shrunk_disadvantaged":-2.4563,"va_shrunk_non_disadvantaged":-0.8828,"va_shrunk_girls":-0.779,"va_shrunk_boys":-0.9463,"v1_all":-0.2424,"att8":44.6,"fsm":19.1,"ks2_c":3.5,"absence":9.99,"mobile":9.1,"l4":36.4338,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"Bishop Luffa School, Chichester","lon":-0.7981,"lat":50.8388,"pupils":1579,"tip":"<b>Bishop Luffa School, Chichester<\/b> (Chichester)<br>Value added v2: all -0.7, disadvantaged -4.2, girls -1.9, boys +0.1<br>Value added v1 (published): -1.4<br>Attainment 8 52.5, FSM 9%, absence 6.9%<br>Ofsted latest: Outstanding (Nov 2022)<br>Run by (2024/25): Bishop Luffa Learning Partnership","va_shrunk_all":-0.6796,"va_shrunk_disadvantaged":-4.2298,"va_shrunk_non_disadvantaged":-0.5321,"va_shrunk_girls":-1.8674,"va_shrunk_boys":0.0909,"v1_all":-1.3819,"att8":52.5,"fsm":8.9,"ks2_c":5.8,"absence":6.9,"mobile":1.7,"l4":40.1281,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"St Paul's Catholic College","lon":-0.1546,"lat":50.9664,"pupils":1190,"tip":"<b>St Paul's Catholic College<\/b> (Mid Sussex)<br>Value added v2: all -0.7, disadvantaged -2.5, girls -1.2, boys -0.7<br>Value added v1 (published): -2.1<br>Attainment 8 55.4, FSM 8%, absence 5.8%<br>Ofsted latest: Outstanding (Feb 2023)<br>Run by (2024/25): Bosco Catholic Education Trust","va_shrunk_all":-0.7289,"va_shrunk_disadvantaged":-2.4742,"va_shrunk_non_disadvantaged":-0.5805,"va_shrunk_girls":-1.1662,"va_shrunk_boys":-0.6685,"v1_all":-2.139,"att8":55.4,"fsm":7.7,"ks2_c":6.8,"absence":5.8,"mobile":0.6,"l4":36.0203,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Chichester High School","lon":-0.776,"lat":50.8294,"pupils":1258,"tip":"<b>Chichester High School<\/b> (Chichester)<br>Value added v2: all -1.0, disadvantaged -2.0, girls -0.8, boys -1.4<br>Value added v1 (published): -0.8<br>Attainment 8 38.9, FSM 24%, absence 10.7%<br>Ofsted latest: No overall grade (Nov 2024): quality of education Good<br>Run by (2024/25): The Kemnal Academies Trust","va_shrunk_all":-0.9669,"va_shrunk_disadvantaged":-2.0017,"va_shrunk_non_disadvantaged":-1.4256,"va_shrunk_girls":-0.8305,"va_shrunk_boys":-1.3624,"v1_all":-0.8142,"att8":38.9,"fsm":23.5,"ks2_c":3.5,"absence":10.67,"mobile":7.8,"l4":38.843,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Bourne Community College","lon":-0.9144,"lat":50.8511,"pupils":729,"tip":"<b>Bourne Community College<\/b> (Chichester)<br>Value added v2: all -1.0, disadvantaged -1.0, girls -0.2, boys -1.6<br>Value added v1 (published): -0.4<br>Attainment 8 39.0, FSM 22%, absence 8.6%<br>Ofsted latest: Report card (Jan 2026): achievement Needs attention, curriculum and teaching Needs attention<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-0.9785,"va_shrunk_disadvantaged":-1.0227,"va_shrunk_non_disadvantaged":-1.439,"va_shrunk_girls":-0.1854,"va_shrunk_boys":-1.6434,"v1_all":-0.3502,"att8":39,"fsm":22.4,"ks2_c":3.4,"absence":8.63,"mobile":4.8,"l4":34.5282,"gov":"Maintained","ofsted_rc":"Needs attention"},{"SCHNAME":"Oriel High School","lon":-0.1581,"lat":51.1055,"pupils":1478,"tip":"<b>Oriel High School<\/b> (Crawley)<br>Value added v2: all -1.4, disadvantaged -3.4, girls -2.2, boys -0.6<br>Value added v1 (published): -1.9<br>Attainment 8 45.2, FSM 12%, absence 8.8%<br>Ofsted latest: No overall grade (Mar 2025): quality of education Good<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.3583,"va_shrunk_disadvantaged":-3.3817,"va_shrunk_non_disadvantaged":-1.712,"va_shrunk_girls":-2.2434,"va_shrunk_boys":-0.566,"v1_all":-1.9386,"att8":45.2,"fsm":12.5,"ks2_c":5.1,"absence":8.83,"mobile":4.2,"l4":30.3646,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Bohunt Horsham","lon":-0.2986,"lat":51.0916,"pupils":1121,"tip":"<b>Bohunt Horsham<\/b> (Horsham)<br>Value added v2: all -1.4, disadvantaged -0.9, girls -2.0, boys -0.4<br>Value added v1 (published): -0.9<br>Attainment 8 49.4, FSM 12%, absence 7.3%<br>Ofsted latest: Good (Oct 2023)<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":-1.3933,"va_shrunk_disadvantaged":-0.9048,"va_shrunk_non_disadvantaged":-2.0058,"va_shrunk_girls":-1.9573,"va_shrunk_boys":-0.4443,"v1_all":-0.8533,"att8":49.4,"fsm":12,"ks2_c":6.7,"absence":7.35,"mobile":2.4,"l4":37.6791,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Angmering School","lon":-0.4838,"lat":50.8215,"pupils":1345,"tip":"<b>The Angmering School<\/b> (Arun)<br>Value added v2: all -1.4, disadvantaged -2.7, girls -0.7, boys -1.7<br>Value added v1 (published): -2.4<br>Attainment 8 41.0, FSM 17%, absence 10.3%<br>Ofsted latest: Good (Oct 2022)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.4359,"va_shrunk_disadvantaged":-2.7111,"va_shrunk_non_disadvantaged":-1.7762,"va_shrunk_girls":-0.744,"va_shrunk_boys":-1.7345,"v1_all":-2.4049,"att8":41,"fsm":16.9,"ks2_c":3,"absence":10.3,"mobile":5.8,"l4":27.1169,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Felpham Community College","lon":-0.6562,"lat":50.7932,"pupils":1557,"tip":"<b>Felpham Community College<\/b> (Arun)<br>Value added v2: all -1.5, disadvantaged -1.4, girls -1.0, boys -2.0<br>Value added v1 (published): -2.1<br>Attainment 8 41.9, FSM 16%, absence 8.8%<br>Ofsted latest: Standards maintained (Oct 2024, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.4716,"va_shrunk_disadvantaged":-1.4057,"va_shrunk_non_disadvantaged":-2.415,"va_shrunk_girls":-0.9598,"va_shrunk_boys":-1.9991,"v1_all":-2.1216,"att8":41.9,"fsm":16.3,"ks2_c":3.7,"absence":8.84,"mobile":3.8,"l4":23.7258,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Bohunt School Worthing","lon":-0.374,"lat":50.8246,"pupils":897,"tip":"<b>Bohunt School Worthing<\/b> (Worthing)<br>Value added v2: all -1.6, disadvantaged -2.8, girls -1.9, boys -0.8<br>Value added v1 (published): -1.5<br>Attainment 8 46.7, FSM 14%, absence 8.3%<br>Ofsted latest: Remains Good (Oct 2023, ungraded visit)<br>Run by (2024/25): Bohunt Education Trust","va_shrunk_all":-1.6149,"va_shrunk_disadvantaged":-2.7518,"va_shrunk_non_disadvantaged":-2.0372,"va_shrunk_girls":-1.9145,"va_shrunk_boys":-0.7947,"v1_all":-1.5095,"att8":46.7,"fsm":13.5,"ks2_c":4.9,"absence":8.27,"mobile":3.9,"l4":34.1777,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"The Forest School","lon":-0.3067,"lat":51.0595,"pupils":1095,"tip":"<b>The Forest School<\/b> (Horsham)<br>Value added v2: all -1.8, disadvantaged -1.3, girls n/a, boys -0.3<br>Value added v1 (published): -0.6<br>Attainment 8 46.9, FSM 7%, absence 7.8%<br>Ofsted latest: Remains Good (Jan 2022, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.7567,"va_shrunk_disadvantaged":-1.3084,"va_shrunk_non_disadvantaged":-2.5494,"va_shrunk_girls":null,"va_shrunk_boys":-0.2948,"v1_all":-0.6012,"att8":46.9,"fsm":7.4,"ks2_c":5,"absence":7.79,"mobile":1.5,"l4":37.7649,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Ifield Community College","lon":-0.2099,"lat":51.1178,"pupils":1204,"tip":"<b>Ifield Community College<\/b> (Crawley)<br>Value added v2: all -1.8, disadvantaged -1.3, girls -2.2, boys -1.1<br>Value added v1 (published): -2.2<br>Attainment 8 40.0, FSM 29%, absence 10.9%<br>Ofsted latest: Remains Good (Apr 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.7889,"va_shrunk_disadvantaged":-1.3445,"va_shrunk_non_disadvantaged":-2.7016,"va_shrunk_girls":-2.1818,"va_shrunk_boys":-1.1077,"v1_all":-2.2332,"att8":40,"fsm":28.8,"ks2_c":2.5,"absence":10.88,"mobile":6.2,"l4":25.9867,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"The Academy, Selsey","lon":-0.7911,"lat":50.7362,"pupils":501,"tip":"<b>The Academy, Selsey<\/b> (Chichester)<br>Value added v2: all -2.2, disadvantaged -0.2, girls -1.7, boys -2.5<br>Value added v1 (published): -1.3<br>Attainment 8 37.9, FSM 23%, absence 11.1%<br>Ofsted latest: No overall grade (Jan 2025): quality of education Good<br>Run by (2024/25): The Kemnal Academies Trust","va_shrunk_all":-2.1508,"va_shrunk_disadvantaged":-0.1885,"va_shrunk_non_disadvantaged":-3.227,"va_shrunk_girls":-1.6804,"va_shrunk_boys":-2.465,"v1_all":-1.3425,"att8":37.9,"fsm":22.7,"ks2_c":2.5,"absence":11.12,"mobile":5.7,"l4":27.5328,"gov":"Multi-academy trust, sponsored","ofsted_rc":null},{"SCHNAME":"St Wilfrid's Catholic Comprehensive School, Crawley","lon":-0.2042,"lat":51.1101,"pupils":1174,"tip":"<b>St Wilfrid's Catholic Comprehensive School, Crawley<\/b> (Crawley)<br>Value added v2: all -2.6, disadvantaged -6.0, girls -3.2, boys -2.0<br>Value added v1 (published): -4.0<br>Attainment 8 45.0, FSM 14%, absence 6.5%<br>Ofsted latest: Remains Good (Mar 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-2.6388,"va_shrunk_disadvantaged":-6.0119,"va_shrunk_non_disadvantaged":-2.7157,"va_shrunk_girls":-3.218,"va_shrunk_boys":-1.9842,"v1_all":-4.0307,"att8":45,"fsm":13.7,"ks2_c":6.1,"absence":6.49,"mobile":6.3,"l4":25.3514,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"The Littlehampton Academy","lon":-0.5354,"lat":50.8149,"pupils":1369,"tip":"<b>The Littlehampton Academy<\/b> (Arun)<br>Value added v2: all -2.9, disadvantaged -2.7, girls -3.3, boys -2.4<br>Value added v1 (published): -3.5<br>Attainment 8 37.2, FSM 24%, absence 12.6%<br>Ofsted latest: Report card (Feb 2026): achievement Needs attention, curriculum and teaching Expected standard<br>Run by (2024/25): Woodard Academies Trust","va_shrunk_all":-2.9182,"va_shrunk_disadvantaged":-2.6783,"va_shrunk_non_disadvantaged":-3.6251,"va_shrunk_girls":-3.2763,"va_shrunk_boys":-2.3699,"v1_all":-3.5112,"att8":37.2,"fsm":23.7,"ks2_c":3.7,"absence":12.65,"mobile":5.5,"l4":24.4162,"gov":"Multi-academy trust, sponsored","ofsted_rc":"Needs attention"},{"SCHNAME":"Chichester Free School","lon":-0.7693,"lat":50.823,"pupils":1078,"tip":"<b>Chichester Free School<\/b> (Chichester)<br>Value added v2: all -4.1, disadvantaged -2.7, girls -4.7, boys -3.7<br>Value added v1 (published): -3.1<br>Attainment 8 44.6, FSM 14%, absence 8.1%<br>Ofsted latest: Good (May 2024)<br>Run by (2024/25): Sussex Learning Trust","va_shrunk_all":-4.0737,"va_shrunk_disadvantaged":-2.6944,"va_shrunk_non_disadvantaged":-4.5407,"va_shrunk_girls":-4.7043,"va_shrunk_boys":-3.6505,"v1_all":-3.0604,"att8":44.6,"fsm":14.5,"ks2_c":3.6,"absence":8.07,"mobile":3.4,"l4":38.0661,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"The Gatwick School","lon":-0.1633,"lat":51.1386,"pupils":846,"tip":"<b>The Gatwick School<\/b> (Crawley)<br>Value added v2: all -4.2, disadvantaged -3.9, girls -4.3, boys -4.0<br>Value added v1 (published): -4.6<br>Attainment 8 39.5, FSM 23%, absence 9.2%<br>Ofsted latest: Good (May 2024)<br>Run by (2024/25): Aurora Academies Trust","va_shrunk_all":-4.1782,"va_shrunk_disadvantaged":-3.9208,"va_shrunk_non_disadvantaged":-4.9403,"va_shrunk_girls":-4.2809,"va_shrunk_boys":-4.0297,"v1_all":-4.5813,"att8":39.5,"fsm":23.2,"ks2_c":1.8,"absence":9.15,"mobile":14.3,"l4":31.0592,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Thomas Bennett Community College","lon":-0.1907,"lat":51.0992,"pupils":1262,"tip":"<b>Thomas Bennett Community College<\/b> (Crawley)<br>Value added v2: all -4.6, disadvantaged -4.2, girls -4.0, boys -4.8<br>Value added v1 (published): -6.0<br>Attainment 8 33.0, FSM 38%, absence 11.6%<br>Ofsted latest: Good (Oct 2022)<br>Run by (2024/25): The Kemnal Academies Trust","va_shrunk_all":-4.6325,"va_shrunk_disadvantaged":-4.163,"va_shrunk_non_disadvantaged":-4.6509,"va_shrunk_girls":-3.9608,"va_shrunk_boys":-4.8087,"v1_all":-6.0462,"att8":33,"fsm":38.1,"ks2_c":2.6,"absence":11.56,"mobile":6.8,"l4":25.6194,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
+<p>Each school coloured by Value Added v2.0 for all pupils (choose another measure from the menu). Circle size is the school’s roll; hover for every group’s value added, the published v1 figure, and Ofsted.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-va" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="west_sussex_files/figure-html/fig-va-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Each school’s Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-gb" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="west_sussex_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-schools" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Value Added v2.0 for every school, against England, Attainment 8 points with 95% interval for all pupils; v1 is the published measure, within the authority. Ofsted is the latest judgement as at 30 September 2026.
+</figcaption>
+<div aria-describedby="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">District</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v1</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Ofsted latest</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Run by (2024/25)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Shoreham Academy</td>
+<td style="text-align: left;">Adur</td>
+<td style="text-align: right;">+5.0 (+2.3 to +7.9)</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+5.6</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: left;">Outstanding (Feb 2024)</td>
+<td style="text-align: left;">United Learning Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Oscar Romero Catholic School</td>
+<td style="text-align: left;">Worthing</td>
+<td style="text-align: right;">+4.7 (+1.9 to +7.7)</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: right;">+5.3</td>
+<td style="text-align: right;">+6.4</td>
+<td style="text-align: left;">No overall grade (Apr 2025): quality of education Outstanding</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Philip Howard Catholic School</td>
+<td style="text-align: left;">Arun</td>
+<td style="text-align: right;">+3.0 (+0.2 to +5.9)</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: left;">Report card (Apr 2026): achievement Strong standard, curriculum and teaching Strong standard</td>
+<td style="text-align: left;">Bosco Catholic Education Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Downlands Community School</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">+3.0 (+0.1 to +6.0)</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+4.4</td>
+<td style="text-align: left;">Report card (Jul 2026): achievement Strong standard, curriculum and teaching Strong standard</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Regis School</td>
+<td style="text-align: left;">Arun</td>
+<td style="text-align: right;">+2.7 (+0.4 to +5.2)</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: left;">Remains Good (Mar 2023, ungraded visit)</td>
+<td style="text-align: left;">United Learning Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Durrington High School</td>
+<td style="text-align: left;">Worthing</td>
+<td style="text-align: right;">+2.6 (+0.1 to +5.3)</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: left;">Good (Mar 2022)</td>
+<td style="text-align: left;">Durrington Multi Academy Trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Worthing High School</td>
+<td style="text-align: left;">Worthing</td>
+<td style="text-align: right;">+2.1 (-0.4 to +4.8)</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">+3.5</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: left;">Standards maintained (Mar 2025, ungraded visit)</td>
+<td style="text-align: left;">South Downs Education Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tanbridge House School</td>
+<td style="text-align: left;">Horsham</td>
+<td style="text-align: right;">+2.1 (-0.8 to +5.1)</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: left;">Outstanding (Jun 2024)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Midhurst Rother College</td>
+<td style="text-align: left;">Chichester</td>
+<td style="text-align: right;">+1.9 (-0.7 to +4.5)</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: left;">Outstanding (May 2024)</td>
+<td style="text-align: left;">United Learning Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weald School, The</td>
+<td style="text-align: left;">Horsham</td>
+<td style="text-align: right;">+1.5 (-1.0 to +4.2)</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: left;">No overall grade (Oct 2024): quality of education Good</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Imberhorne School</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">+1.4 (-1.0 to +3.9)</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: left;">Standards maintained (Oct 2024, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Steyning Grammar School</td>
+<td style="text-align: left;">Horsham</td>
+<td style="text-align: right;">+1.4 (-1.1 to +3.9)</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: left;">Report card (Mar 2026): achievement Expected standard, curriculum and teaching Expected standard</td>
+<td style="text-align: left;">Bohunt Education Trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Davison Church of England High School for Girls, Worthing</td>
+<td style="text-align: left;">Worthing</td>
+<td style="text-align: right;">+1.0 (-1.7 to +3.9)</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: left;">Outstanding (Jun 2024)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sackville School</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">+0.8 (-1.6 to +3.4)</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: left;">Remains Good (May 2024, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Millais School</td>
+<td style="text-align: left;">Horsham</td>
+<td style="text-align: right;">+0.7 (-2.1 to +3.6)</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: left;">Good (Sep 2022)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Andrew's CofE High School</td>
+<td style="text-align: left;">Worthing</td>
+<td style="text-align: right;">+0.7 (-1.5 to +3.0)</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: left;">Good (Apr 2023)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Oathall Community College</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">+0.4 (-2.3 to +3.2)</td>
+<td style="text-align: right;">-5.1</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: left;">Remains Good (Sep 2023, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Sir Robert Woodard Academy</td>
+<td style="text-align: left;">Adur</td>
+<td style="text-align: right;">+0.1 (-2.1 to +2.5)</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: left;">Report card (Jan 2026): achievement Expected standard, curriculum and teaching Expected standard</td>
+<td style="text-align: left;">Woodard Academies Trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Warden Park Secondary Academy</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">+0.1 (-2.7 to +3.0)</td>
+<td style="text-align: right;">-4.6</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: left;">Report card (Jun 2026): achievement Expected standard, curriculum and teaching Expected standard</td>
+<td style="text-align: left;">Sussex Learning Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hazelwick School</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-0.0 (-2.6 to +2.7)</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: left;">Outstanding (Oct 2023)</td>
+<td style="text-align: left;">Single-academy trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ormiston Six Villages Academy</td>
+<td style="text-align: left;">Arun</td>
+<td style="text-align: right;">-0.0 (-2.3 to +2.3)</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: left;">Good (Nov 2022)</td>
+<td style="text-align: left;">Ormiston Academies Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-0.2 (-2.4 to +2.2)</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: left;">Good (Nov 2023)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Burgess Hill Academy</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">-0.6 (-2.9 to +1.8)</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: left;">Some aspects not as strong (Dec 2024, ungraded visit)</td>
+<td style="text-align: left;">University of Brighton Academies Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bishop Luffa School, Chichester</td>
+<td style="text-align: left;">Chichester</td>
+<td style="text-align: right;">-0.7 (-3.4 to +2.2)</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: left;">Outstanding (Nov 2022)</td>
+<td style="text-align: left;">Bishop Luffa Learning Partnership</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St Paul's Catholic College</td>
+<td style="text-align: left;">Mid Sussex</td>
+<td style="text-align: right;">-0.7 (-4.0 to +2.7)</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: left;">Outstanding (Feb 2023)</td>
+<td style="text-align: left;">Bosco Catholic Education Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chichester High School</td>
+<td style="text-align: left;">Chichester</td>
+<td style="text-align: right;">-1.0 (-3.1 to +1.3)</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: left;">No overall grade (Nov 2024): quality of education Good</td>
+<td style="text-align: left;">The Kemnal Academies Trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bourne Community College</td>
+<td style="text-align: left;">Chichester</td>
+<td style="text-align: right;">-1.0 (-3.2 to +1.4)</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: left;">Report card (Jan 2026): achievement Needs attention, curriculum and teaching Needs attention</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oriel High School</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-1.4 (-3.8 to +1.2)</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: left;">No overall grade (Mar 2025): quality of education Good</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bohunt Horsham</td>
+<td style="text-align: left;">Horsham</td>
+<td style="text-align: right;">-1.4 (-4.9 to +2.3)</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: left;">Good (Oct 2023)</td>
+<td style="text-align: left;">Bohunt Education Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Angmering School</td>
+<td style="text-align: left;">Arun</td>
+<td style="text-align: right;">-1.4 (-3.6 to +0.8)</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-1.8</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: left;">Good (Oct 2022)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Felpham Community College</td>
+<td style="text-align: left;">Arun</td>
+<td style="text-align: right;">-1.5 (-3.7 to +0.9)</td>
+<td style="text-align: right;">-1.4</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-1.0</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: left;">Standards maintained (Oct 2024, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bohunt School Worthing</td>
+<td style="text-align: left;">Worthing</td>
+<td style="text-align: right;">-1.6 (-4.1 to +1.0)</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: left;">Remains Good (Oct 2023, ungraded visit)</td>
+<td style="text-align: left;">Bohunt Education Trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Forest School</td>
+<td style="text-align: left;">Horsham</td>
+<td style="text-align: right;">-1.8 (-4.2 to +0.9)</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: left;">Remains Good (Jan 2022, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ifield Community College</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-1.8 (-3.8 to +0.4)</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: left;">Remains Good (Apr 2023, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Academy, Selsey</td>
+<td style="text-align: left;">Chichester</td>
+<td style="text-align: right;">-2.2 (-4.1 to -0.1)</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-2.5</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: left;">No overall grade (Jan 2025): quality of education Good</td>
+<td style="text-align: left;">The Kemnal Academies Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-2.6 (-5.2 to +0.0)</td>
+<td style="text-align: right;">-6.0</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: left;">Remains Good (Mar 2023, ungraded visit)</td>
+<td style="text-align: left;">Maintained by the council</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Littlehampton Academy</td>
+<td style="text-align: left;">Arun</td>
+<td style="text-align: right;">-2.9 (-4.8 to -0.9)</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-3.5</td>
+<td style="text-align: left;">Report card (Feb 2026): achievement Needs attention, curriculum and teaching Expected standard</td>
+<td style="text-align: left;">Woodard Academies Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chichester Free School</td>
+<td style="text-align: left;">Chichester</td>
+<td style="text-align: right;">-4.1 (-6.3 to -1.7)</td>
+<td style="text-align: right;">-2.7</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: left;">Good (May 2024)</td>
+<td style="text-align: left;">Sussex Learning Trust</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Gatwick School</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-4.2 (-6.1 to -2.2)</td>
+<td style="text-align: right;">-3.9</td>
+<td style="text-align: right;">-4.9</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-4.6</td>
+<td style="text-align: left;">Good (May 2024)</td>
+<td style="text-align: left;">Aurora Academies Trust</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Thomas Bennett Community College</td>
+<td style="text-align: left;">Crawley</td>
+<td style="text-align: right;">-4.6 (-6.4 to -2.8)</td>
+<td style="text-align: right;">-4.2</td>
+<td style="text-align: right;">-4.7</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-4.8</td>
+<td style="text-align: right;">-6.0</td>
+<td style="text-align: left;">Good (Oct 2022)</td>
+<td style="text-align: left;">The Kemnal Academies Trust</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="what-explains-the-areas-results" class="level1">
+<h1>What explains the area’s results</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-decomp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="west_sussex_files/figure-html/fig-decomp-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Why average Attainment 8 differs from England’s, by factor, all school-years, on the v2.0 model. Approximate Attainment 8 points; the pieces sum to each panel’s gap. ‘Unexplained (school)’ is the schools’ own residual, before shrinkage and net of the authority and region effects, so it differs from the value added above.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For all pupils, West Sussex’s two largest pieces are disadvantage (+0.8) and region (-0.5), and its schools themselves account for +0.0 points. For disadvantaged pupils the two largest are region (-1.2) and local authority (-1.0), and the schools -0.1.</p>
+</section>
+<section id="districts" class="level1">
+<h1>Districts</h1>
+<div class="cell" data-tbl-cap="Mean Value Added v2.0 by district, Attainment 8 points against England.">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small">
+<caption>Mean Value Added v2.0 by district, Attainment 8 points against England.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">District</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above / below</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="../areas/adur.html">Adur</a></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">1 / 0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="../areas/arun.html">Arun</a></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">-0.0</td>
+<td style="text-align: right;">-1.7</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">2 / 1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="../areas/chichester.html">Chichester</a></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">0 / 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="../areas/crawley.html">Crawley</a></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">0 / 2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="../areas/horsham.html">Horsham</a></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">0 / 0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="../areas/mid_sussex.html">Mid Sussex</a></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-2.6</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">1 / 0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="../areas/worthing.html">Worthing</a></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">2 / 0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="notes-on-method" class="level1 unnumbered">
+<h1 class="unnumbered">Notes on method</h1>
+<p>Value added v2.0 is described on <a href="../method.html">the method page</a>. School districts come from each school’s postcode. The decomposition splits each area’s mean log Attainment 8 against England’s into one piece per model term, exactly, and converts to points at England’s mean. This page is generated from <code>templates/area.qmd</code> by <code>R/03_area_pages.R</code>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

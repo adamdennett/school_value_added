@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Value Added v2.0 – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-36c9bf196519df77a4e3d84cd0b4122a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./method.html" aria-current="page"> 
+<span class="menu-text">Value Added v2.0</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./schools.html"> 
+<span class="menu-text">Every school</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-changed-from-v1" id="toc-what-changed-from-v1" class="nav-link active" data-scroll-target="#what-changed-from-v1">What changed from v1</a></li>
+  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
+  <li><a href="#how-v2.0-compares-with-v1" id="toc-how-v2.0-compares-with-v1" class="nav-link" data-scroll-target="#how-v2.0-compares-with-v1">How v2.0 compares with v1</a></li>
+  <li><a href="#girls-and-boys" id="toc-girls-and-boys" class="nav-link" data-scroll-target="#girls-and-boys">Girls and boys</a></li>
+  <li><a href="#local-authorities" id="toc-local-authorities" class="nav-link" data-scroll-target="#local-authorities">Local authorities</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Value Added v2.0</h1>
+<p class="subtitle lead">The specification, the model for each pupil group, and how it compares with the published measure.</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In one line
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Value added v2.0 is each school’s Attainment 8 above or below what a multilevel model expects from its intake and context, measured against England, for five groups of pupils, 2021/22 to 2024/25.</p>
+</div>
+</div>
+<section id="what-changed-from-v1" class="level1">
+<h1>What changed from v1</h1>
+<p>v2.0 adopts every recommendation of <a href="./review.html">the review</a>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>v1 (published)</th>
+<th>v2.0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ofsted grade in the expectation</td>
+<td>Yes (random effect)</td>
+<td><strong>No</strong>: it is judged partly on the same results</td>
+</tr>
+<tr class="even">
+<td>Teacher retention, leadership pay, sickness</td>
+<td>Yes</td>
+<td><strong>No</strong>: partly in a school’s own hands</td>
+</tr>
+<tr class="odd">
+<td>LA segregation</td>
+<td>Yes</td>
+<td><strong>No</strong>: added nothing</td>
+</tr>
+<tr class="even">
+<td>Pupil mobility</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="odd">
+<td>Single-sex school</td>
+<td>No</td>
+<td><strong>Yes</strong>: girls’ schools gained ~5% from intake alone</td>
+</tr>
+<tr class="even">
+<td>SEN support and EHCP rates</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="odd">
+<td>Neighbourhood education (% level 4+, 150 nearest output areas)</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="even">
+<td>Measured against</td>
+<td>Schools in the same local authority</td>
+<td><strong>England</strong>, with the within-authority view kept beside it</td>
+</tr>
+<tr class="odd">
+<td>Estimate</td>
+<td>Mean residual</td>
+<td>Mean residual, <strong>shrunk by its reliability, with a 95% interval</strong></td>
+</tr>
+<tr class="even">
+<td>Pupil groups</td>
+<td>All, disadvantaged, non-disadvantaged</td>
+<td><strong>+ girls and boys</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Kept from v1: the construction (a school-level residual of a model of log Attainment 8), prior attainment, absence, disadvantage, EAL and selective admissions, and random intercepts for year and for region and local authority.</p>
+</section>
+<section id="the-model" class="level1">
+<h1>The model</h1>
+<p><span class="math display">\[\log(\text{Att8}) = \beta\,\text{intake and context} + u_\text{year} + u_\text{region} + u_\text{LA} + e\]</span></p>
+<p>Value added for a school-year is observed Attainment 8 minus <span class="math inline">\(\exp(\hat y)\,e^{\sigma^2/2}\)</span>. Against England, <span class="math inline">\(\hat y\)</span> carries only the year effect; within the authority it carries every random effect. A school’s value added is the mean over its years, shrunk towards zero by its reliability, <span class="math inline">\(\tau^2 / (\tau^2 + \sigma^2 / n)\)</span>, where <span class="math inline">\(\tau^2\)</span> is the persistent between-school variance (from a fit with a school random intercept) and <span class="math inline">\(n\)</span> its number of years.</p>
+<div class="cell">
+<div id="tbl-coefs" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-coefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Fixed effects by pupil group, as the percentage change in Attainment 8 (t statistic in brackets). Neighbourhood education is per standard deviation; SEN, mobility are per percentage point; disadvantage, absence and EAL are elasticities (per 1% change).
+</figcaption>
+<div aria-describedby="tbl-coefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Disadvantage (% FSM6, log)</td>
+<td style="text-align: right;">-0.041 (-15)</td>
+<td style="text-align: right;">+0.028 (8)</td>
+<td style="text-align: right;">-0.014 (-6)</td>
+<td style="text-align: right;">-0.047 (-16)</td>
+<td style="text-align: right;">-0.042 (-12)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Absence (log)</td>
+<td style="text-align: right;">-0.228 (-54)</td>
+<td style="text-align: right;">-0.326 (-59)</td>
+<td style="text-align: right;">-0.185 (-54)</td>
+<td style="text-align: right;">-0.222 (-48)</td>
+<td style="text-align: right;">-0.235 (-45)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">English as an additional language (log)</td>
+<td style="text-align: right;">+0.007 (6)</td>
+<td style="text-align: right;">+0.024 (16)</td>
+<td style="text-align: right;">+0.009 (10)</td>
+<td style="text-align: right;">+0.008 (6)</td>
+<td style="text-align: right;">+0.006 (5)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prior attainment (KS2, centred)</td>
+<td style="text-align: right;">+2.88% (43)</td>
+<td style="text-align: right;">+2.55% (29)</td>
+<td style="text-align: right;">+2.79% (51)</td>
+<td style="text-align: right;">+2.60% (37)</td>
+<td style="text-align: right;">+3.02% (37)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-selective elsewhere (vs non-selective in a selective area)</td>
+<td style="text-align: right;">+2.67% (4)</td>
+<td style="text-align: right;">+0.56% (1)</td>
+<td style="text-align: right;">+3.02% (5)</td>
+<td style="text-align: right;">+3.10% (4)</td>
+<td style="text-align: right;">+1.64% (2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Selective (vs non-selective in a selective area)</td>
+<td style="text-align: right;">+0.36% (1)</td>
+<td style="text-align: right;">+20.06% (19)</td>
+<td style="text-align: right;">+2.13% (4)</td>
+<td style="text-align: right;">+0.48% (1)</td>
+<td style="text-align: right;">+1.84% (2)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbourhood education (SD)</td>
+<td style="text-align: right;">+2.57% (19)</td>
+<td style="text-align: right;">+0.78% (4)</td>
+<td style="text-align: right;">+2.55% (23)</td>
+<td style="text-align: right;">+2.38% (17)</td>
+<td style="text-align: right;">+3.01% (18)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support %</td>
+<td style="text-align: right;">-0.19% (-10)</td>
+<td style="text-align: right;">-0.10% (-4)</td>
+<td style="text-align: right;">-0.15% (-10)</td>
+<td style="text-align: right;">-0.22% (-11)</td>
+<td style="text-align: right;">-0.16% (-7)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SEN with EHCP %</td>
+<td style="text-align: right;">-0.16% (-3)</td>
+<td style="text-align: right;">-0.41% (-6)</td>
+<td style="text-align: right;">-0.13% (-3)</td>
+<td style="text-align: right;">-0.21% (-3)</td>
+<td style="text-align: right;">-0.13% (-2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pupil mobility %</td>
+<td style="text-align: right;">-0.54% (-21)</td>
+<td style="text-align: right;">-0.57% (-17)</td>
+<td style="text-align: right;">-0.46% (-22)</td>
+<td style="text-align: right;">-0.60% (-22)</td>
+<td style="text-align: right;">-0.54% (-17)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls' school</td>
+<td style="text-align: right;">+5.23% (14)</td>
+<td style="text-align: right;">+7.75% (15)</td>
+<td style="text-align: right;">+4.59% (15)</td>
+<td style="text-align: right;">+1.99% (5)</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Boys' school</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+1.40% (3)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Each group’s model: data, fit, and how much of the unexplained variation is a persistent school effect.
+</figcaption>
+<div aria-describedby="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">School-years</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean Att 8</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Marginal R²</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Conditional R²</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">School SD (vs England)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Residual SD</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Reliability, 4 years</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">12,845</td>
+<td style="text-align: right;">3,266</td>
+<td style="text-align: right;">47.5</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.80</td>
+<td style="text-align: right;">0.079</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.88</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">12,702</td>
+<td style="text-align: right;">3,254</td>
+<td style="text-align: right;">38.4</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.117</td>
+<td style="text-align: right;">0.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">12,702</td>
+<td style="text-align: right;">3,254</td>
+<td style="text-align: right;">50.3</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">0.063</td>
+<td style="text-align: right;">0.073</td>
+<td style="text-align: right;">0.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: right;">12,191</td>
+<td style="text-align: right;">3,110</td>
+<td style="text-align: right;">48.6</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.077</td>
+<td style="text-align: right;">0.095</td>
+<td style="text-align: right;">0.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: right;">11,994</td>
+<td style="text-align: right;">3,057</td>
+<td style="text-align: right;">45.0</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.107</td>
+<td style="text-align: right;">0.84</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Every term is intake or context. The largest are prior attainment and absence, as in v1. The new terms all matter: each percentage point of mobile pupils costs 0.5% of Attainment 8, a standard deviation of neighbourhood education is worth +2.6% for all pupils but only +0.8% for disadvantaged pupils, and a girls’ school +5.2%. Four years of value added are reliable for every group, from 0.76 for disadvantaged pupils to 0.88 for all pupils.</p>
+</section>
+<section id="how-v2.0-compares-with-v1" class="level1">
+<h1>How v2.0 compares with v1</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-v1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-v1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-v1-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-v1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Each school’s value added, v1 as published (within its local authority) against v2.0 (against England, shrunk), all pupils, mean over the four years.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-v1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-v1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Agreement between v1 and v2.0 across schools, by group. v1 has no girls or boys measure.
+</figcaption>
+<div aria-describedby="tbl-v1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">r, v2 against England</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">r, v2 within the LA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools changing quintile</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">3,235</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">55%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">3,235</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">0.89</td>
+<td style="text-align: right;">51%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">3,235</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">56%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The two measures agree broadly but not closely: 55% of schools fall in a different quintile on v2.0 for all pupils. Measured within the authority, as v1 was, the correlation is 0.83. The remaining difference is the specification: the Ofsted grade and workforce terms coming out, and the new intake terms going in. The <a href="./review.html">review</a> sets out how much each change contributes.</p>
+</section>
+<section id="girls-and-boys" class="level1">
+<h1>Girls and boys</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-gb" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Each mixed school’s value added for its girls and for its boys (v2.0, shrunk, against England). Schools far from the diagonal do markedly better by one group.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Girls’ and boys’ value added correlate 0.81 across the 2,902 schools with both. In 199 schools the two differ by more than three points. The girls’ and boys’ models use the same intake terms, measured for the whole school; the DfE publishes Attainment 8 by sex but not intake by sex, so a school’s intake of girls and of boys is assumed alike.</p>
+</section>
+<section id="local-authorities" class="level1">
+<h1>Local authorities</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-la" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-la-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Local authority effects in v2.0, all pupils and disadvantaged pupils, with 95% intervals. Sussex’s three authorities highlighted.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The authority effect is reported here, beside value added, rather than inside it: value added against England includes whatever the authority contributes. The within-authority value added (as v1) is kept in the data for anyone who wants it.</p>
+</section>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>Every school’s v2.0 value added, for every group, with intervals and the within-authority version, is in <a href="data/va_v2_schools.csv">va_v2_schools.csv</a>. Inputs are the DfE performance tables, school census and absence data, the 2021 Census and Ofsted’s monthly management information, assembled by the <a href="https://github.com/adamdennett/school_attainment_tool">original project</a>. The build is described in the <a href="https://github.com/adamdennett/school_value_added#readme">repository README</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

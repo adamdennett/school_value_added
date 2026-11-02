@@ -1,0 +1,71 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.qmd
+    - method.qmd
+    - schools.qmd
+    - review.qmd
+    - sussex.qmd
+    - areas/*.qmd
+    - roadmap.qmd
+  resources:
+    - fonts/
+    - .nojekyll
+    - data/va_v2_schools.csv
+
+website:
+  title: "School Value Added"
+  site-url: "https://adamdennett.github.io/school_value_added"
+  repo-url: "https://github.com/adamdennett/school_value_added"
+  page-navigation: true
+  navbar:
+    background: "#eedeff"
+    foreground: "#361a54"
+    left:
+      - href: index.qmd
+        text: Home
+      - href: method.qmd
+        text: "Value Added v2.0"
+      - href: schools.qmd
+        text: "Every school"
+      - text: Sussex
+        menu:
+          - href: sussex.qmd
+            text: "Sussex overview"
+          - href: areas/brighton_and_hove.qmd
+            text: "Brighton and Hove"
+          - href: areas/east_sussex.qmd
+            text: "East Sussex"
+          - href: areas/west_sussex.qmd
+            text: "West Sussex"
+      - href: review.qmd
+        text: "The review"
+      - href: roadmap.qmd
+        text: Roadmap
+    right:
+      - text: "The original work"
+        href: "https://adamdennett.github.io/school_attainment_tool/"
+      - icon: github
+        href: "https://github.com/adamdennett/school_value_added"
+  page-footer:
+    left: "Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL"
+    right: "Built from published DfE and Ofsted data. Nothing uses pupil-level records."
+
+format:
+  html:
+    theme: [cosmo, theme.scss]
+    toc: true
+    toc-location: left
+    code-fold: true
+    code-summary: "Show code"
+    fig-cap-location: bottom
+    fig-width: 9
+    fig-height: 5.5
+    fig-dpi: 108
+    link-external-newwindow: true
+
+execute:
+  echo: false
+  warning: false
+  message: false

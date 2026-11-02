@@ -1,0 +1,157 @@
+---
+title: "@@TITLE@@"
+subtitle: "@@SUBTITLE@@"
+---
+
+<!-- GENERATED from templates/area.qmd by R/03_area_pages.R. Edit the template, not this file. -->
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+NAME <- "@@NAME@@"; TIER <- "@@TIER@@"; LAS <- @@LAS@@; PARENT <- "@@PARENT@@"; V1_DOC <- "@@V1DOC@@"
+V <- load_va()
+W <- va_wide(V)
+LADS <- readRDS(here::here("data", "sussex_lads.rds"))
+in_area <- if (TIER == "district") W$lad %in% NAME else W$LANAME %in% LAS
+w <- W[in_area, ] |> arrange(desc(va_shrunk_all))
+lads <- if (TIER == "district") LADS[LADS$lad == NAME, ] else LADS[LADS$la %in% LAS, ]
+n <- nrow(w)
+m <- function(g) mean(w[[paste0("va_shrunk_", g)]], na.rm = TRUE)
+above <- sum(w$va_lo_all > 0, na.rm = TRUE); below <- sum(w$va_hi_all < 0, na.rm = TRUE)
+la_at <- function(la, g) V$la |> filter(LANAME == la, group == g)
+yrs <- V$spec$years
+sh <- function(x, d = 1) sprintf(paste0("%+.", d, "f"), x)
+schools_txt <- function(k) if (k == 1) "1 school" else paste(k, "schools")
+n_sig <- function(k, dir) if (k == 0) paste("none", dir) else paste(k, dir)
+OFSTED_KIND <- c("Report card" = "report card", "No overall grade" = "inspection with no overall grade",
+                 "Graded" = "graded inspection", "Ungraded only" = "ungraded visit only")
+ofsted_txt_area <- function(k) { t <- table(factor(k, names(OFSTED_KIND))); t <- t[t > 0]
+  and_list(sprintf("%d %s%s", as.vector(t), OFSTED_KIND[names(t)], ifelse(as.vector(t) == 1 | names(t) == "Ungraded only", "", "s"))) }
+lc1 <- function(x) sub("^(.)", "\\L\\1", x, perl = TRUE)
+v1d <- w$va_nat_all - w$v1_all
+orig <- function(text) sprintf("[%s](%s/%s)", text, ORIGINAL_SITE, V1_DOC)
+```
+
+::: {.callout-note appearance="simple"}
+## About this page
+
+Value Added v2.0 for `r NAME`'s state-funded secondary schools, `r yl(min(yrs))`
+to `r yl(max(yrs))`, measured against England: see [the method](@@ROOT@@method.qmd).
+The original analysis, with absence, suspensions and trusts in depth, is
+`r orig("here")`. Built from published DfE and Ofsted data; nothing uses
+pupil-level records.
+:::
+
+# Summary {.unnumbered}
+
+```{r summary}
+#| results: asis
+b <- c(
+  sprintf("**%s with value added for all pupils averaging %s points** against England: %s significantly above expectation and %s.",
+          schools_txt(n), sh(m("all")), n_sig(above, "significantly above"), n_sig(below, "below")) |>
+    sub(pattern = "and none below\\.$", replacement = "and none below."),
+  sprintf("**Disadvantaged pupils: %s points; non-disadvantaged pupils: %s.**", sh(m("disadvantaged")), sh(m("non_disadvantaged"))),
+  sprintf("**Girls: %s points; boys: %s.**", sh(m("girls")), sh(m("boys"))),
+  if (n) sprintf("**Strongest: %s (%s). Weakest: %s (%s).**", w$SCHNAME[1], sh(w$va_shrunk_all[1]),
+                 w$SCHNAME[n], sh(w$va_shrunk_all[n])),
+  if (TIER == "la") {
+    e <- la_at(NAME, "all"); ed <- la_at(NAME, "disadvantaged")
+    sprintf("**The authority's own effect is %s (%s of %d)%s for all pupils, and %s (%s) for disadvantaged pupils.** Value added against England includes it.",
+            sprintf("%+.1f%%", pct(e$effect)), ord(e$rank), e$n_la, ifelse(e$sig, ", distinguishable from zero", ""),
+            sprintf("%+.1f%%", pct(ed$effect)), ord(ed$rank))
+  },
+  if (any(!is.na(w$v1_all)))
+    sprintf("**Against the published v1 measure**, the area's schools move by %s points on average (v2 against England minus v1 within the authority).",
+            sh(mean(v1d, na.rm = TRUE))),
+  sprintf("**Latest Ofsted:** %s.", ofsted_txt_area(w$ofsted_kind))
+)
+cat(paste0("- ", b[!is.na(b) & nzchar(b)], collapse = "\n"), "\n")
+```
+
+# The schools
+
+```{r map}
+#| fig-cap: "Each school coloured by Value Added v2.0 for all pupils (choose another measure from the menu). Circle size is the school's roll; hover for every group's value added, the published v1 figure, and Ofsted."
+map_schools(w, lads, height = if (TIER == "district") 440 else 560)
+```
+
+```{r fig-va}
+#| fig-cap: "Each school's Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability."
+#| fig-height: !expr max(3.2, 0.42 * n + 1.8)
+fig_va(w, title = paste0(NAME, ": value added by school"))
+```
+
+```{r fig-gb}
+#| fig-cap: "Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk."
+#| fig-height: !expr max(3.2, 0.42 * n + 1.8)
+fig_va(w, c("girls", "boys"), title = "Girls and boys")
+```
+
+```{r tbl-schools}
+#| tbl-cap: !expr paste0("Value Added v2.0 for every school, against England, Attainment 8 points with 95% interval for all pupils; v1 is the published measure, within the authority. Ofsted is the latest judgement as at ", format(V$ofsted_as_at, "%d %B %Y"), ".")
+w |>
+  transmute(School = SCHNAME, District = lad,
+            `All pupils` = va_txt(va_shrunk_all, va_lo_all, va_hi_all),
+            Disadv. = sh(va_shrunk_disadvantaged), `Non-disadv.` = sh(va_shrunk_non_disadvantaged),
+            Girls = ifelse(is.na(va_shrunk_girls), "", sh(va_shrunk_girls)),
+            Boys = ifelse(is.na(va_shrunk_boys), "", sh(va_shrunk_boys)),
+            `v1` = ifelse(is.na(v1_all), "", sh(v1_all)),
+            `Ofsted latest` = coalesce(ofsted_latest, ""),
+            `Run by (2024/25)` = coalesce(run_by, "")) |>
+  select(where(~any(nzchar(as.character(.x)) & !is.na(.x)))) |>
+  kt(align = "llrrrrrrll")
+```
+
+# What explains the area's results
+
+```{r decomp}
+#| include: false
+areas <- if (TIER == "region") c(NAME, LAS) else if (TIER == "district") c(NAME, PARENT) else NAME
+dec <- bind_rows(lapply(areas, function(a) {
+  u <- if (a == NAME) w$URN else if (a %in% LAS || a == PARENT) W$URN[W$LANAME == a] else integer()
+  decompose(V, u, a)
+})) |> mutate(area = factor(area, areas))
+d_get <- function(a, g, comp) dec$points[dec$area == a & dec$group == g & dec$component == comp]
+top2 <- function(a, g) dec |> filter(area == a, group == g, component != "Unexplained (school)") |>
+  arrange(desc(abs(points))) |> slice(1:2) |> mutate(t = sprintf("%s (%+.1f)", lc1(component), points)) |> pull(t)
+```
+
+```{r fig-decomp}
+#| fig-cap: "Why average Attainment 8 differs from England's, by factor, all school-years, on the v2.0 model. Approximate Attainment 8 points; the pieces sum to each panel's gap. 'Unexplained (school)' is the schools' own residual, before shrinkage and net of the authority and region effects, so it differs from the value added above."
+#| fig-height: !expr 1.2 + 3.6 * length(areas)
+fig_decomp(dec)
+```
+
+For all pupils, `r NAME`'s two largest pieces are `r and_list(top2(NAME, "All pupils"))`,
+and its schools themselves account for `r sh(d_get(NAME, "All pupils", "Unexplained (school)"))`
+points. For disadvantaged pupils the two largest are
+`r and_list(top2(NAME, "Disadvantaged"))`, and the schools
+`r sh(d_get(NAME, "Disadvantaged", "Unexplained (school)"))`.
+
+```{r districts-head}
+#| results: asis
+if (TIER != "district") cat("# Districts\n")
+```
+
+```{r districts}
+#| tbl-cap: "Mean Value Added v2.0 by district, Attainment 8 points against England."
+if (TIER != "district") {
+  w |> group_by(District = lad) |>
+    summarise(Schools = n(), `All pupils` = sh(mean(va_shrunk_all, na.rm = TRUE)),
+              Disadvantaged = sh(mean(va_shrunk_disadvantaged, na.rm = TRUE)),
+              Girls = sh(mean(va_shrunk_girls, na.rm = TRUE)), Boys = sh(mean(va_shrunk_boys, na.rm = TRUE)),
+              `Above / below` = paste(sum(va_lo_all > 0, na.rm = TRUE), "/", sum(va_hi_all < 0, na.rm = TRUE)),
+              .groups = "drop") |>
+    mutate(District = ifelse(District == "Brighton and Hove", District,
+                             sprintf('<a href="@@ROOT@@areas/%s.html">%s</a>', slug(District), District))) |>
+    kt(align = "lrrrrrr", escape = FALSE)
+}
+```
+
+# Notes on method {.unnumbered}
+
+Value added v2.0 is described on [the method page](@@ROOT@@method.qmd).
+School districts come from each school's postcode. The decomposition
+splits each area's mean log Attainment 8 against England's into one piece
+per model term, exactly, and converts to points at England's mean. This
+page is generated from `templates/area.qmd` by `R/03_area_pages.R`.
