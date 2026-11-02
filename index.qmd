@@ -61,7 +61,7 @@ original measure</a>.</p>
 
 ::: {.cards}
 <a class="card-v2" href="method.html"><div class="card-title">Value Added v2.0</div><div class="card-desc">The specification, the model for each pupil group, and how v2.0 compares with the published measure.</div></a>
-<a class="card-v2" href="schools.html"><div class="card-title">Every school</div><div class="card-desc">Search and sort every secondary school in England by value added for each group.</div></a>
+<a class="card-v2" href="explore.html"><div class="card-title">Explore by area</div><div class="card-desc">Pick a region, a combined or mayoral authority, or a local authority, and see its schools on a map and in a table.</div></a>
 <a class="card-v2" href="sussex.html"><div class="card-title">Sussex</div><div class="card-desc">East Sussex, West Sussex and Brighton and Hove, with a page for each authority and district.</div></a>
 <a class="card-v2" href="review.html"><div class="card-title">The review</div><div class="card-desc">The analysis of the original measure that v2.0 is built on: every term tested, and ten recommendations.</div></a>
 <a class="card-v2" href="roadmap.html"><div class="card-title">Roadmap</div><div class="card-desc">What comes next: a new policy simulator, new years of data as DfE publishes them, and more.</div></a>

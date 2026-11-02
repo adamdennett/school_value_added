@@ -75,3 +75,19 @@ table thead th { background: $ucl-pale-purple; color: $ucl-dark-purple; }
   .num { font-size: 1.7rem; font-weight: 700; color: $ucl-dark-purple; line-height: 1.1; }
   .lab { font-size: .85rem; color: #4a4060; }
 }
+
+// Area explorer
+.explore-bar { display: flex; flex-wrap: wrap; gap: .8rem; margin: .5rem 0 .8rem; }
+.explore-ctl { display: flex; flex-direction: column; font-size: .85rem; color: #4a4060; font-weight: 600;
+  select { margin-top: .2rem; padding: .3rem .5rem; border: 1px solid $ucl-light-purple; border-radius: .4rem;
+           background: #fff; max-width: 22rem; font-weight: 400; color: $body-color; } }
+.explore-summary { background: $ucl-pale-purple; border-radius: .6rem; padding: .7rem 1rem; margin: .8rem 0; }
+.explore-table { max-height: 34rem; overflow: auto; border: 1px solid $ucl-light-purple; border-radius: .6rem;
+  table { margin: 0; font-size: .85rem; }
+  th { position: sticky; top: 0; cursor: pointer; white-space: nowrap; user-select: none; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  td.up { color: $ucl-dark-purple; font-weight: 700; } td.down { color: #1f7fa0; font-weight: 700; }
+  .ci { color: #7a7090; font-size: .78rem; font-weight: 400; } }
+.explore-legend { background: #fff; padding: 8px 12px; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,.25);
+  font-size: 12px; line-height: 1.5; max-width: 210px;
+  .bar { height: 12px; border-radius: 2px; margin: 4px 0; } .note { font-size: 11px; color: #666; clear: both; } }

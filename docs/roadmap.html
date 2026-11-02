@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-36c9bf196519df77a4e3d84cd0b4122a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-26d3d98048e428269f5752dcc3e16a50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -98,8 +98,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Value Added v2.0</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./schools.html"> 
-<span class="menu-text">Every school</span></a>
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -199,9 +199,11 @@ ul.task-list li input[type="checkbox"] {
 <ul class="task-list">
 <li><label><input type="checkbox" checked="">Value Added v2.0 specified on the review’s recommendations and fitted for all, disadvantaged, non-disadvantaged pupils, girls and boys</label></li>
 <li><label><input type="checkbox" checked="">Value added against England and within the authority, shrunk, with 95% intervals</label></li>
-<li><label><input type="checkbox" checked="">Every school in England, searchable, with a downloadable file</label></li>
+<li><label><input type="checkbox" checked="">Every school in England, explored by region, combined or mayoral authority, or local authority, on a map with a sortable table, and a downloadable file</label></li>
 <li><label><input type="checkbox" checked="">Pages for Sussex, its three authorities and twelve districts, with the map, the girls/boys split, a v2.0 decomposition and the latest Ofsted judgement</label></li>
 <li><label><input type="checkbox" checked="">Comparison with the published v1 measure throughout</label></li>
+<li><label><input type="checkbox" checked="">Absence above or below what the intake predicts, on the v2 intake terms, on every map and in every profile</label></li>
+<li><label><input type="checkbox" checked="">The original Sussex documents’ analyses refitted on v2.0: the decomposition, the district test, trusts, the joint-signal plane, absence scenarios, comparator profiles, league tables and questions for discussion; a district summary page</label></li>
 </ul>
 </section>
 <section id="next" class="level2">
@@ -211,7 +213,6 @@ ul.task-list li input[type="checkbox"] {
 <li><label><input type="checkbox"><strong>Adding a new year.</strong> When DfE publishes a new year’s KS4 results, absence, census and SEN data, extend the panel in the original project, then rerun <code>R/01_inputs.R</code>, <code>R/02_fit_va.R</code> and <code>R/03_area_pages.R</code> here. The v2.0 model takes its years from the data, and no longer needs the workforce file, which was the slowest to arrive. See the README.</label></li>
 <li><label><input type="checkbox"><strong>A self-contained data pipeline.</strong> Bring the DfE and Ofsted fetch steps into this repository, so it no longer reads from the original project’s folder.</label></li>
 <li><label><input type="checkbox"><strong>Provisional value added for the newest year.</strong> 2025/26 KS4 results are out, but its census, SEN and mobility data are not yet; predict from the fitted model once they are, as the original project did for v1.</label></li>
-<li><label><input type="checkbox"><strong>Absence, suspensions and trusts on v2.0.</strong> The original area documents’ absence-by-reason, suspension and trust sections, and the district effect test, refitted on the v2.0 model.</label></li>
 <li><label><input type="checkbox"><strong>Areas beyond Sussex.</strong> The area template works for any authority and its districts once boundaries are added.</label></li>
 <li><label><input type="checkbox"><strong>Monthly Ofsted refresh.</strong> Pick up Ofsted’s new monthly release automatically.</label></li>
 <li><label><input type="checkbox"><strong>Publish v2.0 alongside v1</strong> in the original reports, labelled, with a note on how rankings change.</label></li>

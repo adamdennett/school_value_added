@@ -1,0 +1,73 @@
+---
+title: "Explore by area"
+subtitle: "Choose a region, a combined or mayoral authority, or a local authority, and see its schools' Value Added v2.0 on a map and in a table."
+toc: false
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+source(here::here("R", "explore_js.R"))
+V <- load_va()
+P <- readRDS(here::here("data", "place_absence.rds"))
+
+# Combined and mayoral authorities: the ONS lookup (May 2025) for those
+# established, by district; the Devolution Priority Programme areas,
+# announced February 2025, by upper-tier council. A council area takes the
+# authority of its districts, so schools without a district still get one.
+ons <- read.csv(here::here("data", "lookups", "lad_cauth_2025.csv"))
+new_ma <- read.csv(here::here("data", "lookups", "new_mayoral_authorities.csv"))
+w <- va_wide(V) |> left_join(P$abs_schools |> select(URN, abs_excess), by = "URN")
+la_ca <- w |> filter(!is.na(lad)) |> distinct(LANAME, lad) |>
+  inner_join(ons, by = c("lad" = "LAD25NM")) |> distinct(LANAME, ca = CAUTH25NM)
+la_ca <- bind_rows(la_ca, new_ma |> transmute(LANAME, ca = paste0(authority, " (new)"))) |>
+  distinct(LANAME, .keep_all = TRUE)
+w <- w |> left_join(la_ca, by = "LANAME")
+
+dat <- w |>
+  transmute(SCHNAME, LANAME, region = gor_name, ca, la = LANAME, lat, lon, pupils,
+            va_shrunk_all, va_lo_all, va_hi_all, va_shrunk_disadvantaged, va_shrunk_non_disadvantaged,
+            va_shrunk_girls, va_shrunk_boys, abs_excess, ofsted_latest,
+            up = va_lo_all > 0, down = va_hi_all < 0) |>   # flags before rounding
+  mutate(across(where(is.double) & !c(lat, lon), ~round(.x, 2)))
+measures <- tibble::tribble(
+  ~var, ~label, ~good, ~unit,
+  "va_shrunk_all", "Value added, all pupils", "high", " pts",
+  "va_shrunk_disadvantaged", "Value added, disadvantaged", "high", " pts",
+  "va_shrunk_non_disadvantaged", "Value added, non-disadvantaged", "high", " pts",
+  "va_shrunk_girls", "Value added, girls", "high", " pts",
+  "va_shrunk_boys", "Value added, boys", "high", " pts",
+  "abs_excess", "Absence against intake", "low", " pp")
+levels <- tibble::tibble(key = c("region", "ca", "la"),
+                         label = c("Region", "Combined or mayoral authority", "Local authority (upper tier)"))
+notes <- setNames(as.list(rep("New mayoral strategic authority, from the Devolution Priority Programme announced in February 2025; not yet in the ONS lookup.",
+                                n_distinct(new_ma$authority))), paste0(unique(new_ma$authority), " (new)"))
+```
+
+Every state-funded mainstream secondary school in England has a Value
+Added v2.0 figure for all pupils, disadvantaged and non-disadvantaged
+pupils, girls and boys, `r yl(min(V$spec$years))` to `r yl(max(V$spec$years))`:
+Attainment 8 points against England, shrunk by reliability. Choose a
+level and an area; the map zooms to its schools and the table lists them.
+Click a column heading to sort. "Absence against intake" is percentage
+points above (positive) or below what the school's intake predicts.
+
+```{r explorer}
+payload <- list(
+  schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 6),
+  levels = jsonlite::toJSON(levels, dataframe = "rows"),
+  measures = jsonlite::toJSON(measures, dataframe = "rows"),
+  notes = jsonlite::toJSON(notes, auto_unbox = TRUE),
+  default = jsonlite::toJSON(list(level = "ca", area = "Sussex and Brighton (new)"), auto_unbox = TRUE))
+leaflet::leaflet(height = 560, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
+  leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
+  leaflet::setView(-1.5, 52.8, 6) |>
+  htmlwidgets::onRender(EXPLORE_JS, data = payload)
+```
+
+Combined and mayoral authorities are from the ONS lookup of local
+authority districts to combined authorities (May 2025), with the six
+Devolution Priority Programme areas announced in February 2025 added and
+marked "(new)". Areas not in a combined authority are not listed at that
+level. The full data are in [va_v2_schools.csv](data/va_v2_schools.csv),
+and the Sussex areas have [pages of their own](sussex.qmd).

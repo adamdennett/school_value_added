@@ -9,7 +9,7 @@ subtitle: "What v2.0 does now, and what comes next."
       for all, disadvantaged, non-disadvantaged pupils, girls and boys
 - [x] Value added against England and within the authority, shrunk, with
       95% intervals
-- [x] Every school in England, searchable, with a downloadable file
+- [x] Every school in England, explored by region, combined or mayoral authority, or local authority, on a map with a sortable table, and a downloadable file
 - [x] Pages for Sussex, its three authorities and twelve districts, with the
       map, the girls/boys split, a v2.0 decomposition and the latest Ofsted
       judgement
