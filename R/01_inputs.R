@@ -144,6 +144,21 @@ build_inputs <- function() {
   d <- d |> left_join(ofs, by = "URN")
   d <- d |> left_join(sussex_governance(), by = "URN")
 
+  # School-years where Attainment 8 does not measure what the school does,
+  # by what was entered, not by how low the results were:
+  #   - fewer than three GCSE entries per pupil: the school does not mainly
+  #     take GCSEs (Europa School UK's pupils take the European Baccalaureate);
+  #     UTCs and studio schools taking technical qualifications that count
+  #     towards Attainment 8 sit well above this;
+  #   - fewer than half of pupils achieving any qualification: an anomalous year.
+  # They stay in this table, flagged, and are left out of every model.
+  d <- d |> mutate(
+    excl_reason = case_when(
+      TAVENT_G_PTQ_EE < 3 ~ "Fewer than three GCSE entries per pupil",
+      PTANYQ_PTQ_EE < 50 ~ "Fewer than half of pupils achieved any qualification"),
+    excluded = !is.na(excl_reason))
+  message(sprintf("  %d school-years excluded (%d schools)", sum(d$excluded), n_distinct(d$URN[d$excluded])))
+
   attr(d, "ofsted_as_at") <- attr(ofs, "as_at")
   attr(d, "built_at") <- Sys.time()
   message(sprintf("%d school-years, %d schools, years %s", nrow(d), n_distinct(d$URN),

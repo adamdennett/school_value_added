@@ -61,6 +61,9 @@ build_provisional <- function() {
     select(URN, SCHNAME, ATT8SCR, ATT8SCR_FSM6CLA1A, ATT8SCR_NFSM6CLA1A, ATT8SCR_GIRLS, ATT8SCR_BOYS,
            PTFSM6CLA1A, PNUMEAL, ADMPOL_PT, PERCTOT_2term) |>
     inner_join(carry, by = "URN") |>
+    # only schools with v2 value added: a school excluded in every model year
+    # (it does not mainly take GCSEs) stays out of the provisional year too
+    filter(URN %in% V$va$URN) |>
     mutate(PERCTOT = ifelse(PERCTOT_2term > 0, exp(predict(br$model, newdata = pick(everything()))), NA_real_),
            ADMPOL_PT = as.character(ADMPOL_PT))
   message(sprintf("2025/26: %d schools with provisional results and carried-forward intake", nrow(new)))

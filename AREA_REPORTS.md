@@ -71,6 +71,9 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
   suspended at least once per 100 (`susp_both()`), with England on both.
 - **Ofsted.** The latest judgement from Ofsted's monthly management
   information, dated, beside every school.
+- **Exclusions.** A school-year is left out of every model when its pupils
+  averaged fewer than three GCSE entries or fewer than half achieved any
+  qualification (`R/01_inputs.R`, `excluded`). The method page lists them.
 - **2025/26 is provisional.** Predicted from the fitted v2.0 model on
   DfE's provisional KS4 results (`R/05_provisional_2526.R`): absence
   bridged from autumn and spring, the unpublished intake data carried

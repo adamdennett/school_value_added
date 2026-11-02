@@ -31,7 +31,7 @@ SUSSEX_LADS <- c("Brighton and Hove", "Eastbourne", "Hastings", "Lewes", "Rother
                  "Arun", "Chichester", "Crawley", "Horsham", "Mid Sussex", "Worthing")
 
 base_rows <- function(d) {
-  keep <- d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
+  keep <- !d$excluded & d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
     complete.cases(d[, c("ks2_c", "ADMPOL_PT", "z_l4", "sen_support", "sen_ehcp", "mobile",
                          "gor_name", "LANAME", "PTFSM6CLA1A", "PERCTOT", "PNUMEAL")])
   d[which(keep), ] |>

@@ -34,7 +34,7 @@ COMPONENT <- function(col) dplyr::case_when(
 model_rows <- function(d, group) {
   y <- GROUPS[[group]]
   ss <- single_sex_term(group)
-  keep <- d[[y]] > 0 & d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
+  keep <- !d$excluded & d[[y]] > 0 & d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
     complete.cases(d[, c(y, "ks2_c", "ADMPOL_PT", "z_l4", "sen_support", "sen_ehcp", "mobile", ss,
                          "gor_name", "LANAME", "PTFSM6CLA1A", "PERCTOT", "PNUMEAL")])
   d[which(keep), ] |>      # which(): a missing comparison drops the row rather than adding an NA one
@@ -155,6 +155,9 @@ build_va <- function() {
     summary = pick("summary"), coefs = pick("coefs"), vc = pick("vc"),
     school_years = pick("school_years"), va = pick("schools"), contrib = pick("contrib"),
     la = pick("la"), v1 = v1_va(d |> distinct(urn_published, URN)), schools = schools,
+    excluded = d |> filter(excluded) |>
+      transmute(URN, SCHNAME, LANAME = as.character(LANAME), year_label, att8 = ATT8SCR,
+                gcse_entries = TAVENT_G_PTQ_EE, any_qual = PTANYQ_PTQ_EE, reason = excl_reason),
     ofsted_as_at = attr(d, "ofsted_as_at"), built_at = Sys.time())
   saveRDS(out, here::here("data", "va_v2.rds"))
 

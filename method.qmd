@@ -44,6 +44,7 @@ v2.0 adopts every recommendation of [the review](review.qmd):
 | Measured against | Schools in the same local authority | **England**, with the within-authority view kept beside it |
 | Estimate | Mean residual | Mean residual, **shrunk by its reliability, with a 95% interval** |
 | Pupil groups | All, disadvantaged, non-disadvantaged | **+ girls and boys** |
+| Schools not mainly taking GCSEs | Included | **Left out**, school-year by school-year, and listed ([below](#sec-excluded)) |
 
 Kept from v1: the construction (a school-level residual of a model of log
 Attainment 8), prior attainment, absence, disadvantage, EAL and selective
@@ -183,6 +184,41 @@ The authority effect is reported here, beside value added, rather than
 inside it: value added against England includes whatever the authority
 contributes. The within-authority value added (as v1) is kept in the data
 for anyone who wants it.
+
+# Schools and years left out {#sec-excluded}
+
+Attainment 8 only measures a school fairly if its pupils take the
+qualifications it counts. A school-year is left out of every v2.0 model,
+and so has no value added for that year, when either:
+
+- **its pupils averaged fewer than three GCSE entries**, so the school does
+  not mainly take GCSEs (England's median is about seven). UTCs and studio
+  schools that take technical qualifications counting towards Attainment 8
+  sit well above this line; or
+- **fewer than half of its pupils achieved any qualification**, an
+  anomalous year.
+
+The rule is about what was entered, not how low the results were, so a
+school with weak results is never excluded for them.
+
+```{r tbl-excluded}
+#| tbl-cap: "Every school-year left out, with the measure that put it there. A school excluded in every year has no v2.0 value added; one excluded in some years keeps the rest."
+V$excluded |>
+  arrange(SCHNAME, year_label) |>
+  group_by(URN, School = SCHNAME, `Local authority` = LANAME, Reason = reason) |>
+  summarise(Years = paste(yl(year_label), collapse = ", "),
+            `Attainment 8` = paste(sprintf("%.1f", att8), collapse = ", "),
+            `GCSE entries per pupil` = paste(sprintf("%.1f", gcse_entries), collapse = ", "),
+            `Pupils with any qualification %` = paste(sprintf("%.0f", any_qual), collapse = ", "),
+            .groups = "drop") |>
+  mutate(`Still has value added` = ifelse(URN %in% V$va$URN, "Yes, other years", "No")) |>
+  select(-URN) |>
+  kt(align = "llllrrrl")
+```
+
+`r nrow(V$excluded)` school-years from `r n_distinct(V$excluded$URN)` schools
+are left out. A school with no value added is also left out of the
+provisional 2025/26 figures, for which DfE has not yet published entry data.
 
 # 2025/26, provisional {#sec-provisional}
 
