@@ -70,6 +70,19 @@ va_wide <- function(V) {
   out
 }
 
+#' A fixed, national colour scale for each diverging map measure: the
+#' 97.5th percentile of |value| across England's schools. Schools beyond it
+#' take the end colour (legends read "<=" / ">="), so a single extreme
+#' school cannot wash out an area, and a colour means the same everywhere.
+colour_caps <- function() {
+  V <- load_va()
+  w <- va_wide(V)
+  f <- here::here("data", "place_absence.rds")
+  if (file.exists(f)) w <- w |> left_join(readRDS(f)$abs_schools |> select(URN, abs_excess), by = "URN")
+  vars <- intersect(c(grep("^va_shrunk_|^va_2526_", names(w), value = TRUE), "v1_all", "abs_excess"), names(w))
+  sapply(vars, function(v) round(unname(quantile(abs(w[[v]]), 0.975, na.rm = TRUE)), 1))
+}
+
 #' Provisional 2025/26 value added, or NULL before it has been built
 load_prov <- function() {
   f <- here::here("data", "va_2526_provisional.rds")
@@ -178,6 +191,7 @@ MAP_NONE <- c(ofsted_rc = "no report card yet", gov = "not recorded")
 #' The area's schools within its district boundaries, coloured by a measure
 #' chosen from a menu above the map (value added v2 by default)
 map_schools <- function(w, lads, height = 520) {
+  COLOUR_CAPS <- colour_caps()
   lad_c <- suppressWarnings(sf::st_coordinates(sf::st_point_on_surface(lads)))
   bb <- sf::st_bbox(lads)
   dat <- w |>
@@ -198,7 +212,8 @@ map_schools <- function(w, lads, height = 520) {
     select(SCHNAME, lon, lat, pupils, tip, any_of(MAP_VARS$var))
   payload <- list(
     schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 4),
-    vars = jsonlite::toJSON(MAP_VARS |> filter(var %in% names(dat)), dataframe = "rows"),
+    vars = jsonlite::toJSON(MAP_VARS |> filter(var %in% names(dat)) |>
+                              mutate(cap = unname(COLOUR_CAPS[var])), dataframe = "rows", na = "null"),
     cats = jsonlite::toJSON(lapply(MAP_CATS, as.list), auto_unbox = TRUE),
     none = jsonlite::toJSON(as.list(MAP_NONE), auto_unbox = TRUE))
   leaflet::leaflet(height = height, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>

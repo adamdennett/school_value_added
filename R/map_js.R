@@ -40,7 +40,8 @@ function(el, x, data) {
     if (m.scale === "cat") {
       colour = function(v) { return cats[name][v] || "#c9c9d6"; };
     } else if (m.scale === "div") {
-      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;
+      // a fixed national cap (R: colour_caps()) so colours mean the same in every area
+      hi = m.cap || Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;
       colour = function(v) { var t = (v - lo) / (hi - lo);
         return ramp(DIV, m.good === "high" ? t : 1 - t); };
     } else {
@@ -71,9 +72,9 @@ function(el, x, data) {
     } else {
       var C = m.scale === "div" ? (m.good === "high" ? DIV : DIV.slice().reverse()) : SEQ;
       h += "<div style=\\"height:12px;border-radius:2px;margin:4px 0;background:" + css(C) + "\\"></div>" +
-        "<span>" + fmt(lo, m) + "</span>" +
+        "<span>" + (m.cap ? "&le; " : "") + fmt(lo, m) + "</span>" +
         (m.scale === "div" ? "<span style=\\"position:absolute;left:50%;transform:translateX(-50%)\\">0</span>" : "") +
-        "<span style=\\"float:right\\">" + fmt(hi, m) + "</span>";
+        "<span style=\\"float:right\\">" + (m.cap ? "&ge; " : "") + fmt(hi, m) + "</span>";
       if (m.scale === "div") h += "<div style=\\"font-size:11px;color:#666\\">" +
         (m.good === "high" ? "blue below expectation, purple above" : "purple below expectation, blue above") + "</div>";
     }

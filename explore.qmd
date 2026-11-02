@@ -63,7 +63,7 @@ The "2025/26 (prov.)" column and colouring: `r PROV_NOTE`
 payload <- list(
   schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 6),
   levels = jsonlite::toJSON(levels, dataframe = "rows"),
-  measures = jsonlite::toJSON(measures, dataframe = "rows"),
+  measures = jsonlite::toJSON(measures |> mutate(cap = unname(colour_caps()[var])), dataframe = "rows", na = "null"),
   notes = jsonlite::toJSON(notes, auto_unbox = TRUE),
   default = jsonlite::toJSON(list(level = "ca", area = "Sussex and Brighton (new)"), auto_unbox = TRUE))
 leaflet::leaflet(height = 560, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>

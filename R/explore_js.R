@@ -90,7 +90,8 @@ function(el, x, data) {
     var m = MEASURES.filter(function(x) { return x.var === sMeasure.value; })[0];
     var rows = S.filter(function(d) { return d[level] === area; });
     var vals = rows.map(function(d) { return d[m.var]; }).filter(function(v) { return v != null; });
-    var hi = Math.max.apply(null, vals.map(Math.abs).concat([1]));
+    // a fixed national cap per measure, so one extreme school cannot wash out the rest
+    var hi = m.cap || Math.max.apply(null, vals.map(Math.abs).concat([1]));
     markers.clearLayers();
     var pts = [];
     rows.forEach(function(d) {
@@ -110,7 +111,7 @@ function(el, x, data) {
     if (pts.length) map.fitBounds(pts, {padding: [24, 24], maxZoom: 13});
     legDiv.innerHTML = "<strong>" + m.label + "</strong><div class=\\"bar\\" style=\\"background:linear-gradient(to right," +
       (m.good === "low" ? "rgb(54,26,84),rgb(232,230,238),rgb(31,127,160)" : "rgb(31,127,160),rgb(232,230,238),rgb(54,26,84)") +
-      ")\\"></div><span>" + fmt(-hi) + "</span><span style=\\"float:right\\">" + fmt(hi) + "</span><div class=\\"note\\">" +
+      ")\\"></div><span>&le; " + fmt(-hi) + "</span><span style=\\"float:right\\">&ge; " + fmt(hi) + "</span><div class=\\"note\\">" +
       (m.good === "low" ? "purple below what the intake predicts, blue above" : "blue below expectation, purple above") + "</div>";
     var n = rows.length, va = rows.map(function(d) { return d.va_shrunk_all; }).filter(function(v) { return v != null; });
     var mean = va.reduce(function(a, b) { return a + b; }, 0) / Math.max(va.length, 1);
