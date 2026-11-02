@@ -126,7 +126,10 @@ b <- c(
     and_list(TE |> filter(sig) |> group_by(name) |>
                summarise(t = sprintf("%s (%s)", first(name), and_list(sprintf("%s %s%%", ow(outcome), sh(pct(effect))))),
                          .groups = "drop") |> pull(t)), "."),
-  sprintf("**Latest Ofsted:** %s.", ofsted_txt_area(w$ofsted_kind)))
+  sprintf("**Latest Ofsted:** %s.", ofsted_txt_area(w$ofsted_kind)),
+  if ("va_2526_all" %in% names(w)) sprintf(
+    "**2025/26, provisional:** value added for all pupils averages %s points across the area's schools on DfE's provisional results. *This will be updated with the revised release in February 2027.*",
+    sh(mean(w$va_2526_all, na.rm = TRUE))))
 cat(paste0("- ", b[!is.na(b) & nzchar(b)], collapse = "\n"), "\n")
 ```
 
@@ -138,7 +141,7 @@ map_schools(w, lads, height = if (TIER == "district") 440 else 560)
 ```
 
 ```{r tbl-schools}
-#| tbl-cap: !expr paste0("Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, and the latest Ofsted judgement as at ", format(V$ofsted_as_at, "%d %B %Y"), ".")
+#| tbl-cap: !expr paste0("Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, the latest Ofsted judgement as at ", format(V$ofsted_as_at, "%d %B %Y"), ", and provisional 2025/26 value added for all pupils. ", PROV_NOTE)
 w |>
   transmute(School = SCHNAME, District = lad,
             `All pupils` = va_txt(va_shrunk_all, va_lo_all, va_hi_all),
@@ -146,10 +149,11 @@ w |>
             Girls = ifelse(is.na(va_shrunk_girls), "", sh(va_shrunk_girls)),
             Boys = ifelse(is.na(va_shrunk_boys), "", sh(va_shrunk_boys)),
             `Absence vs intake` = ifelse(is.na(abs_excess), "", sh(abs_excess)),
+            `2025/26 (provisional)` = ifelse(is.na(va_2526_all), "", sh(va_2526_all)),
             v1 = ifelse(is.na(v1_all), "", sh(v1_all)),
             `Ofsted latest` = coalesce(ofsted_latest, ""), `Run by (2024/25)` = coalesce(run_by, "")) |>
   select(where(~any(nzchar(as.character(.x)) & !is.na(.x)))) |>
-  kt(align = "llrrrrrrrll")
+  kt(align = "llrrrrrrrrll")
 ```
 
 ```{r gov-head}
@@ -407,41 +411,49 @@ across England).
 
 # Contextual league tables
 
+::: {.callout-warning appearance="simple"}
+## 2025/26 is provisional
+
+`r PROV_NOTE` It is shown beside the four-year figure, not averaged into
+it, and is not shrunk: one provisional year of a school's results moves a
+good deal.
+:::
+
 ::: {.panel-tabset}
 
 ## All pupils
 
 ```{r lt-all}
 #| tbl-cap: "Value Added v2.0, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval."
-va_by_year(V, w$URN, "all", names_) |> kt(align = "lrrrrrr")
+va_by_year(V, w$URN, "all", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Disadvantaged
 
 ```{r lt-dis}
 #| tbl-cap: "Value Added v2.0, disadvantaged pupils. Small groups: read across years."
-va_by_year(V, w$URN, "disadvantaged", names_) |> kt(align = "lrrrrrr")
+va_by_year(V, w$URN, "disadvantaged", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Non-disadvantaged
 
 ```{r lt-non}
 #| tbl-cap: "Value Added v2.0, non-disadvantaged pupils."
-va_by_year(V, w$URN, "non_disadvantaged", names_) |> kt(align = "lrrrrrr")
+va_by_year(V, w$URN, "non_disadvantaged", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Girls
 
 ```{r lt-girls}
 #| tbl-cap: "Value Added v2.0, girls."
-va_by_year(V, w$URN, "girls", names_) |> kt(align = "lrrrrrr")
+va_by_year(V, w$URN, "girls", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Boys
 
 ```{r lt-boys}
 #| tbl-cap: "Value Added v2.0, boys."
-va_by_year(V, w$URN, "boys", names_) |> kt(align = "lrrrrrr")
+va_by_year(V, w$URN, "boys", names_) |> kt(align = "lrrrrrrr")
 ```
 
 :::

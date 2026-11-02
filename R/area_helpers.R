@@ -157,15 +157,20 @@ tidy_trust <- function(x) ifelse(is.na(x), NA_character_, sub(" Limited$", "", g
 #' League table: v2 value added by year for one group, then the shrunk
 #' four-year figure with its interval
 va_by_year <- function(V, urns, g, names) {
+  pv <- load_prov()
+  prov <- if (is.null(pv)) tibble(URN = integer(), Prov = numeric()) else
+    pv$va |> filter(group == g) |> select(URN, Prov = va_2526)
   V$school_years |> filter(URN %in% urns, group == g) |>
     select(URN, year_label, va_nat) |>
     mutate(year_label = yl(year_label)) |>
     pivot_wider(names_from = year_label, values_from = va_nat) |>
     left_join(V$va |> filter(group == g) |> select(URN, Shrunk = va_shrunk, lo = va_lo, hi = va_hi),
               by = "URN") |>
+    left_join(prov, by = "URN") |>
     left_join(names, by = "URN") |>
     arrange(desc(Shrunk)) |>
     mutate(`95% interval` = sprintf("%+.1f to %+.1f", lo, hi),
            across(where(is.double), ~ifelse(is.na(.x), "", sprintf("%+.1f", .x)))) |>
-    select(School = SCHNAME, starts_with("20"), `v2.0 (shrunk)` = Shrunk, `95% interval`)
+    select(School = SCHNAME, starts_with("20"), `v2.0, four years (shrunk)` = Shrunk, `95% interval`,
+           `2025/26 (provisional)` = Prov)
 }

@@ -23,6 +23,7 @@ its git-ignored data.
 Rscript R/01_inputs.R        # assemble data/inputs.rds from the original project
 Rscript R/02_fit_va.R        # fit v2.0 for every group -> data/va_v2.rds, data/va_v2_schools.csv
 Rscript R/04_place_and_absence.R  # absence against intake, district test, trusts, scenarios on v2 (~15 min)
+Rscript R/05_provisional_2526.R   # provisional 2025/26, predicted from the fitted model
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```

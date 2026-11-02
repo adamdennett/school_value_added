@@ -184,6 +184,52 @@ inside it: value added against England includes whatever the authority
 contributes. The within-authority value added (as v1) is kept in the data
 for anyone who wants it.
 
+# 2025/26, provisional {#sec-provisional}
+
+```{r prov}
+#| include: false
+PV <- load_prov()
+ag <- function(g) PV$agree$r[PV$agree$group == g]
+```
+
+::: {.callout-warning appearance="simple"}
+## Provisional, and to be updated in February 2027
+
+`r PROV_NOTE`
+:::
+
+DfE has published provisional KS4 results for 2025/26, but not yet the
+year's school census, SEN or mobility data. So 2025/26 is not part of the
+fitted model. Instead each school's 2025/26 result is set against what the
+**fitted v2.0 model** predicts for it, as the original project did when it
+extended v1. The four model years do not move.
+
+- **Absence.** 2025/26 publishes autumn and spring only. Full-year absence
+  is estimated from the two-term figure by a log-log fit on every earlier
+  school-year with both (R² = `r sprintf("%.3f", PV$bridge_r2)`,
+  `r format(PV$bridge_n, big.mark = ",")` school-years).
+- **Carried forward** from each school's latest earlier year:
+  `r and_list(PV$carried)`. Disadvantage and EAL are 2025/26's own;
+  neighbourhood education is the 2021 Census figure, as for every year.
+- **The year effect** for 2025/26 is set so England's schools average zero,
+  as the model's year effects do for the fitted years.
+- **Not shrunk.** It is one provisional year, shown beside the four-year
+  figure, never averaged into it.
+
+```{r tbl-prov}
+#| tbl-cap: "How one provisional year sits against each school's four-year value added: correlation across schools, by group."
+PV$agree |> transmute(Group = GROUP_LABELS[group], Schools = format(n, big.mark = ","),
+                      `Correlation with four-year value added` = sprintf("%.2f", r)) |>
+  kt(align = "lrr")
+```
+
+`r format(PV$schools, big.mark = ",")` schools have a provisional 2025/26
+figure. A single year agrees with the four-year measure at
+`r sprintf("%.2f", ag("all"))` for all pupils and less for the smaller
+groups (`r sprintf("%.2f", ag("disadvantaged"))` for disadvantaged
+pupils), which is why it is reported as a separate, provisional column.
+The figures are in [va_2526_provisional.csv](data/va_2526_provisional.csv).
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

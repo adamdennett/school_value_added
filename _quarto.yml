@@ -14,6 +14,7 @@ project:
     - fonts/
     - .nojekyll
     - data/va_v2_schools.csv
+    - data/va_2526_provisional.csv
 
 website:
   title: "School Value Added"

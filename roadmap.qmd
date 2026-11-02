@@ -36,10 +36,12 @@ subtitle: "What v2.0 does now, and what comes next."
 - [ ] **A self-contained data pipeline.** Bring the DfE and Ofsted fetch
       steps into this repository, so it no longer reads from the original
       project's folder.
-- [ ] **Provisional value added for the newest year.** 2025/26 KS4 results
-      are out, but its census, SEN and mobility data are not yet; predict
-      from the fitted model once they are, as the original project did for
-      v1.
+- [ ] **Update 2025/26 with the revised KS4 release (February 2027).**
+      2025/26 is shown now, provisional, predicted from the fitted model on
+      DfE's October results with absence bridged and the unpublished intake
+      data carried forward (`R/05_provisional_2526.R`). Rerun it on the
+      revised results; then, once the year's census, SEN and mobility data
+      are out, fold 2025/26 into the model as a fifth year.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [ ] **Monthly Ofsted refresh.** Pick up Ofsted's new monthly release

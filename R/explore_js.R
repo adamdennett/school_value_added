@@ -60,6 +60,7 @@ function(el, x, data) {
       " <span class=\\"ci\\">(" + fmt(d.va_lo_all) + " to " + fmt(d.va_hi_all) + ")</span>"); }},
     {key: "va_shrunk_disadvantaged", label: "Disadv."}, {key: "va_shrunk_non_disadvantaged", label: "Non-disadv."},
     {key: "va_shrunk_girls", label: "Girls"}, {key: "va_shrunk_boys", label: "Boys"},
+    {key: "va_2526_all", label: "2025/26 (prov.)"},
     {key: "abs_excess", label: "Absence vs intake"},
     {key: "ofsted_latest", label: "Ofsted latest", txt: true}];
 

@@ -27,7 +27,7 @@ w <- w |> left_join(la_ca, by = "LANAME")
 dat <- w |>
   transmute(SCHNAME, LANAME, region = gor_name, ca, la = LANAME, lat, lon, pupils,
             va_shrunk_all, va_lo_all, va_hi_all, va_shrunk_disadvantaged, va_shrunk_non_disadvantaged,
-            va_shrunk_girls, va_shrunk_boys, abs_excess, ofsted_latest,
+            va_shrunk_girls, va_shrunk_boys, abs_excess, ofsted_latest, va_2526_all,
             up = va_lo_all > 0, down = va_hi_all < 0) |>   # flags before rounding
   mutate(across(where(is.double) & !c(lat, lon), ~round(.x, 2)))
 measures <- tibble::tribble(
@@ -37,6 +37,7 @@ measures <- tibble::tribble(
   "va_shrunk_non_disadvantaged", "Value added, non-disadvantaged", "high", " pts",
   "va_shrunk_girls", "Value added, girls", "high", " pts",
   "va_shrunk_boys", "Value added, boys", "high", " pts",
+  "va_2526_all", "Value added 2025/26 (PROVISIONAL), all pupils", "high", " pts",
   "abs_excess", "Absence against intake", "low", " pp")
 levels <- tibble::tibble(key = c("region", "ca", "la"),
                          label = c("Region", "Combined or mayoral authority", "Local authority (upper tier)"))
@@ -51,6 +52,12 @@ Attainment 8 points against England, shrunk by reliability. Choose a
 level and an area; the map zooms to its schools and the table lists them.
 Click a column heading to sort. "Absence against intake" is percentage
 points above (positive) or below what the school's intake predicts.
+
+::: {.callout-warning appearance="simple"}
+## 2025/26 is provisional
+
+The "2025/26 (prov.)" column and colouring: `r PROV_NOTE`
+:::
 
 ```{r explorer}
 payload <- list(

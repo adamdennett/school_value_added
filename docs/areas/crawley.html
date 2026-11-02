@@ -258,14 +258,15 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Suspensions: 18.5 episodes per 100 pupils (England 21.2); 7.0 pupils per 100 suspended at least once (England 7.3).</strong> Reduced timetables run at 2.1 times the national rate.</li>
 <li><strong>Trusts that stand out nationally on v2.0:</strong> The Kemnal Academies Trust (all pupils -3.1% and absence +11.3%).</li>
 <li><strong>Latest Ofsted:</strong> 1 inspection with no overall grade, 4 graded inspections and 2 ungraded visits only.</li>
+<li><strong>2025/26, provisional:</strong> value added for all pupils averages -2.0 points across the area’s schools on DfE’s provisional results. <em>This will be updated with the revised release in February 2027.</em></li>
 </ul>
 </section>
 <section id="the-schools" class="level1">
 <h1>The schools</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="htmlwidget-419c01752b622f899d7a" style="width:100%;height:294px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-419c01752b622f899d7a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[-0.140462480803131,-0.132959635268358,-0.137571778320172,-0.145185443413673,-0.173845222306386,-0.212074998918325,-0.219371621174042,-0.232521955647978,-0.236873003807449,-0.200274263901966,-0.254625028845736,-0.255184519970304,-0.214235175126048,-0.212142089174476,-0.17670622529243,-0.140462480803131],"lat":[51.1600473181942,51.1588837311559,51.1421596095868,51.102641282125,51.0893224581091,51.0866134856262,51.0995655549787,51.0973777366437,51.1094769468914,51.1390924653301,51.1390994430562,51.1441908360757,51.1484633096485,51.1554548855593,51.1668499717321,51.1600473181942]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,"Crawley",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[51.12428470611075,-0.1797946100417107,{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Crawley",{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[51.0866134856262,51.1668499717321],"lng":[-0.255184519970304,-0.132959635268358]},"fitBounds":[51.0866134856262,-0.255184519970304,51.1668499717321,-0.132959635268358,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Hazelwick School","lon":-0.1664,"lat":51.1253,"pupils":1890,"tip":"<b>Hazelwick School<\/b> (Crawley)<br>Value added v2: all -0.0, disadvantaged -2.1, girls +0.2, boys -0.1<br>Value added v1 (published): -1.5<br>Attainment 8 50.1, FSM 20%, absence 6.6% (-1.6 pp against intake)<br>Ofsted latest: Outstanding (Oct 2023)<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-0.0357,"va_shrunk_disadvantaged":-2.1327,"va_shrunk_non_disadvantaged":-0.0776,"va_shrunk_girls":0.1511,"va_shrunk_boys":-0.0992,"v1_all":-1.4566,"abs_excess":-1.6405,"att8":50.1,"fsm":20.5,"ks2_c":4.5,"absence":6.58,"mobile":3,"l4":31.7701,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"Holy Trinity CofE Secondary School, Crawley","lon":-0.2096,"lat":51.1056,"pupils":1359,"tip":"<b>Holy Trinity CofE Secondary School, Crawley<\/b> (Crawley)<br>Value added v2: all -0.2, disadvantaged -1.8, girls -0.1, boys -0.4<br>Value added v1 (published): -1.1<br>Attainment 8 41.6, FSM 27%, absence 11.9% (+1.5 pp against intake)<br>Ofsted latest: Good (Nov 2023)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-0.1707,"va_shrunk_disadvantaged":-1.8053,"va_shrunk_non_disadvantaged":-0.6806,"va_shrunk_girls":-0.0773,"va_shrunk_boys":-0.4019,"v1_all":-1.0702,"abs_excess":1.4628,"att8":41.6,"fsm":27.2,"ks2_c":4.1,"absence":11.95,"mobile":4.4,"l4":24.8263,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Oriel High School","lon":-0.1581,"lat":51.1055,"pupils":1478,"tip":"<b>Oriel High School<\/b> (Crawley)<br>Value added v2: all -1.4, disadvantaged -3.4, girls -2.2, boys -0.6<br>Value added v1 (published): -1.9<br>Attainment 8 45.2, FSM 12%, absence 8.8% (-0.4 pp against intake)<br>Ofsted latest: No overall grade (Mar 2025): quality of education Good<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.3583,"va_shrunk_disadvantaged":-3.3817,"va_shrunk_non_disadvantaged":-1.712,"va_shrunk_girls":-2.2434,"va_shrunk_boys":-0.566,"v1_all":-1.9386,"abs_excess":-0.3607,"att8":45.2,"fsm":12.5,"ks2_c":5.1,"absence":8.83,"mobile":4.2,"l4":30.3646,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Ifield Community College","lon":-0.2099,"lat":51.1178,"pupils":1204,"tip":"<b>Ifield Community College<\/b> (Crawley)<br>Value added v2: all -1.8, disadvantaged -1.3, girls -2.2, boys -1.1<br>Value added v1 (published): -2.2<br>Attainment 8 40.0, FSM 29%, absence 10.9% (-0.3 pp against intake)<br>Ofsted latest: Remains Good (Apr 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.7889,"va_shrunk_disadvantaged":-1.3445,"va_shrunk_non_disadvantaged":-2.7016,"va_shrunk_girls":-2.1818,"va_shrunk_boys":-1.1077,"v1_all":-2.2332,"abs_excess":-0.3086,"att8":40,"fsm":28.8,"ks2_c":2.5,"absence":10.88,"mobile":6.2,"l4":25.9867,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"St Wilfrid's Catholic Comprehensive School, Crawley","lon":-0.2042,"lat":51.1101,"pupils":1174,"tip":"<b>St Wilfrid's Catholic Comprehensive School, Crawley<\/b> (Crawley)<br>Value added v2: all -2.6, disadvantaged -6.0, girls -3.2, boys -2.0<br>Value added v1 (published): -4.0<br>Attainment 8 45.0, FSM 14%, absence 6.5% (-1.1 pp against intake)<br>Ofsted latest: Remains Good (Mar 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-2.6388,"va_shrunk_disadvantaged":-6.0119,"va_shrunk_non_disadvantaged":-2.7157,"va_shrunk_girls":-3.218,"va_shrunk_boys":-1.9842,"v1_all":-4.0307,"abs_excess":-1.1335,"att8":45,"fsm":13.7,"ks2_c":6.1,"absence":6.49,"mobile":6.3,"l4":25.3514,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"The Gatwick School","lon":-0.1633,"lat":51.1386,"pupils":846,"tip":"<b>The Gatwick School<\/b> (Crawley)<br>Value added v2: all -4.2, disadvantaged -3.9, girls -4.3, boys -4.0<br>Value added v1 (published): -4.6<br>Attainment 8 39.5, FSM 23%, absence 9.2% (-0.8 pp against intake)<br>Ofsted latest: Good (May 2024)<br>Run by (2024/25): Aurora Academies Trust","va_shrunk_all":-4.1782,"va_shrunk_disadvantaged":-3.9208,"va_shrunk_non_disadvantaged":-4.9403,"va_shrunk_girls":-4.2809,"va_shrunk_boys":-4.0297,"v1_all":-4.5813,"abs_excess":-0.8166,"att8":39.5,"fsm":23.2,"ks2_c":1.8,"absence":9.15,"mobile":14.3,"l4":31.0592,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Thomas Bennett Community College","lon":-0.1907,"lat":51.0992,"pupils":1262,"tip":"<b>Thomas Bennett Community College<\/b> (Crawley)<br>Value added v2: all -4.6, disadvantaged -4.2, girls -4.0, boys -4.8<br>Value added v1 (published): -6.0<br>Attainment 8 33.0, FSM 38%, absence 11.6% (+0.5 pp against intake)<br>Ofsted latest: Good (Oct 2022)<br>Run by (2024/25): The Kemnal Academies Trust","va_shrunk_all":-4.6325,"va_shrunk_disadvantaged":-4.163,"va_shrunk_non_disadvantaged":-4.6509,"va_shrunk_girls":-3.9608,"va_shrunk_boys":-4.8087,"v1_all":-6.0462,"abs_excess":0.4813,"att8":33,"fsm":38.1,"ks2_c":2.6,"absence":11.56,"mobile":6.8,"l4":25.6194,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"abs_excess","label":"Absence above or below what the intake predicts, 2021/22 to 2024/25","group":"Attendance","scale":"div","good":"low","dp":1,"unit":" pp"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
+<div id="htmlwidget-4401004685c879a0a9fc" style="width:100%;height:294px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4401004685c879a0a9fc">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addPolygons","args":[[[[{"lng":[-0.140462480803131,-0.132959635268358,-0.137571778320172,-0.145185443413673,-0.173845222306386,-0.212074998918325,-0.219371621174042,-0.232521955647978,-0.236873003807449,-0.200274263901966,-0.254625028845736,-0.255184519970304,-0.214235175126048,-0.212142089174476,-0.17670622529243,-0.140462480803131],"lat":[51.1600473181942,51.1588837311559,51.1421596095868,51.102641282125,51.0893224581091,51.0866134856262,51.0995655549787,51.0973777366437,51.1094769468914,51.1390924653301,51.1390994430562,51.1441908360757,51.1484633096485,51.1554548855593,51.1668499717321,51.1600473181942]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#361a54","weight":1.5,"opacity":0.5,"fill":true,"fillColor":"#361a54","fillOpacity":0.03,"smoothFactor":1,"noClip":false},null,null,"Crawley",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[51.12428470611075,-0.1797946100417107,{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Crawley",{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":true,"style":{"color":"#361a54","font-weight":"bold","font-size":"12px"},"className":"","sticky":true},null]}],"limits":{"lat":[51.0866134856262,51.1668499717321],"lng":[-0.255184519970304,-0.132959635268358]},"fitBounds":[51.0866134856262,-0.255184519970304,51.1668499717321,-0.132959635268358,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x, data) {\n  var map = this;\n  // htmlwidgets writes the \"json\" strings into the page as objects\n  var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;\n  var defaultVar = \"va_shrunk_all\";\n\n  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.\n  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];\n  var DIV = [[31,127,160],[232,230,238],[54,26,84]];\n  function ramp(C, t) {\n    t = Math.max(0, Math.min(1, t));\n    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;\n    return \"rgb(\" + [0,1,2].map(function(k) {\n      return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(\",\") + \")\";\n  }\n  function css(C) { return \"linear-gradient(to right,\" + C.map(function(c) {\n    return \"rgb(\" + c.join(\",\") + \")\"; }).join(\",\") + \")\"; }\n\n  var markers = L.layerGroup().addTo(map);\n  var legDiv;\n  var leg = L.control({position: \"bottomright\"});\n  leg.onAdd = function() {\n    legDiv = L.DomUtil.create(\"div\");\n    legDiv.style.cssText = \"background:white;padding:8px 12px;border-radius:5px;\" +\n      \"box-shadow:0 1px 5px rgba(0,0,0,.25);font-size:12px;line-height:1.5;max-width:200px;\";\n    return legDiv;\n  };\n  leg.addTo(map);\n\n  function fmt(v, m) { return v == null ? \"no data\" :\n    (m.scale === \"div\" && v > 0 ? \"+\" : \"\") + (+v).toFixed(m.dp) + m.unit; }\n\n  function draw(name) {\n    markers.clearLayers();\n    var m = vars.find(function(v) { return v[\"var\"] === name; });\n    var vals = schools.map(function(d) { return d[name]; })\n                      .filter(function(v) { return v != null && (m.scale === \"cat\" || !isNaN(v)); });\n    var lo = 0, hi = 1, colour;\n    if (m.scale === \"cat\") {\n      colour = function(v) { return cats[name][v] || \"#c9c9d6\"; };\n    } else if (m.scale === \"div\") {\n      hi = Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;\n      colour = function(v) { var t = (v - lo) / (hi - lo);\n        return ramp(DIV, m.good === \"high\" ? t : 1 - t); };\n    } else {\n      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);\n      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };\n    }\n    var missing = 0, counts = {};\n    schools.forEach(function(d) {\n      var v = d[name], none = v == null;\n      if (none) missing++; else if (m.scale === \"cat\") counts[v] = (counts[v] || 0) + 1;\n      L.circleMarker([d.lat, d.lon], {\n        radius: Math.sqrt(d.pupils) / 4,\n        fillColor: none ? \"#ffffff\" : colour(v), fillOpacity: none ? 0.6 : 0.9,\n        color: none ? \"#8a8aa3\" : \"white\", weight: none ? 1.5 : 1\n      }).bindTooltip(d.tip + \"<br><b>\" + m.label + \": \" +\n          (m.scale === \"cat\" ? (v || none[name] || \"not known\") : fmt(v, m)) + \"<\/b>\")\n        .addTo(markers);\n    });\n\n    var h = \"<strong>\" + m.label + \"<\/strong><br>\";\n    if (m.scale === \"cat\") {\n      Object.keys(cats[name]).forEach(function(k) {\n        if (!counts[k]) return;\n        h += \"<div><span style=\\\"display:inline-block;width:11px;height:11px;border-radius:50%;\" +\n          \"margin-right:6px;vertical-align:-1px;background:\" + cats[name][k] + \"\\\"><\/span>\" +\n          k + \" (\" + counts[k] + \")<\/div>\";\n      });\n    } else {\n      var C = m.scale === \"div\" ? (m.good === \"high\" ? DIV : DIV.slice().reverse()) : SEQ;\n      h += \"<div style=\\\"height:12px;border-radius:2px;margin:4px 0;background:\" + css(C) + \"\\\"><\/div>\" +\n        \"<span>\" + fmt(lo, m) + \"<\/span>\" +\n        (m.scale === \"div\" ? \"<span style=\\\"position:absolute;left:50%;transform:translateX(-50%)\\\">0<\/span>\" : \"\") +\n        \"<span style=\\\"float:right\\\">\" + fmt(hi, m) + \"<\/span>\";\n      if (m.scale === \"div\") h += \"<div style=\\\"font-size:11px;color:#666\\\">\" +\n        (m.good === \"high\" ? \"blue below expectation, purple above\" : \"purple below expectation, blue above\") + \"<\/div>\";\n    }\n    if (missing) h += \"<div style=\\\"font-size:11px;color:#666;margin-top:2px\\\">\" +\n      \"<span style=\\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;\" +\n      \"border:1.5px solid #8a8aa3\\\"><\/span>\" + (none[name] || \"no data\") + \" (\" + missing + \")<\/div>\";\n    h += \"<div style=\\\"font-size:11px;color:#666\\\">Circle size: pupils on roll<\/div>\";\n    legDiv.style.position = \"relative\";\n    legDiv.innerHTML = h;\n  }\n\n  // Dropdown above the map\n  var wrap = document.createElement(\"div\");\n  wrap.style.cssText = \"margin:0 0 8px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;\";\n  var lbl = document.createElement(\"label\");\n  lbl.textContent = \"Colour schools by:\";\n  lbl.style.fontWeight = \"bold\";\n  var sel = document.createElement(\"select\");\n  sel.setAttribute(\"aria-label\", \"Variable to colour the schools by\");\n  sel.style.cssText = \"padding:4px 8px;font-size:13px;max-width:100%;border:1px solid #ccc;border-radius:4px;\";\n  var og = null;\n  vars.forEach(function(v) {\n    if (!og || og.label !== v.group) {\n      og = document.createElement(\"optgroup\"); og.label = v.group; sel.appendChild(og);\n    }\n    var o = document.createElement(\"option\");\n    o.value = v[\"var\"]; o.textContent = v.label;\n    if (v[\"var\"] === defaultVar) o.selected = true;\n    og.appendChild(o);\n  });\n  wrap.appendChild(lbl); wrap.appendChild(sel);\n  el.parentNode.insertBefore(wrap, el);\n  sel.addEventListener(\"change\", function() { draw(sel.value); });\n  draw(defaultVar);\n}\n).call(this.getMap(), el, x, data);\n}","data":{"schools":[{"SCHNAME":"Hazelwick School","lon":-0.1664,"lat":51.1253,"pupils":1890,"tip":"<b>Hazelwick School<\/b> (Crawley)<br>Value added v2: all -0.0, disadvantaged -2.1, girls +0.2, boys -0.1<br>Value added v1 (published): -1.5<br>Attainment 8 50.1, FSM 20%, absence 6.6% (-1.6 pp against intake)<br>Ofsted latest: Outstanding (Oct 2023)<br>Run by (2024/25): Single-academy trust","va_shrunk_all":-0.0357,"va_shrunk_disadvantaged":-2.1327,"va_shrunk_non_disadvantaged":-0.0776,"va_shrunk_girls":0.1511,"va_shrunk_boys":-0.0992,"va_2526_all":-3.8544,"v1_all":-1.4566,"abs_excess":-1.6405,"att8":50.1,"fsm":20.5,"ks2_c":4.5,"absence":6.58,"mobile":3,"l4":31.7701,"gov":"Single-academy trust or not recorded","ofsted_rc":null},{"SCHNAME":"Holy Trinity CofE Secondary School, Crawley","lon":-0.2096,"lat":51.1056,"pupils":1359,"tip":"<b>Holy Trinity CofE Secondary School, Crawley<\/b> (Crawley)<br>Value added v2: all -0.2, disadvantaged -1.8, girls -0.1, boys -0.4<br>Value added v1 (published): -1.1<br>Attainment 8 41.6, FSM 27%, absence 11.9% (+1.5 pp against intake)<br>Ofsted latest: Good (Nov 2023)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-0.1707,"va_shrunk_disadvantaged":-1.8053,"va_shrunk_non_disadvantaged":-0.6806,"va_shrunk_girls":-0.0773,"va_shrunk_boys":-0.4019,"va_2526_all":-1.4362,"v1_all":-1.0702,"abs_excess":1.4628,"att8":41.6,"fsm":27.2,"ks2_c":4.1,"absence":11.95,"mobile":4.4,"l4":24.8263,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Oriel High School","lon":-0.1581,"lat":51.1055,"pupils":1478,"tip":"<b>Oriel High School<\/b> (Crawley)<br>Value added v2: all -1.4, disadvantaged -3.4, girls -2.2, boys -0.6<br>Value added v1 (published): -1.9<br>Attainment 8 45.2, FSM 12%, absence 8.8% (-0.4 pp against intake)<br>Ofsted latest: No overall grade (Mar 2025): quality of education Good<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.3583,"va_shrunk_disadvantaged":-3.3817,"va_shrunk_non_disadvantaged":-1.712,"va_shrunk_girls":-2.2434,"va_shrunk_boys":-0.566,"va_2526_all":-1.8186,"v1_all":-1.9386,"abs_excess":-0.3607,"att8":45.2,"fsm":12.5,"ks2_c":5.1,"absence":8.83,"mobile":4.2,"l4":30.3646,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"Ifield Community College","lon":-0.2099,"lat":51.1178,"pupils":1204,"tip":"<b>Ifield Community College<\/b> (Crawley)<br>Value added v2: all -1.8, disadvantaged -1.3, girls -2.2, boys -1.1<br>Value added v1 (published): -2.2<br>Attainment 8 40.0, FSM 29%, absence 10.9% (-0.3 pp against intake)<br>Ofsted latest: Remains Good (Apr 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-1.7889,"va_shrunk_disadvantaged":-1.3445,"va_shrunk_non_disadvantaged":-2.7016,"va_shrunk_girls":-2.1818,"va_shrunk_boys":-1.1077,"va_2526_all":null,"v1_all":-2.2332,"abs_excess":-0.3086,"att8":40,"fsm":28.8,"ks2_c":2.5,"absence":10.88,"mobile":6.2,"l4":25.9867,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"St Wilfrid's Catholic Comprehensive School, Crawley","lon":-0.2042,"lat":51.1101,"pupils":1174,"tip":"<b>St Wilfrid's Catholic Comprehensive School, Crawley<\/b> (Crawley)<br>Value added v2: all -2.6, disadvantaged -6.0, girls -3.2, boys -2.0<br>Value added v1 (published): -4.0<br>Attainment 8 45.0, FSM 14%, absence 6.5% (-1.1 pp against intake)<br>Ofsted latest: Remains Good (Mar 2023, ungraded visit)<br>Run by (2024/25): Maintained by the council","va_shrunk_all":-2.6388,"va_shrunk_disadvantaged":-6.0119,"va_shrunk_non_disadvantaged":-2.7157,"va_shrunk_girls":-3.218,"va_shrunk_boys":-1.9842,"va_2526_all":-4.855,"v1_all":-4.0307,"abs_excess":-1.1335,"att8":45,"fsm":13.7,"ks2_c":6.1,"absence":6.49,"mobile":6.3,"l4":25.3514,"gov":"Maintained","ofsted_rc":null},{"SCHNAME":"The Gatwick School","lon":-0.1633,"lat":51.1386,"pupils":846,"tip":"<b>The Gatwick School<\/b> (Crawley)<br>Value added v2: all -4.2, disadvantaged -3.9, girls -4.3, boys -4.0<br>Value added v1 (published): -4.6<br>Attainment 8 39.5, FSM 23%, absence 9.2% (-0.8 pp against intake)<br>Ofsted latest: Good (May 2024)<br>Run by (2024/25): Aurora Academies Trust","va_shrunk_all":-4.1782,"va_shrunk_disadvantaged":-3.9208,"va_shrunk_non_disadvantaged":-4.9403,"va_shrunk_girls":-4.2809,"va_shrunk_boys":-4.0297,"va_2526_all":2.8909,"v1_all":-4.5813,"abs_excess":-0.8166,"att8":39.5,"fsm":23.2,"ks2_c":1.8,"absence":9.15,"mobile":14.3,"l4":31.0592,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null},{"SCHNAME":"Thomas Bennett Community College","lon":-0.1907,"lat":51.0992,"pupils":1262,"tip":"<b>Thomas Bennett Community College<\/b> (Crawley)<br>Value added v2: all -4.6, disadvantaged -4.2, girls -4.0, boys -4.8<br>Value added v1 (published): -6.0<br>Attainment 8 33.0, FSM 38%, absence 11.6% (+0.5 pp against intake)<br>Ofsted latest: Good (Oct 2022)<br>Run by (2024/25): The Kemnal Academies Trust","va_shrunk_all":-4.6325,"va_shrunk_disadvantaged":-4.163,"va_shrunk_non_disadvantaged":-4.6509,"va_shrunk_girls":-3.9608,"va_shrunk_boys":-4.8087,"va_2526_all":-3.0594,"v1_all":-6.0462,"abs_excess":0.4813,"att8":33,"fsm":38.1,"ks2_c":2.6,"absence":11.56,"mobile":6.8,"l4":25.6194,"gov":"Multi-academy trust, converter or free school","ofsted_rc":null}],"vars":[{"var":"va_shrunk_all","label":"Value added v2, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_disadvantaged","label":"Value added v2, disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_non_disadvantaged","label":"Value added v2, non-disadvantaged pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_girls","label":"Value added v2, girls","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_shrunk_boys","label":"Value added v2, boys","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"va_2526_all","label":"Value added 2025/26 PROVISIONAL, all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"v1_all","label":"Value added v1 (published, within the LA), all pupils","group":"Value added","scale":"div","good":"high","dp":1,"unit":" pts"},{"var":"abs_excess","label":"Absence above or below what the intake predicts, 2021/22 to 2024/25","group":"Attendance","scale":"div","good":"low","dp":1,"unit":" pp"},{"var":"att8","label":"Attainment 8, all pupils","group":"Results","scale":"seq","good":"","dp":1,"unit":""},{"var":"fsm","label":"Disadvantaged pupils (FSM6) %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"ks2_c","label":"Prior attainment at KS2 (centred)","group":"Intake","scale":"seq","good":"","dp":1,"unit":""},{"var":"absence","label":"Overall absence %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"mobile","label":"Pupil mobility %","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"l4","label":"Neighbourhood education (% level 4+)","group":"Intake","scale":"seq","good":"","dp":1,"unit":"%"},{"var":"gov","label":"Who runs it, 2024/25","group":"The school","scale":"cat","good":"","dp":0,"unit":""},{"var":"ofsted_rc","label":"Ofsted report card, achievement (since November 2025)","group":"The school","scale":"cat","good":"","dp":0,"unit":""}],"cats":{"gov":{"Maintained":"#361a54","Multi-academy trust, converter or free school":"#993bff","Multi-academy trust, sponsored":"#1f7fa0","Single-academy trust or not recorded":"#6b6680"},"ofsted_rc":{"Exceptional":"#361a54","Strong standard":"#993bff","Expected standard":"#ddbdff","Needs attention":"#30d6ff","Urgent improvement":"#1f7fa0"}},"none":{"ofsted_rc":"no report card yet","gov":"not recorded"}}}]}}</script>
 <p>Each school coloured by Value Added v2.0 for all pupils; choose another measure, including absence against intake, from the menu. Circle size is the school’s roll; hover for every group’s value added, absence against intake, the published v1 figure, and Ofsted.</p>
 </div>
 </div>
@@ -273,7 +274,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="tbl-schools" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, and the latest Ofsted judgement as at 30 September 2026.
+Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, the latest Ofsted judgement as at 30 September 2026, and provisional 2025/26 value added for all pupils. 2025/26 is provisional: predicted from the v2.0 model using DfE’s provisional KS4 results (October 2026), with absence bridged from autumn and spring and the intake data not yet published carried forward. It will be updated with the revised KS4 release in February 2027.
 </figcaption>
 <div aria-describedby="tbl-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -288,6 +289,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <th style="text-align: right;" data-quarto-table-cell-role="th">Girls</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Boys</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Absence vs intake</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2025/26 (provisional)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">v1</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Ofsted latest</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Run by (2024/25)</th>
@@ -303,6 +305,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-3.9</td>
 <td style="text-align: right;">-1.5</td>
 <td style="text-align: left;">Outstanding (Oct 2023)</td>
 <td style="text-align: left;">Single-academy trust</td>
@@ -316,6 +319,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-0.4</td>
 <td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-1.4</td>
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: left;">Good (Nov 2023)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -329,6 +333,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">-2.2</td>
 <td style="text-align: right;">-0.6</td>
 <td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-1.8</td>
 <td style="text-align: right;">-1.9</td>
 <td style="text-align: left;">No overall grade (Mar 2025): quality of education Good</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -342,6 +347,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">-2.2</td>
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: right;">-0.3</td>
+<td style="text-align: right;"></td>
 <td style="text-align: right;">-2.2</td>
 <td style="text-align: left;">Remains Good (Apr 2023, ungraded visit)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -355,6 +361,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">-3.2</td>
 <td style="text-align: right;">-2.0</td>
 <td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-4.9</td>
 <td style="text-align: right;">-4.0</td>
 <td style="text-align: left;">Remains Good (Mar 2023, ungraded visit)</td>
 <td style="text-align: left;">Maintained by the council</td>
@@ -368,6 +375,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">-4.3</td>
 <td style="text-align: right;">-4.0</td>
 <td style="text-align: right;">-0.8</td>
+<td style="text-align: right;">+2.9</td>
 <td style="text-align: right;">-4.6</td>
 <td style="text-align: left;">Good (May 2024)</td>
 <td style="text-align: left;">Aurora Academies Trust</td>
@@ -381,6 +389,7 @@ Table&nbsp;1: Every school, with Value Added v2.0 against England (Attainment 8 
 <td style="text-align: right;">-4.0</td>
 <td style="text-align: right;">-4.8</td>
 <td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-3.1</td>
 <td style="text-align: right;">-6.0</td>
 <td style="text-align: left;">Good (Oct 2022)</td>
 <td style="text-align: left;">The Kemnal Academies Trust</td>
@@ -1010,6 +1019,19 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 </section>
 <section id="contextual-league-tables" class="level1">
 <h1>Contextual league tables</h1>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>2025/26 is provisional
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>2025/26 is provisional: predicted from the v2.0 model using DfE’s provisional KS4 results (October 2026), with absence bridged from autumn and spring and the intake data not yet published carried forward. It will be updated with the revised KS4 release in February 2027. It is shown beside the four-year figure, not averaged into it, and is not shrunk: one provisional year of a school’s results moves a good deal.</p>
+</div>
+</div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">All pupils</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Disadvantaged</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Non-disadvantaged</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Girls</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Boys</a></li></ul>
 <div class="tab-content">
@@ -1025,8 +1047,9 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0, four years (shrunk)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2025/26 (provisional)</th>
 </tr>
 </thead>
 <tbody>
@@ -1038,6 +1061,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.4</td>
 <td style="text-align: right;">-0.0</td>
 <td style="text-align: right;">-2.6 to +2.7</td>
+<td style="text-align: right;">-3.9</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
@@ -1047,6 +1071,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">-0.2</td>
 <td style="text-align: right;">-2.4 to +2.2</td>
+<td style="text-align: right;">-1.4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Oriel High School</td>
@@ -1056,6 +1081,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-2.3</td>
 <td style="text-align: right;">-1.4</td>
 <td style="text-align: right;">-3.8 to +1.2</td>
+<td style="text-align: right;">-1.8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Ifield Community College</td>
@@ -1065,6 +1091,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.3</td>
 <td style="text-align: right;">-1.8</td>
 <td style="text-align: right;">-3.8 to +0.4</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
@@ -1074,6 +1101,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-6.0</td>
 <td style="text-align: right;">-2.6</td>
 <td style="text-align: right;">-5.2 to +0.0</td>
+<td style="text-align: right;">-4.9</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">The Gatwick School</td>
@@ -1083,6 +1111,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.4</td>
 <td style="text-align: right;">-4.2</td>
 <td style="text-align: right;">-6.1 to -2.2</td>
+<td style="text-align: right;">+2.9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Thomas Bennett Community College</td>
@@ -1092,6 +1121,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-5.7</td>
 <td style="text-align: right;">-4.6</td>
 <td style="text-align: right;">-6.4 to -2.8</td>
+<td style="text-align: right;">-3.1</td>
 </tr>
 </tbody>
 </table>
@@ -1110,8 +1140,9 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0, four years (shrunk)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2025/26 (provisional)</th>
 </tr>
 </thead>
 <tbody>
@@ -1123,6 +1154,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.3</td>
 <td style="text-align: right;">-1.3</td>
 <td style="text-align: right;">-3.9 to +1.4</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
@@ -1132,6 +1164,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.0</td>
 <td style="text-align: right;">-1.8</td>
 <td style="text-align: right;">-4.4 to +1.0</td>
+<td style="text-align: right;">-4.7</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Hazelwick School</td>
@@ -1141,6 +1174,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-2.5</td>
 <td style="text-align: right;">-2.1</td>
 <td style="text-align: right;">-5.2 to +1.2</td>
+<td style="text-align: right;">-6.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Oriel High School</td>
@@ -1150,6 +1184,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-8.7</td>
 <td style="text-align: right;">-3.4</td>
 <td style="text-align: right;">-6.1 to -0.4</td>
+<td style="text-align: right;">-5.9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">The Gatwick School</td>
@@ -1159,6 +1194,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-3.9</td>
 <td style="text-align: right;">-3.9</td>
 <td style="text-align: right;">-6.2 to -1.4</td>
+<td style="text-align: right;">+0.7</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Thomas Bennett Community College</td>
@@ -1168,6 +1204,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-6.1</td>
 <td style="text-align: right;">-4.2</td>
 <td style="text-align: right;">-6.3 to -1.8</td>
+<td style="text-align: right;">-6.6</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
@@ -1177,6 +1214,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-10.2</td>
 <td style="text-align: right;">-6.0</td>
 <td style="text-align: right;">-8.8 to -3.0</td>
+<td style="text-align: right;">-4.2</td>
 </tr>
 </tbody>
 </table>
@@ -1195,8 +1233,9 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0, four years (shrunk)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2025/26 (provisional)</th>
 </tr>
 </thead>
 <tbody>
@@ -1208,6 +1247,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.5</td>
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-2.4 to +2.3</td>
+<td style="text-align: right;">-4.3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
@@ -1217,6 +1257,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.2</td>
 <td style="text-align: right;">-0.7</td>
 <td style="text-align: right;">-2.7 to +1.4</td>
+<td style="text-align: right;">-0.8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Oriel High School</td>
@@ -1226,6 +1267,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-2.5</td>
 <td style="text-align: right;">-1.7</td>
 <td style="text-align: right;">-3.9 to +0.6</td>
+<td style="text-align: right;">-2.3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Ifield Community College</td>
@@ -1235,6 +1277,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.3</td>
 <td style="text-align: right;">-2.7</td>
 <td style="text-align: right;">-4.5 to -0.8</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
@@ -1244,6 +1287,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-6.4</td>
 <td style="text-align: right;">-2.7</td>
 <td style="text-align: right;">-4.9 to -0.4</td>
+<td style="text-align: right;">-5.9</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Thomas Bennett Community College</td>
@@ -1253,6 +1297,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-5.4</td>
 <td style="text-align: right;">-4.7</td>
 <td style="text-align: right;">-6.3 to -2.9</td>
+<td style="text-align: right;">-2.6</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">The Gatwick School</td>
@@ -1262,6 +1307,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.8</td>
 <td style="text-align: right;">-4.9</td>
 <td style="text-align: right;">-6.7 to -3.1</td>
+<td style="text-align: right;">+2.1</td>
 </tr>
 </tbody>
 </table>
@@ -1280,8 +1326,9 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0, four years (shrunk)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2025/26 (provisional)</th>
 </tr>
 </thead>
 <tbody>
@@ -1293,6 +1340,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+1.3</td>
 <td style="text-align: right;">+0.2</td>
 <td style="text-align: right;">-2.8 to +3.3</td>
+<td style="text-align: right;">-3.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
@@ -1302,6 +1350,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+1.6</td>
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-2.6 to +2.6</td>
+<td style="text-align: right;">-4.3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Ifield Community College</td>
@@ -1311,6 +1360,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.2</td>
 <td style="text-align: right;">-2.2</td>
 <td style="text-align: right;">-4.5 to +0.3</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Oriel High School</td>
@@ -1320,6 +1370,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-1.7</td>
 <td style="text-align: right;">-2.2</td>
 <td style="text-align: right;">-5.0 to +0.7</td>
+<td style="text-align: right;">-0.8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
@@ -1329,6 +1380,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-4.8</td>
 <td style="text-align: right;">-3.2</td>
 <td style="text-align: right;">-6.1 to -0.2</td>
+<td style="text-align: right;">-8.3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Thomas Bennett Community College</td>
@@ -1338,6 +1390,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-2.2</td>
 <td style="text-align: right;">-4.0</td>
 <td style="text-align: right;">-6.0 to -1.8</td>
+<td style="text-align: right;">-5.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">The Gatwick School</td>
@@ -1347,6 +1400,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-1.0</td>
 <td style="text-align: right;">-4.3</td>
 <td style="text-align: right;">-6.5 to -1.9</td>
+<td style="text-align: right;">+2.3</td>
 </tr>
 </tbody>
 </table>
@@ -1365,8 +1419,9 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <th style="text-align: right;" data-quarto-table-cell-role="th">2022/23</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2023/24</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">2024/25</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 (shrunk)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0, four years (shrunk)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2025/26 (provisional)</th>
 </tr>
 </thead>
 <tbody>
@@ -1378,6 +1433,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-0.1</td>
 <td style="text-align: right;">-3.2 to +3.2</td>
+<td style="text-align: right;">-4.6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Holy Trinity CofE Secondary School, Crawley</td>
@@ -1387,6 +1443,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.1</td>
 <td style="text-align: right;">-0.4</td>
 <td style="text-align: right;">-3.0 to +2.4</td>
+<td style="text-align: right;">+1.3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Oriel High School</td>
@@ -1396,6 +1453,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-3.3</td>
 <td style="text-align: right;">-0.6</td>
 <td style="text-align: right;">-3.6 to +2.7</td>
+<td style="text-align: right;">-3.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Ifield Community College</td>
@@ -1405,6 +1463,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.9</td>
 <td style="text-align: right;">-1.1</td>
 <td style="text-align: right;">-3.6 to +1.5</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">St Wilfrid's Catholic Comprehensive School, Crawley</td>
@@ -1414,6 +1473,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-7.2</td>
 <td style="text-align: right;">-2.0</td>
 <td style="text-align: right;">-5.0 to +1.3</td>
+<td style="text-align: right;">-1.8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">The Gatwick School</td>
@@ -1423,6 +1483,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">+0.1</td>
 <td style="text-align: right;">-4.0</td>
 <td style="text-align: right;">-6.3 to -1.6</td>
+<td style="text-align: right;">+3.4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Thomas Bennett Community College</td>
@@ -1432,6 +1493,7 @@ Figure&nbsp;10: Every school in England on two signals, 2021/22 to 2024/25: abse
 <td style="text-align: right;">-8.5</td>
 <td style="text-align: right;">-4.8</td>
 <td style="text-align: right;">-6.8 to -2.6</td>
+<td style="text-align: right;">-0.9</td>
 </tr>
 </tbody>
 </table>

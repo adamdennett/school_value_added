@@ -61,8 +61,26 @@ va_wide <- function(V) {
                 names_glue = "{.value}_{group}")
   v1 <- V$v1 |> select(URN, group, va_v1) |>
     pivot_wider(names_from = group, values_from = va_v1, names_glue = "v1_{group}")
-  V$schools |> inner_join(w, by = "URN") |> left_join(v1, by = "URN")
+  out <- V$schools |> inner_join(w, by = "URN") |> left_join(v1, by = "URN")
+  # Provisional 2025/26, predicted from the fitted model (R/05_provisional_2526.R)
+  pv <- load_prov()
+  if (!is.null(pv)) out <- out |> left_join(
+    pv$va |> select(URN, group, va_2526) |>
+      pivot_wider(names_from = group, values_from = va_2526, names_glue = "va_2526_{group}"), by = "URN")
+  out
 }
+
+#' Provisional 2025/26 value added, or NULL before it has been built
+load_prov <- function() {
+  f <- here::here("data", "va_2526_provisional.rds")
+  if (file.exists(f)) readRDS(f) else NULL
+}
+
+#' The sentence every provisional figure carries
+PROV_NOTE <- paste("2025/26 is provisional: predicted from the v2.0 model using DfE's provisional KS4",
+                   "results (October 2026), with absence bridged from autumn and spring and the intake",
+                   "data not yet published carried forward. It will be updated with the revised KS4",
+                   "release in February 2027.")
 
 #' A school's value added as "+2.1 (+0.8 to +3.4)"
 va_txt <- function(v, lo, hi) ifelse(is.na(v), "", sprintf("%+.1f (%+.1f to %+.1f)", v, lo, hi))
@@ -138,6 +156,7 @@ MAP_VARS <- tribble(
   "va_shrunk_non_disadvantaged", "Value added v2, non-disadvantaged pupils",     "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_girls", "Value added v2, girls",                                    "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_boys",  "Value added v2, boys",                                     "Value added",    "div",  "high", 1,   " pts",
+  "va_2526_all",     "Value added 2025/26 PROVISIONAL, all pupils",              "Value added",    "div",  "high", 1,   " pts",
   "v1_all",          "Value added v1 (published, within the LA), all pupils",    "Value added",    "div",  "high", 1,   " pts",
   "abs_excess",      "Absence above or below what the intake predicts, 2021/22 to 2024/25", "Attendance", "div", "low", 1, " pp",
   "att8",            "Attainment 8, all pupils",                                 "Results",        "seq",  "",     1,   "",
