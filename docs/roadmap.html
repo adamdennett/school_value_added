@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-26d3d98048e428269f5752dcc3e16a50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,6 +113,10 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./areas/brighton_and_hove.html">
  <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove’s authority effect</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./areas/east_sussex.html">
@@ -204,6 +208,7 @@ ul.task-list li input[type="checkbox"] {
 <li><label><input type="checkbox" checked="">Comparison with the published v1 measure throughout</label></li>
 <li><label><input type="checkbox" checked="">Absence above or below what the intake predicts, on the v2 intake terms, on every map and in every profile</label></li>
 <li><label><input type="checkbox" checked="">The original Sussex documents’ analyses refitted on v2.0: the decomposition, the district test, trusts, the joint-signal plane, absence scenarios, comparator profiles, league tables and questions for discussion; a district summary page</label></li>
+<li><label><input type="checkbox" checked="">Value added over time: every school’s yearly v2.0 value added, trajectories in the explorer and on every area page, and a centred moving average over one, three or five years around a chosen year</label></li>
 </ul>
 </section>
 <section id="next" class="level2">
@@ -213,6 +218,7 @@ ul.task-list li input[type="checkbox"] {
 <li><label><input type="checkbox"><strong>Adding a new year.</strong> When DfE publishes a new year’s KS4 results, absence, census and SEN data, extend the panel in the original project, then rerun <code>R/01_inputs.R</code>, <code>R/02_fit_va.R</code> and <code>R/03_area_pages.R</code> here. The v2.0 model takes its years from the data, and no longer needs the workforce file, which was the slowest to arrive. See the README.</label></li>
 <li><label><input type="checkbox"><strong>A self-contained data pipeline.</strong> Bring the DfE and Ofsted fetch steps into this repository, so it no longer reads from the original project’s folder.</label></li>
 <li><label><input type="checkbox"><strong>Update 2025/26 with the revised KS4 release (February 2027).</strong> 2025/26 is shown now, provisional, predicted from the fitted model on DfE’s October results with absence bridged and the unpublished intake data carried forward (<code>R/05_provisional_2526.R</code>). Rerun it on the revised results; then, once the year’s census, SEN and mobility data are out, fold 2025/26 into the model as a fifth year.</label></li>
+<li><label><input type="checkbox"><strong>v2.1 candidates: the kind of absence, and 11–16 schools.</strong> The illness share of absence and an 11–16 flag both improve the model’s fit; see <a href="./bh_effect.html">Brighton and Hove’s authority effect</a>. Test them across every group before adopting either, and look at a parents’ qualification measure from the 2021 Census in place of neighbourhood education for all adults.</label></li>
 <li><label><input type="checkbox"><strong>Areas beyond Sussex.</strong> The area template works for any authority and its districts once boundaries are added.</label></li>
 <li><label><input type="checkbox"><strong>Monthly Ofsted refresh.</strong> Pick up Ofsted’s new monthly release automatically.</label></li>
 <li><label><input type="checkbox"><strong>Publish v2.0 alongside v1</strong> in the original reports, labelled, with a note on how rankings change.</label></li>

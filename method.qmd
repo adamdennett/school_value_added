@@ -266,6 +266,58 @@ groups (`r sprintf("%.2f", ag("disadvantaged"))` for disadvantaged
 pupils), which is why it is reported as a separate, provisional column.
 The figures are in [va_2526_provisional.csv](data/va_2526_provisional.csv).
 
+# Value added over time {#sec-over-time}
+
+```{r over-time}
+#| include: false
+YR <- va_years(V)
+ALLY <- sort(unique(YR$year_label))
+prov_year <- if (is.null(PV)) "" else PV$year
+yr_cor <- lapply(names(GROUPS), function(g) {
+  wd <- YR |> filter(group == g) |> select(URN, year_label, va) |>
+    pivot_wider(names_from = year_label, values_from = va)
+  cm <- cor(wd[, ALLY], use = "pairwise.complete.obs")
+  tibble(group = g, adjacent = mean(diag(cm[-1, -ncol(cm)])), apart = cm[1, ncol(cm)])
+}) |> bind_rows()
+yc <- function(g, col) sprintf("%.2f", yr_cor[[col]][yr_cor$group == g])
+```
+
+The four-year figure is the school's average over `r yl(min(yrs))` to
+`r yl(max(yrs))`, shrunk towards England by its reliability. The same model
+also gives a figure for **each year**: the school's Attainment 8 that year
+against what the model expects from that year's intake and context, with
+that year's effect for England taken out (`va_nat` for the school-year).
+Yearly figures are not shrunk, so a small cohort or an unusual year moves
+them more. `r yl(prov_year)` is the
+provisional year described [above](#sec-provisional).
+
+Schools that do well one year mostly do well the next, but not entirely:
+
+```{r tbl-yr-cor}
+#| tbl-cap: "How far a school's yearly value added carries from one year to the next: correlation across schools, by group."
+yr_cor |> transmute(Group = GROUP_LABELS[group],
+                    `Adjacent years (average)` = sprintf("%.2f", adjacent),
+                    `First year against last` = sprintf("%.2f", apart)) |>
+  kt(align = "lrr")
+```
+
+For all pupils, adjacent years correlate at `r yc("all", "adjacent")` and
+`r yl(first(ALLY))` with `r yl(last(ALLY))` at `r yc("all", "apart")`; for
+disadvantaged pupils, where cohorts are smaller, at
+`r yc("disadvantaged", "adjacent")` and `r yc("disadvantaged", "apart")`.
+Value added changes gradually, and part of any one year's movement is noise.
+
+That is why the [explorer](explore.qmd) and the area pages offer a
+**centred moving average**: the mean of the yearly figures over a window of
+one, three or five years centred on a chosen year. A three-year average
+centred on 2023/24 is the mean of 2022/23, 2023/24 and 2024/25. A window
+that runs past the first or last year uses the years there are, so a
+three-year average centred on `r yl(first(ALLY))` covers two years. A
+school missing a year is averaged over the years it has. A window that
+includes `r yl(prov_year)` includes a provisional figure and is flagged.
+Moving averages are not shrunk, and the four-year figure remains the
+headline measure.
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

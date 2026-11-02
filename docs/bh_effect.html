@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Brighton and Hove’s authority effect – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./method.html"> 
+<span class="menu-text">Value Added v2.0</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove’s authority effect</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#how-large-and-how-steady" id="toc-how-large-and-how-steady" class="nav-link active" data-scroll-target="#how-large-and-how-steady">How large, and how steady</a></li>
+  <li><a href="#it-is-an-absence-effect" id="toc-it-is-an-absence-effect" class="nav-link" data-scroll-target="#it-is-an-absence-effect">It is an absence effect</a></li>
+  <li><a href="#what-kind-of-absence" id="toc-what-kind-of-absence" class="nav-link" data-scroll-target="#what-kind-of-absence">What kind of absence</a></li>
+  <li><a href="#so-what-is-it" id="toc-so-what-is-it" class="nav-link" data-scroll-target="#so-what-is-it">So what is it?</a></li>
+  <li><a href="#what-would-help-tell-them-apart" id="toc-what-would-help-tell-them-apart" class="nav-link" data-scroll-target="#what-would-help-tell-them-apart">What would help tell them apart</a></li>
+  <li><a href="#what-it-means-for-v2.0" id="toc-what-it-means-for-v2.0" class="nav-link" data-scroll-target="#what-it-means-for-v2.0">What it means for v2.0</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Brighton and Hove’s authority effect</h1>
+<p class="subtitle lead">Why the city’s schools sit so far above what Value Added v2.0 expects, what explains it, and what might.</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In short
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>On the v2.0 model Brighton and Hove has the 4th largest local authority effect of 152: its schools’ Attainment 8 runs +3.8% above what intake and context predict, after neighbourhood education is taken into account. <strong>Almost all of it is an absence effect.</strong> The city’s absence is among the highest in England, the model expects that absence to cost attainment, and in Brighton and Hove it costs much less than expected. Take absence out of the model and the authority falls to 60th. The extra absence is mostly authorised illness. Why it costs so little here is the open question, and family-level resources are one of the likely answers.</p>
+</div>
+</div>
+<section id="how-large-and-how-steady" class="level1">
+<h1>How large, and how steady</h1>
+<p>The effect is there for every group of pupils and in every year:</p>
+<div class="cell">
+<div id="tbl-groups" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Brighton and Hove’s authority effect on the v2.0 model, by group. The effect on Attainment 8 and its rank among authorities (1 = most above expectation), with and without the absence term.
+</figcaption>
+<div aria-describedby="tbl-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 effect</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v2.0 rank</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Without absence</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank without absence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">+3.9%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+0.8%</td>
+<td style="text-align: right;">60 of 152</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">+4.0%</td>
+<td style="text-align: right;">16 of 151</td>
+<td style="text-align: right;">+0.3%</td>
+<td style="text-align: right;">78 of 151</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">+3.9%</td>
+<td style="text-align: right;">3 of 151</td>
+<td style="text-align: right;">+1.5%</td>
+<td style="text-align: right;">40 of 151</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: right;">+3.0%</td>
+<td style="text-align: right;">12 of 152</td>
+<td style="text-align: right;">+0.2%</td>
+<td style="text-align: right;">71 of 152</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: right;">+4.7%</td>
+<td style="text-align: right;">3 of 152</td>
+<td style="text-align: right;">+1.8%</td>
+<td style="text-align: right;">38 of 152</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-bh-years" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bh-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="bh_effect_files/figure-html/fig-bh-years-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bh-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Mean value added of Brighton and Hove’s schools by year, all pupils, Attainment 8 points against England. 2025/26 is provisional (hollow).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A school in Brighton and Hove averages +0.7 to +2.5 points a year above similar schools in England. That is not one good cohort.</p>
+</section>
+<section id="it-is-an-absence-effect" class="level1">
+<h1>It is an absence effect</h1>
+<p>The test is to refit the model one term at a time. Each row below is the all-pupils model with one change, on the 12,763 school-years that have published absence reasons:</p>
+<div class="cell">
+<div id="tbl-tests" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Brighton and Hove’s authority effect, all pupils, as the v2.0 model changes. AIC compares fit (lower is better; the published model is the reference). The last column is how closely every authority’s effect matches the published model’s.
+</figcaption>
+<div aria-describedby="tbl-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Effect</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC vs v2.0</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Correlation of effects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Value Added v2.0</td>
+<td style="text-align: right;">+3.8%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+0</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Without absence</td>
+<td style="text-align: right;">+0.8%</td>
+<td style="text-align: right;">60 of 152</td>
+<td style="text-align: right;">+3998</td>
+<td style="text-align: right;">0.82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Without neighbourhood education</td>
+<td style="text-align: right;">+5.6%</td>
+<td style="text-align: right;">3 of 152</td>
+<td style="text-align: right;">+489</td>
+<td style="text-align: right;">0.90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Without prior attainment (KS2)</td>
+<td style="text-align: right;">+6.9%</td>
+<td style="text-align: right;">1 of 152</td>
+<td style="text-align: right;">+2610</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Plus the illness share of absence</td>
+<td style="text-align: right;">+3.6%</td>
+<td style="text-align: right;">7 of 152</td>
+<td style="text-align: right;">-30</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Absence split: illness and the rest</td>
+<td style="text-align: right;">+2.7%</td>
+<td style="text-align: right;">11 of 152</td>
+<td style="text-align: right;">+498</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Plus an 11-16 school flag</td>
+<td style="text-align: right;">+3.7%</td>
+<td style="text-align: right;">6 of 152</td>
+<td style="text-align: right;">-33</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Plus local segregation (Gorard index)</td>
+<td style="text-align: right;">+3.8%</td>
+<td style="text-align: right;">5 of 152</td>
+<td style="text-align: right;">+2</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Plus the illness share and the 11-16 flag</td>
+<td style="text-align: right;">+3.5%</td>
+<td style="text-align: right;">7 of 152</td>
+<td style="text-align: right;">-67</td>
+<td style="text-align: right;">0.99</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>Without absence</strong> the effect falls from +3.8% to +0.8%, indistinguishable from zero.</li>
+<li><strong>Without neighbourhood education</strong> or <strong>without prior attainment</strong> it grows, to +5.6% and +6.9%. Both are already working: the city’s intakes are more advantaged on both, and the model credits that.</li>
+<li><strong>Local segregation</strong> changes nothing. Brighton and Hove’s catchment admissions, with random allocation as a tie-break, keep its schools relatively mixed, but that does not explain the effect.</li>
+<li><strong>An 11–16 flag</strong> takes a little off. 60% of Brighton and Hove’s school-years are at 11–16 schools, against 37% in England. Nationally, 11–16 schools score +1.0% higher.</li>
+</ul>
+<p><strong>The arithmetic.</strong> Brighton and Hove’s schools average 10.9% absence against 9.0% for England, 6th highest of 152 authorities. On the v2.0 absence coefficient (-0.226, an elasticity), that difference lowers expected Attainment 8 by 4.5%. The authority effect, +3.8%, almost exactly gives it back. Brighton and Hove’s schools attain about what similar intakes attain elsewhere. They do it despite absence that, elsewhere, goes with lower results.</p>
+<p>Inside the city, absence costs about what it costs elsewhere. A school with more absence than its neighbours does worse by about the national rate: the interaction is +0.033 (standard error 0.042). It is the city’s <em>level</em> of absence that carries no penalty, not its slope.</p>
+</section>
+<section id="what-kind-of-absence" class="level1">
+<h1>What kind of absence</h1>
+<div class="cell">
+<div id="tbl-comp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Absence in Brighton and Hove and England, % of possible sessions, mean of school-years 2021/22 to 2024/25 (DfE school absence data).
+</figcaption>
+<div aria-describedby="tbl-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Brighton and Hove</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">England</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All absence</td>
+<td style="text-align: right;">10.9</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">+1.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Illness (authorised)</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">4.3</td>
+<td style="text-align: right;">+1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unauthorised</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">+0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other authorised</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Illness share of absence</td>
+<td style="text-align: right;">57.3</td>
+<td style="text-align: right;">52.5</td>
+<td style="text-align: right;">+4.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Of Brighton and Hove’s 1.9 points of extra absence, 1.4 is authorised illness. Unauthorised absence is close to England’s. Illness makes up 57% of absence in the city (36th highest share of 152).</p>
+<p>Nationally, illness absence costs less than other absence. Split in two, a 1% rise in illness absence goes with -0.06% Attainment 8 and a 1% rise in other absence with -0.12%. Allowing for that takes some of the effect away: to +3.6% with the illness share, +2.7% with absence split. It does not take most of it away. Absence’s <em>type</em>, as DfE records it, is part of the story, not the whole of it.</p>
+</section>
+<section id="so-what-is-it" class="level1">
+<h1>So what is it?</h1>
+<p>The data are school-level, so they cannot settle this. Four readings fit what is above, and they are not exclusive.</p>
+<ol type="1">
+<li><strong>Family resources that keep learning going.</strong> A day off costs less when someone at home can help catch up: parents with degrees, flexible or home-based work, tutoring, books. FSM does not see this, and neither, quite, does neighbourhood education. The Census measure counts every adult, and Brighton’s adults include a large population of students and young graduates without school-age children. The effect is largest for boys and non-disadvantaged pupils (3rd of 151–152 for both). It is also present for disadvantaged pupils (16th), which fits a city with many lower-income households that are highly educated.</li>
+<li><strong>Absence as a stand-in.</strong> Across England, high absence travels with things the model does not measure: family stress, poverty beyond FSM, disengagement. Part of the absence coefficient is those things, not the days missed. Where absence comes from somewhere else, the model over-predicts its cost. In Brighton and Hove it is mostly authorised illness, which may include anxiety and other health-related absence that follows a different pattern from disengagement. On this reading the authority effect is partly an artefact of how v2.0 treats absence, not something the schools do.</li>
+<li><strong>Recording.</strong> Schools and authorities differ in when they authorise illness and how they code it. A practice that authorises more parent-reported illness raises recorded absence without changing learning. This would show up as exactly this pattern, and school-level data cannot tell it from reading 2.</li>
+<li><strong>Something the schools or the system do.</strong> The 11–16 structure, where entry to the city’s sixth-form colleges depends on GCSE grades, explains a little. Mixed intakes explain nothing measurable. Whatever is left after absence (+0.8%, ranked 60th) is ordinary.</li>
+</ol>
+</section>
+<section id="what-would-help-tell-them-apart" class="level1">
+<h1>What would help tell them apart</h1>
+<p>All of these are published:</p>
+<ul>
+<li><strong>Absence by pupil characteristics, by authority</strong> (DfE, <em>Pupil absence in schools in England</em>). Is the city’s extra absence among pupils eligible for free school meals or not, and in which year groups? Reading 1 predicts it is mostly among the non-disadvantaged.</li>
+<li><strong>Census 2021 qualifications for parents rather than all adults</strong>: households with dependent children by the household reference person’s qualification or NS-SeC, for school neighbourhoods. This would test reading 1 directly, and would improve v2.0’s neighbourhood term everywhere students and young graduates are concentrated.</li>
+<li><strong>Persistent absence and absence reasons by authority over time</strong>, against attainment. Reading 3 predicts the city’s illness authorisation sits apart from its neighbours’ with no matching change in attainment.</li>
+<li><strong>Elective home education and children missing education</strong> (DfE, by authority). These show whether pupils leave school rolls before Year 11 at unusual rates, which would change who sits GCSEs.</li>
+<li><strong>Attainment by prior-attainment band</strong> in the KS4 performance tables: whether the effect sits with high, middle or low prior attainers.</li>
+</ul>
+</section>
+<section id="what-it-means-for-v2.0" class="level1">
+<h1>What it means for v2.0</h1>
+<p>v2.0 treats a day of absence the same whatever its cause. Adding the illness share of absence improves the model’s fit (AIC -30) and barely changes other authorities’ effects (correlation 0.997). It is a candidate for a v2.1, with the 11–16 flag (-33). Neither removes Brighton and Hove’s effect. Until the questions above are answered, read the city’s authority effect this way: its schools achieve as much as similar schools elsewhere despite unusually high, mostly illness, absence. It is not evidence that the city’s schools add more than others. With <a href="./areas/brighton_and_hove.html#school-by-school">attendance counted in</a>, the city’s schools average -0.5 points of value added, 95th of 151 authorities.</p>
+<p>The models are in <code>R/06_bh_effect.R</code>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-26d3d98048e428269f5752dcc3e16a50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -148,6 +148,10 @@ window.Quarto = {
  <span class="dropdown-text">Brighton and Hove</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove’s authority effect</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./areas/east_sussex.html">
  <span class="dropdown-text">East Sussex</span></a>
   </li>  
@@ -202,6 +206,7 @@ window.Quarto = {
   <li><a href="#local-authorities" id="toc-local-authorities" class="nav-link" data-scroll-target="#local-authorities">Local authorities</a></li>
   <li><a href="#sec-excluded" id="toc-sec-excluded" class="nav-link" data-scroll-target="#sec-excluded">Schools and years left out</a></li>
   <li><a href="#sec-provisional" id="toc-sec-provisional" class="nav-link" data-scroll-target="#sec-provisional">2025/26, provisional</a></li>
+  <li><a href="#sec-over-time" id="toc-sec-over-time" class="nav-link" data-scroll-target="#sec-over-time">Value added over time</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul>
 </nav>
@@ -773,6 +778,62 @@ Table&nbsp;5: How one provisional year sits against each school’s four-year va
 </div>
 </div>
 <p>3,210 schools have a provisional 2025/26 figure. A single year agrees with the four-year measure at 0.68 for all pupils and less for the smaller groups (0.55 for disadvantaged pupils), which is why it is reported as a separate, provisional column. The figures are in <a href="data/va_2526_provisional.csv">va_2526_provisional.csv</a>.</p>
+</section>
+<section id="sec-over-time" class="level1">
+<h1>Value added over time</h1>
+<p>The four-year figure is the school’s average over 2021/22 to 2024/25, shrunk towards England by its reliability. The same model also gives a figure for <strong>each year</strong>: the school’s Attainment 8 that year against what the model expects from that year’s intake and context, with that year’s effect for England taken out (<code>va_nat</code> for the school-year). Yearly figures are not shrunk, so a small cohort or an unusual year moves them more. 2025/26 is the provisional year described <a href="#sec-provisional">above</a>.</p>
+<p>Schools that do well one year mostly do well the next, but not entirely:</p>
+<div class="cell">
+<div id="tbl-yr-cor" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-yr-cor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: How far a school’s yearly value added carries from one year to the next: correlation across schools, by group.
+</figcaption>
+<div aria-describedby="tbl-yr-cor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adjacent years (average)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">First year against last</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">0.38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.42</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>For all pupils, adjacent years correlate at 0.67 and 2021/22 with 2025/26 at 0.47; for disadvantaged pupils, where cohorts are smaller, at 0.48 and 0.31. Value added changes gradually, and part of any one year’s movement is noise.</p>
+<p>That is why the <a href="./explore.html">explorer</a> and the area pages offer a <strong>centred moving average</strong>: the mean of the yearly figures over a window of one, three or five years centred on a chosen year. A three-year average centred on 2023/24 is the mean of 2022/23, 2023/24 and 2024/25. A window that runs past the first or last year uses the years there are, so a three-year average centred on 2021/22 covers two years. A school missing a year is averaged over the years it has. A window that includes 2025/26 includes a provisional figure and is flagged. Moving averages are not shrunk, and the four-year figure remains the headline measure.</p>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>

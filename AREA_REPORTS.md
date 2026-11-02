@@ -78,46 +78,73 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
   DfE's provisional KS4 results (`R/05_provisional_2526.R`): absence
   bridged from autumn and spring, the unpublished intake data carried
   forward, the year centred on England. It appears as its own column
-  (school table, league tables, explorer) and map colouring, always
+  (school table, league tables) and map colouring, as the last point in
+  the trajectories, and in any explorer moving average that includes it, always
   labelled provisional, never averaged into the four-year figure and never
   shrunk, and every appearance carries `PROV_NOTE`: it will be updated
   with the revised KS4 release in February 2027.
+- **Over time.** Yearly value added is the school-year's `va_nat` (not
+  shrunk), averaged where two merged schools share a year (`va_years()`).
+  Moving averages are centred on a chosen year over 1, 3 or 5 years
+  (`centred_ma()`); a window past either end uses the years there are, and
+  one that includes 2025/26 is flagged provisional. The four-year shrunk
+  figure stays the headline.
+- **Lists of schools.** Running text names schools only up to `FEW` (4);
+  beyond that it gives the count and the names go in a table (the gap and
+  girls/boys tables, the absence table), so no paragraph becomes a list.
 - **Every number in the text is computed**, never typed.
 
 ## Section order (`templates/area.qmd`)
 
+The thrust of every page is value added in the face of attendance: what
+schools achieve with their intake, set beside how well they hold
+attendance against what that intake predicts.
+
 1. **Summary.** Schools and mean value added, significant above/below;
    groups; strongest and weakest; absence against intake (with the
-   authority's rank, and schools more than a point above); the authority's
-   own effect (authority tier); the district test (district and authority
-   tiers, not unitary); suspensions both ways and reduced timetables;
-   trusts that stand out; latest Ofsted.
-2. **The schools.** Map (value added by default; absence against intake,
-   v1, intake, Ofsted and governance in the menu); school table; who runs
-   them (governance chart).
-3. **How the area compares.** Profile table against comparators and
+   authority's rank, and schools more than a point above); value added
+   with attendance counted in and the plane's quadrant counts; the
+   authority's own effect (authority tier); the district test (district
+   and authority tiers, not unitary); suspensions both ways and reduced
+   timetables; trusts that stand out; latest Ofsted.
+2. **The schools.** Map (value added by default; the menu has every value
+   added measure including attendance counted in, every attendance measure
+   of the original documents (overall, persistent, against intake,
+   illness, unauthorised, reduced timetables, suspensions), Attainment 8 for
+   all, disadvantaged and other pupils, the intake, Ofsted old and new,
+   governance and religious character); school table; who runs them
+   (governance chart).
+3. **Value added and attendance** (`#school-by-school`). The joint-signal
+   plane, interactive (`fig_plane_live()`, plotly): absence against intake
+   by v2 value added with attendance counted in, every school in England
+   in grey; quadrant counts (`plane_quadrants()`); the schools furthest
+   above and below.
+4. **How the area compares.** Profile table against comparators and
    England, with ranks, plus v2 value added and absence against intake.
-4. **What explains attainment.** v2 decomposition chart for the area and
+5. **What explains attainment.** v2 decomposition chart for the area and
    its comparators; table; every piece of at least 0.25 points listed.
-5. **Place.** Authority effects (caterpillar); the v2 district test chart
+6. **Place.** Authority effects (caterpillar); the v2 district test chart
    and sentence; district table (region and authority tiers).
-6. **Trusts.** v2 trust effects for the trusts running the area's schools.
-7. **The disadvantaged gap, and girls and boys.** Value added by school
-   for the groups; gap schools; girl/boy differences of more than two
-   points.
-8. **Absence.** Series; absence against intake by school with reasons;
+7. **Trusts.** v2 trust effects for the trusts running the area's schools.
+8. **The disadvantaged gap, and girls and boys.** Value added by school
+   for the groups; counts, then a table of gap schools and schools above
+   for both, and a table of girl/boy differences of more than two points.
+9. **Absence.** Series; absence against intake by school with reasons;
    reasons chart; suspensions both ways, by school; scenarios.
-9. **School by school.** The joint-signal plane: absence against intake
-   by v2 value added with attendance counted in.
-10. **Contextual league tables.** Value added by year for each group.
-11. **Questions for discussion**, by rule: disadvantaged pupils (always);
+10. **Over time.** The area's mean value added by year for each group
+    against England (`fig_area_years()`), with which way it moved; every
+    school's yearly value added with its three-year centred moving average
+    (`fig_trajectories()`, provisional points hollow); a table of three-year
+    centred averages by school.
+11. **Contextual league tables.** Value added by year for each group.
+12. **Questions for discussion**, by rule: disadvantaged pupils (always);
     attendance "a lever" if absence costs more than 1 point or the area
     runs more than 1 point above intake, "modest" above 0.3 / 0.5,
     otherwise "not the main lever"; schools not the place (district test);
     practice if reduced timetables exceed 1.5 times or suspensions 1.3
     times the national rate; the authority effect for disadvantaged
     pupils.
-12. **Notes on method.**
+13. **Notes on method.**
 
 ## District summary (`districts.qmd`)
 

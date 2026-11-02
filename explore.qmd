@@ -25,20 +25,44 @@ la_ca <- bind_rows(la_ca, new_ma |> transmute(LANAME, ca = paste0(authority, " (
 w <- w |> left_join(la_ca, by = "LANAME")
 
 dat <- w |>
-  transmute(SCHNAME, LANAME, region = gor_name, ca, la = LANAME, lat, lon, pupils,
+  transmute(URN, SCHNAME, LANAME, region = gor_name, ca, la = LANAME, lat, lon, pupils,
             va_shrunk_all, va_lo_all, va_hi_all, va_shrunk_disadvantaged, va_shrunk_non_disadvantaged,
-            va_shrunk_girls, va_shrunk_boys, abs_excess, ofsted_latest, va_2526_all,
+            va_shrunk_girls, va_shrunk_boys, abs_excess, ofsted_latest,
             up = va_lo_all > 0, down = va_hi_all < 0) |>   # flags before rounding
   mutate(across(where(is.double) & !c(lat, lon), ~round(.x, 2)))
+
+# Value added year by year, one array per group in YEARS order (null where
+# the school had no result), for the trajectories and moving averages
+yrs <- va_years(V)
+YEARS <- sort(unique(yrs$year_label))
+for (g in names(GROUPS)) {
+  yg <- yrs |> filter(group == g) |>
+    mutate(year_label = factor(year_label, levels = YEARS), va = round(va, 2)) |>
+    tidyr::complete(URN, year_label) |> arrange(URN, year_label) |>
+    group_by(URN) |> summarise(ys = list(va), .groups = "drop")
+  dat[[paste0("y_", g)]] <- yg$ys[match(dat$URN, yg$URN)]
+}
+dat <- dat |> select(-URN)
+
+# Colour caps for moving averages: the 97.5th percentile of |average| over
+# every centre year, by group and window, as colour_caps() does for the rest
+caps_ma <- lapply(setNames(names(GROUPS), names(GROUPS)), function(g) {
+  yg <- yrs |> filter(group == g)
+  lapply(setNames(c(1, 3, 5), c(1, 3, 5)), function(n) {
+    ma <- bind_rows(lapply(YEARS, function(cc) centred_ma(yg, cc, n)))$ma
+    round(unname(quantile(abs(ma), 0.975, na.rm = TRUE)), 1) })
+})
+pv <- load_prov()
+prov_year <- if (is.null(pv)) "" else pv$year
+
 measures <- tibble::tribble(
-  ~var, ~label, ~good, ~unit,
-  "va_shrunk_all", "Value added, all pupils", "high", " pts",
-  "va_shrunk_disadvantaged", "Value added, disadvantaged", "high", " pts",
-  "va_shrunk_non_disadvantaged", "Value added, non-disadvantaged", "high", " pts",
-  "va_shrunk_girls", "Value added, girls", "high", " pts",
-  "va_shrunk_boys", "Value added, boys", "high", " pts",
-  "va_2526_all", "Value added 2025/26 (PROVISIONAL), all pupils", "high", " pts",
-  "abs_excess", "Absence against intake", "low", " pp")
+  ~var, ~label, ~good, ~unit, ~group,
+  "va_shrunk_all", "Value added, all pupils", "high", " pts", "all",
+  "va_shrunk_disadvantaged", "Value added, disadvantaged", "high", " pts", "disadvantaged",
+  "va_shrunk_non_disadvantaged", "Value added, non-disadvantaged", "high", " pts", "non_disadvantaged",
+  "va_shrunk_girls", "Value added, girls", "high", " pts", "girls",
+  "va_shrunk_boys", "Value added, boys", "high", " pts", "boys",
+  "abs_excess", "Absence against intake", "low", " pp", NA)
 levels <- tibble::tibble(key = c("region", "ca", "la"),
                          label = c("Region", "Combined or mayoral authority", "Local authority (upper tier)"))
 notes <- setNames(as.list(rep("New mayoral strategic authority, from the Devolution Priority Programme announced in February 2025; not yet in the ONS lookup.",
@@ -49,14 +73,24 @@ Every state-funded mainstream secondary school in England has a Value
 Added v2.0 figure for all pupils, disadvantaged and non-disadvantaged
 pupils, girls and boys, `r yl(min(V$spec$years))` to `r yl(max(V$spec$years))`:
 Attainment 8 points against England, shrunk by reliability. Choose a
-level and an area; the map zooms to its schools and the table lists them.
+level and an area; the map zooms to its schools, a chart shows how each
+school's value added has moved year by year, and the table lists them.
 Click a column heading to sort. "Absence against intake" is percentage
 points above (positive) or below what the school's intake predicts.
 
-::: {.callout-warning appearance="simple"}
-## 2025/26 is provisional
+**Period** switches between the four-year figure (shrunk, with 95%
+intervals) and a **moving average** of the yearly figures, centred on the
+year you choose, over one, three or five years. A window that runs off
+the end of the series uses the years there are: a three-year average
+centred on `r yl(min(YEARS))` averages `r yl(YEARS[1])` and `r yl(YEARS[2])`.
+Yearly figures are not shrunk, so a single year moves more than the
+four-year figure; see [value added over time](method.qmd#sec-over-time).
 
-The "2025/26 (prov.)" column and colouring: `r PROV_NOTE`
+::: {.callout-warning appearance="simple"}
+## `r yl(prov_year)` is provisional
+
+The last year in the trajectories, and any moving average whose window
+includes it: `r PROV_NOTE`
 :::
 
 ```{r explorer}
@@ -65,7 +99,10 @@ payload <- list(
   levels = jsonlite::toJSON(levels, dataframe = "rows"),
   measures = jsonlite::toJSON(measures |> mutate(cap = unname(colour_caps()[var])), dataframe = "rows", na = "null"),
   notes = jsonlite::toJSON(notes, auto_unbox = TRUE),
-  default = jsonlite::toJSON(list(level = "ca", area = "Sussex and Brighton (new)"), auto_unbox = TRUE))
+  default = jsonlite::toJSON(list(level = "ca", area = "Sussex and Brighton (new)"), auto_unbox = TRUE),
+  years = jsonlite::toJSON(YEARS),
+  provisional_year = jsonlite::toJSON(prov_year, auto_unbox = TRUE),
+  caps_ma = jsonlite::toJSON(caps_ma, auto_unbox = TRUE))
 leaflet::leaflet(height = 560, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
   leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
   leaflet::setView(-1.5, 52.8, 6) |>

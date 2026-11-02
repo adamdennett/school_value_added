@@ -46,4 +46,15 @@ TERM_LABELS <- c(
 
 CTRL <- lme4::lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 20000))
 
+# The school-years a group's model is fitted on
+model_rows <- function(d, group) {
+  y <- GROUPS[[group]]
+  ss <- single_sex_term(group)
+  keep <- !d$excluded & d[[y]] > 0 & d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
+    complete.cases(d[, c(y, "ks2_c", "ADMPOL_PT", "z_l4", "sen_support", "sen_ehcp", "mobile", ss,
+                         "gor_name", "LANAME", "PTFSM6CLA1A", "PERCTOT", "PNUMEAL")])
+  d[which(keep), ] |>      # which(): a missing comparison drops the row rather than adding an NA one
+    mutate(year_label = factor(year_label), gor_name = factor(gor_name), LANAME = factor(LANAME))
+}
+
 SUSSEX_LAS <- c("East Sussex", "West Sussex", "Brighton and Hove")

@@ -20,6 +20,9 @@ subtitle: "What v2.0 does now, and what comes next."
       decomposition, the district test, trusts, the joint-signal plane,
       absence scenarios, comparator profiles, league tables and questions
       for discussion; a district summary page
+- [x] Value added over time: every school's yearly v2.0 value added,
+      trajectories in the explorer and on every area page, and a centred
+      moving average over one, three or five years around a chosen year
 
 ## Next
 
@@ -42,6 +45,12 @@ subtitle: "What v2.0 does now, and what comes next."
       data carried forward (`R/05_provisional_2526.R`). Rerun it on the
       revised results; then, once the year's census, SEN and mobility data
       are out, fold 2025/26 into the model as a fifth year.
+- [ ] **v2.1 candidates: the kind of absence, and 11–16 schools.** The
+      illness share of absence and an 11–16 flag both improve the model's
+      fit; see [Brighton and Hove's authority effect](bh_effect.qmd). Test
+      them across every group before adopting either, and look at a
+      parents' qualification measure from the 2021 Census in place of
+      neighbourhood education for all adults.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [ ] **Monthly Ofsted refresh.** Pick up Ofsted's new monthly release

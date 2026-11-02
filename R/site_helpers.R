@@ -70,6 +70,32 @@ va_wide <- function(V) {
   out
 }
 
+#' Every school's value added year by year, against England (unshrunk), for
+#' every group: the model years, then provisional 2025/26 flagged as such
+va_years <- function(V = load_va()) {
+  # Two schools that later merged can share a year under one identity: average them
+  yrs <- V$school_years |> group_by(URN, group, year_label) |>
+    summarise(va = mean(va_nat), .groups = "drop") |> mutate(provisional = FALSE)
+  pv <- load_prov()
+  if (!is.null(pv)) yrs <- bind_rows(yrs, pv$va |> transmute(URN, group, year_label = pv$year,
+                                                             va = va_2526, provisional = TRUE))
+  yrs
+}
+
+#' A moving average of yearly value added, centred on `centre`, over a
+#' window of n years (odd), using whichever years in the window a school has.
+#' Returns one row a school and group: the average and how many years it used.
+centred_ma <- function(yrs, centre, n = 3) {
+  all_years <- sort(unique(yrs$year_label))
+  i <- match(centre, all_years); h <- (n - 1) %/% 2
+  win <- all_years[max(1, i - h):min(length(all_years), i + h)]
+  yrs |> filter(year_label %in% win) |>
+    group_by(URN, group) |>
+    summarise(ma = mean(va, na.rm = TRUE), years_used = sum(!is.na(va)),
+              includes_provisional = any(provisional), .groups = "drop") |>
+    mutate(centre = centre, window = n)
+}
+
 #' A fixed, national colour scale for each diverging map measure: the
 #' 97.5th percentile of |value| across England's schools. Schools beyond it
 #' take the end colour (legends read "<=" / ">="), so a single extreme
@@ -78,8 +104,12 @@ colour_caps <- function() {
   V <- load_va()
   w <- va_wide(V)
   f <- here::here("data", "place_absence.rds")
-  if (file.exists(f)) w <- w |> left_join(readRDS(f)$abs_schools |> select(URN, abs_excess), by = "URN")
-  vars <- intersect(c(grep("^va_shrunk_|^va_2526_", names(w), value = TRUE), "v1_all", "abs_excess"), names(w))
+  if (file.exists(f)) {
+    pa <- readRDS(f)
+    w <- w |> left_join(pa$abs_schools |> select(URN, abs_excess), by = "URN") |>
+      left_join(pa$va_m2 |> filter(group == "all") |> select(URN, va_m2), by = "URN")
+  }
+  vars <- intersect(c(grep("^va_shrunk_|^va_2526_", names(w), value = TRUE), "v1_all", "abs_excess", "va_m2"), names(w))
   sapply(vars, function(v) round(unname(quantile(abs(w[[v]]), 0.975, na.rm = TRUE)), 1))
 }
 
@@ -169,29 +199,73 @@ MAP_VARS <- tribble(
   "va_shrunk_non_disadvantaged", "Value added v2, non-disadvantaged pupils",     "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_girls", "Value added v2, girls",                                    "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_boys",  "Value added v2, boys",                                     "Value added",    "div",  "high", 1,   " pts",
+  "va_m2",           "Value added v2, attendance counted in, all pupils",        "Value added",    "div",  "high", 1,   " pts",
   "va_2526_all",     "Value added 2025/26 PROVISIONAL, all pupils",              "Value added",    "div",  "high", 1,   " pts",
   "v1_all",          "Value added v1 (published, within the LA), all pupils",    "Value added",    "div",  "high", 1,   " pts",
   "abs_excess",      "Absence above or below what the intake predicts, 2021/22 to 2024/25", "Attendance", "div", "low", 1, " pp",
-  "att8",            "Attainment 8, all pupils",                                 "Results",        "seq",  "",     1,   "",
+  "absence",         "Overall absence, 2024/25",                                 "Attendance",     "seq",  "",     1,   "%",
+  "persistent",      "Persistent absence, 2024/25",                              "Attendance",     "seq",  "",     1,   "%",
+  "illness",         "Illness absence, autumn and spring 2025/26",               "Attendance",     "seq",  "",     1,   "%",
+  "unauth",          "Unauthorised absence, autumn and spring 2025/26",          "Attendance",     "seq",  "",     1,   "%",
+  "reduced",         "Reduced timetables, autumn and spring 2025/26",            "Attendance",     "seq",  "",     2,   "%",
+  "susp_rate",       "Suspensions per 100 pupils, 2024/25",                      "Attendance",     "seq",  "",     1,   "",
+  "att8",            "Attainment 8, all pupils, 2024/25",                        "Results",        "seq",  "",     1,   "",
+  "att8_dis",        "Attainment 8, disadvantaged pupils, 2024/25",              "Results",        "seq",  "",     1,   "",
+  "att8_non",        "Attainment 8, other pupils, 2024/25",                      "Results",        "seq",  "",     1,   "",
   "fsm",             "Disadvantaged pupils (FSM6) %",                            "Intake",         "seq",  "",     1,   "%",
   "ks2_c",           "Prior attainment at KS2 (centred)",                        "Intake",         "seq",  "",     1,   "",
-  "absence",         "Overall absence %",                                        "Intake",         "seq",  "",     1,   "%",
+  "eal",             "English as an additional language, 2024/25",               "Intake",         "seq",  "",     1,   "%",
+  "sen_support",     "SEN support, 2024/25",                                     "Intake",         "seq",  "",     1,   "%",
+  "sen_ehcp",        "Education, health and care plans, 2024/25",               "Intake",         "seq",  "",     1,   "%",
   "mobile",          "Pupil mobility %",                                         "Intake",         "seq",  "",     1,   "%",
   "l4",              "Neighbourhood education (% level 4+)",                     "Intake",         "seq",  "",     1,   "%",
+  "pupils_roll",     "Pupils on roll, 2024/25",                                  "Intake",         "seq",  "",     0,   "",
   "gov",             "Who runs it, 2024/25",                                     "The school",     "cat",  "",     0,   "",
-  "ofsted_rc",       "Ofsted report card, achievement (since November 2025)",    "The school",     "cat",  "",     0,   "")
+  "ofsted_rc",       "Ofsted report card, achievement (since November 2025)",    "The school",     "cat",  "",     0,   "",
+  "ofsted",          "Ofsted rating, last graded inspection before September 2024", "The school",  "cat",  "",     0,   "",
+  "religion",        "Religious character",                                      "The school",     "cat",  "",     0,   "")
 
 MAP_CATS <- list(
   gov = c("Maintained" = DPURPLE, "Multi-academy trust, converter or free school" = BPURPLE,
           "Multi-academy trust, sponsored" = BLUE, "Single-academy trust or not recorded" = GREY),
   ofsted_rc = c("Exceptional" = DPURPLE, "Strong standard" = BPURPLE, "Expected standard" = LPURPLE,
-                "Needs attention" = HERITAGE, "Urgent improvement" = BLUE))
+                "Needs attention" = HERITAGE, "Urgent improvement" = BLUE),
+  ofsted = c("Outstanding" = DPURPLE, "Good" = BPURPLE, "Requires Improvement" = HERITAGE,
+             "Inadequate" = BLUE),
+  religion = c("None" = GREY, "Church of England" = BPURPLE, "Roman Catholic" = DPURPLE,
+               "Christian" = HERITAGE, "Other faith" = BLUE))
 MAP_NONE <- c(ofsted_rc = "no report card yet", gov = "not recorded")
+
+#' The attendance, results and intake measures of the original area
+#' documents (load_area_v1()), added to the area's schools for the map. The
+#' original project keys schools by their published URN, so a school that
+#' has since merged is matched on that.
+map_extra <- function(w, X) {
+  key <- function(src) {
+    u <- as.integer(src$URN)
+    i <- match(w$URN, u)
+    if ("urn_published" %in% names(w)) i <- ifelse(is.na(i), match(w$urn_published, u), i)
+    i
+  }
+  s <- X$schools |> transmute(URN, persistent, att8_dis, att8_non, eal, sen_support, sen_ehcp,
+                              ofsted, religion = case_when(religion %in% c("Does not apply", "None") | is.na(religion) ~ "None",
+                                                          religion %in% c("Church of England", "Roman Catholic", "Christian") ~ religion,
+                                                          TRUE ~ "Other faith"),
+                              pupils_roll = pupils)
+  r <- X$sch_reasons |> transmute(URN = urn, illness, unauth = unauth_other, reduced)
+  e <- X$excl_schools |> filter(time_period == max(time_period)) |> transmute(URN = urn, susp_rate)
+  for (src in list(s, r, e)) {
+    i <- key(src)
+    for (v in setdiff(names(src), c("URN", names(w)))) w[[v]] <- src[[v]][i]
+  }
+  w
+}
 
 #' The area's schools within its district boundaries, coloured by a measure
 #' chosen from a menu above the map (value added v2 by default)
-map_schools <- function(w, lads, height = 520) {
+map_schools <- function(w, lads, height = 520, X = NULL) {
   COLOUR_CAPS <- colour_caps()
+  if (!is.null(X)) w <- map_extra(w, X)
   lad_c <- suppressWarnings(sf::st_coordinates(sf::st_point_on_surface(lads)))
   bb <- sf::st_bbox(lads)
   dat <- w |>

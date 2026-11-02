@@ -34,6 +34,7 @@ above <- sum(w$va_lo_all > 0, na.rm = TRUE); below <- sum(w$va_hi_all < 0, na.rm
 la_at <- function(la, g) V$la |> filter(LANAME == la, group == g)
 yrs <- V$spec$years
 sh <- function(x, d = 1) sprintf(paste0("%+.", d, "f"), x)
+FEW <- 4   # name schools in running text up to this many; beyond it, count them and point to a table
 schools_txt <- function(k) if (k == 1) "1 school" else paste(k, "schools")
 n_sig <- function(k, dir) if (k == 0) paste("none", dir) else paste(k, dir)
 # Lower-case a component's first letter for running text, but not a proper noun
@@ -106,7 +107,11 @@ b <- c(
   sprintf("**Absence runs %s points %s what the intake predicts** on average over %s to %s%s%s.",
           sprintf("%.1f", abs(abs_ex(NAME))), ifelse(abs_ex(NAME) >= 0, "above", "below"), yl(min(yrs)), yl(max(yrs)),
           if (TIER == "la") { a <- P$abs_la |> filter(LANAME == NAME); sprintf(" (%s highest of %d authorities)", ord(a$rank_excess), a$n_la) } else "",
-          if (nrow(over)) paste0("; ", and_list(over$SCHNAME), " more than a point above") else ""),
+          if (!nrow(over)) "" else if (nrow(over) <= FEW) paste0("; ", and_list(over$SCHNAME), " more than a point above")
+          else paste0("; ", nrow(over), " schools more than a point above")),
+  with(as.list(plane_quadrants(w)), sprintf(
+    "**With attendance counted in, value added averages %s points; %d of %d schools add value with attendance at or better than predicted**, %d add value despite worse attendance, and %d are below expectation with worse attendance ([value added and attendance](#school-by-school)).",
+    sh(mean(w$va_m2, na.rm = TRUE)), good_both, n, despite, below_worse)),
   if (TIER == "la") {
     e <- la_at(NAME, "all"); ed <- la_at(NAME, "disadvantaged")
     sprintf("**The authority's own effect is %s%% (%s of %d)%s for all pupils, and %s%% (%s) for disadvantaged pupils.**",
@@ -137,9 +142,10 @@ cat(paste0("- ", b[!is.na(b) & nzchar(b)], collapse = "\n"), "\n")
 
 ```{r map}
 #| fig-cap: "Each school coloured by Value Added v2.0 for all pupils; choose another measure, including absence against intake, from the menu. Circle size is the school's roll; hover for every group's value added, absence against intake, the published v1 figure, and Ofsted."
-map_schools(w, lads, height = if (TIER == "district") 440 else 560)
+map_schools(w, lads, height = if (TIER == "district") 440 else 560, X = X)
 ```
 
+::: {.school-table}
 ```{r tbl-schools}
 #| tbl-cap: !expr paste0("Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, the latest Ofsted judgement as at ", format(V$ofsted_as_at, "%d %B %Y"), ", and provisional 2025/26 value added for all pupils. ", PROV_NOTE)
 w |>
@@ -155,6 +161,7 @@ w |>
   select(where(~any(nzchar(as.character(.x)) & !is.na(.x)))) |>
   kt(align = "llrrrrrrrrll")
 ```
+:::
 
 ```{r gov-head}
 #| results: asis
@@ -167,6 +174,41 @@ if (nrow(g)) cat("## Who runs them\n")
 #| fig-cap: "Who ran each school in 2024/25, and its Value Added v2.0 for all pupils. Each panel is a governing body; the shape is how the school came to be run that way."
 #| fig-height: !expr max(3, 0.32 * nrow(g) + 1.6)
 if (nrow(g)) fig_governance(g, paste0(NAME, "'s schools by who ran them in 2024/25"))
+```
+
+# Value added and attendance {#school-by-school}
+
+Value Added v2.0 counts absence as part of a school's context: a school
+with more absence is expected to score lower. The other view counts
+attendance *in*: value added from the model without its absence term,
+set beside how far each school's absence runs above or below what its
+intake predicts. A school high on that chart adds value; one to the left
+also holds attendance better than its intake would suggest.
+
+```{r fig-plane}
+#| fig-cap: "Every school in England on two signals, 2021/22 to 2024/25: absence above or below what its intake predicts, and Value Added v2.0 with attendance counted in (the model without its absence term). The area's schools in colour; hover for each school's figures, drag to zoom, double-click to reset."
+#| fig-height: 6.5
+fig_plane_live(js |> left_join(W |> select(URN, SCHNAME), by = "URN"), w)
+```
+
+`r with(as.list(plane_quadrants(w)), paste0("Of ", n, " schools, **", good_both, "** add value with attendance at or better than their intake predicts, and **", despite, "** add value despite worse attendance. **", below_worse, "** are below expectation with worse attendance, and **", below_better, "** are below expectation despite attendance at or better than predicted."))`
+Across `r NAME`'s schools the two signals correlate at
+`r sprintf("%.2f", cor(w$abs_excess, w$va_m2, use = "complete"))`
+(`r sprintf("%.2f", cor(js$abs_excess, js$va_m2, use = "complete"))`
+across England): schools whose absence runs below what their intake
+predicts tend to add more.
+
+```{r tbl-plane}
+#| tbl-cap: "The schools furthest above and below expectation with attendance counted in (Attainment 8 points, 2021/22 to 2024/25), with absence against intake and Value Added v2.0."
+k <- min(8, floor(sum(!is.na(w$va_m2)) / 2))
+tb <- w |> filter(!is.na(va_m2)) |> arrange(desc(va_m2))
+if (k > 0) {
+  tt <- bind_rows(head(tb, k) |> mutate(g = "Furthest above"), tail(tb, k) |> mutate(g = "Furthest below")) |>
+    transmute(g, School = SCHNAME, District = coalesce(lad, LANAME),
+              `Attendance counted in` = sh(va_m2), `Absence vs intake` = sh(abs_excess),
+              `Value added v2.0` = sh(va_shrunk_all), `Run by (2024/25)` = coalesce(run_by, ""))
+  tt |> select(-g) |> kt(align = "llrrrl") |> kableExtra::pack_rows(index = table(factor(tt$g, unique(tt$g))))
+}
 ```
 
 # How `r NAME` compares
@@ -258,6 +300,12 @@ V$la |>
   theme_note(10) + theme(axis.text.x = element_blank(), panel.grid.major.x = element_blank())
 ```
 
+```{r bh-effect-note}
+#| results: asis
+if ("Brighton and Hove" %in% c(LAS, COMPS) && TIER != "district")
+  cat("Brighton and Hove's large authority effect is almost all an absence effect: the city's schools attain what similar intakes attain elsewhere, despite unusually high, mostly illness, absence. See [Brighton and Hove's authority effect](@@ROOT@@bh_effect.qmd).\n")
+```
+
 The district test adds a district level to the v2.0 model, with and
 without each school's own record. An effect that disappears once schools
 are counted belongs to particular schools; one that survives is something
@@ -318,9 +366,31 @@ both <- w |> filter(va_shrunk_non_disadvantaged > 0, va_shrunk_disadvantaged > 0
 gb_gap <- w |> filter(!is.na(va_shrunk_girls), !is.na(va_shrunk_boys), abs(va_shrunk_girls - va_shrunk_boys) > 2)
 ```
 
-`r if (nrow(gap_s)) paste0(and_list(gap_s$SCHNAME), ifelse(nrow(gap_s) == 1, " is", " are"), " above expectation for non-disadvantaged pupils and more than a point below it for disadvantaged ones.") else "No school is above expectation for its non-disadvantaged pupils while more than a point below it for its disadvantaged ones."`
-`r if (nrow(both)) paste0(and_list(both$SCHNAME), ifelse(nrow(both) == 1, " is", " are"), " above expectation for both groups.") else ""`
-`r if (nrow(gb_gap)) paste0("Girls' and boys' value added differ by more than two points at ", and_list(sprintf("%s (girls %s, boys %s)", gb_gap$SCHNAME, sh(gb_gap$va_shrunk_girls), sh(gb_gap$va_shrunk_boys))), ".") else "In no school do girls' and boys' value added differ by more than two points."`
+Of `r nrow(w)` schools:
+
+- **`r nrow(both)`** `r ifelse(nrow(both) == 1, "is", "are")` above expectation for both disadvantaged and non-disadvantaged pupils.
+- **`r nrow(gap_s)`** `r ifelse(nrow(gap_s) == 1, "is", "are")` above expectation for non-disadvantaged pupils but more than a point below it for disadvantaged ones: the gap schools.
+- **`r nrow(gb_gap)`** `r ifelse(nrow(gb_gap) == 1, "has", "have")` girls' and boys' value added more than two points apart.
+
+```{r tbl-gap}
+#| include: !expr nrow(gap_s) + nrow(both) > 0
+#| tbl-cap: "Schools by the pattern of their disadvantaged and non-disadvantaged value added (Attainment 8 points against England, shrunk). The gap is non-disadvantaged minus disadvantaged."
+gap_rows <- function(d, pattern) d |> transmute(Pattern = pattern, School = SCHNAME,
+  Disadvantaged = sh(va_shrunk_disadvantaged), `Non-disadvantaged` = sh(va_shrunk_non_disadvantaged),
+  Gap = sh(va_shrunk_non_disadvantaged - va_shrunk_disadvantaged))
+gt <- bind_rows(gap_rows(gap_s, "Gap schools: above for non-disadvantaged, more than a point below for disadvantaged"),
+                gap_rows(both |> arrange(desc(va_shrunk_disadvantaged)), "Above expectation for both groups"))
+if (nrow(gt)) gt |> select(-Pattern) |> kt(align = "lrrr") |>
+  kableExtra::pack_rows(index = table(factor(gt$Pattern, unique(gt$Pattern))))
+```
+
+```{r tbl-gb-gap}
+#| include: !expr nrow(gb_gap) > 0
+#| tbl-cap: "Schools where girls' and boys' value added differ by more than two points (Attainment 8 points against England, shrunk)."
+if (nrow(gb_gap)) gb_gap |> mutate(d = va_shrunk_boys - va_shrunk_girls) |> arrange(desc(abs(d))) |>
+  transmute(School = SCHNAME, Girls = sh(va_shrunk_girls), Boys = sh(va_shrunk_boys), `Boys minus girls` = sh(d)) |>
+  kt(align = "lrrr")
+```
 
 ```{r fig-gb}
 #| fig-cap: "Value added for girls and for boys in each school (single-sex schools show one). Attainment 8 points, against England, shrunk."
@@ -345,8 +415,8 @@ fig_abs_series(ser, c(NAME, COMPS), paste0(NAME, " against ", and_list(COMPS), "
   `r ifelse(abs_ex(NAME) >= 0, "above", "below")` what their pupils'
   profiles predict over 2021/22 to 2024/25
   (`r and_list(sprintf("%s %s", COMPS, sh(sapply(COMPS, abs_ex), 2)))`).
-`r if (nrow(over)) paste0("- **", and_list(over$SCHNAME), "** ", ifelse(nrow(over) == 1, "runs", "each run"), " more than a point above ", ifelse(nrow(over) == 1, "its prediction", "their predictions"), ".") else "- **No school** runs more than a point above its predicted absence."`
-`r if (nrow(under)) paste0("- **", and_list(under$SCHNAME), "** ", ifelse(nrow(under) == 1, "runs", "run"), " more than a point below.") else ""`
+`r if (!nrow(over)) "- **No school** runs more than a point above its predicted absence." else if (nrow(over) <= FEW) paste0("- **", and_list(over$SCHNAME), "** ", ifelse(nrow(over) == 1, "runs", "each run"), " more than a point above ", ifelse(nrow(over) == 1, "its prediction", "their predictions"), ".") else paste0("- **", nrow(over), " schools** run more than a point above their predictions: the top of the table below.")`
+`r if (!nrow(under)) "" else if (nrow(under) <= FEW) paste0("- **", and_list(under$SCHNAME), "** ", ifelse(nrow(under) == 1, "runs", "run"), " more than a point below.") else paste0("- **", nrow(under), " schools** run more than a point below: the foot of the table.")`
 
 ```{r tbl-absence}
 #| tbl-cap: !expr paste0("Each school's absence against what its intake predicts (v2.0 intake terms, mean 2021/22 to 2024/25), and its reasons in autumn and spring ", yr(abs_last), " (percentage of sessions).")
@@ -394,20 +464,54 @@ w |> filter(gain_all > 0) |> arrange(desc(gain_all)) |>
   kt(align = "lrrr")
 ```
 
-# School by school
+# Over time
 
-```{r fig-plane}
-#| fig-cap: "Every school in England on two signals, 2021/22 to 2024/25: absence above or below what its intake predicts, and Value Added v2.0 with attendance counted in (the model without its absence term). The area's schools are named. Grey: every school in England."
-#| fig-height: 7
-fig_plane(js |> left_join(W |> select(URN, SCHNAME), by = "URN"), w$URN, paste0(NAME, "'s schools on the two signals"))
+```{r time-setup}
+#| include: false
+YRS <- va_years(V)
+tyears <- sort(unique(YRS$year_label))
+area_m <- YRS |> filter(URN %in% w$URN, group == "all") |> group_by(year_label) |>
+  summarise(va = mean(va, na.rm = TRUE), .groups = "drop")
+ma_tab <- bind_rows(lapply(tyears[2:(length(tyears) - 1)], function(c) centred_ma(YRS |> filter(URN %in% w$URN), c, 3))) |>
+  filter(group == "all")
+improved <- ma_tab |> filter(centre %in% range(centre)) |> select(URN, centre, ma) |>
+  tidyr::pivot_wider(names_from = centre, values_from = ma) |>
+  (\(x) setNames(x, c("URN", "first", "last")))() |>
+  mutate(change = last - first) |> left_join(w |> select(URN, SCHNAME), by = "URN") |> arrange(desc(change))
 ```
 
-Across England the two signals move together: schools whose absence runs
-below what their intake predicts tend to add more. Across `r NAME`'s
-schools the correlation between the two is
-`r sprintf("%.2f", cor(w$abs_excess, w$va_m2, use = "complete"))`
-(`r sprintf("%.2f", cor(js$abs_excess, js$va_m2, use = "complete"))`
-across England).
+Value added is computed for every year separately, then averaged. A
+single year moves a good deal; a **three-year moving average centred on a
+year** (that year, the one before and the one after) shows the trajectory
+more steadily. Years at the ends use the years they have. 2025/26 is
+provisional and shown as a hollow point. The
+[explorer](@@ROOT@@explore.qmd) lets you choose the centre year and the
+window.
+
+```{r fig-area-years}
+#| fig-cap: "The area's schools' average value added by year, for each pupil group, against England (zero). 2025/26 provisional."
+#| fig-height: 4.6
+fig_area_years(YRS, w, NAME)
+```
+
+`r if (nrow(improved) > 1) paste0("On the three-year centred average from ", yl(min(ma_tab$centre)), " to ", yl(max(ma_tab$centre)), ", the largest rises are at ", and_list(sprintf("%s (%s)", head(improved$SCHNAME, 2), sh(head(improved$change, 2)))), " and the largest falls at ", and_list(sprintf("%s (%s)", tail(improved$SCHNAME, 2), sh(tail(improved$change, 2)))), ". The later windows include the provisional 2025/26 year.") else ""`
+
+```{r fig-trajectories}
+#| fig-cap: "Each school's value added for all pupils, year by year (points; hollow is provisional 2025/26), with its three-year centred moving average (line)."
+#| fig-height: !expr 1.2 + 1.7 * ceiling(n / 4)
+fig_trajectories(YRS, w, "all", 3)
+```
+
+```{r tbl-ma}
+#| tbl-cap: "Three-year centred moving average of value added for all pupils (Attainment 8 points), by centre year; the last includes provisional 2025/26."
+mt <- ma_tab |> left_join(w |> select(URN, SCHNAME), by = "URN") |>
+  mutate(centre = paste0(yl(centre), if_else(includes_provisional, " (incl. prov.)", ""))) |>
+  select(School = SCHNAME, centre, ma) |>
+  tidyr::pivot_wider(names_from = centre, values_from = ma)
+mt[order(-mt[[ncol(mt)]]), ] |>
+  mutate(across(where(is.double), ~sprintf("%+.1f", .x))) |>
+  kt(align = paste0("l", strrep("r", ncol(mt) - 1)))
+```
 
 # Contextual league tables
 

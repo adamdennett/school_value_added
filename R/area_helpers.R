@@ -71,30 +71,49 @@ fig_reasons <- function(rs, areas, title) {
     theme_note()
 }
 
-#' Every school in England on absence against intake and value added with
-#' attendance counted in, the area's schools picked out and named
-fig_plane <- function(js, focus_urns, title = "Attendance and value added go together school by school") {
-  sel <- js |> filter(URN %in% focus_urns)
-  xl <- quantile(js$abs_excess, c(0.005, 0.995)); yl <- quantile(js$va_m2, c(0.005, 0.995))
+#' The joint-signal plane as an interactive chart: every school in England
+#' in grey, the area's schools coloured by authority, each with its figures
+#' on hover; drag to zoom, double-click to reset
+fig_plane_live <- function(js, focus) {
+  xl <- quantile(js$abs_excess, c(0.005, 0.995), na.rm = TRUE); yl <- quantile(js$va_m2, c(0.005, 0.995), na.rm = TRUE)
   xl <- c(min(xl[1], -4), max(xl[2], 4.5)); yl <- c(min(yl[1], -8), max(yl[2], 9))
-  ggplot(js, aes(abs_excess, va_m2)) +
-    geom_point(colour = LIGHT, size = 0.8, alpha = 0.6) +
-    geom_hline(yintercept = 0, colour = GREY) + geom_vline(xintercept = 0, colour = GREY) +
-    geom_point(data = sel, fill = DPURPLE, shape = 21, colour = "white", size = 3.4) +
-    ggrepel::geom_text_repel(data = sel, aes(label = SCHNAME), size = 2.6, max.overlaps = 50,
-                             segment.colour = GREY, colour = INK) +
-    annotate("text", x = xl[1], y = yl[2], hjust = 0, vjust = 1, size = 3, colour = DPURPLE,
-             label = "Adds value, attendance\nbetter than intake predicts") +
-    annotate("text", x = xl[2], y = yl[2], hjust = 1, vjust = 1, size = 3, colour = BPURPLE,
-             label = "Adds value despite\nworse attendance") +
-    annotate("text", x = xl[2], y = yl[1], hjust = 1, vjust = 0, size = 3, colour = BLUE,
-             label = "Below expectation,\nattendance worse") +
-    annotate("text", x = xl[1], y = yl[1], hjust = 0, vjust = 0, size = 3, colour = GREY,
-             label = "Below expectation despite\nbetter attendance") +
-    coord_cartesian(xlim = xl, ylim = yl) +
-    labs(x = "Absence above what the intake predicts (percentage points)",
-         y = "Value added v2.0, attendance counted in (points)", title = title) +
-    theme_note()
+  bg <- js |> filter(!URN %in% focus$URN, !is.na(abs_excess), !is.na(va_m2))
+  fg <- focus |> filter(!is.na(abs_excess), !is.na(va_m2)) |>
+    mutate(tip = sprintf("<b>%s</b><br>%s<br>Value added, attendance counted in: %s<br>Absence against intake: %s pp<br>Value added v2.0: %s",
+                         SCHNAME, coalesce(lad, LANAME), sgn(va_m2), sgn(abs_excess),
+                         ifelse(is.na(va_shrunk_all), "n/a", sgn(va_shrunk_all))))
+  cols <- area_cols(unique(fg$LANAME))
+  corner <- function(x, y, xa, ya, txt, col) list(x = x, y = y, xref = "paper", yref = "paper", xanchor = xa, yanchor = ya, text = txt,
+    showarrow = FALSE, font = list(size = 11, color = col))
+  p <- plotly::plot_ly() |>
+    plotly::add_markers(data = bg, x = ~abs_excess, y = ~va_m2, name = "Every school in England",
+                        marker = list(color = LIGHT, size = 4, opacity = 0.6),
+                        text = ~SCHNAME, hovertemplate = "%{text}<extra></extra>")
+  for (la in unique(fg$LANAME)) p <- p |>
+    plotly::add_markers(data = fg |> filter(LANAME == la), x = ~abs_excess, y = ~va_m2, name = la,
+                        marker = list(color = unname(cols[la]), size = 11, line = list(color = "white", width = 1)),
+                        text = ~tip, hovertemplate = "%{text}<extra></extra>")
+  p |> plotly::layout(
+    xaxis = list(title = "Absence above what the intake predicts (percentage points)", range = xl,
+                 zeroline = TRUE, zerolinecolor = GREY, gridcolor = "#ece8f3"),
+    yaxis = list(title = "Value added v2.0, attendance counted in (points)", range = yl,
+                 zeroline = TRUE, zerolinecolor = GREY, gridcolor = "#ece8f3"),
+    legend = list(orientation = "h", y = -0.15), font = list(family = "inherit", color = INK),
+    paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
+    annotations = list(
+      corner(0, 1, "left", "top", "Adds value, attendance<br>better than intake predicts", DPURPLE),
+      corner(1, 1, "right", "top", "Adds value despite<br>worse attendance", BPURPLE),
+      corner(1, 0, "right", "bottom", "Below expectation,<br>attendance worse", BLUE),
+      corner(0, 0, "left", "bottom", "Below expectation despite<br>better attendance", GREY))) |>
+    plotly::config(displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d", "autoScale2d"))
+}
+
+#' How many of the area's schools sit in each quadrant of the plane
+plane_quadrants <- function(focus) {
+  f <- focus |> filter(!is.na(abs_excess), !is.na(va_m2))
+  c(good_both = sum(f$va_m2 > 0 & f$abs_excess <= 0), despite = sum(f$va_m2 > 0 & f$abs_excess > 0),
+    below_worse = sum(f$va_m2 <= 0 & f$abs_excess > 0), below_better = sum(f$va_m2 <= 0 & f$abs_excess <= 0),
+    n = nrow(f))
 }
 
 fig_governance <- function(g, title = "Schools by who ran them in 2024/25") {
@@ -173,4 +192,41 @@ va_by_year <- function(V, urns, g, names) {
            across(where(is.double), ~ifelse(is.na(.x), "", sprintf("%+.1f", .x)))) |>
     select(School = SCHNAME, starts_with("20"), `v2.0, four years (shrunk)` = Shrunk, `95% interval`,
            `2025/26 (provisional)` = Prov)
+}
+
+#' Each school's value added year by year (points), its three-year centred
+#' moving average (line), and the provisional year as a hollow point
+fig_trajectories <- function(yrs, w, g = "all", n = 3) {
+  y <- yrs |> filter(URN %in% w$URN, group == g) |> left_join(w |> select(URN, SCHNAME), by = "URN")
+  years <- sort(unique(y$year_label))
+  ma <- bind_rows(lapply(years, function(c) centred_ma(y, c, n) |> filter(group == g))) |>
+    left_join(w |> select(URN, SCHNAME), by = "URN") |> rename(year_label = centre)
+  ord_s <- w |> arrange(desc(.data[[paste0("va_shrunk_", g)]])) |> pull(SCHNAME)
+  y <- y |> mutate(SCHNAME = factor(SCHNAME, ord_s), yr = yl(year_label))
+  ma <- ma |> mutate(SCHNAME = factor(SCHNAME, ord_s), yr = yl(year_label))
+  ggplot(y, aes(yr, va)) +
+    geom_hline(yintercept = 0, colour = GREY, linewidth = 0.3) +
+    geom_line(data = ma, aes(y = ma, group = SCHNAME), colour = MPURPLE, linewidth = 1) +
+    geom_point(aes(shape = provisional), colour = DPURPLE, size = 1.8) +
+    scale_shape_manual(values = c(`FALSE` = 16, `TRUE` = 1), labels = c("Final", "Provisional (2025/26)"), name = NULL) +
+    facet_wrap(~SCHNAME, ncol = 4, labeller = label_wrap_gen(28)) +
+    labs(x = NULL, y = "Value added (Attainment 8 points)",
+         title = paste0("Year by year (points) and ", n, "-year centred average (line), ", tolower(GROUP_LABELS[[g]]))) +
+    theme_note(9) + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+                          strip.text = element_text(size = 7.5))
+}
+
+#' The area's mean value added by year, for every group
+fig_area_years <- function(yrs, w, name) {
+  yrs |> filter(URN %in% w$URN) |>
+    group_by(group, year_label, provisional) |> summarise(va = mean(va, na.rm = TRUE), .groups = "drop") |>
+    mutate(group = factor(GROUP_LABELS[group], GROUP_LABELS), yr = yl(year_label)) |>
+    ggplot(aes(yr, va, colour = group, group = group)) +
+    geom_hline(yintercept = 0, colour = GREY) +
+    geom_line(linewidth = 1) +
+    geom_point(aes(shape = provisional), size = 2.6, fill = "white") +
+    scale_colour_manual(values = GROUP_COL, name = NULL) +
+    scale_shape_manual(values = c(`FALSE` = 16, `TRUE` = 21), labels = c("Final", "Provisional"), name = NULL) +
+    labs(x = NULL, y = "Mean value added (points)", title = paste0(name, ": the schools' average, year by year")) +
+    theme_note()
 }

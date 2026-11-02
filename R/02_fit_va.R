@@ -31,16 +31,6 @@ COMPONENT <- function(col) dplyr::case_when(
   startsWith(col, "sen_") ~ "Special educational needs", col == "mobile" ~ "Pupil mobility",
   grepl("_school", col) ~ "Single-sex school", TRUE ~ NA_character_)
 
-model_rows <- function(d, group) {
-  y <- GROUPS[[group]]
-  ss <- single_sex_term(group)
-  keep <- !d$excluded & d[[y]] > 0 & d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
-    complete.cases(d[, c(y, "ks2_c", "ADMPOL_PT", "z_l4", "sen_support", "sen_ehcp", "mobile", ss,
-                         "gor_name", "LANAME", "PTFSM6CLA1A", "PERCTOT", "PNUMEAL")])
-  d[which(keep), ] |>      # which(): a missing comparison drops the row rather than adding an NA one
-    mutate(year_label = factor(year_label), gor_name = factor(gor_name), LANAME = factor(LANAME))
-}
-
 fit_group <- function(d, group) {
   y <- GROUPS[[group]]
   dg <- model_rows(d, group)
