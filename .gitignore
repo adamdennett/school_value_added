@@ -12,7 +12,8 @@ sussex.qmd
 
 # Quarto
 /.quarto/
-*_files/
+/*_files/
+/areas/*_files/
 
 **/*.quarto_ipynb
 
