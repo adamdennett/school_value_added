@@ -101,6 +101,90 @@ years of value added are reliable for every group, from
 disadvantaged pupils to `r sprintf("%.2f", s_at("all", "reliability_4yr"))`
 for all pupils.
 
+# Shrinkage, and what the four-year figure is {#sec-shrinkage}
+
+A school's headline figure is not the plain mean of its yearly value
+added. It is an **empirical Bayes** estimate: that mean pulled towards
+zero by as much of it as the evidence will carry. The weight it keeps is
+its reliability,
+
+$$\lambda = \frac{\tau^2}{\tau^2 + \sigma^2/n}$$
+
+with $\sigma^2$ the year-to-year variance within a school, $\tau^2$ the
+persistent variance between schools, and $n$ the school's own number of
+years — not four. Both variances come from the second fit, the one
+carrying a school random intercept, so $\sigma^2$ is what is left once a
+school's own level is accounted for.
+
+A school with a long record keeps nearly all of its mean. A school with
+two years keeps less, because on that much evidence most of its distance
+from the average is sampling noise. Reliability depends only on $n$ and
+the group's two variances, so every school in a group with the same
+number of years carries the same weight.
+
+```{r tbl-reliability}
+#| tbl-cap: "How much of its mean each school keeps, all pupils. Reliability is a function of the number of years and the group's variances alone, so it is identical for every school with the same length of record."
+V$va |>
+  filter(group == "all") |>
+  group_by(years) |>
+  summarise(n_sch = n(), lam = median(reliability), .groups = "drop") |>
+  transmute(`Years of data` = years, Schools = format(n_sch, big.mark = ","),
+            `Reliability (lambda)` = sprintf("%.2f", lam)) |>
+  kt(align = "rrr")
+```
+
+## What is Bayesian here, and what is not
+
+$\lambda\bar r$ is exactly the posterior mean of a school's effect under
+a normal prior centred on zero with variance $\tau^2$. The arithmetic is
+Bayesian; the prior is not chosen. $\tau^2$ and $\sigma^2$ are estimated
+by REML from the same data the shrinkage is then applied to, which makes
+this *empirical* Bayes rather than Bayes. There is no hyperprior, no
+sampling and nothing to converge: the posterior is Gaussian and closed
+form.
+
+The price is that the intervals treat $\tau^2$ and $\sigma^2$ as known.
+They carry the uncertainty in a school's own mean, not the uncertainty in
+the variances used to shrink it, so they are a little tighter than a
+fully Bayesian treatment would give — most so for the groups with the
+fewest schools.
+
+## Two variances, because there are two questions
+
+Against England, a school is credited with everything that separates it
+from the national picture, its authority and its region included. The
+prior variance for that comparison is therefore all three persistent
+components together:
+
+$$\tau^2_\text{England} = \tau^2_\text{school} + \tau^2_\text{LA} + \tau^2_\text{region}$$
+
+Within the authority, the authority and region effects are already in the
+prediction and are not the school's to own, so the prior variance is the
+school component alone. The national figure is the less shrunk of the
+two: there is more real variation there for it to be variation of. For
+all pupils that is $\tau_\text{England} =
+`r sprintf("%.3f", s_at("all", "tau_school_nat"))`$ against
+$\tau_\text{school} = `r sprintf("%.3f", s_at("all", "tau_school"))`$ on
+the log scale.
+
+## Back to Attainment 8 points
+
+Shrinkage happens on the log scale, where the model is additive. The
+shrunken effect is converted against the school's own mean expected
+Attainment 8:
+
+$$\text{value added} = \text{base}\left(e^{\lambda\bar r} - 1\right)$$
+
+and its 95% interval the same way, from $\lambda\bar r \pm
+1.96\sqrt{\lambda\sigma^2/n}$. A school counts as significant where that
+interval excludes zero.
+
+This is a different quantity from the plain four-year mean sitting beside
+it in the tables: that one averages observed minus expected in points,
+while this one shrinks a mean log residual and then converts it. For most
+schools the two are close. For schools with short records or unusual
+intakes they are not, and the shrunken figure is the one to read.
+
 # How v2.0 compares with v1
 
 ```{r fig-v1}
