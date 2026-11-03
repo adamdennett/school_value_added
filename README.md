@@ -1,5 +1,7 @@
 # School Value Added v2.0
 
+**How much does a school add? And how much does absence (or anything else) take away?**
+
 Value added for every state-funded mainstream secondary school in England:
 Attainment 8 above or below what a multilevel model expects from a school's
 intake and context, for all pupils, disadvantaged and non-disadvantaged

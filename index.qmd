@@ -12,7 +12,7 @@ S <- V$summary
 ```
 
 ::: {.hero}
-# How much does a school add?
+# How much does a school add? And how much does absence (or anything else) take away?
 
 <p class="lead">Value Added v2.0 measures each secondary school in England
 against what its intake and context would lead us to expect: for all
@@ -41,6 +41,96 @@ original measure</a>.</p>
 <div class="lab">latest Ofsted judgements included</div>
 :::
 :::
+
+## What a school adds, and what absence takes away {#sec-add-take}
+
+```{r add-take-figures}
+#| include: false
+wv  <- va_wide(V)
+bA  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "all"]
+bD  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "disadvantaged"]
+m8  <- S$mean_att8[S$group == "all"]
+ab  <- quantile(wv$absence[!is.na(wv$absence)], c(.5, .95), names = FALSE)
+vaa <- wv$va_shrunk_all[!is.na(wv$va_shrunk_all)]
+qv  <- quantile(vaa, c(.5, .90), names = FALSE)
+pts_for <- function(beta) m8 * (exp(beta * log(ab[2] / ab[1])) - 1)
+drop  <- pts_for(bA)          # absence: a typical school -> the highest 5%
+dropD <- pts_for(bD)          # the same move, for disadvantaged pupils
+climb <- qv[2] - qv[1]        # value added: median -> top decile
+short <- -(drop + climb)      # what is still missing at the end
+```
+
+Value added measures what a school does **after** its intake and context
+are accounted for, absence included. So the two quantities below are not
+the same thing counted twice: one is what absence moves, the other is
+what the school moves once absence has already been allowed for.
+
+```{r fig-add-take}
+#| fig-cap: !expr sprintf("An average school, then the same school with absence where the highest 5%% of schools sit, then that school doing everything a school can do. Blue is what absence takes away, purple what the school adds back. Attainment 8 points; the dashed line is the England average of %.1f.", m8)
+#| fig-width: 9
+#| fig-height: 4.8
+st <- tibble::tibble(
+  i    = c(1, 2, 3),
+  y0   = c(m8, m8, m8 + drop),
+  y1   = c(m8, m8 + drop, m8 + drop + climb),
+  kind = c("start", "Absence takes away", "The school adds back"),
+  lab  = c("", sprintf("%+.1f", drop), sprintf("%+.1f", climb)),
+  foot = c("An average school",
+           "with absence where the\nhighest 5% of schools sit",
+           "and doing everything a\nschool can do: top 10%"))
+bars <- dplyr::filter(st, kind != "start")
+
+ggplot() +
+  geom_hline(yintercept = m8, linetype = "31", colour = "grey50", linewidth = 0.5) +
+  geom_segment(data = bars, aes(x = i - 0.5, xend = i + 0.34, y = y0, yend = y0),
+               colour = "grey70", linewidth = 0.3) +
+  geom_rect(data = bars, aes(xmin = i - 0.34, xmax = i + 0.34, ymin = pmin(y0, y1),
+                             ymax = pmax(y0, y1), fill = kind)) +
+  geom_point(data = dplyr::filter(st, kind == "start"), aes(i, y1),
+             size = 4.5, colour = DPURPLE) +
+  geom_text(data = bars, aes(i, (y0 + y1) / 2, label = lab),
+            colour = "white", fontface = "bold", size = 4.6) +
+  geom_text(data = dplyr::filter(st, kind == "start"), aes(i, y1 + 0.55,
+            label = sprintf("%.1f", y1)), colour = DPURPLE, fontface = "bold", size = 4.2) +
+  geom_text(data = bars, aes(i, pmin(y0, y1) - 0.55, label = sprintf("%.1f", y1)),
+            colour = "grey25", size = 4.2) +
+  annotate("segment", x = 3.52, xend = 3.52, y = m8 + drop + climb, yend = m8,
+           colour = WARM, linewidth = 0.7,
+           arrow = grid::arrow(length = grid::unit(0.16, "cm"), ends = "both")) +
+  annotate("text", x = 3.62, y = m8 + drop + climb + short / 2, hjust = 0,
+           label = sprintf("still %.1f\nshort", short), colour = WARM,
+           fontface = "bold", size = 4, lineheight = 0.95) +
+  scale_x_continuous(breaks = st$i, labels = st$foot, limits = c(0.55, 4.35)) +
+  scale_fill_manual(values = c("Absence takes away" = BLUE,
+                               "The school adds back" = DPURPLE), name = NULL) +
+  scale_y_continuous(expand = ggplot2::expansion(mult = c(0.10, 0.07))) +
+  labs(x = NULL, y = "Attainment 8") +
+  theme_note(13) +
+  theme(legend.position = "top", panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(lineheight = 0.95))
+```
+
+Read it left to right. An average school sits at the England mean. Put
+its absence where the highest 5% of schools sit and it loses
+**`r sprintf("%.1f", -drop)` Attainment 8 points**. Now ask it to do
+everything a school can do -- to be a top-ten-per-cent school on value
+added, net of its intake -- and it gains **`r sprintf("%.1f", climb)`**
+back. It is still `r sprintf("%.1f", short)` points below where it
+started. Being exceptional buys back about
+**`r sprintf("%.0f%%", 100 * climb / -drop)`** of what high absence
+costs.
+
+It also falls hardest on the pupils with the least room to absorb it.
+The same change in absence is worth `r sprintf("%.1f", -dropD)` points
+for disadvantaged pupils, `r sprintf("%.0f%%", 100 * (bD / bA - 1))`
+more than for pupils as a whole: absence is not only the largest lever,
+it is a regressive one.
+
+One caveat, stated plainly because the scale of this invites
+over-reading. The model is associational. The gradient says what schools
+with more absence look like once intake is accounted for, not what a
+particular school would gain by cutting absence by a given amount. The
+direction and the order of magnitude are what to take from it.
 
 ## What is new in v2.0
 

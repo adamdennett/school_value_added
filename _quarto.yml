@@ -28,6 +28,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: review.qmd
+        text: "The review"
       - href: method.qmd
         text: "Value Added v2.0"
       - href: explore.qmd
@@ -46,8 +48,6 @@ website:
             text: "West Sussex"
           - href: districts.qmd
             text: "All twelve districts"
-      - href: review.qmd
-        text: "The review"
       - href: roadmap.qmd
         text: Roadmap
     right:
