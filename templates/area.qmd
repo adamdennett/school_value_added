@@ -211,6 +211,86 @@ if (k > 0) {
 }
 ```
 
+# What `r NAME`'s schools add, and what absence takes away
+
+```{r add-take-area-figures}
+#| include: false
+bA_ <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "all"]
+bD_ <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "disadvantaged"]
+m8_ <- V$summary$mean_att8[V$summary$group == "all"]
+ab_eng <- mean(W$absence, na.rm = TRUE)
+# Absence is converted through the national gradient, so an area with few
+# schools is not asked to supply its own percentiles. Value added is already
+# measured against England, so it needs no rebasing.
+eff <- function(ww, lab) {
+  a <- mean(ww$absence, na.rm = TRUE)
+  tibble::tibble(area = lab, k = nrow(ww), absence = a,
+                 abs_pts = m8_ * (exp(bA_ * log(a / ab_eng)) - 1),
+                 abs_pts_dis = m8_ * (exp(bD_ * log(a / ab_eng)) - 1),
+                 va_pts = mean(ww$va_shrunk_all, na.rm = TRUE))
+}
+cmp <- dplyr::bind_rows(eff(w, NAME),
+         dplyr::bind_rows(lapply(COMPS, function(a) eff(W[W$LANAME == a, ], a)))) |>
+  dplyr::mutate(net = abs_pts + va_pts)
+me <- cmp[cmp$area == NAME, ]
+```
+
+Value added already counts absence as part of a school's context, so what
+absence moves and what the school moves are separate quantities rather
+than one counted twice. Below, the blue bar is what this area's absence
+is worth against the England average of
+`r sprintf("%.1f%%", ab_eng)`, run through the national gradient; the
+purple bar is the area's mean value added, which is measured against
+England already. The diamond is the two together.
+
+```{r fig-add-take-area}
+#| fig-cap: !expr sprintf("%s and its comparators. Blue is what the area absence level is worth against the England average, through the national gradient. Purple is mean Value Added v2.0, which is measured against England already. The diamond is the two together, and zero is the England average.", NAME)
+#| fig-width: 9
+#| fig-height: !expr max(3.1, 1.15 + 0.78 * nrow(cmp))
+lv <- rev(cmp$area)
+long <- cmp |>
+  tidyr::pivot_longer(c(abs_pts, va_pts), names_to = "part", values_to = "pts") |>
+  dplyr::mutate(part = factor(ifelse(part == "abs_pts", "What absence moves",
+                                     "What the schools move"),
+                              levels = c("What absence moves", "What the schools move")),
+                area = factor(area, levels = lv))
+
+ggplot(long, aes(pts, area, fill = part)) +
+  geom_vline(xintercept = 0, colour = "grey45", linetype = "31", linewidth = 0.5) +
+  geom_col(position = ggplot2::position_dodge(width = 0.74), width = 0.64) +
+  geom_text(aes(label = sprintf("%+.1f", pts),
+                hjust = ifelse(pts < 0, 1.15, -0.15)),
+            position = ggplot2::position_dodge(width = 0.74), size = 3.5, colour = "grey25") +
+  geom_point(data = dplyr::mutate(cmp, area = factor(area, levels = lv)),
+             aes(net, area), inherit.aes = FALSE, shape = 23, size = 3.4,
+             fill = "white", colour = INK, stroke = 1.1) +
+  scale_fill_manual(values = c("What absence moves" = BLUE,
+                               "What the schools move" = DPURPLE), name = NULL) +
+  scale_x_continuous(expand = ggplot2::expansion(mult = 0.16)) +
+  labs(x = "Attainment 8 points against England", y = NULL) +
+  theme_note(13) +
+  theme(legend.position = "top", panel.grid.major.y = element_blank(),
+        axis.text.y = element_text(face = ifelse(lv == NAME, "bold", "plain")))
+```
+
+`r NAME`'s schools run at `r sprintf("%.1f%%", me$absence)` absence
+against England's `r sprintf("%.1f%%", ab_eng)`, which on the national
+gradient is worth **`r sh(me$abs_pts)` Attainment 8 points**. Their mean
+value added is **`r sh(me$va_pts)`**, so the two together leave the area
+`r sh(me$net)` points against England.
+`r if (me$abs_pts < 0 && me$va_pts > 0) sprintf("The schools are pulling against their attendance, and recovering %.0f%% of it.", 100 * min(me$va_pts / -me$abs_pts, 1)) else if (me$abs_pts > 0 && me$va_pts < 0) "Attendance is doing the area a favour its value added is not." else if (me$abs_pts < 0) "Both are pulling the same way, downwards." else "Both are pulling the same way, upwards."`
+
+For disadvantaged pupils the same absence is worth
+`r sh(me$abs_pts_dis)` points rather than `r sh(me$abs_pts)`: the
+gradient is
+`r sprintf("%.0f%%", 100 * (bD_ / bA_ - 1))` steeper for them, so
+wherever attendance is the problem it is a sharper problem for the
+pupils with least room to absorb it.
+
+The gradient is associational. It says what schools with this much
+absence look like once intake is accounted for, not what this area would
+gain by changing it.
+
 # How `r NAME` compares
 
 ```{r tbl-profile}
