@@ -31,7 +31,7 @@ website:
       - href: review.qmd
         text: "The review"
       - href: method.qmd
-        text: "Value Added v2.0"
+        text: "Methodology"
       - href: explore.qmd
         text: "Explore by area"
       - text: Sussex

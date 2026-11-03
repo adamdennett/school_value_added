@@ -96,7 +96,8 @@ B$tests |> transmute(Model = label, Effect = pc(effect), Rank = paste(rank, "of"
 - **Without neighbourhood education** or **without prior attainment** it
   grows, to `r pc(t_at("no_l4", "effect"))` and
   `r pc(t_at("no_ks2", "effect"))`. Both are already working: the city's
-  intakes are more advantaged on both, and the model credits that.
+  intakes are more advantaged on both, and the model credits that. See
+  [neighbourhood education](#sec-neighbourhood) below.
 - **Local segregation** changes nothing. `r LA`'s catchment admissions,
   with random allocation as a tie-break, keep its schools relatively mixed, but that does not explain the effect.
 - **An 11–16 flag** takes a little off. `r sprintf("%.0f%%", 100 * c_at(LA, "age16"))`
@@ -153,6 +154,90 @@ share, `r pc(t_at("split", "effect"))` with absence split. It does not
 take most of it away. Absence's *type*, as DfE records it, is part of the
 story, not the whole of it.
 
+# Neighbourhood education {#sec-neighbourhood}
+
+```{r neigh-setup}
+#| include: false
+N <- B$neigh; NP <- B$neigh_place
+n_at <- function(s, col) N[[col]][N$spec == s]
+la_urns <- V$schools$URN[V$schools$LANAME == LA]
+dec <- decompose(V, la_urns, LA, groups = c("all", "disadvantaged", "non_disadvantaged"))
+d_at <- function(g, comp) dec$points[dec$group == GROUP_LABELS[[g]] & dec$component == comp]
+z_coef <- function(g) exp(V$coefs$estimate[V$coefs$group == g & V$coefs$term == "z_l4"]) - 1   # as a percentage change, as the methodology reports it
+absorbed <- 1 - n_at("k150", "effect") / n_at("none", "effect")
+best <- N |> filter(spec != "none") |> slice_min(aic, n = 1)
+sc <- NP$schools |> left_join(V$schools |> select(URN, SCHNAME), by = "URN") |> arrange(desc(l4))
+```
+
+v2.0 measures neighbourhood education as the share of adults with a
+degree-level (level 4+) qualification in the 150 Census output areas
+nearest each school, from the 2021 Census. It is there because a school's
+results follow the education of the families around it, and FSM sees only
+the bottom of that.
+
+**Where the city's schools sit.** Their neighbourhoods average
+`r sprintf("%.1f%%", NP$la_l4)` of adults at level 4+, against
+`r sprintf("%.1f%%", NP$eng_l4)` around England's schools: about
+`r zz <- (NP$la_l4 - NP$eng_l4) / NP$sd_l4; sprintf("%.1f standard deviation%s", zz, ifelse(round(zz, 1) == 1, "", "s"))`
+higher, `r ord(NP$la_rank)` of `r NP$n_la` authorities. The share with no
+qualifications is `r sprintf("%.1f%%", NP$la_noq)` against
+`r sprintf("%.1f%%", NP$eng_noq)`.
+`r k <- sum(sc$pct_england >= 0.5); if (k == nrow(sc)) "Every one of the city's schools sits above England's median school:" else sprintf("%d of the city's %d schools sit above England's median school:", k, nrow(sc))`
+
+```{r tbl-neigh-schools}
+#| tbl-cap: !expr paste0(LA, "'s schools' neighbourhoods, 2021 Census. Level 4+ is the share of adults with a degree-level qualification; the percentile places each school among England's.")
+sc |> transmute(School = SCHNAME, `Level 4+, 150 nearest` = sprintf("%.1f%%", l4),
+                `Level 4+, 10 nearest` = sprintf("%.1f%%", l4_10),
+                `No qualifications, 150 nearest` = sprintf("%.1f%%", noq),
+                `Percentile in England` = sprintf("%.0f", 100 * pct_england)) |>
+  kt(align = "lrrrr")
+```
+
+**What the model already credits.** Each standard deviation of
+neighbourhood education is worth `r pc(z_coef("all"), 2)` of Attainment 8
+for all pupils, `r pc(z_coef("non_disadvantaged"), 2)` for
+non-disadvantaged pupils and only `r pc(z_coef("disadvantaged"), 2)` for
+disadvantaged ones. Set against England, the city's neighbourhoods lift
+its schools' expected Attainment 8 by about
+`r sprintf("%+.1f", d_at("all", "Neighbourhood education"))` points for all
+pupils, `r sprintf("%+.1f", d_at("non_disadvantaged", "Neighbourhood education"))`
+for non-disadvantaged and
+`r sprintf("%+.1f", d_at("disadvantaged", "Neighbourhood education"))` for
+disadvantaged pupils. That is credit the schools do not get: it is in the
+expectation, not in their value added.
+
+Without the term, the authority effect would be
+`r pc(n_at("none", "effect"))` (`r ord(n_at("none", "rank"))`) rather than
+`r pc(n_at("k150", "effect"))`. Neighbourhood education already accounts
+for about `r sprintf("%.0f%%", 100 * absorbed)` of what would otherwise
+look like a city effect.
+
+**Would a better measure take more?** The table refits the model with the
+neighbourhood drawn at every scale the original project built, and with
+the share of adults with no qualifications:
+
+```{r tbl-neigh}
+#| tbl-cap: !expr paste0(LA, "'s authority effect, all pupils, with neighbourhood education measured in different ways. AIC is against v2.0 (lower is better). Fitted on every school-year with each measure, so the v2.0 row matches the published effect.")
+N |> transmute(Measure = label, Effect = pc(effect), Rank = paste(rank, "of", n_la),
+               `AIC vs v2.0` = sprintf("%+.0f", aic - aic[spec == "k150"])) |>
+  kt(align = "lrrr")
+```
+
+No. A more local neighbourhood fits worse at every step, and leaves the
+city's effect *larger*: `r pc(n_at("k5", "effect"))` with the 5 nearest
+output areas. The no-qualifications share fits worse than level 4+. The
+best fit, `r tolower(best$label)`, moves the effect only to
+`r pc(best$effect)`. Neighbourhood education is doing what it can, and
+the rest is not a neighbourhood the Census can see.
+
+**What it cannot see.** The measure counts every adult, not parents.
+`r LA` has two universities: students, whose highest qualification while
+studying is usually level 3, and young graduates without school-age
+children both sit in the count, in opposite directions, and neither says
+much about the families whose children attend the schools. A measure of
+parents' qualifications, from the Census tables for households with
+dependent children, would test this directly (reading 1 below).
+
 # So what is it?
 
 The data are school-level, so they cannot settle this. Four readings fit
@@ -160,9 +245,10 @@ what is above, and they are not exclusive.
 
 1. **Family resources that keep learning going.** A day off costs less when someone at home can help catch up:
    parents with degrees, flexible or home-based work, tutoring, books. FSM
-   does not see this, and neither, quite, does neighbourhood education. The
-   Census measure counts every adult, and Brighton's adults include a large
-   population of students and young graduates without school-age children.
+   does not see this, and neither, quite, does neighbourhood education,
+   which already takes about `r sprintf("%.0f%%", 100 * absorbed)` of the effect and can take no more
+   however it is drawn ([above](#sec-neighbourhood)). It counts every
+   adult, not parents.
    The effect is largest for boys and non-disadvantaged pupils (3rd of
    151–152 for both). It is also present for disadvantaged pupils (16th),
    which fits a city with many lower-income households that are highly

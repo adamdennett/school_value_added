@@ -102,9 +102,60 @@ ranks <- c(ill_share = rank(-la_share$s)[la_share$LANAME == TARGET], absence = r
 gap_log <- comp$log_abs[comp$area == TARGET] - comp$log_abs[comp$area == "England"]
 cost <- coefs[["absence"]] * gap_log
 
+# ---- 5. Neighbourhood education ----------------------------------------------
+# v2.0 measures it as the share of adults with a degree-level (level 4+)
+# qualification in the 150 census output areas nearest the school. Refit
+# with the neighbourhood drawn at every scale the original project built,
+# and with the share of adults with no qualifications in its place or
+# beside it, to see whether a different measure of the same thing takes
+# the authority effect away.
+census <- readRDS(sat("data", "census", "school_census_context.rds")) |> mutate(URN = as.integer(URN))
+da <- model_rows(d, "all")
+da <- da |> left_join(census |> rename(urn_published = URN), by = "urn_published")
+zs <- function(x) (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+neigh_specs <- list(
+  k150 = list(label = "Level 4+, 150 nearest output areas (v2.0)", vars = "cens_l4plus_k150"),
+  k100 = list(label = "Level 4+, 100 nearest", vars = "cens_l4plus_k100"),
+  k50 = list(label = "Level 4+, 50 nearest", vars = "cens_l4plus_k50"),
+  k25 = list(label = "Level 4+, 25 nearest", vars = "cens_l4plus_k25"),
+  k10 = list(label = "Level 4+, 10 nearest", vars = "cens_l4plus_k10"),
+  k5 = list(label = "Level 4+, 5 nearest", vars = "cens_l4plus_k5"),
+  idw50 = list(label = "Level 4+, distance-weighted over 50", vars = "cens_l4plus_idw50"),
+  noquals = list(label = "No qualifications, 150 nearest, in its place", vars = "cens_noquals_k150"),
+  both = list(label = "Level 4+ and no qualifications, 150 nearest", vars = c("cens_l4plus_k150", "cens_noquals_k150")))
+for (v in unique(unlist(lapply(neigh_specs, `[[`, "vars")))) da[[paste0("z_", v)]] <- zs(da[[v]])
+da <- da[stats::complete.cases(da[, paste0("z_", unique(unlist(lapply(neigh_specs, `[[`, "vars"))))]), ]
+no_l4 <- setdiff(base, "z_l4")
+nfits <- lapply(neigh_specs, function(s) fit_la(da, "ATT8SCR", c(no_l4, paste0("z_", s$vars))))
+nfits$none <- fit_la(da, "ATT8SCR", no_l4)
+neigh <- tibble(spec = c(names(neigh_specs), "none"),
+                label = c(vapply(neigh_specs, `[[`, "", "label"), "No neighbourhood term"),
+                effect = vapply(nfits, `[[`, 0, "effect"), rank = vapply(nfits, `[[`, 0, "rank"),
+                n_la = vapply(nfits, `[[`, 0, "n_la"),
+                aic = vapply(nfits, function(f) AIC(refitML(f$m)), 0),
+                coef = vapply(names(nfits), function(k) if (k == "none") NA_real_ else
+                  unname(fixef(nfits[[k]]$m)[paste0("z_", neigh_specs[[k]]$vars[1])]), 0))
+
+# Where the city's schools sit: their neighbourhoods against England's
+# schools, and each authority's mean
+sch <- da |> group_by(URN, LANAME) |>
+  summarise(l4 = mean(cens_l4plus_k150), l4_10 = mean(cens_l4plus_k10), noq = mean(cens_noquals_k150),
+            .groups = "drop")
+la_l4 <- sch |> group_by(LANAME) |> summarise(l4 = mean(l4), .groups = "drop") |> mutate(rank = rank(-l4))
+neigh_place <- list(
+  la_l4 = la_l4$l4[la_l4$LANAME == TARGET], la_rank = la_l4$rank[la_l4$LANAME == TARGET], n_la = nrow(la_l4),
+  eng_l4 = mean(sch$l4), eng_l4_10 = mean(sch$l4_10), eng_noq = mean(sch$noq),
+  la_l4_10 = mean(sch$l4_10[sch$LANAME == TARGET]), la_noq = mean(sch$noq[sch$LANAME == TARGET]),
+  sd_l4 = sd(sch$l4),
+  schools = sch |> filter(LANAME == TARGET) |> select(URN, l4, l4_10, noq) |>
+    mutate(pct_england = vapply(l4, function(x) mean(sch$l4 <= x), 0)))
+
 saveRDS(list(la = TARGET, tests = tests, coefs = coefs, slope = slope, groups = groups, comp = comp,
+             neigh = neigh, neigh_place = neigh_place,
              ranks = ranks, cost = cost, rows = nrow(dg), built_at = Sys.time()),
         here::here("data", "bh_effect.rds"))
 message("Wrote data/bh_effect.rds")
 print(tests |> mutate(across(c(effect, se), ~round(.x, 4)), aic = round(aic), r_v2 = round(r_v2, 3)))
 print(groups); print(comp); print(round(coefs, 4)); print(ranks); cat("cost", round(cost, 4), "\n"); print(slope)
+print(neigh |> mutate(across(c(effect, coef), ~round(.x, 4)), aic = round(aic - aic[spec == "k150"])))
+str(neigh_place[setdiff(names(neigh_place), "schools")])

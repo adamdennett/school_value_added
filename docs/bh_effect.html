@@ -103,7 +103,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./method.html"> 
-<span class="menu-text">Value Added v2.0</span></a>
+<span class="menu-text">Methodology</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./explore.html"> 
@@ -173,6 +173,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#how-large-and-how-steady" id="toc-how-large-and-how-steady" class="nav-link active" data-scroll-target="#how-large-and-how-steady">How large, and how steady</a></li>
   <li><a href="#it-is-an-absence-effect" id="toc-it-is-an-absence-effect" class="nav-link" data-scroll-target="#it-is-an-absence-effect">It is an absence effect</a></li>
   <li><a href="#what-kind-of-absence" id="toc-what-kind-of-absence" class="nav-link" data-scroll-target="#what-kind-of-absence">What kind of absence</a></li>
+  <li><a href="#sec-neighbourhood" id="toc-sec-neighbourhood" class="nav-link" data-scroll-target="#sec-neighbourhood">Neighbourhood education</a></li>
   <li><a href="#so-what-is-it" id="toc-so-what-is-it" class="nav-link" data-scroll-target="#so-what-is-it">So what is it?</a></li>
   <li><a href="#what-would-help-tell-them-apart" id="toc-what-would-help-tell-them-apart" class="nav-link" data-scroll-target="#what-would-help-tell-them-apart">What would help tell them apart</a></li>
   <li><a href="#what-it-means-for-v2.0" id="toc-what-it-means-for-v2.0" class="nav-link" data-scroll-target="#what-it-means-for-v2.0">What it means for v2.0</a></li>
@@ -393,7 +394,7 @@ Table&nbsp;2: Brighton and Hove’s authority effect, all pupils, as the v2.0 mo
 </div>
 <ul>
 <li><strong>Without absence</strong> the effect falls from +3.8% to +0.8%, indistinguishable from zero.</li>
-<li><strong>Without neighbourhood education</strong> or <strong>without prior attainment</strong> it grows, to +5.6% and +6.9%. Both are already working: the city’s intakes are more advantaged on both, and the model credits that.</li>
+<li><strong>Without neighbourhood education</strong> or <strong>without prior attainment</strong> it grows, to +5.6% and +6.9%. Both are already working: the city’s intakes are more advantaged on both, and the model credits that. See <a href="#sec-neighbourhood">neighbourhood education</a> below.</li>
 <li><strong>Local segregation</strong> changes nothing. Brighton and Hove’s catchment admissions, with random allocation as a tie-break, keep its schools relatively mixed, but that does not explain the effect.</li>
 <li><strong>An 11–16 flag</strong> takes a little off. 60% of Brighton and Hove’s school-years are at 11–16 schools, against 37% in England. Nationally, 11–16 schools score +1.0% higher.</li>
 </ul>
@@ -460,11 +461,202 @@ Table&nbsp;3: Absence in Brighton and Hove and England, % of possible sessions, 
 <p>Of Brighton and Hove’s 1.9 points of extra absence, 1.4 is authorised illness. Unauthorised absence is close to England’s. Illness makes up 57% of absence in the city (36th highest share of 152).</p>
 <p>Nationally, illness absence costs less than other absence. Split in two, a 1% rise in illness absence goes with -0.06% Attainment 8 and a 1% rise in other absence with -0.12%. Allowing for that takes some of the effect away: to +3.6% with the illness share, +2.7% with absence split. It does not take most of it away. Absence’s <em>type</em>, as DfE records it, is part of the story, not the whole of it.</p>
 </section>
+<section id="sec-neighbourhood" class="level1">
+<h1>Neighbourhood education</h1>
+<p>v2.0 measures neighbourhood education as the share of adults with a degree-level (level 4+) qualification in the 150 Census output areas nearest each school, from the 2021 Census. It is there because a school’s results follow the education of the families around it, and FSM sees only the bottom of that.</p>
+<p><strong>Where the city’s schools sit.</strong> Their neighbourhoods average 43.4% of adults at level 4+, against 33.2% around England’s schools: about 1.0 standard deviation higher, 25th of 152 authorities. The share with no qualifications is 13.9% against 18.8%. 9 of the city’s 10 schools sit above England’s median school:</p>
+<div class="cell">
+<div id="tbl-neigh-schools" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-neigh-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Brighton and Hove’s schools’ neighbourhoods, 2021 Census. Level 4+ is the share of adults with a degree-level qualification; the percentile places each school among England’s.
+</figcaption>
+<div aria-describedby="tbl-neigh-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Level 4+, 150 nearest</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Level 4+, 10 nearest</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">No qualifications, 150 nearest</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Percentile in England</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cardinal Newman Catholic School</td>
+<td style="text-align: right;">57.2%</td>
+<td style="text-align: right;">58.9%</td>
+<td style="text-align: right;">8.8%</td>
+<td style="text-align: right;">97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dorothy Stringer School</td>
+<td style="text-align: right;">50.5%</td>
+<td style="text-align: right;">59.0%</td>
+<td style="text-align: right;">10.4%</td>
+<td style="text-align: right;">93</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hove Park School and Sixth Form Centre</td>
+<td style="text-align: right;">48.3%</td>
+<td style="text-align: right;">52.4%</td>
+<td style="text-align: right;">12.9%</td>
+<td style="text-align: right;">91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Varndean School</td>
+<td style="text-align: right;">48.1%</td>
+<td style="text-align: right;">51.9%</td>
+<td style="text-align: right;">11.1%</td>
+<td style="text-align: right;">91</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Patcham High School</td>
+<td style="text-align: right;">46.3%</td>
+<td style="text-align: right;">38.0%</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">89</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blatchington Mill School</td>
+<td style="text-align: right;">45.3%</td>
+<td style="text-align: right;">46.0%</td>
+<td style="text-align: right;">14.0%</td>
+<td style="text-align: right;">87</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">King's School</td>
+<td style="text-align: right;">39.8%</td>
+<td style="text-align: right;">25.8%</td>
+<td style="text-align: right;">15.1%</td>
+<td style="text-align: right;">78</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Longhill High School</td>
+<td style="text-align: right;">36.9%</td>
+<td style="text-align: right;">42.0%</td>
+<td style="text-align: right;">18.3%</td>
+<td style="text-align: right;">71</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brighton Aldridge Community Academy</td>
+<td style="text-align: right;">31.9%</td>
+<td style="text-align: right;">19.1%</td>
+<td style="text-align: right;">17.2%</td>
+<td style="text-align: right;">53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Portslade Aldridge Community Academy</td>
+<td style="text-align: right;">29.3%</td>
+<td style="text-align: right;">22.3%</td>
+<td style="text-align: right;">19.1%</td>
+<td style="text-align: right;">42</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>What the model already credits.</strong> Each standard deviation of neighbourhood education is worth +2.40% of Attainment 8 for all pupils, +2.54% for non-disadvantaged pupils and only +0.78% for disadvantaged ones. Set against England, the city’s neighbourhoods lift its schools’ expected Attainment 8 by about +1.1 points for all pupils, +1.3 for non-disadvantaged and +0.3 for disadvantaged pupils. That is credit the schools do not get: it is in the expectation, not in their value added.</p>
+<p>Without the term, the authority effect would be +5.7% (3rd) rather than +3.9%. Neighbourhood education already accounts for about 31% of what would otherwise look like a city effect.</p>
+<p><strong>Would a better measure take more?</strong> The table refits the model with the neighbourhood drawn at every scale the original project built, and with the share of adults with no qualifications:</p>
+<div class="cell">
+<div id="tbl-neigh" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-neigh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Brighton and Hove’s authority effect, all pupils, with neighbourhood education measured in different ways. AIC is against v2.0 (lower is better). Fitted on every school-year with each measure, so the v2.0 row matches the published effect.
+</figcaption>
+<div aria-describedby="tbl-neigh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Effect</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC vs v2.0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Level 4+, 150 nearest output areas (v2.0)</td>
+<td style="text-align: right;">+3.9%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Level 4+, 100 nearest</td>
+<td style="text-align: right;">+4.1%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Level 4+, 50 nearest</td>
+<td style="text-align: right;">+4.3%</td>
+<td style="text-align: right;">5 of 152</td>
+<td style="text-align: right;">+53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Level 4+, 25 nearest</td>
+<td style="text-align: right;">+4.5%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+124</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Level 4+, 10 nearest</td>
+<td style="text-align: right;">+4.7%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+192</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Level 4+, 5 nearest</td>
+<td style="text-align: right;">+4.8%</td>
+<td style="text-align: right;">3 of 152</td>
+<td style="text-align: right;">+221</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Level 4+, distance-weighted over 50</td>
+<td style="text-align: right;">+4.4%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">+77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">No qualifications, 150 nearest, in its place</td>
+<td style="text-align: right;">+4.8%</td>
+<td style="text-align: right;">6 of 152</td>
+<td style="text-align: right;">+197</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Level 4+ and no qualifications, 150 nearest</td>
+<td style="text-align: right;">+3.7%</td>
+<td style="text-align: right;">4 of 152</td>
+<td style="text-align: right;">-18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">No neighbourhood term</td>
+<td style="text-align: right;">+5.7%</td>
+<td style="text-align: right;">3 of 152</td>
+<td style="text-align: right;">+470</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>No.&nbsp;A more local neighbourhood fits worse at every step, and leaves the city’s effect <em>larger</em>: +4.8% with the 5 nearest output areas. The no-qualifications share fits worse than level 4+. The best fit, level 4+ and no qualifications, 150 nearest, moves the effect only to +3.7%. Neighbourhood education is doing what it can, and the rest is not a neighbourhood the Census can see.</p>
+<p><strong>What it cannot see.</strong> The measure counts every adult, not parents. Brighton and Hove has two universities: students, whose highest qualification while studying is usually level 3, and young graduates without school-age children both sit in the count, in opposite directions, and neither says much about the families whose children attend the schools. A measure of parents’ qualifications, from the Census tables for households with dependent children, would test this directly (reading 1 below).</p>
+</section>
 <section id="so-what-is-it" class="level1">
 <h1>So what is it?</h1>
 <p>The data are school-level, so they cannot settle this. Four readings fit what is above, and they are not exclusive.</p>
 <ol type="1">
-<li><strong>Family resources that keep learning going.</strong> A day off costs less when someone at home can help catch up: parents with degrees, flexible or home-based work, tutoring, books. FSM does not see this, and neither, quite, does neighbourhood education. The Census measure counts every adult, and Brighton’s adults include a large population of students and young graduates without school-age children. The effect is largest for boys and non-disadvantaged pupils (3rd of 151–152 for both). It is also present for disadvantaged pupils (16th), which fits a city with many lower-income households that are highly educated.</li>
+<li><strong>Family resources that keep learning going.</strong> A day off costs less when someone at home can help catch up: parents with degrees, flexible or home-based work, tutoring, books. FSM does not see this, and neither, quite, does neighbourhood education, which already takes about 31% of the effect and can take no more however it is drawn (<a href="#sec-neighbourhood">above</a>). It counts every adult, not parents. The effect is largest for boys and non-disadvantaged pupils (3rd of 151–152 for both). It is also present for disadvantaged pupils (16th), which fits a city with many lower-income households that are highly educated.</li>
 <li><strong>Absence as a stand-in.</strong> Across England, high absence travels with things the model does not measure: family stress, poverty beyond FSM, disengagement. Part of the absence coefficient is those things, not the days missed. Where absence comes from somewhere else, the model over-predicts its cost. In Brighton and Hove it is mostly authorised illness, which may include anxiety and other health-related absence that follows a different pattern from disengagement. On this reading the authority effect is partly an artefact of how v2.0 treats absence, not something the schools do.</li>
 <li><strong>Recording.</strong> Schools and authorities differ in when they authorise illness and how they code it. A practice that authorises more parent-reported illness raises recorded absence without changing learning. This would show up as exactly this pattern, and school-level data cannot tell it from reading 2.</li>
 <li><strong>Something the schools or the system do.</strong> The 11–16 structure, where entry to the city’s sixth-form colleges depends on GCSE grades, explains a little. Mixed intakes explain nothing measurable. Whatever is left after absence (+0.8%, ranked 60th) is ordinary.</li>
