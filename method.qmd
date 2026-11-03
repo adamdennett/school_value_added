@@ -415,7 +415,7 @@ ab <- quantile(wv$absence, c(.5, .95), na.rm = TRUE, names = FALSE)
 qv <- quantile(wv$va_shrunk_all, c(.5, .90), na.rm = TRUE, names = FALSE)
 r_hi <- ab[2] / ab[1]
 prop <- function(b, r) r^b - 1                 # proportional change in expected Attainment 8
-drop <- m8 * prop(bA, r_hi); dropD <- m8 * prop(bD, r_hi); dropD_own <- m8d * prop(bD, r_hi)
+drop <- m8 * prop(bA, r_hi); dropD_own <- m8d * prop(bD, r_hi)
 climb <- qv[2] - qv[1]
 # The area figure, worked for one authority
 ex <- "Brighton and Hove"
@@ -482,10 +482,11 @@ conversion. The diamond is the sum. For `r ex`: *r* =
 β = `r sprintf("%.3f", bD)`, `r sprintf("%.0f%%", 100 * (bD / bA - 1))`
 steeper than for all pupils. The same move from typical to high absence
 then takes `r pp(prop(bD, r_hi))` off expected Attainment 8 rather than
-`r pp(prop(bA, r_hi))`. The charts express this in points on England's
-all-pupil mean (`r p1(dropD)`) so it sits on the same scale as the
-all-pupil figure. On disadvantaged pupils' own mean Attainment 8,
-`r sprintf("%.1f", m8d)`, the same proportion is `r p1(dropD_own)` points.
+`r pp(prop(bA, r_hi))`. That proportion is converted to points on
+disadvantaged pupils' own mean Attainment 8, `r sprintf("%.1f", m8d)`,
+giving `r p1(dropD_own)` points against `r p1(drop)` for pupils as a
+whole. The gap in points is smaller than the gap in gradient because
+the base is lower; the area pages convert the same way.
 
 **What the figures are not.**
 
