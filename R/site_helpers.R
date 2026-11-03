@@ -67,7 +67,10 @@ va_wide <- function(V) {
   if (!is.null(pv)) out <- out |> left_join(
     pv$va |> select(URN, group, va_2526) |>
       pivot_wider(names_from = group, values_from = va_2526, names_glue = "va_2526_{group}"), by = "URN")
-  out
+  # One Ofsted column with no gaps: the report card where a school has one,
+  # otherwise its last graded inspection. The two regimes' grade names are
+  # disjoint, so one column can carry both and the grade alone says which.
+  out |> mutate(ofsted_combined = coalesce(ofsted_rc, ofsted_model))
 }
 
 #' Every school's value added year by year, against England (unshrunk), for
@@ -223,6 +226,7 @@ MAP_VARS <- tribble(
   "gov",             "Who runs it, 2024/25",                                     "The school",     "cat",  "",     0,   "",
   "ofsted_rc",       "Ofsted report card, achievement (since November 2025)",    "The school",     "cat",  "",     0,   "",
   "ofsted",          "Ofsted rating, last graded inspection before September 2024", "The school",  "cat",  "",     0,   "",
+  "ofsted_combined", "Ofsted, report card where there is one, else the last graded inspection", "The school", "cat", "", 0, "",
   "religion",        "Religious character",                                      "The school",     "cat",  "",     0,   "")
 
 MAP_CATS <- list(
@@ -233,8 +237,32 @@ MAP_CATS <- list(
   ofsted = c("Outstanding" = DPURPLE, "Good" = BPURPLE, "Requires Improvement" = HERITAGE,
              "Inadequate" = BLUE),
   religion = c("None" = GREY, "Church of England" = BPURPLE, "Roman Catholic" = DPURPLE,
-               "Christian" = HERITAGE, "Other faith" = BLUE))
-MAP_NONE <- c(ofsted_rc = "no report card yet", gov = "not recorded")
+               "Christian" = HERITAGE, "Other faith" = BLUE),
+  # Two regimes on one map, so two ramps: both run dark (best) to light
+  # (worst), and the hue says which regime a school is being read under.
+  # Purple is the current report card, teal the old graded inspection.
+  ofsted_combined = c("Exceptional" = "#2a0f45", "Strong standard" = "#5b21a8",
+                      "Expected standard" = "#8f5cf0", "Needs attention" = "#b98cff",
+                      "Urgent improvement" = "#e0ccff",
+                      "Outstanding" = "#07343a", "Good" = "#11636e",
+                      "Requires Improvement" = "#3f9aa6", "Inadequate" = "#9fd3d9"))
+
+# Which regime each grade belongs to, for the legend. Defined for every
+# grade, not just the first of each block, so a regime whose top grade has
+# no schools on this map still gets its heading.
+MAP_CAT_HEADS <- list(ofsted_combined = c(
+  "Exceptional" = "Report card, since November 2025",
+  "Strong standard" = "Report card, since November 2025",
+  "Expected standard" = "Report card, since November 2025",
+  "Needs attention" = "Report card, since November 2025",
+  "Urgent improvement" = "Report card, since November 2025",
+  "Outstanding" = "No report card yet: last graded inspection, before September 2024",
+  "Good" = "No report card yet: last graded inspection, before September 2024",
+  "Requires Improvement" = "No report card yet: last graded inspection, before September 2024",
+  "Inadequate" = "No report card yet: last graded inspection, before September 2024"))
+
+MAP_NONE <- c(ofsted_rc = "no report card yet", gov = "not recorded",
+              ofsted_combined = "never inspected, or not recorded")
 
 #' The attendance, results and intake measures of the original area
 #' documents (load_area_v1()), added to the area's schools for the map. The
@@ -289,6 +317,7 @@ map_schools <- function(w, lads, height = 520, X = NULL) {
     vars = jsonlite::toJSON(MAP_VARS |> filter(var %in% names(dat)) |>
                               mutate(cap = unname(COLOUR_CAPS[var])), dataframe = "rows", na = "null"),
     cats = jsonlite::toJSON(lapply(MAP_CATS, as.list), auto_unbox = TRUE),
+    heads = jsonlite::toJSON(lapply(MAP_CAT_HEADS, as.list), auto_unbox = TRUE),
     none = jsonlite::toJSON(as.list(MAP_NONE), auto_unbox = TRUE))
   leaflet::leaflet(height = height, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
     leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>

@@ -3,6 +3,7 @@ function(el, x, data) {
   var map = this;
   // htmlwidgets writes the "json" strings into the page as objects
   var schools = data.schools, vars = data.vars, cats = data.cats, none = data.none;
+  var heads = data.heads || {};
   var defaultVar = "va_shrunk_all";
 
   // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.
@@ -63,8 +64,14 @@ function(el, x, data) {
 
     var h = "<strong>" + m.label + "</strong><br>";
     if (m.scale === "cat") {
+      var curHead = null;
       Object.keys(cats[name]).forEach(function(k) {
         if (!counts[k]) return;
+        var hd = heads[name] ? heads[name][k] : null;
+        if (hd && hd !== curHead) {
+          h += "<div style=\\"font-size:11px;color:#666;margin:4px 0 1px\\">" + hd + "</div>";
+          curHead = hd;
+        }
         h += "<div><span style=\\"display:inline-block;width:11px;height:11px;border-radius:50%;" +
           "margin-right:6px;vertical-align:-1px;background:" + cats[name][k] + "\\"></span>" +
           k + " (" + counts[k] + ")</div>";
