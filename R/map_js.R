@@ -91,6 +91,100 @@ function(el, x, data) {
     h += "<div style=\\"font-size:11px;color:#666\\">Circle size: pupils on roll</div>";
     legDiv.style.position = "relative";
     legDiv.innerHTML = h;
+    drawDist(name, m, vals, colour, lo, hi, counts);
+  }
+
+  // How the values on the map are spread, under it, in the same colours.
+  // Few schools get a dot each, so a district map of a dozen schools is not
+  // a histogram of mostly empty bins; many get bins. Both take their fill
+  // from the colour() the map is using, so the two cannot disagree.
+  var distBox = document.createElement("div");
+  distBox.style.cssText = "margin:10px 0 0;";
+  el.parentNode.insertBefore(distBox, el.nextSibling);
+  var DOT_MAX = 120;
+
+  function esc2(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  function at(x, y, anchor, size, fill, txt) {
+    return "<text x=\\"" + x + "\\" y=\\"" + y + "\\"" +
+      (anchor ? " text-anchor=\\"" + anchor + "\\"" : "") +
+      " font-size=\\"" + size + "\\" fill=\\"" + fill + "\\">" + txt + "</text>";
+  }
+
+  function drawDist(name, m, vals, colour, lo, hi, counts) {
+    var W = 720, L = 10, R = 10, T = 12, B = 20, iw = W - L - R;
+    var s = "", H, ih, cap;
+
+    if (m.scale === "cat") {
+      var keys = Object.keys(cats[name]).filter(function(k) { return counts[k]; });
+      if (!keys.length) { distBox.innerHTML = ""; return; }
+      var bh = 15, gap = 4, lw = 190;
+      ih = keys.length * (bh + gap) - gap; H = T + ih + B;
+      var mxc = 0;
+      keys.forEach(function(k) { if (counts[k] > mxc) mxc = counts[k]; });
+      keys.forEach(function(k, j) {
+        var y = T + j * (bh + gap), w = (counts[k] / mxc) * (iw - lw - 34);
+        s += "<rect x=\\"" + (L + lw) + "\\" y=\\"" + y + "\\" width=\\"" + w.toFixed(1) +
+             "\\" height=\\"" + bh + "\\" rx=\\"2\\" fill=\\"" + cats[name][k] + "\\"></rect>";
+        s += at(L + lw - 7, y + bh - 3.5, "end", 11, "#333", esc2(k));
+        s += at(L + lw + w + 5, y + bh - 3.5, null, 11, "#666", counts[k]);
+      });
+      cap = keys.length + " grades, " + vals.length + " schools";
+    } else {
+      if (!vals.length) { distBox.innerHTML = ""; return; }
+      H = 104; ih = H - T - B;
+      var span = (hi - lo) || 1;
+      var xs = function(v) { return L + ((v - lo) / span) * iw; };
+      s += "<line x1=\\"" + L + "\\" y1=\\"" + (T + ih) + "\\" x2=\\"" + (L + iw) +
+           "\\" y2=\\"" + (T + ih) + "\\" stroke=\\"#d8d8e0\\"></line>";
+      if (vals.length <= DOT_MAX) {
+        var sorted = vals.slice().sort(function(a, b) { return a - b; });
+        var rows = [];
+        sorted.forEach(function(v) {
+          var cx = xs(v), r = 0;
+          while (rows[r] != null && cx - rows[r] < 7.6) r++;
+          rows[r] = cx;
+          var cy = T + ih - 5.5 - r * 7.6;
+          if (cy < T + 4) cy = T + 4;
+          s += "<circle cx=\\"" + cx.toFixed(1) + "\\" cy=\\"" + cy.toFixed(1) +
+               "\\" r=\\"3.4\\" fill=\\"" + colour(v) + "\\" stroke=\\"#fff\\" stroke-width=\\"0.7\\"></circle>";
+        });
+        cap = "One dot a school, " + vals.length + " of them, coloured as on the map";
+      } else {
+        var NB = 28, bins = [], k2;
+        for (k2 = 0; k2 < NB; k2++) bins[k2] = 0;
+        vals.forEach(function(v) {
+          var b = Math.floor(((v - lo) / span) * NB);
+          if (b < 0) b = 0; if (b > NB - 1) b = NB - 1;
+          bins[b]++;
+        });
+        var mxb = 0;
+        bins.forEach(function(c) { if (c > mxb) mxb = c; });
+        var bw = iw / NB;
+        bins.forEach(function(c, b) {
+          if (!c) return;
+          var hgt = (c / mxb) * (ih - 4);
+          s += "<rect x=\\"" + (L + b * bw + 0.6).toFixed(1) + "\\" y=\\"" + (T + ih - hgt).toFixed(1) +
+               "\\" width=\\"" + (bw - 1.2).toFixed(1) + "\\" height=\\"" + hgt.toFixed(1) +
+               "\\" fill=\\"" + colour(lo + (b + 0.5) * span / NB) + "\\"></rect>";
+        });
+        cap = vals.length + " schools in " + NB + " bins, coloured as on the map";
+      }
+      if (m.scale === "div" && lo < 0 && hi > 0) {
+        s += "<line x1=\\"" + xs(0).toFixed(1) + "\\" y1=\\"" + T + "\\" x2=\\"" + xs(0).toFixed(1) +
+             "\\" y2=\\"" + (T + ih + 4) + "\\" stroke=\\"#999\\" stroke-dasharray=\\"3 2\\"></line>";
+        s += at(xs(0).toFixed(1), T + ih + 15, "middle", 10, "#666", "0");
+      }
+      s += at(L, T + ih + 15, null, 10, "#666", fmt(lo, m));
+      s += at(L + iw, T + ih + 15, "end", 10, "#666", fmt(hi, m));
+    }
+
+    distBox.innerHTML =
+      "<div style=\\"font-size:12px;color:#444;margin-bottom:2px\\"><b>" + esc2(m.label) +
+      "</b> &mdash; how the schools on the map are spread</div>" +
+      "<svg viewBox=\\"0 0 " + W + " " + H + "\\" width=\\"100%\\" height=\\"" + H +
+      "\\" preserveAspectRatio=\\"xMidYMin meet\\" role=\\"img\\" aria-label=\\"Distribution of " +
+      esc2(m.label) + "\\">" + s + "</svg>" +
+      "<div style=\\"font-size:11px;color:#666\\">" + cap + "</div>";
   }
 
   // Dropdown above the map

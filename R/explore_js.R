@@ -49,6 +49,8 @@ function(el, x, data) {
   var tableBox = document.createElement("div"); tableBox.className = "explore-table";
   el.parentNode.insertBefore(tableBox, el.nextSibling);
   el.parentNode.insertBefore(traj, el.nextSibling);
+  var distBox = document.createElement("div"); distBox.className = "explore-dist";
+  el.parentNode.insertBefore(distBox, el.nextSibling);
   el.parentNode.insertBefore(summary, el.nextSibling);
 
   var legDiv, leg = L.control({position: "bottomright"});
@@ -166,6 +168,61 @@ function(el, x, data) {
         drawTable(rows, m); }); });
   }
 
+  // How the values on the map are spread, under it, in the map colours.
+  // Every measure here is diverging on a symmetric cap, so one path does it:
+  // a dot each while the schools are few, bins once they are not.
+  function drawDist(rows, m, hi) {
+    var W = 720, L = 10, R = 10, T = 12, B = 20, H = 96, iw = W - L - R, ih = H - T - B;
+    var vals = [];
+    rows.forEach(function(d) { var v = value(d, m); if (v != null && !isNaN(v)) vals.push(v); });
+    if (!vals.length) { distBox.innerHTML = ""; return; }
+    var lo = -hi, span = 2 * hi;
+    var tOf = function(v) { var t = (v - lo) / span; if (t < 0) t = 0; if (t > 1) t = 1; return t; };
+    var col = function(v) { var t = tOf(v); return ramp(m.good === "low" ? 1 - t : t); };
+    var xs = function(v) { return L + tOf(v) * iw; };
+    var s = "<line x1=\\"" + L + "\\" y1=\\"" + (T + ih) + "\\" x2=\\"" + (L + iw) +
+            "\\" y2=\\"" + (T + ih) + "\\" stroke=\\"#d8d8e0\\"></line>";
+    var note;
+    if (vals.length <= 120) {
+      var sorted = vals.slice().sort(function(a, b) { return a - b; }), lanes = [];
+      sorted.forEach(function(v) {
+        var cx = xs(v), r = 0;
+        while (lanes[r] != null && cx - lanes[r] < 7.6) r++;
+        lanes[r] = cx;
+        var cy = T + ih - 5.5 - r * 7.6; if (cy < T + 4) cy = T + 4;
+        s += "<circle cx=\\"" + cx.toFixed(1) + "\\" cy=\\"" + cy.toFixed(1) +
+             "\\" r=\\"3.4\\" fill=\\"" + col(v) + "\\" stroke=\\"#fff\\" stroke-width=\\"0.7\\"></circle>";
+      });
+      note = "One dot a school, " + vals.length + " of them, coloured as on the map";
+    } else {
+      var NB = 28, bins = [], i;
+      for (i = 0; i < NB; i++) bins[i] = 0;
+      vals.forEach(function(v) { var b = Math.floor(tOf(v) * NB); if (b > NB - 1) b = NB - 1; bins[b]++; });
+      var mx = 0;
+      bins.forEach(function(c) { if (c > mx) mx = c; });
+      var bw = iw / NB;
+      bins.forEach(function(c, b) {
+        if (!c) return;
+        var hgt = (c / mx) * (ih - 4);
+        s += "<rect x=\\"" + (L + b * bw + 0.6).toFixed(1) + "\\" y=\\"" + (T + ih - hgt).toFixed(1) +
+             "\\" width=\\"" + (bw - 1.2).toFixed(1) + "\\" height=\\"" + hgt.toFixed(1) +
+             "\\" fill=\\"" + col(lo + (b + 0.5) * span / NB) + "\\"></rect>";
+      });
+      note = vals.length + " schools in " + NB + " bins, coloured as on the map";
+    }
+    s += "<line x1=\\"" + xs(0).toFixed(1) + "\\" y1=\\"" + T + "\\" x2=\\"" + xs(0).toFixed(1) +
+         "\\" y2=\\"" + (T + ih + 4) + "\\" stroke=\\"#999\\" stroke-dasharray=\\"3 2\\"></line>";
+    s += "<text x=\\"" + xs(0).toFixed(1) + "\\" y=\\"" + (T + ih + 15) +
+         "\\" text-anchor=\\"middle\\" font-size=\\"10\\" fill=\\"#666\\">0</text>";
+    s += "<text x=\\"" + L + "\\" y=\\"" + (T + ih + 15) + "\\" font-size=\\"10\\" fill=\\"#666\\">&le; " +
+         fmt(-hi) + m.unit + "</text>";
+    s += "<text x=\\"" + (L + iw) + "\\" y=\\"" + (T + ih + 15) +
+         "\\" text-anchor=\\"end\\" font-size=\\"10\\" fill=\\"#666\\">&ge; " + fmt(hi) + m.unit + "</text>";
+    distBox.innerHTML = "<svg viewBox=\\"0 0 " + W + " " + H + "\\" width=\\"100%\\" height=\\"" + H +
+      "\\" preserveAspectRatio=\\"xMidYMin meet\\" role=\\"img\\" aria-label=\\"Spread of " + esc(m.label) +
+      "\\">" + s + "</svg><div class=\\"note\\">" + note + "</div>";
+  }
+
   function draw() {
     var level = sLevel.value, area = sArea.value, m = measure();
     var isVA = !!m.group;
@@ -210,6 +267,7 @@ function(el, x, data) {
     summary.innerHTML = "<strong>" + esc(area) + ":</strong> " + rows.length + " schools. Value added for " + GLAB[g].toLowerCase() +
       " (" + periodText() + ") averages " + fmt(mean) + " points against England; " + counts + ". " +
       "Absence runs " + fmt(abm) + " points against what intakes predict." + (data.notes[area] ? " <em>" + data.notes[area] + "</em>" : "") + provNote;
+    drawDist(rows, m, hi);
     drawTraj(rows, g, area);
     drawTable(rows, m);
   }
