@@ -190,6 +190,55 @@ The ranking is clear:
   matters (retention's AIC change is
   `r sprintf("%+.1f", imp(D, "Teacher retention")$delta_aic)`).
 
+## Why a drop in AIC, and not a Shapley decomposition {#sec-aic-vs-shapley}
+
+The original lever work decomposed Attainment 8 with Shapley values --
+the LMG decomposition, which averages each term's contribution over
+every order in which the terms could have entered. The table above looks
+like the same exercise. It is not, and the difference changes how the
+table should be read.
+
+Dropping a term from the full model measures what that term explains
+**that nothing else does**. It is the "added last" extreme: a term is
+credited with none of the variation it shares with its neighbours.
+Shapley averages over all orders of entry, so each term is credited with
+the shared variation exactly as often as it is denied it. The two agree
+only when the terms are uncorrelated, and these terms are emphatically
+not: prior attainment, absence and disadvantage all describe
+overlapping things about the same intake.
+
+The clearest evidence is in the table itself. Disadvantage comes fifth
+on AIC, below both the Ofsted grade and the local authority, which reads
+as though how poor a school's intake is matters less to attainment than
+its inspection grade. It does not. It means that with prior attainment
+and absence already in the model there is little left for disadvantage
+to explain *on its own* -- those two have absorbed most of it. A Shapley
+decomposition would hand that shared variation back and disadvantage
+would rise sharply. The bullet above is the same point stated as a
+finding; it is better understood as a property of the measure.
+
+So the two answer different questions, and neither is the better tool in
+general:
+
+- **A drop in AIC asks whether a term earns its place in the model.**
+  That is a specification question, and it is the one this document is
+  asking. The penalty means a term has to buy its parameter, and a term
+  that cannot -- segregation here -- is one the published measure should
+  not be carrying.
+- **A Shapley decomposition asks how to divide the credit between terms
+  that are already in.** That is an attribution question, and it was the
+  right one for the lever work, which had to say how much of a gap each
+  driver accounted for. It is also far more expensive: every subset of
+  the terms has to be fitted, against one refit per term here.
+
+Read the table, then, as what it is: how much each term carries that no
+other term does, beside how far the answer moves without it. For
+practical purposes the second column is the one to lean on, because it
+says how many schools actually change quintile rather than how much
+likelihood is lost. Neither column is a statement about how much each
+thing matters to a child's results, and the AIC column in particular
+should not be quoted as a ranking of importance.
+
 # What the measure leaves out {#sec-omissions}
 
 If value added correlates with something outside a school's control,
@@ -377,6 +426,79 @@ Two cautions:
 - it describes the area around the school, not where its pupils live, so
   schools with wide or unusual catchments are measured imperfectly;
 - it is fixed at the 2021 Census, so it cannot track change.
+
+### How the neighbourhood is drawn, and why 150 {#sec-l4-how}
+
+This is the part of v2.0 with no counterpart in the published measure,
+so it is worth setting out plainly rather than leaving in a citation.
+
+For each school we take its coordinates from GIAS, find the 150 nearest
+2021 Census Output Area **population-weighted centroids** -- an exact
+kd-tree search on the British National Grid, so the distances are metres
+on the ground and not degrees -- and average the census indicators over
+those output areas. An output area holds about 125 households, so 150 of
+them is on the order of nineteen thousand: a slice of a town, rather
+than a street or a region. The indicator the model carries is the share
+of adults qualified to level 4 or above. Unemployment and economic
+inactivity were built the same way and are strongly collinear with it,
+which is why only one of the three is in the specification.
+
+150 was not picked for roundness. The preliminary work built the same
+variables at k = 10, 25, 50, 100 and 150 and let the fit choose. AIC
+falls steadily as k grows, bottoms out around 150, and then plateaus and
+slightly reverses. That shape matters: a variable drifting toward a
+regional average would keep on improving the fit as the window widened,
+so a genuine minimum is evidence that 150 is picking up something local
+rather than washing out into region. Primary schools, run the same way
+in earlier work, prefer k = 10.
+
+That contrast is the real finding. **k is a scale parameter, and the fit
+recovers catchment geography from the data**: secondaries draw from much
+further than primaries, and the model knows it without being told. At
+k = 150 the mean radius is about 2.5 km.
+
+There is also a falsification check, which is what makes this more than
+curve fitting. If the term captures the neighbourhood a school actually
+serves, rather than generic regional conditions, it should be **weaker
+for schools with a religious character**, whose admission is less
+distance-based by construction. The interaction carries the predicted
+negative sign, but is not conventionally significant: directionally
+supportive, underpowered.
+
+```{r fig-l4-neighbourhood}
+#| fig-cap: "One school's neighbourhood: Dorothy Stringer School (pink) and the 150 nearest 2021 Census output-area population-weighted centroids (purple), with the extent they cover shaded. These are the output areas the neighbourhood term averages over. Hover a centroid for its distance from the school."
+#| message: false
+#| warning: false
+suppressPackageStartupMessages(library(sf))
+oa <- readRDS(sat("data", "cache", "oa_pwc_2021.rds"))
+ds <- va_wide(load_va()) |> filter(grepl("Dorothy Stringer", SCHNAME)) |> slice(1)
+sch <- st_as_sf(ds, coords = c("lon", "lat"), crs = 4326) |> st_transform(27700)
+nn  <- nabor::knn(as.matrix(oa[, c("easting", "northing")]), st_coordinates(sch), k = 150)
+oa150 <- oa[as.integer(nn$nn.idx[1, ]), ]
+oa150$dist_km <- nn$nn.dists[1, ] / 1000
+L4_MAX <- max(oa150$dist_km); L4_MEAN <- mean(oa150$dist_km)
+pts  <- st_as_sf(oa150, coords = c("easting", "northing"), crs = 27700)
+hull <- concaveman::concaveman(pts) |> st_buffer(120) |> st_transform(4326)
+pts  <- st_transform(pts, 4326)
+leaflet::leaflet(height = 430, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
+  leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
+  leaflet::addPolygons(data = hull, fillColor = BPURPLE, fillOpacity = 0.10,
+                       color = DPURPLE, weight = 1.2) |>
+  leaflet::addCircleMarkers(data = pts, radius = 3.2, weight = 0.4, color = "#ffffff",
+                            fillColor = MPURPLE, fillOpacity = 0.9,
+                            label = ~sprintf("%.2f km from the school", dist_km)) |>
+  leaflet::addCircleMarkers(data = st_transform(sch, 4326), radius = 8, weight = 2,
+                            color = "#ffffff", fillColor = "#ED357D", fillOpacity = 1,
+                            label = ds$SCHNAME)
+```
+
+For this school the 150th output area is
+`r sprintf("%.1f km", L4_MAX)` away and the mean is
+`r sprintf("%.1f km", L4_MEAN)` -- a compact, genuinely local patch. The
+same 150 output areas around a rural school would sprawl much further,
+which is the honest limitation of a fixed k: it is a constant number of
+households, not a constant distance, so it adapts to population density
+rather than to how far a particular school's pupils travel.
 
 ## Who runs the school: route and trusts
 
