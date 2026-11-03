@@ -154,6 +154,13 @@
     "text": "Value Added v2.0 measures each secondary school in England against what its intake and context would lead us to expect: for all pupils, for disadvantaged and non-disadvantaged pupils, and now for girls and boys. It is the next step from How to Pull the Right Lever, rebuilt on the recommendations of a review of the original measure."
   },
   {
+    "objectID": "index.html#sec-add-take",
+    "href": "index.html#sec-add-take",
+    "title": "How much does a school add? And how much does absence (or anything else) take away?",
+    "section": "What a school adds, and what absence takes away",
+    "text": "What a school adds, and what absence takes away\nValue added measures what a school does after its intake and context are accounted for, absence included. So the two quantities below are not the same thing counted twice: one is what absence moves, the other is what the school moves once absence has already been allowed for.\n\n\n\n\n\n\n\n\nFigure 1: An average school, then the same school with absence where the highest 5% of schools sit, then that school doing everything a school can do. Blue is what absence takes away, purple what the school adds back. Attainment 8 points; the dashed line is the England average of 47.5.\n\n\n\n\n\nRead it left to right. An average school sits at the England mean. Put its absence where the highest 5% of schools sit and it loses 4.6 Attainment 8 points. Now ask it to do everything a school can do – to be a top-ten-per-cent school on value added, net of its intake – and it gains 3.2 back. It is still 1.3 points below where it started. Being exceptional buys back about 71% of what high absence costs.\nIt also falls hardest on the pupils with the least room to absorb it. The same change in absence is worth 6.3 points for disadvantaged pupils, 41% more than for pupils as a whole: absence is not only the largest lever, it is a regressive one.\nOne caveat, stated plainly because the scale of this invites over-reading. The model is associational. The gradient says what schools with more absence look like once intake is accounted for, not what a particular school would gain by cutting absence by a given amount. The direction and the order of magnitude are what to take from it."
+  },
+  {
     "objectID": "index.html#what-is-new-in-v2.0",
     "href": "index.html#what-is-new-in-v2.0",
     "title": "How much does a school add? And how much does absence (or anything else) take away?",
@@ -404,12 +411,5 @@
     "title": "Worthing",
     "section": "Who runs them",
     "text": "Who runs them\n\n\n\n\n\n\n\n\nFigure 1: Who ran each school in 2024/25, and its Value Added v2.0 for all pupils. Each panel is a governing body; the shape is how the school came to be run that way."
-  },
-  {
-    "objectID": "index.html#sec-add-take",
-    "href": "index.html#sec-add-take",
-    "title": "How much does a school add? And how much does absence (or anything else) take away?",
-    "section": "What a school adds, and what absence takes away",
-    "text": "What a school adds, and what absence takes away\nValue added measures what a school does after its intake and context are accounted for, absence included. So the two quantities below are not the same thing counted twice: one is what absence moves, the other is what the school moves once absence has already been allowed for.\n\n\n\n\n\n\n\n\nFigure 1: An average school, then the same school with absence where the highest 5% of schools sit, then that school doing everything a school can do. Blue is what absence takes away, purple what the school adds back. Attainment 8 points; the dashed line is the England average of 47.5.\n\n\n\n\n\nRead it left to right. An average school sits at the England mean. Put its absence where the highest 5% of schools sit and it loses 4.6 Attainment 8 points. Now ask it to do everything a school can do – to be a top-ten-per-cent school on value added, net of its intake – and it gains 3.2 back. It is still 1.3 points below where it started. Being exceptional buys back about 71% of what high absence costs.\nIt also falls hardest on the pupils with the least room to absorb it. The same change in absence is worth 6.3 points for disadvantaged pupils, 41% more than for pupils as a whole: absence is not only the largest lever, it is a regressive one.\nOne caveat, stated plainly because the scale of this invites over-reading. The model is associational. The gradient says what schools with more absence look like once intake is accounted for, not what a particular school would gain by cutting absence by a given amount. The direction and the order of magnitude are what to take from it."
   }
 ]
