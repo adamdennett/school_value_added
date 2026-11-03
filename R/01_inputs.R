@@ -70,7 +70,11 @@ ofsted_latest <- function(urns) {
     filter(!is.na(ofsted_latest)) |>
     arrange(URN, desc(ofsted_latest_date)) |>
     distinct(URN, .keep_all = TRUE) |>
-    transmute(URN, ofsted_latest, ofsted_latest_date, ofsted_kind, ofsted_rc = rc_achievement)
+    transmute(URN, ofsted_latest, ofsted_latest_date, ofsted_kind, ofsted_rc = rc_achievement,
+              # one grade for an inspection with no overall grade: the most
+              # common of its key judgements (R/15b_ofsted_latest.R there)
+              ofsted_nog = if ("oeif_modal" %in% names(o)) ifelse(ofsted_kind == "No overall grade", oeif_modal, NA_character_)
+                           else NA_character_)
   attr(best, "as_at") <- attr(o, "as_at")
   best
 }

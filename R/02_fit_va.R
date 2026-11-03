@@ -137,7 +137,7 @@ build_va <- function() {
               sen_support, sen_ehcp, l4, att8 = ATT8SCR, att8_dis = ATT8SCR_FSM6CLA1A,
               att8_non = ATT8SCR_NFSM6CLA1A, att8_girls = ATT8SCR_GIRLS, att8_boys = ATT8SCR_BOYS,
               ofsted_model = as.character(OFSTEDRATING_1), ofsted_model_date = OFSTEDLASTINSP,
-              ofsted_latest, ofsted_latest_date, ofsted_kind, ofsted_rc, run_by, gov, route)
+              ofsted_latest, ofsted_latest_date, ofsted_kind, ofsted_rc, ofsted_nog, run_by, gov, route)
 
   out <- list(
     spec = list(fixed = FIXED_V2, random = RANDOM_V2, groups = GROUPS, labels = GROUP_LABELS,

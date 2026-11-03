@@ -1,6 +1,6 @@
 ---
-title: "Value Added v2.0"
-subtitle: "The specification, the model for each pupil group, and how it compares with the published measure."
+title: "Methodology – Value Added v2.0"
+subtitle: "The specification, the model for each pupil group, how it compares with the published measure, and how the figures built on it are made."
 ---
 
 ```{r setup}
@@ -401,6 +401,152 @@ school missing a year is averaged over the years it has. A window that
 includes `r yl(prov_year)` includes a provisional figure and is flagged.
 Moving averages are not shrunk, and the four-year figure remains the
 headline measure.
+
+# What a school adds, and what absence takes away {#sec-add-take}
+
+```{r add-take}
+#| include: false
+wv <- va_wide(V)
+abs_yr <- yl(max(wv$latest_year))
+bA <- cf("all", "log(PERCTOT)")$estimate
+bD <- cf("disadvantaged", "log(PERCTOT)")$estimate
+m8 <- s_at("all", "mean_att8"); m8d <- s_at("disadvantaged", "mean_att8")
+ab <- quantile(wv$absence, c(.5, .95), na.rm = TRUE, names = FALSE)
+qv <- quantile(wv$va_shrunk_all, c(.5, .90), na.rm = TRUE, names = FALSE)
+r_hi <- ab[2] / ab[1]
+prop <- function(b, r) r^b - 1                 # proportional change in expected Attainment 8
+drop <- m8 * prop(bA, r_hi); dropD <- m8 * prop(bD, r_hi); dropD_own <- m8d * prop(bD, r_hi)
+climb <- qv[2] - qv[1]
+# The area figure, worked for one authority
+ex <- "Brighton and Hove"
+ab_eng <- mean(wv$absence, na.rm = TRUE)
+a_ex <- mean(wv$absence[wv$LANAME == ex], na.rm = TRUE)
+abs_ex <- m8 * prop(bA, a_ex / ab_eng)
+va_ex <- mean(wv$va_shrunk_all[wv$LANAME == ex], na.rm = TRUE)
+p1 <- function(x) sprintf("%+.1f", x); pp <- function(x) sprintf("%+.1f%%", 100 * x)
+```
+
+The home page and every area page set two quantities side by side: what
+absence is worth, and what schools add. Both come from the fitted
+all-pupils model; nothing is fitted separately for the charts.
+
+**Why the two can be added.** Value added is what is left after the model
+has accounted for intake and context, *absence included*. A school's value
+added therefore contains none of what its absence is worth, and the
+absence figure contains none of what the school adds. They are separate
+pieces of the same prediction, so setting them end to end does not count
+anything twice.
+
+**What absence is worth.** The model is in logs on both sides: log
+Attainment 8 depends on log absence with coefficient β =
+`r sprintf("%.3f", bA)` (an elasticity: 1% more absence goes with about
+`r sprintf("%.2f%%", -bA)` lower Attainment 8). With everything else held
+fixed, multiplying absence by a ratio *r* multiplies expected Attainment 8
+by *r*^β. To turn that into points, the proportional change is multiplied
+by England's mean Attainment 8, `r sprintf("%.1f", m8)` (the mean of the
+school-years the model is fitted on):
+
+$$\text{points} = \bar{A}_{\text{England}} \times \left(r^{\beta} - 1\right)$$
+
+**The home page's waterfall.**
+
+```{r tbl-add-take}
+#| tbl-cap: !expr paste0("How the home page's three steps are computed. Absence is each school's full-year absence in ", abs_yr, "; value added is each school's four-year shrunk Value Added v2.0, all pupils.")
+tibble::tibble(
+  Step = c("Typical absence", "High absence", "Ratio r", "Proportional change, r^β − 1",
+           "What absence takes away", "Typical value added", "Top-decile value added",
+           "What the school adds back", "Still short"),
+  `Computed as` = c("median school", "95th percentile school", "high ÷ typical", paste0("β = ", sprintf("%.3f", bA)),
+                    paste0(sprintf("%.1f", m8), " × proportional change"), "median school", "90th percentile school",
+                    "top decile − median", "−(takes away + adds back)"),
+  Value = c(sprintf("%.1f%%", ab[1]), sprintf("%.1f%%", ab[2]), sprintf("%.2f", r_hi), pp(prop(bA, r_hi)),
+            p1(drop), p1(qv[1]), p1(qv[2]), p1(climb), sprintf("%.1f", -(drop + climb)))) |>
+  kt(align = "llr")
+```
+
+**Each area's bars.** The same arithmetic, with the area in place of the
+high-absence school. *r* is the area's absence over England's: the mean of
+its schools' full-year absence in `r abs_yr` over the mean of every
+school's in England (`r sprintf("%.1f%%", ab_eng)`). The national β is used
+throughout, because a dozen schools cannot supply a gradient of their own.
+The purple bar is the mean of the area's schools' four-year shrunk value
+added, which is already in points against England and needs no
+conversion. The diamond is the sum. For `r ex`: *r* =
+`r sprintf("%.1f", a_ex)` ÷ `r sprintf("%.1f", ab_eng)` =
+`r sprintf("%.2f", a_ex / ab_eng)`, so absence is worth
+`r sprintf("%.1f", m8)` × `r pp(prop(bA, a_ex / ab_eng))` =
+**`r p1(abs_ex)`** points; its schools add **`r p1(va_ex)`**; together
+**`r p1(abs_ex + va_ex)`**.
+
+**For disadvantaged pupils** the disadvantaged model's coefficient is used,
+β = `r sprintf("%.3f", bD)`, `r sprintf("%.0f%%", 100 * (bD / bA - 1))`
+steeper than for all pupils. The same move from typical to high absence
+then takes `r pp(prop(bD, r_hi))` off expected Attainment 8 rather than
+`r pp(prop(bA, r_hi))`. The charts express this in points on England's
+all-pupil mean (`r p1(dropD)`) so it sits on the same scale as the
+all-pupil figure. On disadvantaged pupils' own mean Attainment 8,
+`r sprintf("%.1f", m8d)`, the same proportion is `r p1(dropD_own)` points.
+
+**What the figures are not.**
+
+- **Not causal.** β describes how attainment differs between schools whose
+  absence differs, once intake is accounted for. It is not what one school
+  would gain by cutting its absence. Absence also stands in for things the
+  model does not measure (see
+  [Brighton and Hove's authority effect](bh_effect.qmd)).
+- **Not the same period.** Absence is a single year, `r abs_yr`. Value added
+  is the four-year figure, `r yl(min(yrs))` to `r yl(max(yrs))`.
+- **Shrunk value added.** The top decile is of shrunk estimates, which are
+  pulled towards zero. Unshrunk single-year value added spreads wider.
+- **England's mean, not the area's.** Points are on England's mean
+  Attainment 8. An area whose own mean is a few points different would
+  convert at a few per cent more or less.
+
+# Value added with no allowance for absence {#sec-no-allowance}
+
+```{r no-allowance}
+#| include: false
+pa <- readRDS(here::here("data", "place_absence.rds"))
+na_w <- wv |> inner_join(pa$abs_schools |> select(URN, abs_excess), by = "URN") |>
+  inner_join(pa$va_m2 |> filter(group == "all") |> select(URN, va_m2), by = "URN")
+na_fit <- lm(va_m2 ~ va_shrunk_all + abs_excess, data = na_w)
+na_b <- coef(na_fit)
+na_r2 <- summary(na_fit)$r.squared
+r_m2 <- cor(na_w$abs_excess, na_w$va_m2); r_v2 <- cor(na_w$abs_excess, na_w$va_shrunk_all)
+flips <- sum(na_w$va_shrunk_all > 0 & na_w$va_m2 < 0)
+```
+
+Value Added v2.0 includes absence in what a school is expected to
+achieve: a school with more absence is expected to score lower, so it is
+not marked down for it. That is the right question for "what does the
+school do with the pupils who attend?", and it leaves attendance to be
+judged separately, by **absence against intake**: how far a school's
+absence runs above or below what its intake predicts.
+
+The map also offers **value added with no allowance for absence**: the
+same model refitted without its absence term (`R/04_place_and_absence.R`;
+v1 called this M2). Now a school's absence earns it no allowance. It is,
+almost exactly, Value Added v2.0 less a fixed cost for absence above what
+the intake predicts. Across England's schools:
+
+$$\text{no allowance} \approx `r sprintf("%.2f", na_b[["va_shrunk_all"]])` \times \text{Value Added v2.0} `r sprintf("%+.2f", na_b[["abs_excess"]])` \times \text{absence against intake}$$
+
+with R² = `r sprintf("%.2f", na_r2)`. So
+`r format(flips, big.mark = ",")` schools are above expectation on Value
+Added v2.0 and below it with no allowance for absence. They are schools
+that achieve well with the pupils who attend, but whose absence runs well
+above what their intake predicts.
+
+**Why the value added and attendance chart uses Value Added v2.0.** Plotted
+against absence against intake, value added with no allowance for absence
+would contain the very thing on the other axis. The two would correlate
+at `r sprintf("%.2f", r_m2)` across England largely by construction,
+suggesting that schools which hold attendance add more. With Value Added
+v2.0 on the vertical axis the correlation is `r sprintf("%.2f", r_v2)`:
+adding value and holding attendance are close to independent. The chart
+therefore asks two separate questions, and value added with no allowance
+for absence is kept to the map, where it is one number answering both at
+once.
 
 # Data
 

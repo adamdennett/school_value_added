@@ -18,13 +18,19 @@ yrs <- va_years(V) |> filter(group == "all") |>
 by_year <- yrs |> filter(LANAME == LA) |> group_by(year_label, provisional) |>
   summarise(va = mean(va), n = n(), .groups = "drop")
 gap <- function(col) c_at(LA, col) - c_at("England", col)
-# Value added with attendance counted in (the model without absence), by
+# Value added with no allowance for absence (the model without absence), by
 # authority, all pupils: authorities with three or more schools
 m2 <- readRDS(here::here("data", "place_absence.rds"))$va_m2 |> filter(group == "all") |>
   inner_join(V$schools |> select(URN, LANAME), by = "URN") |>
   group_by(LANAME) |> summarise(va = mean(va_m2), n = n(), .groups = "drop") |>
   filter(n >= 3) |> mutate(rank = rank(-va))
 m2_la <- m2 |> filter(LANAME == LA)
+# The single latest year, mean of schools: the measure the area pages'
+# add-and-take figure uses
+wl <- va_wide(V)
+abs_yr <- yl(max(wl$latest_year))
+lat_la <- mean(wl$absence[wl$LANAME == LA], na.rm = TRUE)
+lat_eng <- mean(wl$absence, na.rm = TRUE)
 ```
 
 ::: {.callout-note appearance="simple"}
@@ -98,9 +104,16 @@ B$tests |> transmute(Model = label, Effect = pc(effect), Rank = paste(rank, "of"
   `r sprintf("%.0f%%", 100 * c_at("England", "age16"))` in England.
   Nationally, 11–16 schools score `r pc(B$coefs[["age16"]])` higher.
 
-**The arithmetic.** `r LA`'s schools average `r sprintf("%.1f%%", c_at(LA, "total"))`
-absence against `r sprintf("%.1f%%", c_at("England", "total"))` for England,
+**The arithmetic.** Over 2021/22 to 2024/25, the four years the model is
+fitted on, `r LA`'s schools average `r sprintf("%.1f%%", c_at(LA, "total"))`
+full-year absence against `r sprintf("%.1f%%", c_at("England", "total"))`
+for England (means of school-years),
 `r ord(B$ranks[["absence"]])` highest of `r B$ranks[["n_la"]]` authorities.
+In `r abs_yr` alone, the year the
+[area page's add-and-take figure](areas/brighton_and_hove.qmd#add-take)
+uses, it was `r sprintf("%.1f%%", lat_la)` against
+`r sprintf("%.1f%%", lat_eng)` (means of schools): the gap has
+`r ifelse(lat_la - lat_eng > gap("total"), "widened", "narrowed")`.
 On the v2.0 absence coefficient (`r sprintf("%.3f", B$coefs[["absence"]])`,
 an elasticity), that difference lowers expected Attainment 8 by
 `r sprintf("%.1f%%", -100 * B$cost)`. The authority effect, `r pc(t_at("v2", "effect"))`, almost
@@ -208,8 +221,8 @@ removes `r LA`'s effect. Until the questions above are answered, read the
 city's authority effect this way: its schools achieve as much as similar
 schools elsewhere despite unusually high, mostly illness, absence. It is
 not evidence that the city's schools add more than others. With
-[attendance counted in](areas/brighton_and_hove.qmd#school-by-school),
-the city's schools average `r sgn(m2_la$va)` points of value added,
+[no allowance for absence](method.qmd#sec-no-allowance), the city's
+schools average `r sgn(m2_la$va)` points of value added,
 `r ord(m2_la$rank)` of `r nrow(m2)` authorities.
 
 The models are in `R/06_bh_effect.R`.

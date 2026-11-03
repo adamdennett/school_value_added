@@ -71,32 +71,38 @@ fig_reasons <- function(rs, areas, title) {
     theme_note()
 }
 
-#' The joint-signal plane as an interactive chart: every school in England
-#' in grey, the area's schools coloured by authority, each with its figures
-#' on hover; drag to zoom, double-click to reset
-fig_plane_live <- function(js, focus) {
-  xl <- quantile(js$abs_excess, c(0.005, 0.995), na.rm = TRUE); yl <- quantile(js$va_m2, c(0.005, 0.995), na.rm = TRUE)
-  xl <- c(min(xl[1], -4), max(xl[2], 4.5)); yl <- c(min(yl[1], -8), max(yl[2], 9))
-  bg <- js |> filter(!URN %in% focus$URN, !is.na(abs_excess), !is.na(va_m2))
-  fg <- focus |> filter(!is.na(abs_excess), !is.na(va_m2)) |>
-    mutate(tip = sprintf("<b>%s</b><br>%s<br>Value added, attendance counted in: %s<br>Absence against intake: %s pp<br>Value added v2.0: %s",
-                         SCHNAME, coalesce(lad, LANAME), sgn(va_m2), sgn(abs_excess),
-                         ifelse(is.na(va_shrunk_all), "n/a", sgn(va_shrunk_all))))
+#' The two questions, one against the other, as an interactive chart: does
+#' the school add value (Value Added v2.0, absence allowed for), and does it
+#' hold attendance (absence against intake). Neither contains the other, so
+#' the corners mean what they say. Every school in England in grey, the
+#' area's schools coloured by authority, each with its figures on hover;
+#' drag to zoom, double-click to reset. all_schools needs SCHNAME,
+#' abs_excess, va_shrunk_all and va_m2.
+fig_plane_live <- function(all_schools, focus) {
+  ok <- function(d) d |> filter(!is.na(abs_excess), !is.na(va_shrunk_all))
+  xl <- quantile(all_schools$abs_excess, c(0.005, 0.995), na.rm = TRUE)
+  yl <- quantile(all_schools$va_shrunk_all, c(0.005, 0.995), na.rm = TRUE)
+  xl <- c(min(xl[1], -4), max(xl[2], 4.5)); yl <- c(min(yl[1], -6), max(yl[2], 6))
+  bg <- ok(all_schools) |> filter(!URN %in% focus$URN)
+  fg <- ok(focus) |>
+    mutate(tip = sprintf("<b>%s</b><br>%s<br>Value added v2.0: %s<br>Absence against intake: %s pp<br>Value added with no allowance for absence: %s",
+                         SCHNAME, coalesce(lad, LANAME), sgn(va_shrunk_all), sgn(abs_excess),
+                         ifelse(is.na(va_m2), "n/a", sgn(va_m2))))
   cols <- area_cols(unique(fg$LANAME))
   corner <- function(x, y, xa, ya, txt, col) list(x = x, y = y, xref = "paper", yref = "paper", xanchor = xa, yanchor = ya, text = txt,
     showarrow = FALSE, font = list(size = 11, color = col))
   p <- plotly::plot_ly() |>
-    plotly::add_markers(data = bg, x = ~abs_excess, y = ~va_m2, name = "Every school in England",
+    plotly::add_markers(data = bg, x = ~abs_excess, y = ~va_shrunk_all, name = "Every school in England",
                         marker = list(color = LIGHT, size = 4, opacity = 0.6),
                         text = ~SCHNAME, hovertemplate = "%{text}<extra></extra>")
   for (la in unique(fg$LANAME)) p <- p |>
-    plotly::add_markers(data = fg |> filter(LANAME == la), x = ~abs_excess, y = ~va_m2, name = la,
+    plotly::add_markers(data = fg |> filter(LANAME == la), x = ~abs_excess, y = ~va_shrunk_all, name = la,
                         marker = list(color = unname(cols[la]), size = 11, line = list(color = "white", width = 1)),
                         text = ~tip, hovertemplate = "%{text}<extra></extra>")
   p |> plotly::layout(
     xaxis = list(title = "Absence above what the intake predicts (percentage points)", range = xl,
                  zeroline = TRUE, zerolinecolor = GREY, gridcolor = "#ece8f3"),
-    yaxis = list(title = "Value added v2.0, attendance counted in (points)", range = yl,
+    yaxis = list(title = "Value added v2.0 (Attainment 8 points)", range = yl,
                  zeroline = TRUE, zerolinecolor = GREY, gridcolor = "#ece8f3"),
     legend = list(orientation = "h", y = -0.15), font = list(family = "inherit", color = INK),
     paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
@@ -110,10 +116,10 @@ fig_plane_live <- function(js, focus) {
 
 #' How many of the area's schools sit in each quadrant of the plane
 plane_quadrants <- function(focus) {
-  f <- focus |> filter(!is.na(abs_excess), !is.na(va_m2))
-  c(good_both = sum(f$va_m2 > 0 & f$abs_excess <= 0), despite = sum(f$va_m2 > 0 & f$abs_excess > 0),
-    below_worse = sum(f$va_m2 <= 0 & f$abs_excess > 0), below_better = sum(f$va_m2 <= 0 & f$abs_excess <= 0),
-    n = nrow(f))
+  f <- focus |> filter(!is.na(abs_excess), !is.na(va_shrunk_all))
+  up <- f$va_shrunk_all > 0; worse <- f$abs_excess > 0
+  c(good_both = sum(up & !worse), despite = sum(up & worse),
+    below_worse = sum(!up & worse), below_better = sum(!up & !worse), n = nrow(f))
 }
 
 fig_governance <- function(g, title = "Schools by who ran them in 2024/25") {

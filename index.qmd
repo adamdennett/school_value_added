@@ -51,6 +51,7 @@ bA  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "all"]
 bD  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "disadvantaged"]
 m8  <- S$mean_att8[S$group == "all"]
 ab  <- quantile(wv$absence[!is.na(wv$absence)], c(.5, .95), names = FALSE)
+abs_yr <- yl(max(wv$latest_year))   # each school's latest full year of absence
 vaa <- wv$va_shrunk_all[!is.na(wv$va_shrunk_all)]
 qv  <- quantile(vaa, c(.5, .90), names = FALSE)
 pts_for <- function(beta) m8 * (exp(beta * log(ab[2] / ab[1])) - 1)
@@ -66,7 +67,7 @@ the same thing counted twice: one is what absence moves, the other is
 what the school moves once absence has already been allowed for.
 
 ```{r fig-add-take}
-#| fig-cap: !expr sprintf("An average school, then the same school with absence where the highest 5%% of schools sit, then that school doing everything a school can do. Blue is what absence takes away, purple what the school adds back. Attainment 8 points; the dashed line is the England average of %.1f.", m8)
+#| fig-cap: !expr sprintf("An average school, then the same school with absence where the highest 5%% of schools sit (full-year absence in %s, %.1f%% against a median of %.1f%%), then that school doing everything a school can do (value added %s to %s). Blue is what absence takes away, purple what the school adds back. Attainment 8 points; the dashed line is the England average of %.1f.", abs_yr, ab[2], ab[1], yl(min(V$spec$years)), yl(max(V$spec$years)), m8)
 #| fig-width: 9
 #| fig-height: 4.8
 st <- tibble::tibble(
@@ -111,7 +112,9 @@ ggplot() +
 ```
 
 Read it left to right. An average school sits at the England mean. Put
-its absence where the highest 5% of schools sit and it loses
+its absence where the highest 5% of schools sit (`r sprintf("%.1f%%", ab[2])`
+full-year absence in `r abs_yr`, against a typical
+`r sprintf("%.1f%%", ab[1])`) and it loses
 **`r sprintf("%.1f", -drop)` Attainment 8 points**. Now ask it to do
 everything a school can do -- to be a top-ten-per-cent school on value
 added, net of its intake -- and it gains **`r sprintf("%.1f", climb)`**
@@ -130,7 +133,9 @@ One caveat, stated plainly because the scale of this invites
 over-reading. The model is associational. The gradient says what schools
 with more absence look like once intake is accounted for, not what a
 particular school would gain by cutting absence by a given amount. The
-direction and the order of magnitude are what to take from it.
+direction and the order of magnitude are what to take from it. How each
+number is computed from the model is set out in the
+[methodology](method.qmd#sec-add-take).
 
 ## What is new in v2.0
 

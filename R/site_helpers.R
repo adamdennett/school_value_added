@@ -67,10 +67,14 @@ va_wide <- function(V) {
   if (!is.null(pv)) out <- out |> left_join(
     pv$va |> select(URN, group, va_2526) |>
       pivot_wider(names_from = group, values_from = va_2526, names_glue = "va_2526_{group}"), by = "URN")
-  # One Ofsted column with no gaps: the report card where a school has one,
-  # otherwise its last graded inspection. The two regimes' grade names are
-  # disjoint, so one column can carry both and the grade alone says which.
-  out |> mutate(ofsted_combined = coalesce(ofsted_rc, ofsted_model))
+  # One Ofsted column with no gaps: the report card where a school has one;
+  # otherwise, for an inspection between September 2024 and November 2025
+  # that gave no overall grade, the most common of its key judgements;
+  # otherwise its last graded inspection. The report card's grade names and
+  # the old scale's are disjoint, so one column can carry both and the grade
+  # alone says which.
+  if (!"ofsted_nog" %in% names(out)) out$ofsted_nog <- NA_character_
+  out |> mutate(ofsted_combined = coalesce(ofsted_rc, ofsted_nog, ofsted_model))
 }
 
 #' Every school's value added year by year, against England (unshrunk), for
@@ -202,7 +206,7 @@ MAP_VARS <- tribble(
   "va_shrunk_non_disadvantaged", "Value added v2, non-disadvantaged pupils",     "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_girls", "Value added v2, girls",                                    "Value added",    "div",  "high", 1,   " pts",
   "va_shrunk_boys",  "Value added v2, boys",                                     "Value added",    "div",  "high", 1,   " pts",
-  "va_m2",           "Value added v2, attendance counted in, all pupils",        "Value added",    "div",  "high", 1,   " pts",
+  "va_m2",           "Value added with no allowance for absence, all pupils",    "Value added",    "div",  "high", 1,   " pts",
   "va_2526_all",     "Value added 2025/26 PROVISIONAL, all pupils",              "Value added",    "div",  "high", 1,   " pts",
   "v1_all",          "Value added v1 (published, within the LA), all pupils",    "Value added",    "div",  "high", 1,   " pts",
   "abs_excess",      "Absence above or below what the intake predicts, 2021/22 to 2024/25", "Attendance", "div", "low", 1, " pp",
@@ -226,7 +230,7 @@ MAP_VARS <- tribble(
   "gov",             "Who runs it, 2024/25",                                     "The school",     "cat",  "",     0,   "",
   "ofsted_rc",       "Ofsted report card, achievement (since November 2025)",    "The school",     "cat",  "",     0,   "",
   "ofsted",          "Ofsted rating, last graded inspection before September 2024", "The school",  "cat",  "",     0,   "",
-  "ofsted_combined", "Ofsted, report card where there is one, else the last graded inspection", "The school", "cat", "", 0, "",
+  "ofsted_combined", "Ofsted, report card where there is one, else the latest graded judgements", "The school", "cat", "", 0, "",
   "religion",        "Religious character",                                      "The school",     "cat",  "",     0,   "")
 
 MAP_CATS <- list(
@@ -256,10 +260,10 @@ MAP_CAT_HEADS <- list(ofsted_combined = c(
   "Expected standard" = "Report card, since November 2025",
   "Needs attention" = "Report card, since November 2025",
   "Urgent improvement" = "Report card, since November 2025",
-  "Outstanding" = "No report card yet: last graded inspection, before September 2024",
-  "Good" = "No report card yet: last graded inspection, before September 2024",
-  "Requires Improvement" = "No report card yet: last graded inspection, before September 2024",
-  "Inadequate" = "No report card yet: last graded inspection, before September 2024"))
+  "Outstanding" = "No report card yet: most common key judgement of a Sep 2024 to Nov 2025 inspection, else the last graded inspection",
+  "Good" = "No report card yet: most common key judgement of a Sep 2024 to Nov 2025 inspection, else the last graded inspection",
+  "Requires Improvement" = "No report card yet: most common key judgement of a Sep 2024 to Nov 2025 inspection, else the last graded inspection",
+  "Inadequate" = "No report card yet: most common key judgement of a Sep 2024 to Nov 2025 inspection, else the last graded inspection"))
 
 MAP_NONE <- c(ofsted_rc = "no report card yet", gov = "not recorded",
               ofsted_combined = "never inspected, or not recorded")

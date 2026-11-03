@@ -70,7 +70,11 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
 - **Suspensions** are given both ways: episodes per 100 pupils and pupils
   suspended at least once per 100 (`susp_both()`), with England on both.
 - **Ofsted.** The latest judgement from Ofsted's monthly management
-  information, dated, beside every school.
+  information, dated, beside every school. The map's single Ofsted measure
+  takes the report card where there is one; for an inspection between
+  September 2024 and November 2025 with no overall grade, the most common
+  of its key judgements (ties to quality of education); otherwise the last
+  graded inspection.
 - **Exclusions.** A school-year is left out of every model when its pupils
   averaged fewer than three GCSE entries or fewer than half achieved any
   qualification (`R/01_inputs.R`, `excluded`). The method page lists them.
@@ -92,6 +96,11 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
 - **Lists of schools.** Running text names schools only up to `FEW` (4);
   beyond that it gives the count and the names go in a table (the gap and
   girls/boys tables, the absence table), so no paragraph becomes a list.
+- **Absence periods are always labelled.** Three measures appear and each
+  says which it is: absence against intake is a mean over the four model
+  years, 2021/22 to 2024/25; the add-and-take figure uses each school's
+  latest full year (2024/25), a mean of schools; the absence series and
+  reasons use autumn and spring of the latest year, sessions-weighted.
 - **Every number in the text is computed**, never typed.
 
 ## Section order (`templates/area.qmd`)
@@ -103,12 +112,13 @@ attendance against what that intake predicts.
 1. **Summary.** Schools and mean value added, significant above/below;
    groups; strongest and weakest; absence against intake (with the
    authority's rank, and schools more than a point above); value added
-   with attendance counted in and the plane's quadrant counts; the
+   and attendance quadrant counts (Value Added v2.0 against absence
+   against intake); the
    authority's own effect (authority tier); the district test (district
    and authority tiers, not unitary); suspensions both ways and reduced
    timetables; trusts that stand out; latest Ofsted.
 2. **The schools.** Map (value added by default; the menu has every value
-   added measure including attendance counted in, every attendance measure
+   added measure including no allowance for absence, every attendance measure
    of the original documents (overall, persistent, against intake,
    illness, unauthorised, reduced timetables, suspensions), Attainment 8 for
    all, disadvantaged and other pupils, the intake, Ofsted old and new,
@@ -116,9 +126,10 @@ attendance against what that intake predicts.
    (governance chart).
 3. **Value added and attendance** (`#school-by-school`). The joint-signal
    plane, interactive (`fig_plane_live()`, plotly): absence against intake
-   by v2 value added with attendance counted in, every school in England
+   (across) by Value Added v2.0 (up), every school in England
    in grey; quadrant counts (`plane_quadrants()`); the schools furthest
-   above and below.
+   above and below; value added with no allowance for absence explained
+   and kept off the chart, since it contains absence against intake.
 4. **How the area compares.** Profile table against comparators and
    England, with ranks, plus v2 value added and absence against intake.
 5. **What explains attainment.** v2 decomposition chart for the area and

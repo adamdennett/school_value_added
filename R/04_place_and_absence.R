@@ -9,8 +9,8 @@
 #      authority's excess absence over what its intake predicts stays
 #      visible (as v1's intake-only stage 1). Per school-year, observed
 #      minus predicted, in percentage points; per school and per authority.
-#   2. Value added with attendance counted in: the v2 model without the
-#      absence term, for the joint-signal plane (v1's M2).
+#   2. Value added with no allowance for absence: the v2 model without the
+#      absence term (v1's M2), for the map and the area comparison.
 #   3. The district test: a district level inside the authority, with and
 #      without each school's own record (v1's R/18).
 #   4. Trusts: a multi-academy trust level, with the academy route and a
@@ -55,7 +55,7 @@ absence_intake <- function(d) {
          mutate(rank_excess = rank(-excess), n_la = n()))
 }
 
-# ---- 2. Value added with attendance counted in ------------------------------
+# ---- 2. Value added with no allowance for absence --------------------------
 va_without_absence <- function(d) {
   bind_rows(lapply(c("all", "disadvantaged"), function(g) {
     y <- GROUPS[[g]]
@@ -172,8 +172,13 @@ scenarios <- function(d, V) {
               shift = log(pmin(absence, nat_abs)) - log(absence),
               gain_all = att8 * (exp(b("all") * shift) - 1),
               gain_dis = att8_dis * (exp(b("disadvantaged") * shift) - 1)) |>
+    one_row_a_school() |>
     mutate(nat_abs = nat_abs, year = latest)
 }
+
+#' Two schools that later merged can share a year under one identity:
+#' average their rows, as va_years() does
+one_row_a_school <- function(x) x |> group_by(URN) |> summarise(across(everything(), mean), .groups = "drop")
 
 build_place_absence <- function() {
   d <- base_rows(readRDS(here::here("data", "inputs.rds")))
@@ -181,7 +186,7 @@ build_place_absence <- function() {
   message("Absence against intake ...")
   ai <- absence_intake(d)
   abs_terms <- INTAKE
-  message("Value added with attendance counted in ...")
+  message("Value added with no allowance for absence ...")
   m2 <- va_without_absence(d)
   message("District test ...")
   dt <- district_test(d, abs_terms)

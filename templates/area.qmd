@@ -35,6 +35,7 @@ la_at <- function(la, g) V$la |> filter(LANAME == la, group == g)
 yrs <- V$spec$years
 sh <- function(x, d = 1) sprintf(paste0("%+.", d, "f"), x)
 FEW <- 4   # name schools in running text up to this many; beyond it, count them and point to a table
+vb <- function(k, one, many) if (k == 1) one else many   # a verb or pronoun that agrees with a count
 schools_txt <- function(k) if (k == 1) "1 school" else paste(k, "schools")
 n_sig <- function(k, dir) if (k == 0) paste("none", dir) else paste(k, dir)
 # Lower-case a component's first letter for running text, but not a proper noun
@@ -110,8 +111,9 @@ b <- c(
           if (!nrow(over)) "" else if (nrow(over) <= FEW) paste0("; ", and_list(over$SCHNAME), " more than a point above")
           else paste0("; ", nrow(over), " schools more than a point above")),
   with(as.list(plane_quadrants(w)), sprintf(
-    "**With attendance counted in, value added averages %s points; %d of %d schools add value with attendance at or better than predicted**, %d add value despite worse attendance, and %d are below expectation with worse attendance ([value added and attendance](#school-by-school)).",
-    sh(mean(w$va_m2, na.rm = TRUE)), good_both, n, despite, below_worse)),
+    "**%d of %d schools %s value with attendance at or better than %s intake predicts**; %d %s value despite worse attendance, and %d %s below expectation with worse attendance ([value added and attendance](#school-by-school)).",
+    good_both, n, vb(good_both, "adds", "add"), vb(good_both, "its", "their"), despite, vb(despite, "adds", "add"),
+    below_worse, vb(below_worse, "is", "are"))),
   if (TIER == "la") {
     e <- la_at(NAME, "all"); ed <- la_at(NAME, "disadvantaged")
     sprintf("**The authority's own effect is %s%% (%s of %d)%s for all pupils, and %s%% (%s) for disadvantaged pupils.**",
@@ -178,43 +180,67 @@ if (nrow(g)) fig_governance(g, paste0(NAME, "'s schools by who ran them in 2024/
 
 # Value added and attendance {#school-by-school}
 
-Value Added v2.0 counts absence as part of a school's context: a school
-with more absence is expected to score lower. The other view counts
-attendance *in*: value added from the model without its absence term,
-set beside how far each school's absence runs above or below what its
-intake predicts. A school high on that chart adds value; one to the left
-also holds attendance better than its intake would suggest.
-
-```{r fig-plane}
-#| fig-cap: "Every school in England on two signals, 2021/22 to 2024/25: absence above or below what its intake predicts, and Value Added v2.0 with attendance counted in (the model without its absence term). The area's schools in colour; hover for each school's figures, drag to zoom, double-click to reset."
-#| fig-height: 6.5
-fig_plane_live(js |> left_join(W |> select(URN, SCHNAME), by = "URN"), w)
+```{r plane-setup}
+#| include: false
+r_eng <- cor(W$abs_excess, W$va_shrunk_all, use = "complete")
+r_area <- cor(w$abs_excess, w$va_shrunk_all, use = "complete")
+# Value added with no allowance for absence is, almost exactly, value added
+# less a fixed cost per point of absence above intake
+nb <- coef(lm(va_m2 ~ va_shrunk_all + abs_excess, data = W))[["abs_excess"]]
+flip <- w |> filter(va_shrunk_all > 0, va_m2 < 0) |> arrange(desc(abs_excess))
 ```
 
-`r with(as.list(plane_quadrants(w)), paste0("Of ", n, " schools, **", good_both, "** add value with attendance at or better than their intake predicts, and **", despite, "** add value despite worse attendance. **", below_worse, "** are below expectation with worse attendance, and **", below_better, "** are below expectation despite attendance at or better than predicted."))`
-Across `r NAME`'s schools the two signals correlate at
-`r sprintf("%.2f", cor(w$abs_excess, w$va_m2, use = "complete"))`
-(`r sprintf("%.2f", cor(js$abs_excess, js$va_m2, use = "complete"))`
-across England): schools whose absence runs below what their intake
-predicts tend to add more.
+Two questions, kept apart. **Does the school add value?** Value Added
+v2.0 answers that with absence allowed for: a school with more absence is
+expected to score lower, so it is judged on what it achieves given its
+attendance. **Does it hold attendance?** Absence against intake answers
+that: how far its absence runs above or below what pupils like its own
+would predict. The chart sets one against the other. Neither contains
+the other, so the four corners mean what they say.
+
+```{r fig-plane}
+#| fig-cap: "Every school in England on the two questions, 2021/22 to 2024/25. Across, absence above or below what its intake predicts. Up, Value Added v2.0. The area's schools in colour; hover for each school's figures, drag to zoom, double-click to reset."
+#| fig-height: 6.5
+fig_plane_live(W, w)
+```
+
+`r with(as.list(plane_quadrants(w)), paste0("Of ", n, " schools, **", good_both, "** ", vb(good_both, "adds", "add"), " value with attendance at or better than ", vb(good_both, "its", "their"), " intake predicts, and **", despite, "** ", vb(despite, "adds", "add"), " value despite worse attendance. **", below_worse, "** ", vb(below_worse, "is", "are"), " below expectation with worse attendance, and **", below_better, "** ", vb(below_better, "is", "are"), " below expectation despite attendance at or better than predicted."))`
+Across England the two are `r if (abs(r_eng) < 0.2) "close to independent" else if (r_eng < 0) "related: schools that hold attendance tend to add more" else "related, in the unexpected direction"`
+(correlation `r sprintf("%.2f", r_eng)`; `r sprintf("%.2f", r_area)` across
+`r NAME`'s schools).
+`r if (abs(r_eng) < 0.2) "Adding value and holding attendance are different things, and plenty of schools do one without the other." else ""`
+
+**Value added with no allowance for absence.** The map also offers value
+added from the model without its absence term. It does not excuse a
+school its absence: for every percentage point its absence runs above
+what its intake predicts, it loses about `r sprintf("%.1f", -nb)`
+Attainment 8 points against Value Added v2.0. It is the two axes above
+folded into one number, so it belongs on the map, not on this chart,
+where it would contain the absence it is plotted against.
+`r if (nrow(flip)) paste0(and_list(head(flip$SCHNAME, 2)), ifelse(min(nrow(flip), 2) == 1, " shows", " show"), " the difference: above expectation on Value Added v2.0 (", and_list(sh(head(flip$va_shrunk_all, 2))), "), below it with no allowance for absence (", and_list(sh(head(flip$va_m2, 2))), "), because absence runs ", and_list(sh(head(flip$abs_excess, 2))), " points above what the intake predicts.") else ""`
+See the [methodology](@@ROOT@@method.qmd#sec-no-allowance).
 
 ```{r tbl-plane}
-#| tbl-cap: "The schools furthest above and below expectation with attendance counted in (Attainment 8 points, 2021/22 to 2024/25), with absence against intake and Value Added v2.0."
-k <- min(8, floor(sum(!is.na(w$va_m2)) / 2))
-tb <- w |> filter(!is.na(va_m2)) |> arrange(desc(va_m2))
+#| tbl-cap: "The schools furthest above and below expectation on Value Added v2.0 (Attainment 8 points, 2021/22 to 2024/25), with absence against intake and value added with no allowance for absence."
+k <- min(8, floor(sum(!is.na(w$va_shrunk_all)) / 2))
+tb <- w |> filter(!is.na(va_shrunk_all)) |> arrange(desc(va_shrunk_all))
 if (k > 0) {
   tt <- bind_rows(head(tb, k) |> mutate(g = "Furthest above"), tail(tb, k) |> mutate(g = "Furthest below")) |>
     transmute(g, School = SCHNAME, District = coalesce(lad, LANAME),
-              `Attendance counted in` = sh(va_m2), `Absence vs intake` = sh(abs_excess),
-              `Value added v2.0` = sh(va_shrunk_all), `Run by (2024/25)` = coalesce(run_by, ""))
+              `Value added v2.0` = sh(va_shrunk_all), `Absence vs intake` = sh(abs_excess),
+              `No allowance for absence` = ifelse(is.na(va_m2), "", sh(va_m2)), `Run by (2024/25)` = coalesce(run_by, ""))
   tt |> select(-g) |> kt(align = "llrrrl") |> kableExtra::pack_rows(index = table(factor(tt$g, unique(tt$g))))
 }
 ```
 
-# What `r NAME`'s schools add, and what absence takes away
+# What `r NAME`'s schools add, and what absence takes away {#add-take}
 
 ```{r add-take-area-figures}
 #| include: false
+# Absence here is each school's latest full year (2024/25 for almost all),
+# a mean of schools; the absence-against-intake measure elsewhere on the
+# page averages the four model years
+abs_yr <- yl(max(W$latest_year))
 bA_ <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "all"]
 bD_ <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "disadvantaged"]
 m8_ <- V$summary$mean_att8[V$summary$group == "all"]
@@ -239,12 +265,15 @@ Value added already counts absence as part of a school's context, so what
 absence moves and what the school moves are separate quantities rather
 than one counted twice. Below, the blue bar is what this area's absence
 is worth against the England average of
-`r sprintf("%.1f%%", ab_eng)`, run through the national gradient; the
+`r sprintf("%.1f%%", ab_eng)` in `r abs_yr`, run through the national gradient; the
 purple bar is the area's mean value added, which is measured against
-England already. The diamond is the two together.
+England already. The diamond is the two together. Absence here is
+full-year absence in `r abs_yr`, the mean of schools; value added covers
+`r yl(min(yrs))` to `r yl(max(yrs))`. How the bars are computed from the
+model is set out in the [methodology](@@ROOT@@method.qmd#sec-add-take).
 
 ```{r fig-add-take-area}
-#| fig-cap: !expr sprintf("%s and its comparators. Blue is what the area absence level is worth against the England average, through the national gradient. Purple is mean Value Added v2.0, which is measured against England already. The diamond is the two together, and zero is the England average.", NAME)
+#| fig-cap: !expr sprintf("%s and its comparators. Blue is what the area absence level in %s (full year, mean of schools) is worth against the England average, through the national gradient. Purple is mean Value Added v2.0, which is measured against England already. The diamond is the two together, and zero is the England average.", NAME, abs_yr)
 #| fig-width: 9
 #| fig-height: !expr max(3.1, 1.15 + 0.78 * nrow(cmp))
 lv <- rev(cmp$area)
@@ -273,7 +302,7 @@ ggplot(long, aes(pts, area, fill = part)) +
         axis.text.y = element_text(face = ifelse(lv == NAME, "bold", "plain")))
 ```
 
-`r NAME`'s schools run at `r sprintf("%.1f%%", me$absence)` absence
+`r NAME`'s schools ran at `r sprintf("%.1f%%", me$absence)` absence in `r abs_yr`
 against England's `r sprintf("%.1f%%", ab_eng)`, which on the national
 gradient is worth **`r sh(me$abs_pts)` Attainment 8 points**. Their mean
 value added is **`r sh(me$va_pts)`**, so the two together leave the area
@@ -489,7 +518,9 @@ fig_abs_series(ser, c(NAME, COMPS), paste0(NAME, " against ", and_list(COMPS), "
 - **`r sprintf("%.1f", s_at(NAME, abs_last))`% absence** in autumn and
   spring `r yr(abs_last)` (`r sprintf("%.1f", s_at(NAME, abs_prev))`% a
   year earlier), against `r sprintf("%.1f", s_at("England", abs_last))`%
-  for England.
+  for England. These are all sessions together, so a large school counts
+  for more than a small one; the full-year `r abs_yr` figures in
+  [what absence takes away](#add-take) are a mean of schools.
 - **Against its intake**, on the v2.0 intake terms, the area's schools ran
   `r sprintf("%.2f", abs(abs_ex(NAME)))` points
   `r ifelse(abs_ex(NAME) >= 0, "above", "below")` what their pupils'
