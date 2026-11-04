@@ -63,10 +63,10 @@ jobs:
         id: ofsted
         run: Rscript R/refresh_ofsted.R
 
+      # Not pinned: the runner image already carries a newer Quarto than
+      # the one used locally, and apt will not downgrade it
       - uses: quarto-dev/quarto-actions/setup@v2
         if: steps.ofsted.outputs.changed == 'true' || inputs.render_anyway
-        with:
-          version: 1.8.27
 
       - name: Render the site
         if: steps.ofsted.outputs.changed == 'true' || inputs.render_anyway
