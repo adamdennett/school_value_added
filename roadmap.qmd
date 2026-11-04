@@ -64,6 +64,17 @@ subtitle: "What v2.1 does now, and what comes next."
       absence differs between schools, beyond what intake predicts: its
       kinds, its timing, the pupils it falls on and what is known from the
       research on its causes. Waiting on a reading of that research first.
+- [ ] **Geographical effects: distance to school.** A page beside Brighton
+      and Hove's under Geographical effects, on how far pupils travel to
+      school and what it does to attendance, building on
+      [FFT Education Datalab's finding](https://ffteducationdatalab.org.uk/2023/11/are-pupils-who-live-further-away-from-their-school-absent-more-often/)
+      that pupils who live further away are absent more often. The
+      hypothesis: distance matters for attendance more than is understood,
+      with a rural and urban difference. It may matter *more* in towns and
+      cities, where a longer journey passes more places to stop on the way
+      (intervening opportunities), than in rural areas, where long journeys
+      are the norm and often by school transport. Needs a measure of how
+      far each school's pupils travel built from published sources.
 - [ ] **Independent schools.** A value added of sorts for independent
       schools. Their published data are thinner (KS4 results where they
       enter pupils for qualifications that count, but no prior attainment,

@@ -776,7 +776,7 @@ the base is lower; the area pages convert the same way.
   absence differs, once intake is accounted for. It is not what one school
   would gain by cutting its absence. Absence also stands in for things the
   model does not measure (see
-  [Brighton and Hove's authority effect](bh_effect.qmd)).
+  [Geographical effects: Brighton and Hove](bh_effect.qmd)).
 - **Not the same period.** Absence is a single year, `r abs_yr`. Value added
   is the four-year figure, `r yl(min(yrs))` to `r yl(max(yrs))`.
 - **Shrunk value added.** The top decile is of shrunk estimates, which are
@@ -847,7 +847,7 @@ k_half <- sum(abs(VK$va_kind_all - VK$va_shrunk_all) >= 0.5)
 ```
 
 v2.0 counted absence by its amount and treated every school's structure
-alike. [Brighton and Hove's authority effect](bh_effect.qmd) suggested
+alike. Brighton and Hove's authority effect ([Geographical effects](bh_effect.qmd)) suggested
 both mattered: illness absence goes with a smaller fall in attainment than
 other absence, and schools that stop at 16 do slightly better. Two terms
 were tested, for every pupil group, against v2.0 and on identical rows

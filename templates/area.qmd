@@ -428,7 +428,7 @@ V$la |>
 ```{r bh-effect-note}
 #| results: asis
 if ("Brighton and Hove" %in% c(LAS, COMPS) && TIER != "district")
-  cat("Brighton and Hove's large authority effect is almost all an absence effect: the city's schools attain what similar intakes attain elsewhere, despite unusually high, mostly illness, absence. See [Brighton and Hove's authority effect](@@ROOT@@bh_effect.qmd).\n")
+  cat("Brighton and Hove's large authority effect is almost all an absence effect: the city's schools attain what similar intakes attain elsewhere, despite unusually high, mostly illness, absence. See [Geographical effects: Brighton and Hove](@@ROOT@@bh_effect.qmd).\n")
 ```
 
 The district test adds a district level to the v2.1 model, with and

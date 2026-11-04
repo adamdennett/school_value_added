@@ -152,10 +152,6 @@ window.Quarto = {
  <span class="dropdown-text">Brighton and Hove</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./bh_effect.html">
- <span class="dropdown-text">Brighton and Hove’s authority effect</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="./areas/east_sussex.html">
  <span class="dropdown-text">East Sussex</span></a>
   </li>  
@@ -166,6 +162,17 @@ window.Quarto = {
         <li>
     <a class="dropdown-item" href="./districts.html">
  <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
   </li>  
     </ul>
   </li>
@@ -3677,7 +3684,7 @@ Table&nbsp;8: How the home page’s three steps are computed. Absence is each sc
 <p><strong>For disadvantaged pupils</strong> the disadvantaged model’s coefficient is used, β = -0.325, 41% steeper than for all pupils. The same move from typical to high absence then takes -13.2% off expected Attainment 8 rather than -9.6%. That proportion is converted to points on disadvantaged pupils’ own mean Attainment 8, 38.4, giving -5.1 points against -4.6 for pupils as a whole. The gap in points is smaller than the gap in gradient because the base is lower; the area pages convert the same way.</p>
 <p><strong>What the figures are not.</strong></p>
 <ul>
-<li><strong>Not causal.</strong> β describes how attainment differs between schools whose absence differs, once intake is accounted for. It is not what one school would gain by cutting its absence. Absence also stands in for things the model does not measure (see <a href="./bh_effect.html">Brighton and Hove’s authority effect</a>).</li>
+<li><strong>Not causal.</strong> β describes how attainment differs between schools whose absence differs, once intake is accounted for. It is not what one school would gain by cutting its absence. Absence also stands in for things the model does not measure (see <a href="./bh_effect.html">Geographical effects: Brighton and Hove</a>).</li>
 <li><strong>Not the same period.</strong> Absence is a single year, 2024/25. Value added is the four-year figure, 2021/22 to 2024/25.</li>
 <li><strong>Shrunk value added.</strong> The top decile is of shrunk estimates, which are pulled towards zero. Unshrunk single-year value added spreads wider.</li>
 <li><strong>England’s mean, not the area’s.</strong> Points are on England’s mean Attainment 8. An area whose own mean is a few points different would convert at a few per cent more or less.</li>
@@ -3693,7 +3700,7 @@ Table&nbsp;8: How the home page’s three steps are computed. Absence is each sc
 </section>
 <section id="sec-v21" class="level1">
 <h1>From v2.0 to v2.1: school structure and the kind of absence</h1>
-<p>v2.0 counted absence by its amount and treated every school’s structure alike. <a href="./bh_effect.html">Brighton and Hove’s authority effect</a> suggested both mattered: illness absence goes with a smaller fall in attainment than other absence, and schools that stop at 16 do slightly better. Two terms were tested, for every pupil group, against v2.0 and on identical rows (<code>R/07_v21_candidates.R</code>):</p>
+<p>v2.0 counted absence by its amount and treated every school’s structure alike. Brighton and Hove’s authority effect (<a href="./bh_effect.html">Geographical effects</a>) suggested both mattered: illness absence goes with a smaller fall in attainment than other absence, and schools that stop at 16 do slightly better. Two terms were tested, for every pupil group, against v2.0 and on identical rows (<code>R/07_v21_candidates.R</code>):</p>
 <ul>
 <li><strong>an 11–16 school</strong>: the school stops at 16, with no sixth form;</li>
 <li><strong>the illness share of absence</strong>: illness as a percentage of all absence, from DfE’s school absence data by reason (a school averages 52%, with a standard deviation of 16 points).</li>

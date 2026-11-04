@@ -1,6 +1,6 @@
 ---
-title: "Brighton and Hove's authority effect"
-subtitle: "Why the city's schools sit so far above what Value Added v2.1 expects, what explains it, and what might."
+title: "Geographical effects"
+subtitle: "Brighton and Hove: why the city's schools sit so far above what Value Added v2.1 expects, what explains it, and what might."
 ---
 
 ```{r setup}

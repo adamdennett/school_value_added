@@ -119,10 +119,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Brighton and Hove</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./bh_effect.html">
- <span class="dropdown-text">Brighton and Hove’s authority effect</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="./areas/east_sussex.html">
  <span class="dropdown-text">East Sussex</span></a>
   </li>  
@@ -133,6 +129,17 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./districts.html">
  <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
   </li>  
     </ul>
   </li>
@@ -223,6 +230,7 @@ ul.task-list li input[type="checkbox"] {
 <li><label><input type="checkbox" checked=""><strong>v2.1 published.</strong> The 11–16 flag is in the expectation (a school’s structure, like its admissions policy). Value added allowing for the kind of absence is published beside it, not in it, because what is authorised as illness is partly a school’s own coding.</label></li>
 <li><label><input type="checkbox"><strong>Parents, not adults.</strong> Try a parents’ qualification measure from the 2021 Census (households with dependent children) in place of neighbourhood education for all adults.</label></li>
 <li><label><input type="checkbox"><strong>What causes school-level absence.</strong> A deeper analysis of why absence differs between schools, beyond what intake predicts: its kinds, its timing, the pupils it falls on and what is known from the research on its causes. Waiting on a reading of that research first.</label></li>
+<li><label><input type="checkbox"><strong>Geographical effects: distance to school.</strong> A page beside Brighton and Hove’s under Geographical effects, on how far pupils travel to school and what it does to attendance, building on <a href="https://ffteducationdatalab.org.uk/2023/11/are-pupils-who-live-further-away-from-their-school-absent-more-often/">FFT Education Datalab’s finding</a> that pupils who live further away are absent more often. The hypothesis: distance matters for attendance more than is understood, with a rural and urban difference. It may matter <em>more</em> in towns and cities, where a longer journey passes more places to stop on the way (intervening opportunities), than in rural areas, where long journeys are the norm and often by school transport. Needs a measure of how far each school’s pupils travel built from published sources.</label></li>
 <li><label><input type="checkbox"><strong>Independent schools.</strong> A value added of sorts for independent schools. Their published data are thinner (KS4 results where they enter pupils for qualifications that count, but no prior attainment, FSM or absence in the same form), so this would need a reduced specification, clearly labelled, and a look at what can and cannot be compared with state-funded schools.</label></li>
 <li><label><input type="checkbox"><strong>Areas beyond Sussex.</strong> The area template works for any authority and its districts once boundaries are added.</label></li>
 <li><label><input type="checkbox" checked=""><strong>Monthly Ofsted refresh.</strong> A GitHub Actions workflow picks up Ofsted’s new release on the 20th of each month, updates every school’s latest judgement without refitting, rerenders and commits.</label></li>

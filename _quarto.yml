@@ -40,14 +40,16 @@ website:
             text: "Sussex overview"
           - href: areas/brighton_and_hove.qmd
             text: "Brighton and Hove"
-          - href: bh_effect.qmd
-            text: "Brighton and Hove's authority effect"
           - href: areas/east_sussex.qmd
             text: "East Sussex"
           - href: areas/west_sussex.qmd
             text: "West Sussex"
           - href: districts.qmd
             text: "All twelve districts"
+      - text: "Geographical effects"
+        menu:
+          - href: bh_effect.qmd
+            text: "Brighton and Hove"
       - href: roadmap.qmd
         text: Roadmap
     right:
