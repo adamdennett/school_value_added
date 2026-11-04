@@ -101,6 +101,116 @@ years of value added are reliable for every group, from
 disadvantaged pupils to `r sprintf("%.2f", s_at("all", "reliability_4yr"))`
 for all pupils.
 
+## What matters most {#sec-importance}
+
+```{r importance-setup}
+#| include: false
+IMP <- readRDS(here::here("data", "v21_candidates.rds"))
+BINARY <- c("ADMPOL_PTSEL", "ADMPOL_PTOTHER NON SEL", "girls_schoolTRUE", "boys_schoolTRUE", "age16")
+SHAP_LAB <- c(ADMPOL_PT = "Admissions (selection)", girls_school = "Single-sex school",
+              boys_school = "Single-sex school")
+GOOD <- "#1b7837"; BAD <- "#762a83"     # the maps' purple-green: green raises attainment
+#' One term's effect: per standard deviation for a measure, the whole
+#' contrast for a yes-or-no, as a % change in Attainment 8
+std_effects <- function(g, sp) {
+  IMP$importance |> filter(group == g, spec == sp) |>
+    mutate(binary = term %in% BINARY,
+           scale = ifelse(binary, 1, sd),
+           eff = 100 * (exp(beta * scale) - 1),
+           lo = 100 * (exp((beta - 1.96 * se) * scale) - 1),
+           hi = 100 * (exp((beta + 1.96 * se) * scale) - 1),
+           label = case_when(term == "ADMPOL_PTSEL" ~ "Selective school (yes vs no)",
+                             term == "ADMPOL_PTOTHER NON SEL" ~ "Non-selective, outside selective areas (yes vs no)",
+                             binary ~ paste0(label, " (yes vs no)"), TRUE ~ paste0(label, " (per SD)")),
+           dir = ifelse(eff >= 0, "Raises Attainment 8", "Lowers Attainment 8"))
+}
+shap_shares <- function(g, sp) {
+  IMP$shapley |> filter(group == g, spec == sp) |>
+    mutate(label = coalesce(unname(SHAP_LAB[term]), label),
+           share = 100 * shapley / sum(shapley))
+}
+fig_std <- function(g, sp = "v2.0") {
+  e <- std_effects(g, sp)
+  ggplot(e, aes(eff, reorder(label, abs(eff)), colour = dir)) +
+    geom_vline(xintercept = 0, colour = GREY) +
+    geom_errorbar(aes(xmin = lo, xmax = hi), width = 0, linewidth = 0.8, orientation = "y") +
+    geom_point(size = 2.8) +
+    scale_colour_manual(values = c("Raises Attainment 8" = GOOD, "Lowers Attainment 8" = BAD), name = NULL) +
+    labs(x = "Change in Attainment 8 (%)", y = NULL,
+         title = "Strength and direction") +
+    theme_note(15)
+}
+fig_shap <- function(g, sp = "v2.0") {
+  s <- shap_shares(g, sp)
+  ggplot(s, aes(share, reorder(label, share))) +
+    geom_col(fill = DPURPLE, width = 0.7) +
+    geom_text(aes(label = sprintf("%.0f%%", share)), hjust = -0.15, size = 3.2, colour = INK) +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+    labs(x = "Share of the variation the intake explains (%)", y = NULL,
+         title = "Importance") +
+    theme_note(15)
+}
+sh_all <- shap_shares("all", "v2.0") |> arrange(desc(share))
+r2a <- IMP$shapley |> filter(group == "all", spec == "v2.0") |> slice(1)
+```
+
+Two ways of asking which terms matter most, side by side. **Strength and
+direction** is each term's effect on expected Attainment 8: for a measure,
+a move of one standard deviation across England's schools; for a yes-or-no,
+the difference between yes and no. Green raises attainment, purple lowers
+it, and the bars are 95% intervals. **Importance** splits the variation in
+Attainment 8 the intake terms explain between them by a Shapley
+decomposition: each term's average gain in explained variance over every
+order in which the terms could be added, so variation two terms share
+(prior attainment, absence and disadvantage share a great deal) is
+credited fairly between them rather than to whichever comes first. It is
+computed by ordinary least squares with the year in every model; the
+intake terms explain `r sprintf("%.0f%%", 100 * (r2a$r2_full - r2a$r2_year))`
+of the variation in log Attainment 8 beyond the year.
+
+::: {.panel-tabset}
+## All pupils
+
+```{r fig-std-all}
+#| fig-cap: "Strength and direction, all pupils: each term's effect on expected Attainment 8 in Value Added v2.0, with its 95% interval."
+#| fig-height: 5.2
+#| fig-width: 9.5
+fig_std("all")
+```
+
+```{r fig-shap-all}
+#| fig-cap: "Importance, all pupils: each term's Shapley share of the variation in Attainment 8 the intake explains."
+#| fig-height: 4.6
+#| fig-width: 9.5
+fig_shap("all")
+```
+
+## Disadvantaged pupils
+
+```{r fig-std-dis}
+#| fig-cap: "Strength and direction, disadvantaged pupils: each term's effect on expected Attainment 8 in Value Added v2.0, with its 95% interval."
+#| fig-height: 5.2
+#| fig-width: 9.5
+fig_std("disadvantaged")
+```
+
+```{r fig-shap-dis}
+#| fig-cap: "Importance, disadvantaged pupils: each term's Shapley share of the variation in Attainment 8 the intake explains."
+#| fig-height: 4.6
+#| fig-width: 9.5
+fig_shap("disadvantaged")
+```
+:::
+
+Prior attainment and absence lead on both counts:
+`r sprintf("%.0f%%", sh_all$share[1])` and `r sprintf("%.0f%%", sh_all$share[2])`
+of what the intake explains for all pupils, then disadvantage at
+`r sprintf("%.0f%%", sh_all$share[3])`. For disadvantaged pupils absence
+comes first. The two views can disagree, and the difference is worth
+reading: a term with a large effect but little spread across schools
+(single-sex schools) explains little variation, and one that moves with
+others shares its credit. Neither is a causal ranking.
+
 # Shrinkage, and what the four-year figure is {#sec-shrinkage}
 
 A school's headline figure is not the plain mean of its yearly value
@@ -548,6 +658,103 @@ adding value and holding attendance are close to independent. The chart
 therefore asks two separate questions, and value added with no allowance
 for absence is kept to the map, where it is one number answering both at
 once.
+
+# Towards v2.1: the kind of absence {#sec-v21}
+
+```{r v21-setup}
+#| include: false
+CMP <- IMP$comparison |> group_by(group) |>
+  mutate(d_aic = aic - aic[spec == "v2.0"], oos = 100 * (rmse_oos / rmse_oos[spec == "v2.0"] - 1)) |> ungroup()
+c_at <- function(g, sp, col) CMP[[col]][CMP$group == g & CMP$spec == sp]
+IS <- IMP$ill_stats
+ill_sd <- function(g, sp = "ill_share") 100 * (exp(c_at(g, sp, "b_ill") * IS$sd) - 1)
+```
+
+v2.0 counts absence by its amount. [Brighton and Hove's authority
+effect](bh_effect.qmd) suggested its kind matters too: illness absence
+goes with a smaller fall in attainment than other absence. Two candidate
+terms for a v2.1 have been tested, for every pupil group, against v2.0
+and on identical rows (`R/07_v21_candidates.R`):
+
+- **the illness share of absence**: illness as a percentage of all
+  absence, from DfE's school absence data by reason (a school averages
+  `r sprintf("%.0f%%", IS$mean)`, with a standard deviation of
+  `r sprintf("%.0f", IS$sd)` points);
+- **an 11–16 school**: the school stops at 16, with no sixth form.
+
+```{r tbl-v21}
+#| tbl-cap: "The candidates against v2.0, by group. AIC is the change in fit (negative is better). Out of sample is the change in error predicting 2024/25 from a model fitted on the three years before. Effects are on expected Attainment 8: illness share per standard deviation, 11–16 against not; t statistics in brackets. The last column is the share of schools whose value-added quintile changes."
+CMP |> filter(spec != "v2.0") |>
+  transmute(Group = GROUP_LABELS[group], Candidate = sub("^\\+ ", "", label),
+            AIC = sprintf("%+.0f", d_aic), `Out of sample` = sprintf("%+.1f%%", oos),
+            `Illness share` = ifelse(is.na(b_ill), "", sprintf("%+.2f%% (%.1f)", 100 * (exp(b_ill * IS$sd) - 1), t_ill)),
+            `11–16` = ifelse(is.na(b_age16), "", sprintf("%+.2f%% (%.1f)", 100 * (exp(b_age16) - 1), t_age16)),
+            `Agreement with v2.0` = sprintf("%.3f", r_school),
+            `Quintile changes` = sprintf("%.0f%%", 100 * moved_quintile)) |>
+  kt(align = "llrrrrrr")
+```
+
+**What the tests show.**
+
+- **The 11–16 flag helps every group**, by about
+  `r sprintf("%.0f%%", 100 * (exp(c_at("all", "age16", "b_age16")) - 1))`
+  of expected Attainment 8 (AIC `r sprintf("%+.0f", c_at("all", "age16", "d_aic"))`
+  for all pupils). Schools that stop at 16 score a little higher than
+  similar schools with sixth forms.
+- **The illness share helps every group but one**: a standard deviation
+  more illness in the mix goes with `r sprintf("%+.1f%%", ill_sd("all"))`
+  for all pupils and `r sprintf("%+.1f%%", ill_sd("disadvantaged"))` for
+  disadvantaged pupils, and it predicts the year it was not fitted on
+  better (`r sprintf("%+.1f%%", c_at("all", "ill_share", "oos"))` error for
+  all pupils). For non-disadvantaged pupils it does nothing
+  (t = `r sprintf("%.1f", c_at("non_disadvantaged", "ill_share", "t_ill"))`).
+- **Little moves.** With both, schools' value added agrees with v2.0 at
+  `r sprintf("%.3f", c_at("all", "both", "r_school"))` and
+  `r sprintf("%.0f%%", 100 * c_at("all", "both", "moved_quintile"))` change
+  quintile; Brighton and Hove's authority effect goes from
+  `r sprintf("%+.1f%%", 100 * c_at("all", "v2.0", "bh_effect"))` to
+  `r sprintf("%+.1f%%", 100 * c_at("all", "both", "bh_effect"))`
+  (`r ord(c_at("all", "both", "bh_rank"))`).
+
+```{r fig-v21-shapley}
+#| fig-cap: "Each term's Shapley share of the variation the intake explains, all pupils, in v2.0 and with both candidates."
+#| fig-height: 4.8
+bind_rows(shap_shares("all", "v2.0") |> mutate(model = "v2.0"),
+          shap_shares("all", "v2.1") |> mutate(model = "With both candidates")) |>
+  mutate(model = factor(model, c("v2.0", "With both candidates"))) |>
+  ggplot(aes(share, reorder(label, share), fill = model)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+  scale_fill_manual(values = c("v2.0" = LIGHT, "With both candidates" = DPURPLE), name = NULL) +
+  labs(x = "Share of the variation the intake explains (%)", y = NULL) +
+  theme_note(14)
+```
+
+**What the illness share is.** It is mostly a fixed feature of a school:
+`r sprintf("%.0f%%", 100 * IS$icc)` of its variation lies between schools
+rather than from year to year. It falls as disadvantage rises (correlation
+`r sprintf("%.2f", IS$cor_fsm)`) and as absence rises
+(`r sprintf("%.2f", IS$cor_abs)`): where absence is high, more of it is
+unauthorised. That is why the Shapley decomposition credits it with a
+sizeable share of what the intake explains even though its own effect is
+small: much of what it carries, disadvantage and absence carry too.
+
+**Two questions before either is adopted.**
+
+1. **Is the illness share intake, or something the school does?** Every
+   v2.0 term is intake or context. Illness absence is reported by
+   families, but whether an absence is authorised as illness is the
+   school's decision, and practice differs. To the extent the share
+   reflects a school's recording, it would credit a school for how it
+   codes absence. Against that, its effect is concentrated among
+   disadvantaged pupils, which looks more like family circumstance than
+   coding.
+2. **Is stopping at 16 context, or a choice?** It is a school's
+   structure, like its admissions policy, which v2.0 already treats as
+   context. Putting it in the expectation removes the small advantage
+   11–16 schools have from their value added; leaving it out credits them
+   with it.
+
+v2.0 remains the published measure until these are settled.
 
 # Data
 

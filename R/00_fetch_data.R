@@ -51,6 +51,9 @@ STEPS <- list(
               outputs = c("data/census/school_census_context.rds", "data/cache/oa_pwc_2021.rds")),
   school_lad = list(scripts = "pipeline/09_school_lad.R", needs = "panel",
               outputs = "data/cache/school_lad.rds"),
+  # absence by reason, from the EES file the panel build downloads
+  absence_reasons = list(scripts = "pipeline/11_absence_reasons.R", needs = "panel_raw",
+              outputs = "data/absence_reasons.rds"),
   # Ofsted's newest monthly release. Only fetched when missing: to move to a
   # newer month run it by name, or R/refresh_ofsted.R
   ofsted_latest = list(scripts = "pipeline/10_ofsted_latest.R",

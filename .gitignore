@@ -16,6 +16,7 @@ data/la_lookup.rds
 data/gias/
 data/census/
 data/ofsted/
+data/absence_reasons.rds
 data/cache/*
 # kept: the Census centroids the review's neighbourhood map draws, so the
 # site renders without the pipeline having run

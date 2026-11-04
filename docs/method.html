@@ -200,7 +200,10 @@ window.Quarto = {
    
   <ul>
   <li><a href="#what-changed-from-v1" id="toc-what-changed-from-v1" class="nav-link active" data-scroll-target="#what-changed-from-v1">What changed from v1</a></li>
-  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
+  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a>
+  <ul class="collapse">
+  <li><a href="#sec-importance" id="toc-sec-importance" class="nav-link" data-scroll-target="#sec-importance">What matters most</a></li>
+  </ul></li>
   <li><a href="#sec-shrinkage" id="toc-sec-shrinkage" class="nav-link" data-scroll-target="#sec-shrinkage">Shrinkage, and what the four-year figure is</a>
   <ul class="collapse">
   <li><a href="#what-is-bayesian-here-and-what-is-not" id="toc-what-is-bayesian-here-and-what-is-not" class="nav-link" data-scroll-target="#what-is-bayesian-here-and-what-is-not">What is Bayesian here, and what is not</a></li>
@@ -215,6 +218,7 @@ window.Quarto = {
   <li><a href="#sec-over-time" id="toc-sec-over-time" class="nav-link" data-scroll-target="#sec-over-time">Value added over time</a></li>
   <li><a href="#sec-add-take" id="toc-sec-add-take" class="nav-link" data-scroll-target="#sec-add-take">What a school adds, and what absence takes away</a></li>
   <li><a href="#sec-no-allowance" id="toc-sec-no-allowance" class="nav-link" data-scroll-target="#sec-no-allowance">Value added with no allowance for absence</a></li>
+  <li><a href="#sec-v21" id="toc-sec-v21" class="nav-link" data-scroll-target="#sec-v21">Towards v2.1: the kind of absence</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul>
 </nav>
@@ -543,6 +547,76 @@ Table&nbsp;2: Each group’s model: data, fit, and how much of the unexplained v
 </div>
 </div>
 <p>Every term is intake or context. The largest are prior attainment and absence, as in v1. The new terms all matter: each percentage point of mobile pupils costs 0.5% of Attainment 8, a standard deviation of neighbourhood education is worth +2.4% for all pupils but only +0.8% for disadvantaged pupils, and a girls’ school +5.1%. Four years of value added are reliable for every group, from 0.76 for disadvantaged pupils to 0.88 for all pupils.</p>
+<section id="sec-importance" class="level2">
+<h2 class="anchored" data-anchor-id="sec-importance">What matters most</h2>
+<p>Two ways of asking which terms matter most, side by side. <strong>Strength and direction</strong> is each term’s effect on expected Attainment 8: for a measure, a move of one standard deviation across England’s schools; for a yes-or-no, the difference between yes and no. Green raises attainment, purple lowers it, and the bars are 95% intervals. <strong>Importance</strong> splits the variation in Attainment 8 the intake terms explain between them by a Shapley decomposition: each term’s average gain in explained variance over every order in which the terms could be added, so variation two terms share (prior attainment, absence and disadvantage share a great deal) is credited fairly between them rather than to whichever comes first. It is computed by ordinary least squares with the year in every model; the intake terms explain 82% of the variation in log Attainment 8 beyond the year.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">All pupils</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Disadvantaged pupils</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-std-all" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-std-all-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-std-all-1.png" class="img-fluid figure-img" width="1026">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-std-all-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Strength and direction, all pupils: each term’s effect on expected Attainment 8 in Value Added v2.0, with its 95% interval.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-shap-all" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shap-all-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-shap-all-1.png" class="img-fluid figure-img" width="1026">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shap-all-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Importance, all pupils: each term’s Shapley share of the variation in Attainment 8 the intake explains.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-std-dis" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-std-dis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-std-dis-1.png" class="img-fluid figure-img" width="1026">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-std-dis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Strength and direction, disadvantaged pupils: each term’s effect on expected Attainment 8 in Value Added v2.0, with its 95% interval.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-shap-dis" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shap-dis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-shap-dis-1.png" class="img-fluid figure-img" width="1026">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shap-dis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Importance, disadvantaged pupils: each term’s Shapley share of the variation in Attainment 8 the intake explains.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Prior attainment and absence lead on both counts: 26% and 24% of what the intake explains for all pupils, then disadvantage at 14%. For disadvantaged pupils absence comes first. The two views can disagree, and the difference is worth reading: a term with a large effect but little spread across schools (single-sex schools) explains little variation, and one that moves with others shares its credit. Neither is a causal ranking.</p>
+</section>
 </section>
 <section id="sec-shrinkage" class="level1">
 <h1>Shrinkage, and what the four-year figure is</h1>
@@ -640,7 +714,7 @@ Table&nbsp;3: How much of its mean each school keeps, all pupils. Reliability is
 <img src="method_files/figure-html/fig-v1-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-v1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Each school’s value added, v1 as published (within its local authority) against v2.0 (against England, shrunk), all pupils, mean over the four years.
+Figure&nbsp;5: Each school’s value added, v1 as published (within its local authority) against v2.0 (against England, shrunk), all pupils, mean over the four years.
 </figcaption>
 </figure>
 </div>
@@ -705,7 +779,7 @@ Table&nbsp;4: Agreement between v1 and v2.0 across schools, by group. v1 has no 
 <img src="method_files/figure-html/fig-gb-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Each mixed school’s value added for its girls and for its boys (v2.0, shrunk, against England). Schools far from the diagonal do markedly better by one group.
+Figure&nbsp;6: Each mixed school’s value added for its girls and for its boys (v2.0, shrunk, against England). Schools far from the diagonal do markedly better by one group.
 </figcaption>
 </figure>
 </div>
@@ -723,7 +797,7 @@ Figure&nbsp;2: Each mixed school’s value added for its girls and for its boys 
 <img src="method_files/figure-html/fig-la-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Local authority effects in v2.0, all pupils and disadvantaged pupils, with 95% intervals. Sussex’s three authorities highlighted.
+Figure&nbsp;7: Local authority effects in v2.0, all pupils and disadvantaged pupils, with 95% intervals. Sussex’s three authorities highlighted.
 </figcaption>
 </figure>
 </div>
@@ -1022,6 +1096,220 @@ Table&nbsp;8: How the home page’s three steps are computed. Absence is each sc
 <p><span class="math display">\[\text{no allowance} \approx 1.08 \times \text{Value Added v2.0} -1.10 \times \text{absence against intake}\]</span></p>
 <p>with R² = 0.90. So 366 schools are above expectation on Value Added v2.0 and below it with no allowance for absence. They are schools that achieve well with the pupils who attend, but whose absence runs well above what their intake predicts.</p>
 <p><strong>Why the value added and attendance chart uses Value Added v2.0.</strong> Plotted against absence against intake, value added with no allowance for absence would contain the very thing on the other axis. The two would correlate at -0.55 across England largely by construction, suggesting that schools which hold attendance add more. With Value Added v2.0 on the vertical axis the correlation is -0.07: adding value and holding attendance are close to independent. The chart therefore asks two separate questions, and value added with no allowance for absence is kept to the map, where it is one number answering both at once.</p>
+</section>
+<section id="sec-v21" class="level1">
+<h1>Towards v2.1: the kind of absence</h1>
+<p>v2.0 counts absence by its amount. <a href="./bh_effect.html">Brighton and Hove’s authority effect</a> suggested its kind matters too: illness absence goes with a smaller fall in attainment than other absence. Two candidate terms for a v2.1 have been tested, for every pupil group, against v2.0 and on identical rows (<code>R/07_v21_candidates.R</code>):</p>
+<ul>
+<li><strong>the illness share of absence</strong>: illness as a percentage of all absence, from DfE’s school absence data by reason (a school averages 52%, with a standard deviation of 16 points);</li>
+<li><strong>an 11–16 school</strong>: the school stops at 16, with no sixth form.</li>
+</ul>
+<div class="cell">
+<div id="tbl-v21" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-v21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9: The candidates against v2.0, by group. AIC is the change in fit (negative is better). Out of sample is the change in error predicting 2024/25 from a model fitted on the three years before. Effects are on expected Attainment 8: illness share per standard deviation, 11–16 against not; t statistics in brackets. The last column is the share of schools whose value-added quintile changes.
+</figcaption>
+<div aria-describedby="tbl-v21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Candidate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Out of sample</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Illness share</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">11–16</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Agreement with v2.0</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Quintile changes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">illness share of absence</td>
+<td style="text-align: right;">-31</td>
+<td style="text-align: right;">-1.5%</td>
+<td style="text-align: right;">+0.60% (5.7)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">11-16 school</td>
+<td style="text-align: right;">-40</td>
+<td style="text-align: right;">-0.3%</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+1.08% (6.5)</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">11%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: left;">both</td>
+<td style="text-align: right;">-76</td>
+<td style="text-align: right;">-1.9%</td>
+<td style="text-align: right;">+0.65% (6.1)</td>
+<td style="text-align: right;">+1.14% (6.9)</td>
+<td style="text-align: right;">0.995</td>
+<td style="text-align: right;">12%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">illness share of absence</td>
+<td style="text-align: right;">-19</td>
+<td style="text-align: right;">-1.2%</td>
+<td style="text-align: right;">+0.80% (4.6)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.999</td>
+<td style="text-align: right;">5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">11-16 school</td>
+<td style="text-align: right;">-20</td>
+<td style="text-align: right;">-0.2%</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+1.28% (4.7)</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: left;">both</td>
+<td style="text-align: right;">-42</td>
+<td style="text-align: right;">-1.4%</td>
+<td style="text-align: right;">+0.85% (4.8)</td>
+<td style="text-align: right;">+1.35% (5.0)</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: left;">illness share of absence</td>
+<td style="text-align: right;">+2</td>
+<td style="text-align: right;">-0.1%</td>
+<td style="text-align: right;">-0.02% (-0.2)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: left;">11-16 school</td>
+<td style="text-align: right;">-50</td>
+<td style="text-align: right;">-0.4%</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+1.21% (7.2)</td>
+<td style="text-align: right;">0.996</td>
+<td style="text-align: right;">11%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: left;">both</td>
+<td style="text-align: right;">-48</td>
+<td style="text-align: right;">-0.5%</td>
+<td style="text-align: right;">+0.02% (0.2)</td>
+<td style="text-align: right;">+1.21% (7.2)</td>
+<td style="text-align: right;">0.996</td>
+<td style="text-align: right;">11%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: left;">illness share of absence</td>
+<td style="text-align: right;">-17</td>
+<td style="text-align: right;">-1.2%</td>
+<td style="text-align: right;">+0.51% (4.3)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.999</td>
+<td style="text-align: right;">5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: left;">11-16 school</td>
+<td style="text-align: right;">-37</td>
+<td style="text-align: right;">-0.3%</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+1.14% (6.2)</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">10%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: left;">both</td>
+<td style="text-align: right;">-57</td>
+<td style="text-align: right;">-1.6%</td>
+<td style="text-align: right;">+0.55% (4.7)</td>
+<td style="text-align: right;">+1.19% (6.5)</td>
+<td style="text-align: right;">0.995</td>
+<td style="text-align: right;">11%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: left;">illness share of absence</td>
+<td style="text-align: right;">-15</td>
+<td style="text-align: right;">-0.8%</td>
+<td style="text-align: right;">+0.53% (4.1)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.999</td>
+<td style="text-align: right;">4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: left;">11-16 school</td>
+<td style="text-align: right;">-26</td>
+<td style="text-align: right;">-0.2%</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">+1.06% (5.3)</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: left;">both</td>
+<td style="text-align: right;">-43</td>
+<td style="text-align: right;">-1.0%</td>
+<td style="text-align: right;">+0.57% (4.3)</td>
+<td style="text-align: right;">+1.11% (5.5)</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">9%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>What the tests show.</strong></p>
+<ul>
+<li><strong>The 11–16 flag helps every group</strong>, by about 1% of expected Attainment 8 (AIC -40 for all pupils). Schools that stop at 16 score a little higher than similar schools with sixth forms.</li>
+<li><strong>The illness share helps every group but one</strong>: a standard deviation more illness in the mix goes with +0.6% for all pupils and +0.8% for disadvantaged pupils, and it predicts the year it was not fitted on better (-1.5% error for all pupils). For non-disadvantaged pupils it does nothing (t = -0.2).</li>
+<li><strong>Little moves.</strong> With both, schools’ value added agrees with v2.0 at 0.995 and 12% change quintile; Brighton and Hove’s authority effect goes from +3.9% to +3.5% (7th).</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-v21-shapley" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-v21-shapley-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-v21-shapley-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-v21-shapley-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Each term’s Shapley share of the variation the intake explains, all pupils, in v2.0 and with both candidates.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>What the illness share is.</strong> It is mostly a fixed feature of a school: 79% of its variation lies between schools rather than from year to year. It falls as disadvantage rises (correlation -0.63) and as absence rises (-0.49): where absence is high, more of it is unauthorised. That is why the Shapley decomposition credits it with a sizeable share of what the intake explains even though its own effect is small: much of what it carries, disadvantage and absence carry too.</p>
+<p><strong>Two questions before either is adopted.</strong></p>
+<ol type="1">
+<li><strong>Is the illness share intake, or something the school does?</strong> Every v2.0 term is intake or context. Illness absence is reported by families, but whether an absence is authorised as illness is the school’s decision, and practice differs. To the extent the share reflects a school’s recording, it would credit a school for how it codes absence. Against that, its effect is concentrated among disadvantaged pupils, which looks more like family circumstance than coding.</li>
+<li><strong>Is stopping at 16 context, or a choice?</strong> It is a school’s structure, like its admissions policy, which v2.0 already treats as context. Putting it in the expectation removes the small advantage 11–16 schools have from their value added; leaving it out credits them with it.</li>
+</ol>
+<p>v2.0 remains the published measure until these are settled.</p>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>

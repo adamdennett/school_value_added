@@ -138,7 +138,16 @@ build_inputs <- function() {
            z_l4 = (l4 - mean(l4, na.rm = TRUE)) / sd(l4, na.rm = TRUE),
            mobile = 100 - PTNMOB, sen_support = PSENELK, sen_ehcp = PSENELSE,
            girls_school = GENDER %in% "Girls", boys_school = GENDER %in% "Boys",
-           ADMPOL_PT = factor(ADMPOL_PT))
+           ADMPOL_PT = factor(ADMPOL_PT),
+           # v2.1 candidates: a school that stops at 16
+           age16 = suppressWarnings(as.numeric(AGEHIGH)) <= 16)
+
+  # v2.1 candidates: what the absence is, by reason (pipeline/11_absence_reasons.R)
+  ar <- src("absence_reasons.rds")
+  if (file.exists(ar)) d <- d |> left_join(
+    readRDS(ar) |> transmute(URN = as.integer(URN), year_label, abs_illness = illness,
+                             abs_auth_other = auth_other, abs_unauth = unauthorised, ill_share),
+    by = c("URN", "year_label"))
 
   # Location for the maps: the panel's own easting and northing, else GIAS
   gias <- readRDS(here::here("data", "gias", "gias_establishments.rds")) |>
