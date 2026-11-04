@@ -1,0 +1,396 @@
+---
+title: "What goes with school absence"
+subtitle: "A first look at the causes of school-level absence in England's secondary schools, framed by the research and tested on published data for every school."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+A <- readRDS(here::here("data", "absence_causes.rds"))
+OUT <- A$outcomes
+OUT_SHORT <- c(overall = "Overall", illness = "Illness", appointments = "Medical\nappointments",
+               auth_other = "Other\nauthorised", unauth = "Unauthorised", persistent = "Persistent\n(10%+)",
+               severe = "Severe\n(50%+)")
+TERM_LAB <- c(A$cont,
+  sixthTRUE = "Has a sixth form (vs 11-16)",
+  ADMPOL_PTSEL = "Selective (vs non-selective, selective area)",
+  `ADMPOL_PTOTHER NON SEL` = "Non-selective elsewhere (vs same)",
+  `matMulti-academy trust` = "Multi-academy trust (vs maintained)",
+  `matSingle-academy trust or not recorded` = "Single-academy trust (vs maintained)",
+  faithTRUE = "Religious character (vs none)",
+  `placeUrban, further from one` = "Urban, further from a city (vs nearer)",
+  placeRural = "Rural (vs urban, nearer a city)")
+TERM_GROUP <- c(fsm = "Poverty", sen_sup = "SEND", ehcp = "SEND", semh = "SEND", asd = "SEND", learning = "SEND",
+  carer = "Young carers", eal = "Ethnicity and language", wbri = "Ethnicity and language",
+  grt = "Ethnicity and language", ks2_c = "Prior attainment and neighbourhood",
+  z_l4 = "Prior attainment and neighbourhood", mobile = "Mobility and sex", girls = "Mobility and sex",
+  size = "The school", sixthTRUE = "The school", ADMPOL_PTSEL = "The school",
+  `ADMPOL_PTOTHER NON SEL` = "The school", `matMulti-academy trust` = "The school",
+  `matSingle-academy trust or not recorded` = "The school", faithTRUE = "The school",
+  `placeUrban, further from one` = "Place", placeRural = "Place")
+e <- function(term, out) A$effects$pct[A$effects$term == term & A$effects$outcome == out]
+sg <- function(x, d = 0) sprintf(paste0("%+.", d, "f%%"), x)
+tr <- function(yr, col) A$trend[[col]][A$trend$year == yr]
+part <- function(out, col) A$partition[[col]][A$partition$outcome == out]
+r2 <- function(out) A$shapley$r2_full[A$shapley$outcome == out][1]
+la_rank <- A$la_effects |> group_by(outcome) |>
+  mutate(rank = rank(-la_pct), n = n()) |> ungroup()
+bh <- function(out, col) la_rank[[col]][la_rank$outcome == out & la_rank$la == "Brighton and Hove"]
+n_la <- max(la_rank$n)
+```
+
+::: {.callout-note}
+## Work in progress
+
+This is the first cut of the absence analysis on the [roadmap](roadmap.qmd).
+It describes how absence varies between schools, and with what. It does not
+yet say why. Every figure comes from published school-level data, so every
+result is an association between schools, not an effect on pupils.
+:::
+
+## Why this matters for value added
+
+Absence is the largest single term in Value Added v2.1's expectation. The
+model takes each school's absence as given: a school with more absence is
+expected to get lower results. That is fair to schools whose absence is
+outside their control. It is unfair if some of that absence is something
+the school could have prevented. To tell the two apart, we need to know
+what absence goes with. This page makes a start.
+
+## What the research says {#sec-research}
+
+A research map of UK work since 2016 (summarised below; sources at the
+foot of the page) says absence is not one behaviour with one cause. Health,
+family, peer, school and wider circumstances all bear on it, and they
+interact. It is higher in secondary schools, rises with age, and is
+concentrated among pupils facing poverty, special educational needs,
+health difficulties and other disadvantage. Absence harms attainment
+whether or not it is authorised, but it is also a marker of difficulties
+that were already there.
+
+The post-pandemic rise is real and not fully explained. The leading
+accounts are:
+
+- more illness;
+- anxiety and avoiding school;
+- broken routines and weaker attendance norms;
+- unmet SEND needs;
+- strained relations between home and school;
+- slow access to support.
+
+No single cause has been shown to dominate.
+
+Each strand of that research suggests something we can measure for every
+school in England:
+
+| The research points to | What we can measure for each school | Source |
+|---|---|---|
+| Physical illness, the most common recorded reason | Illness as a share of possible sessions, as its own outcome | DfE absence data |
+| Mental health, anxiety, school-related distress | Pupils whose main SEN need is social, emotional and mental health | DfE SEN data, January 2026 |
+| SEND, and gaps that have not closed | SEN support, EHC plans, autism, learning difficulties | DfE SEN data |
+| Poverty and family circumstances | Free school meals; young carers | School census, January 2026 |
+| Differences by ethnicity and sex | White British, Gypsy, Roma and Traveller, EAL; share of girls | School census |
+| Prior attainment and disengagement | KS2 prior attainment; neighbourhood education | Value Added inputs |
+| School experience: climate, belonging, fit | Only proxies: size, sixth form, admissions, governance, faith | Census, GIAS |
+| Place | Region, local authority, rural or urban | Census |
+| Post-COVID norms | The trend by reason; not testable across schools in one year | DfE absence data |
+
+Ofsted grades are left out on purpose. Attendance is part of what an
+inspection judges, so a grade would partly be absence measured again.
+
+## How absence has changed, by reason {#sec-trend}
+
+```{r}
+#| label: fig-trend
+#| fig-cap: "Absence by reason in England's state-funded secondary schools, % of possible sessions, full years, 2016/17 to 2024/25 (sessions-weighted; DfE school-level absence data). 2019/20 was not collected; 2020/21 was a year of partial closure."
+#| fig-height: 4.6
+tr_long <- A$trend |> select(-persistent, -severe) |>
+  bind_rows(tibble(year = "2019/20")) |>
+  tidyr::pivot_longer(-year, names_to = "reason", values_to = "rate") |>
+  filter(!is.na(reason)) |>
+  mutate(x = as.integer(substr(year, 1, 4)),
+         reason = factor(reason, c("Illness", "Other unauthorised", "Other authorised",
+                                   "Medical appointments", "Unauthorised holiday")))
+ggplot(tr_long, aes(x, rate, colour = reason)) +
+  annotate("rect", xmin = 2019.5, xmax = 2020.5, ymin = -Inf, ymax = Inf, fill = PPURPLE) +
+  geom_line(linewidth = 0.9, na.rm = TRUE) + geom_point(size = 1.8, na.rm = TRUE) +
+  geom_text(data = tr_long |> filter(x == 2024) |>
+              mutate(rate = rate + case_when(reason == "Medical appointments" ~ 0.12,
+                                             reason == "Unauthorised holiday" ~ -0.1, TRUE ~ 0)),
+            aes(label = reason), hjust = 0, nudge_x = 0.15, size = 3.3, show.legend = FALSE) +
+  scale_colour_manual(values = c(DPURPLE, BLUE, BPURPLE, GREY, MPURPLE), guide = "none") +
+  scale_x_continuous(breaks = 2016:2024, labels = function(x) paste0(x, "/", substr(x + 1, 3, 4)),
+                     expand = expansion(mult = c(0.02, 0.32))) +
+  labs(x = NULL, y = "% of possible sessions") + theme_note()
+```
+
+```{r}
+#| label: fig-trend-pa
+#| fig-cap: "Persistent absence (missing 10% or more of sessions) and severe absence (50% or more), % of pupils, same schools and years."
+#| fig-height: 3.4
+pa <- A$trend |> select(year, `Persistent (10%+)` = persistent, `Severe (50%+)` = severe) |>
+  bind_rows(tibble(year = "2019/20")) |>
+  tidyr::pivot_longer(-year, names_to = "measure", values_to = "rate") |> filter(!is.na(measure)) |>
+  mutate(x = as.integer(substr(year, 1, 4)))
+ggplot(pa, aes(x, rate)) +
+  annotate("rect", xmin = 2019.5, xmax = 2020.5, ymin = -Inf, ymax = Inf, fill = PPURPLE) +
+  geom_line(colour = DPURPLE, linewidth = 0.9, na.rm = TRUE) + geom_point(colour = DPURPLE, size = 1.8, na.rm = TRUE) +
+  facet_wrap(~ measure, scales = "free_y") +
+  scale_x_continuous(breaks = c(2016, 2018, 2020, 2022, 2024), labels = function(x) paste0(x, "/", substr(x + 1, 3, 4))) +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(x = NULL, y = "% of pupils") + theme_note()
+```
+
+The reasons have not moved together:
+
+- **Illness** jumped from `r pp(tr("2018/19", "Illness"))`% of sessions
+  in 2018/19 to `r pp(tr("2021/22", "Illness"))`% in 2021/22. By 2024/25
+  it had fallen back to `r pp(tr("2024/25", "Illness"))`%, most of the
+  way home.
+- **Unauthorised absence other than holidays** doubled, from
+  `r pp(tr("2018/19", "Other unauthorised"))`% to
+  `r pp(tr("2023/24", "Other unauthorised"))`% in 2023/24. It has barely
+  come down since.
+- **Severe absence** rose every year, from `r pp(tr("2018/19", "severe"))`%
+  of pupils to `r pp(tr("2024/25", "severe"))`%, nearly three times as many.
+
+Persistent absence is falling, but the tail is still growing. That matches
+the research: the average can improve while the worst cases get worse.
+
+## What goes with absence, school by school {#sec-effects}
+
+The model covers `r format(A$n_schools, big.mark = ",")` state-funded
+secondary schools with full data. It uses their absence in the autumn and
+spring terms of 2025/26 and their intake as recorded in the January 2026
+school census and SEN data. For each of seven outcomes, it is a multilevel
+model of the outcome (logged) on all the characteristics at once, with
+region and local authority effects.
+
+Each number below is the difference in that kind of absence that goes with
+one standard deviation more of a characteristic, all else equal. A
+standard deviation is roughly the gap between a typical school and one
+noticeably above it. For yes-or-no characteristics, the number compares
+the two kinds of school. Purple means more absence, green less. Blank
+cells are differences that could be zero.
+
+```{r}
+#| label: fig-effects
+#| fig-cap: "Difference in each kind of absence (%) with one standard deviation more of each characteristic (yes vs no for the categories), all else equal: multilevel models with region and local authority effects, 2025/26 autumn and spring terms. Purple, more absence; green, less. Blank, the 95% interval includes zero."
+#| fig-height: 8.5
+#| fig-width: 9
+ef <- A$effects |>
+  mutate(label = unname(TERM_LAB[term]), grp = unname(TERM_GROUP[term]),
+         sig = lo > 0 | hi < 0,
+         out = factor(OUT_SHORT[outcome], OUT_SHORT),
+         grp = factor(grp, names(A$groups)),
+         fillv = ifelse(sig, pmax(pmin(pct, 30), -30), NA))
+lev <- ef |> distinct(term, label, grp) |> arrange(grp, match(term, unique(ef$term))) |> pull(label)
+ef$label <- factor(ef$label, rev(lev))
+ggplot(ef, aes(out, label)) +
+  geom_tile(aes(fill = fillv), colour = "white", linewidth = 0.8) +
+  geom_text(aes(label = sprintf("%+.0f", pct), colour = ifelse(!sig, "ns", ifelse(abs(pct) > 18, "dark", "sig"))), size = 3.6) +
+  scale_fill_gradientn(colours = c("#1b7837", "#5aae61", "#d9f0d3", "#f7f7f7", "#e7d4e8", "#9970ab", "#762a83"),
+                       limits = c(-30, 30), na.value = "white", name = "% difference",
+                       labels = function(x) ifelse(abs(x) == 30, paste0(ifelse(x > 0, "≥ +", "≤ "), x), sprintf("%+d", x))) +
+  scale_colour_manual(values = c(sig = INK, dark = "white", ns = "#a8a3b8"), guide = "none") +
+  facet_grid(grp ~ ., scales = "free_y", space = "free_y", switch = "y") +
+  scale_x_discrete(position = "top") +
+  labs(x = NULL, y = NULL) + theme_note(12) +
+  theme(panel.grid = element_blank(), strip.placement = "outside",
+        strip.text.y.left = element_text(angle = 0, hjust = 1, size = 9),
+        legend.key.width = unit(1.6, "cm"))
+```
+
+What stands out:
+
+- **Poverty, prior attainment and mobility go with the absence a school has
+  least claim to.** With one SD more pupils on free school meals,
+  unauthorised absence is `r sg(e("fsm", "unauth"))` and severe absence
+  `r sg(e("fsm", "severe"))`. Illness, once everything else is allowed
+  for, is `r sg(e("fsm", "illness"))`. Lower KS2 prior attainment and more
+  pupils joining mid-phase point the same way.
+- **Among the types of need, social, emotional and mental health need is
+  the one that matters.** One SD more of it goes with
+  `r sg(e("semh", "severe"))` severe and `r sg(e("semh", "auth_other"))`
+  other authorised absence. Once the types of need are in the model, the
+  share of pupils on SEN support or with EHC plans adds nothing more. This
+  fits the research's emphasis on anxiety and distress.
+- **Schools with more White British pupils have more absence of every
+  kind**, especially severe (`r sg(e("wbri", "severe"))` per SD) and
+  unauthorised (`r sg(e("wbri", "unauth"))`). EAL goes the other way. This
+  is a comparison between schools, not pupils. It matches the national
+  statistics, where absence is lower among most minority ethnic groups. It
+  does not say why.
+- **Girls.** Schools with more girls have more medical-appointment
+  (`r sg(e("girls", "appointments"))`) and severe absence
+  (`r sg(e("girls", "severe"))`). This matches the research finding that
+  girls are absent more than boys.
+- **The school.**
+  - Selective schools have far less unauthorised
+    (`r sg(e("ADMPOL_PTSEL", "unauth"))`) and severe absence
+    (`r sg(e("ADMPOL_PTSEL", "severe"))`) than intake alone predicts.
+  - Schools with a religious character have somewhat less
+    (`r sg(e("faithTRUE", "unauth"))` unauthorised).
+  - Schools with a sixth form have *more* absence among their 11-16 pupils
+    (`r sg(e("sixthTRUE", "overall"))` overall). This echoes Value Added
+    v2.1, where 11-16 schools do better.
+  - Being in a multi-academy trust makes little difference.
+- **Place.** Rural schools record `r sg(e("placeRural", "appointments"))`
+  absence for medical appointments and `r sg(e("placeRural", "unauth"))`
+  unauthorised absence, against urban schools near a city. A plausible reading is that getting to an
+  appointment from a rural school costs a whole session rather than part of
+  one. That bears on the [distance-to-school](roadmap.qmd) question.
+- **Young carers barely register.** This is more likely a measurement
+  problem than a finding: schools differ widely in how many young carers
+  they identify.
+
+## How much each group explains {#sec-shapley}
+
+```{r}
+#| label: fig-shapley
+#| fig-cap: "Share of the variation between schools in each kind of absence (logged) explained by each group of characteristics: Shapley values of R² from OLS, region in Place. Each column sums to the total R² shown at the foot."
+#| fig-height: 5
+#| fig-width: 9
+sh <- A$shapley |> mutate(out = factor(OUT_SHORT[outcome], OUT_SHORT),
+                          group = factor(group, rev(names(A$groups))))
+tot <- sh |> distinct(out, r2_full) |> mutate(group = "Total R²")
+ggplot(sh, aes(out, group)) +
+  geom_tile(aes(fill = 100 * shapley), colour = "white", linewidth = 0.8) +
+  geom_text(aes(label = sprintf("%.0f", 100 * shapley), colour = shapley > 0.11), size = 3.7) +
+  geom_tile(data = tot, aes(out, group), fill = "white", colour = LIGHT) +
+  geom_text(data = tot, aes(out, group, label = sprintf("%.0f%%", 100 * r2_full)), fontface = "bold",
+            colour = DPURPLE, size = 3.8) +
+  scale_y_discrete(limits = c("Total R²", levels(sh$group))) +
+  scale_fill_gradient(low = PPURPLE, high = DPURPLE, name = "Percentage points of R²") +
+  scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = INK), guide = "none") +
+  scale_x_discrete(position = "top") +
+  labs(x = NULL, y = NULL) + theme_note(12) +
+  theme(panel.grid = element_blank(), legend.key.width = unit(1.6, "cm"))
+```
+
+The kinds of absence split cleanly in two:
+
+- **Unauthorised, persistent and severe absence are mostly about who the
+  pupils are.** Intake and school characteristics account for between
+  `r round(100 * min(r2("severe"), r2("persistent"), r2("unauth")))`% and
+  `r round(100 * max(r2("severe"), r2("persistent"), r2("unauth")))`% of
+  the variation. Poverty, prior attainment and the school itself carry most
+  of it.
+- **Illness and medical appointments are mostly not.** Only
+  `r round(100 * r2("illness"))`% and `r round(100 * r2("appointments"))`%
+  is accounted for, and Place is the largest single group for both. Two
+  schools with the same intake can record very different amounts of
+  illness.
+
+That is the case for v2.1's sensitivity test that counts illness separately
+from other absence ([Methodology](method.qmd#sec-v21)).
+
+## Place, once the intake is allowed for {#sec-place}
+
+```{r}
+#| label: tbl-place
+#| tbl-cap: "Share of the variation between schools at the region and local authority levels, before and after the characteristics are in the model (multilevel models, 2025/26 autumn and spring)."
+A$partition |>
+  transmute(Outcome = unname(OUT[outcome]),
+            `Region and authority, before` = sprintf("%.0f%%", 100 * (la_null + region_null)),
+            `Region and authority, after` = sprintf("%.0f%%", 100 * (la_full + region_full)),
+            `Explained by the characteristics` = sprintf("%.0f%%", 100 * r2_fixed)) |>
+  kt(align = "lrrr")
+```
+
+For most kinds of absence, a school's region and authority matter little
+once its intake is known. Illness and other authorised absence are the
+exceptions: about
+`r round(100 * (part("illness", "la_full") + part("illness", "region_full")))`% and
+`r round(100 * (part("auth_other", "la_full") + part("auth_other", "region_full")))`%
+of the variation between schools is still at the region and authority
+levels after allowing for intake. Both are kinds of absence a school chooses
+to authorise. Some places' schools record more illness
+than their intakes predict. That could be because their pupils really are
+ill more often. It could also be because schools in those places authorise
+absence as illness more readily, so that the same absence elsewhere would
+be recorded as unauthorised. The data cannot tell these apart.
+
+```{r}
+#| label: fig-la-illness
+#| fig-cap: !expr paste0("Each local authority's illness absence against what its schools' intakes predict, 2025/26 autumn and spring (multilevel model, region and authority effects together). ", n_la, " authorities, lowest on the left; Sussex's three are named.")
+#| fig-height: 4.2
+li <- la_rank |> filter(outcome == "illness") |> arrange(la_pct) |>
+  mutate(pos = row_number(), sussex = la %in% c("Brighton and Hove", "East Sussex", "West Sussex"))
+ggplot(li, aes(pos, la_pct)) +
+  geom_hline(yintercept = 0, colour = LIGHT) +
+  geom_col(aes(fill = sussex), width = 0.85) +
+  geom_text(data = li |> filter(sussex), aes(label = paste0(la, " ", sg(la_pct))),
+            hjust = ifelse(li$la_pct[li$sussex] > 0, -0.08, 1.08), angle = 90, size = 3.2, colour = DPURPLE) +
+  scale_fill_manual(values = c(`TRUE` = DPURPLE, `FALSE` = LIGHT), guide = "none") +
+  scale_y_continuous(labels = function(x) sprintf("%+d%%", x), expand = expansion(mult = c(0.05, 0.9))) +
+  labs(x = "Local authorities, lowest to highest", y = "Illness against intake") + theme_note() +
+  theme(axis.text.x = element_blank(), panel.grid.major.x = element_blank())
+```
+
+**Brighton and Hove** records `r sg(bh("illness", "la_pct"))` more illness
+absence than its schools' intakes predict, the
+`r ord(bh("illness", "rank"))` highest of `r n_la` authorities. Its
+unauthorised absence is `r sg(bh("unauth", "la_pct"))` against intake
+(`r ord(bh("unauth", "rank"))`). The city's high absence, which the
+[Geographical effects](bh_effect.qmd) page finds costs its pupils so little
+attainment, is illness absence, and its intake does not explain it. That
+fits both readings above: an unusual amount of illness, or a habit of
+authorising absence as illness that elsewhere would go unauthorised. Which
+it is matters for value added. If it is recording, the city's absence is
+not the kind that costs attainment, and the model's absence term
+over-forgives it.
+
+## What this cannot tell us {#sec-limits}
+
+- **Schools, not pupils.** A school with more pupils on free school meals
+  having more absence does not show that its pupils on free school meals
+  are the ones absent.
+- **Association, not cause.** Some of the school characteristics may follow
+  from absence rather than lead to it, such as a school's size or who runs
+  it.
+- **Two terms of one year.** Autumn and spring carry more illness than
+  summer, and one year is a snapshot. The trend figures are full years.
+- **Measured needs only.** SEN data counts identified need. The research
+  warns that unmet or unidentified need sits outside it, and so do young
+  carers not known to their school.
+- **School climate is unmeasured.** Belonging, bullying, relationships and
+  fit come out of the research as important, and nothing here measures
+  them.
+
+## Next steps {#sec-next}
+
+1. **Within-school change.** Follow schools from 2021/22 to 2025/26 to see
+   whether absence moves when intake does. That is a stronger test than one
+   year's snapshot.
+2. **Illness or recording?** Look at how illness and unauthorised absence
+   trade off within authorities, to see whether high-illness places are
+   recording differently.
+3. **Distance to school**, from the roadmap. The rural appointments result
+   gives a first reason to expect it to matter.
+4. **The severe tail.** Severe absence is rising while the average falls.
+   It needs its own model.
+5. **Back into value added.** Absence against intake, split by kind, could
+   replace raw absence in a future version of the model.
+
+## Sources
+
+The research summary draws on a research map of UK work since 2016,
+including:
+
+- Department for Education, *Pupil absence in schools in England* (2025).
+- Education Policy Institute, *Examining post-pandemic absences in England* (2025).
+- Finning et al. (2019), practitioners' beliefs about risk factors for attendance problems, *Emotional and Behavioural Difficulties*.
+- Lereya et al. (2022), special educational need and absence over time and across need types, *European Journal of Special Needs Education*.
+- McDonald, Lester and Michelson (2022), attendance problems in the context of COVID-19, *British Journal of Educational Psychology*.
+- Klein et al. (2019), socioeconomic inequalities in school absenteeism.
+- Anders et al. (2025), the post-pandemic rise in teenage skipping across English-speaking countries, *Educational Assessment, Evaluation and Accountability*.
+- Dräger, Klein and Sosu (2025), whether the timing of absence changes its effect on achievement, *American Educational Research Journal*.
+- Dräger et al. (2026), absence as a mediator of the socioeconomic achievement gap, *Research in Social Stratification and Mobility*.
+- Epstein et al. (2026), absence and later mental health in adolescents in England, *Child and Adolescent Mental Health*.
+- Troncoso et al. (2026), disadvantage, attendance and exclusions in Scotland, *International Journal of Population Data Science*.
+- Strelitz et al. (2026), interventions to improve school attendance, *Journal of Epidemiology and Community Health*.
+
+Data: DfE school-level absence (2016/17 to 2024/25, full years; 2025/26,
+autumn and spring), the January 2026 school census and SEN school-level
+data, GIAS, and the Value Added v2.1 inputs. Code: `R/08_absence_causes.R`.

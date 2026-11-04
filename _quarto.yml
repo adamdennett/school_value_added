@@ -9,6 +9,7 @@ project:
     - sussex.qmd
     - districts.qmd
     - bh_effect.qmd
+    - absence_causes.qmd
     - areas/*.qmd
     - roadmap.qmd
   resources:
@@ -50,6 +51,8 @@ website:
         menu:
           - href: bh_effect.qmd
             text: "Brighton and Hove"
+      - href: absence_causes.qmd
+        text: "Absence"
       - href: roadmap.qmd
         text: Roadmap
     right:

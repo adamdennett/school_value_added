@@ -33,6 +33,7 @@ Rscript R/04_place_and_absence.R  # absence against intake, district test, trust
 Rscript R/05_provisional_2526.R   # provisional 2025/26, predicted from the fitted model
 Rscript R/06_bh_effect.R          # geographical effects: why Brighton and Hove's authority effect is large (~5 min)
 Rscript R/07_v21_candidates.R     # v2.1 candidates, and what matters most in the model (~10 min)
+Rscript R/08_absence_causes.R     # what goes with school absence, school by school (~3 min)
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```
@@ -94,6 +95,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/05_provisional_2526.R` | provisional 2025/26 value added |
 | `R/06_bh_effect.R` | geographical effects: Brighton and Hove's authority effect, term by term (`bh_effect.qmd`) |
 | `R/07_v21_candidates.R` | the v2.1 candidates (kind of absence, 11–16) and the importance charts |
+| `R/08_absence_causes.R` | what goes with school-level absence: trend by reason, seven outcomes on intake, needs and place (`absence_causes.qmd`) |
 | `R/area_helpers.R` | the original area documents' charts, ported |
 | `R/site_helpers.R`, `R/map_js.R` | palette, charts, decomposition, map |
 | `data/va_v2.rds`, `data/va_v2_schools.csv` | the results (committed) |

@@ -60,10 +60,14 @@ subtitle: "What v2.1 does now, and what comes next."
 - [ ] **Parents, not adults.** Try a parents' qualification measure from
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.
-- [ ] **What causes school-level absence.** A deeper analysis of why
-      absence differs between schools, beyond what intake predicts: its
-      kinds, its timing, the pupils it falls on and what is known from the
-      research on its causes. Waiting on a reading of that research first.
+- [ ] **What causes school-level absence.** Started:
+      [What goes with school absence](absence_causes.qmd) frames the
+      question with a map of the UK research, shows the trend by reason, and
+      models seven kinds of absence on every secondary school's intake,
+      needs and setting for 2025/26. Next: within-school change over time,
+      whether high-illness places record absence differently, the severe
+      tail on its own, and absence against intake by kind as a candidate
+      for a future version of the model.
 - [ ] **Geographical effects: distance to school.** A page beside Brighton
       and Hove's under Geographical effects, on how far pupils travel to
       school and what it does to attendance, building on
