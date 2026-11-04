@@ -210,6 +210,90 @@ shapley_groups <- function(y) {
 message("Shapley decomposition ...")
 shap <- bind_rows(lapply(names(OUTCOMES), shapley_groups))
 
+# ---- 5. the school's part ------------------------------------------------------
+# (a) "The school" split into its five terms: Shapley values with the other
+# seven groups as players and each school term a player of its own
+SCHOOL_TERMS <- GROUPS_X[["The school"]]
+players <- c(GROUPS_X[names(GROUPS_X) != "The school"], setNames(as.list(SCHOOL_TERMS), SCHOOL_TERMS))
+shapley_players <- function(y, pl) {
+  dd <- Z |> mutate(.y = ly(y)); p <- length(pl)
+  sub <- expand.grid(rep(list(c(FALSE, TRUE)), p))
+  r2 <- apply(sub, 1, function(z) {
+    v <- unlist(pl[as.logical(z)]); if (!length(v)) return(0)
+    summary(lm(as.formula(paste(".y ~", paste(v, collapse = " + "))), data = dd))$r.squared
+  })
+  names(r2) <- apply(sub, 1, function(z) paste(as.integer(z), collapse = ""))
+  w <- factorial(0:(p - 1)) * factorial((p - 1):0) / factorial(p)
+  phi <- sapply(seq_len(p), function(j) {
+    off <- which(!sub[[j]]); z <- as.matrix(sub[off, ]) * 1L; k <- rowSums(z)
+    z2 <- z; z2[, j] <- 1L
+    sum(w[k + 1] * (r2[apply(z2, 1, paste, collapse = "")] - r2[apply(z, 1, paste, collapse = "")]))
+  })
+  tibble(outcome = y, player = names(pl), shapley = phi)
+}
+message("Shapley with the school group split ...")
+shap_school <- bind_rows(lapply(c("overall", "unauth", "persistent", "severe"), shapley_players, pl = players))
+
+# (b) how far apart schools with the same intake, needs and setting are: the
+# school-level residuals of the multilevel models (within region and
+# authority), and (c) whether they repeat from one year to the next: the
+# same models on 2024/25 full-year absence, against the same characteristics
+ab_2425 <- raw |> filter(time_period == "202425") |>
+  transmute(URN = as.integer(school_urn), overall = num(sess_overall_percent),
+            illness = num(sess_auth_illness_rate), appointments = num(sess_auth_appointments_rate),
+            auth_other = num(sess_authorised_percent) - illness - appointments,
+            unauth = num(sess_unauthorised_percent), persistent = num(enrolments_pa_10_exact_percent),
+            severe = num(enrolments_pa_50_exact_percent)) |>
+  filter(!is.na(overall), overall > 0) |> distinct(URN, .keep_all = TRUE)
+school_resid <- function(y, outcomes) {
+  dd <- Z |> select(-any_of(names(OUTCOMES))) |> inner_join(outcomes |> select(URN, all_of(y)), by = "URN") |>
+    filter(!is.na(.data[[y]])) |> mutate(.y = log(.data[[y]] + 0.1))
+  m <- lmer(as.formula(paste(".y ~", RHS, "+ (1 | region / la)")), data = dd, REML = TRUE, control = CTRL)
+  tibble(URN = dd$URN, resid = residuals(m))
+}
+message("School residuals, two years ...")
+resid_both <- bind_rows(lapply(names(OUTCOMES), function(y) {
+  r1 <- school_resid(y, ab); r0 <- school_resid(y, ab_2425)
+  full_join(r1 |> rename(r_2526 = resid), r0 |> rename(r_2425 = resid), by = "URN") |> mutate(outcome = y)
+}))
+school_spread <- resid_both |> group_by(outcome) |>
+  summarise(n = sum(!is.na(r_2526)),
+            sd = sd(r_2526, na.rm = TRUE),
+            iqr_pct = 100 * (exp(diff(quantile(r_2526, c(0.25, 0.75), na.rm = TRUE))) - 1),
+            p90_10_pct = 100 * (exp(diff(quantile(r_2526, c(0.1, 0.9), na.rm = TRUE))) - 1),
+            n_both = sum(!is.na(r_2526) & !is.na(r_2425)),
+            r_years = cor(r_2526, r_2425, use = "complete.obs"),
+            # of the schools in the top quarter in 2025/26, the share also there in 2024/25
+            top_q_again = { a <- r_2526 > quantile(r_2526, 0.75, na.rm = TRUE); b <- r_2425 > quantile(r_2425, 0.75, na.rm = TRUE)
+                            mean(b[which(a & !is.na(b))]) }, .groups = "drop")
+# The same years' raw outcomes, for comparison: how much a school's absence
+# repeats before anything is allowed for
+raw_rep <- bind_rows(lapply(names(OUTCOMES), function(y) {
+  j <- inner_join(ab |> select(URN, a = all_of(y)), ab_2425 |> select(URN, b = all_of(y)), by = "URN")
+  tibble(outcome = y, r_raw = cor(log(j$a + 0.1), log(j$b + 0.1), use = "complete.obs"))
+}))
+school_spread <- school_spread |> left_join(raw_rep, by = "outcome")
+print(school_spread)
+print(shap_school |> filter(player %in% SCHOOL_TERMS) |> mutate(shapley = round(100 * shapley, 1)) |>
+        tidyr::pivot_wider(names_from = outcome, values_from = shapley))
+
+# For the area pages: every school's characteristics as the model sees them
+# (its design matrix), its logged outcomes, and the smearing factor that turns
+# a fixed-effect prediction back into an expected percentage, so an area
+# can be compared with England group by group and school by school
+MM <- model.matrix(as.formula(paste("~", RHS)), data = Z)
+col_group <- sapply(colnames(MM), function(cn) {
+  hit <- names(GROUPS_X)[sapply(GROUPS_X, function(v) any(startsWith(cn, v)))]
+  if (length(hit)) hit[1] else NA_character_
+})
+ly_all <- sapply(names(OUTCOMES), ly)
+smear <- sapply(names(OUTCOMES), function(o) {
+  b <- coefs |> filter(outcome == o)
+  mean(exp(ly_all[, o] - as.vector(MM[, b$term] %*% b$b)))
+})
+local <- list(schools = dat |> select(URN, SCHNAME, la, region, all_of(names(OUTCOMES))),
+              mm = MM, ly = ly_all, col_group = col_group, smear = smear)
+
 # Where the national outcomes sit, for the text
 desc <- dat |> summarise(n = n(), across(all_of(names(OUTCOMES)), list(mean = mean, sd = sd)))
 cors <- cor(dat[, names(OUTCOMES)])
@@ -217,7 +301,8 @@ cors <- cor(dat[, names(OUTCOMES)])
 saveRDS(list(trend = trend, effects = effects, la_effects = la_effects, partition = partition, shapley = shap,
              outcomes = OUTCOMES, cont = CONT, fact = FACT, groups = GROUPS_X, desc = desc, cors = cors,
              n_schools = nrow(dat), n_absence = nrow(ab), sds = sapply(dat[, names(CONT)], sd),
-             coefs = coefs, random = random, fit = fit_stats, x_desc = x_desc, cat_desc = cat_desc),
+             coefs = coefs, random = random, fit = fit_stats, x_desc = x_desc, cat_desc = cat_desc,
+             local = local, shap_school = shap_school, school_spread = school_spread, resid = resid_both),
         here::here("data", "absence_causes.rds"))
 message("Saved data/absence_causes.rds")
 print(partition)

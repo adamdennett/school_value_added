@@ -215,6 +215,7 @@ window.Quarto = {
   <li><a href="#sec-trend" id="toc-sec-trend" class="nav-link" data-scroll-target="#sec-trend">How absence has changed, by reason</a></li>
   <li><a href="#sec-effects" id="toc-sec-effects" class="nav-link" data-scroll-target="#sec-effects">What goes with absence, school by school</a></li>
   <li><a href="#sec-shapley" id="toc-sec-shapley" class="nav-link" data-scroll-target="#sec-shapley">How much each group explains</a></li>
+  <li><a href="#sec-school" id="toc-sec-school" class="nav-link" data-scroll-target="#sec-school">The school’s part</a></li>
   <li><a href="#sec-place" id="toc-sec-place" class="nav-link" data-scroll-target="#sec-place">Place, once the intake is allowed for</a></li>
   <li><a href="#sec-full" id="toc-sec-full" class="nav-link" data-scroll-target="#sec-full">The full models</a></li>
   <li><a href="#sec-limits" id="toc-sec-limits" class="nav-link" data-scroll-target="#sec-limits">What this cannot tell us</a></li>
@@ -440,13 +441,147 @@ Figure&nbsp;4: Share of the variation between schools in each kind of absence (l
 </ul>
 <p>That is the case for v2.1’s sensitivity test that counts illness separately from other absence (<a href="./method.html#sec-v21">Methodology</a>).</p>
 </section>
+<section id="sec-school" class="level2">
+<h2 class="anchored" data-anchor-id="sec-school">The school’s part</h2>
+<p>“The school” carries 13 to 14 points of R² for unauthorised, persistent and severe absence above. That does not mean schools are to blame for that much absence. The group is five measured features:</p>
+<ul>
+<li>size;</li>
+<li>whether the school has a sixth form;</li>
+<li>its admissions (selective, or non-selective);</li>
+<li>who runs it;</li>
+<li>whether it has a religious character.</li>
+</ul>
+<p>What schools <em>do</em> is not measured at all. Splitting the group into its five features shows where the credit goes:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-school-split" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-school-split-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_causes_files/figure-html/fig-school-split-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-school-split-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The school group’s share of R², split into its five features: Shapley values with each feature as a player of its own and the other seven groups as before (OLS, region in Place), 2025/26 autumn and spring.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Most of it is selection.</strong> Admissions accounts for 9.2 of the points for unauthorised absence, 10.9 for persistent and 10.8 for severe. Selective schools choose their pupils. Prior attainment and free school meals measure some of what selection does, but not all of it, and admissions picks up the rest. That is a fact about who comes to the school, not about how it is run. Who runs it (2.6 points), size, sixth form and religious character each add little.</p>
+<p><strong>What a school does shows up somewhere else: in how far apart similar schools are.</strong> Take schools with the same intake, needs and setting, in the same local authority. What is left over (the models’ school-level residuals) is what the measured characteristics cannot explain. That includes how a school runs attendance, and also anything about its pupils the data does not see.</p>
+<div class="cell">
+<div id="tbl-school-spread" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-school-spread-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: How far apart schools with the same intake, needs and setting, in the same local authority, are on each kind of absence (2025/26 autumn and spring), and whether the differences repeat (the same models on 2024/25 full-year absence).
+</figcaption>
+<div aria-describedby="tbl-school-spread-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Outcome</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Quarter from top vs quarter from bottom</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Tenth from top vs tenth from bottom</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Correlation with 2024/25</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Top quarter in 2025/26 also top quarter in 2024/25</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Overall absence</td>
+<td style="text-align: right;">+24%</td>
+<td style="text-align: right;">+52%</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">70%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Illness</td>
+<td style="text-align: right;">+33%</td>
+<td style="text-align: right;">+76%</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">68%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Medical appointments</td>
+<td style="text-align: right;">+36%</td>
+<td style="text-align: right;">+82%</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">68%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other authorised</td>
+<td style="text-align: right;">+61%</td>
+<td style="text-align: right;">+157%</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">63%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unauthorised</td>
+<td style="text-align: right;">+53%</td>
+<td style="text-align: right;">+133%</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">70%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Persistent absence (10%+)</td>
+<td style="text-align: right;">+31%</td>
+<td style="text-align: right;">+73%</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">68%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Severe absence (50%+)</td>
+<td style="text-align: right;">+67%</td>
+<td style="text-align: right;">+174%</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">62%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>The gaps are large.</strong> Among otherwise similar schools in the same authority, the one a quarter of the way from the top has 53% more unauthorised absence than the one a quarter of the way from the bottom. For severe absence the gap is 67%; for overall absence, 24%.</li>
+<li><strong>They repeat.</strong> A school’s unexplained absence in 2025/26 correlates 0.81 with its own in 2024/25 for unauthorised absence, and 0.84 overall. Of the schools in the top quarter for unexplained unauthorised absence in 2025/26, 70% were in the top quarter the year before; chance would give 25%. These are stable features of schools or their communities, not noise.</li>
+<li><strong>That stability is not proof of a school effect.</strong> The same 2026 characteristics are used for both years, and pupils the data does not see are as stable as a school’s practice. Only following schools whose practice changed would separate the two.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>For heads and governors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Judge absence against what your intake predicts, not against the national average.</strong> The area pages give each Sussex school’s absence by kind, its prediction, and how it compares with similar schools in the same authority over two years.</li>
+<li><strong>Structure is not the lever.</strong> Being in a multi-academy trust, its size, and its religious character make little difference once intake is allowed for. Most of what looks like a “school” effect in the averages is selective admissions, which is about who is admitted.</li>
+<li><strong>Practice may well be the lever.</strong> Schools with the same intake differ by half again or more in unauthorised and severe absence, and the differences persist. A school well above similar schools, year after year, should ask what its look-alikes below the line are doing differently.</li>
+<li><strong>Look at the kind of absence.</strong> Unauthorised, persistent and severe absence are where similar schools differ most. Illness differs mostly by place, and partly by how readily it is authorised.</li>
+<li><strong>The research points to where to look.</strong> It is consistent on:
+<ul>
+<li>early identification;</li>
+<li>relationships and belonging;</li>
+<li>support for social, emotional and mental health needs (the type of need that goes most with absence here);</li>
+<li>work with families. Parental engagement is the one approach with consistent support from randomised trials, though most were in the United States.</li>
+</ul></li>
+<li><strong>Schools with a sixth form</strong> have +5% more absence among their 11-16 pupils than comparable 11-16 schools. That is worth a look in 11-18 schools.</li>
+</ol>
+</div>
+</div>
+</section>
 <section id="sec-place" class="level2">
 <h2 class="anchored" data-anchor-id="sec-place">Place, once the intake is allowed for</h2>
 <div class="cell">
 <div id="tbl-place" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Share of the variation between schools at the region and local authority levels, before and after the characteristics are in the model (multilevel models, 2025/26 autumn and spring).
+Table&nbsp;2: Share of the variation between schools at the region and local authority levels, before and after the characteristics are in the model (multilevel models, 2025/26 autumn and spring).
 </figcaption>
 <div aria-describedby="tbl-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -518,7 +653,7 @@ Table&nbsp;1: Share of the variation between schools at the region and local aut
 <img src="absence_causes_files/figure-html/fig-la-illness-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-illness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Each local authority’s illness absence against what its schools’ intakes predict, 2025/26 autumn and spring (multilevel model, region and authority effects together). 152 authorities, lowest on the left; Sussex’s three are named.
+Figure&nbsp;6: Each local authority’s illness absence against what its schools’ intakes predict, 2025/26 autumn and spring (multilevel model, region and authority effects together). 152 authorities, lowest on the left; Sussex’s three are named.
 </figcaption>
 </figure>
 </div>
@@ -4842,7 +4977,7 @@ BIC
 <div id="tbl-x-desc" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-x-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Measured characteristics: mean and standard deviation across the schools in the models. KS2 prior attainment is centred and neighbourhood education is already a z-score; size is the log of pupils on roll.
+Table&nbsp;3: Measured characteristics: mean and standard deviation across the schools in the models. KS2 prior attainment is centred and neighbourhood education is already a z-score; size is the log of pupils on roll.
 </figcaption>
 <div aria-describedby="tbl-x-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4943,7 +5078,7 @@ Table&nbsp;2: Measured characteristics: mean and standard deviation across the s
 <div id="tbl-cat-desc" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cat-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3: Categories: schools in each, with the reference category first.
+Table&nbsp;4: Categories: schools in each, with the reference category first.
 </figcaption>
 <div aria-describedby="tbl-cat-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">

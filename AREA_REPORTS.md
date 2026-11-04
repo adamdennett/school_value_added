@@ -49,6 +49,7 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
 | Joint-signal plane | M2 (published model without absence) | v2.1 without its absence term (`R/04`) |
 | Scenarios | published absence coefficients | v2.1 absence coefficients (`R/04`) |
 | Absence series, reasons, suspensions | DfE data | the same data, reused |
+| What goes with absence | (none) | national models of seven kinds of absence, 2025/26, applied to the area (`R/08`) |
 
 ## Conventions
 
@@ -144,7 +145,15 @@ attendance against what that intake predicts.
    for the groups; counts, then a table of gap schools and schools above
    for both, and a table of girl/boy differences of more than two points.
 9. **Absence.** Series; absence against intake by school with reasons;
-   reasons chart; suspensions both ways, by school; scenarios.
+   reasons chart; then **what goes with absence here** (`R/08_absence_causes.R`,
+   helpers `abs_*()` in `R/area_helpers.R`): the area and its comparators
+   (higher tiers first, then for a district the Sussex districts it touches)
+   against England by kind, whole and after intake; the area's difference
+   from England group by group; each school against its prediction by kind;
+   the authority's own effects and ranks; and **for heads and governors**,
+   each school against similar schools in its own authority in 2024/25 and
+   2025/26, naming those 20% above or below in both years. Then suspensions
+   both ways, by school; scenarios.
 10. **Over time.** The area's mean value added by year for each group
     against England (`fig_area_years()`), with which way it moved; every
     school's yearly value added with its three-year centred moving average

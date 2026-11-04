@@ -564,6 +564,143 @@ w |>
 fig_reasons(rs, c(NAME, COMPS), "What the absence is")
 ```
 
+## What goes with absence here {#absence-causes}
+
+```{r abs-causes-setup}
+#| include: false
+AC <- load_abs_causes()
+LADS_V <- sf::st_make_valid(LADS)
+neighbours <- function(d) LADS_V$lad[sf::st_touches(LADS_V)[[which(LADS_V$lad == d)]]]
+SE_URNS <- AC$local$schools$URN[AC$local$schools$region == "South East"]
+set_for <- function(a) {
+  if (a == NAME) return(w$URN)
+  if (a == "Sussex") return(W$URN[W$LANAME %in% SUSSEX_LAS])
+  if (a == "South East") return(SE_URNS)
+  if (a %in% SUSSEX_LAS) return(W$URN[W$LANAME == a])
+  W$URN[W$lad %in% a]
+}
+# Higher tiers first, then neighbours: a district against its county, Sussex
+# and the Sussex districts it touches; an authority against Sussex, the South
+# East and the other two; Sussex against the South East and its three
+ABS_COMPS <- switch(TIER, region = c("South East", LAS),
+                    la = c("Sussex", "South East", setdiff(SUSSEX_LAS, NAME)),
+                    district = unique(c(PARENT, "Sussex", neighbours(NAME))))
+ABS_NB <- if (TIER == "district") neighbours(NAME) else character(0)
+abs_sets <- setNames(lapply(c(NAME, ABS_COMPS), set_for), c(NAME, ABS_COMPS))
+ve <- abs_vs_england(AC, abs_sets)
+ve_at <- function(a, o, col) ve[[col]][ve$area == a & ve$outcome == o]
+ve_lab <- ve |> distinct(area, n) |> mutate(lab = paste0(area, " (", n, ")"))
+ve_plot <- ve |> mutate(area = ve_lab$lab[match(area, ve_lab$area)])
+adec <- abs_decomp(AC, w$URN)
+adec_at <- function(o) adec |> filter(outcome == o, group != ABS_REST) |> mutate(pct = 100 * (exp(logc) - 1))
+top_up <- function(o) { d <- adec_at(o) |> arrange(desc(pct)); d[1, ] }
+top_dn <- function(o) { d <- adec_at(o) |> arrange(pct); d[1, ] }
+GROUP_WORD <- c("Poverty" = "poverty", "SEND" = "special educational needs",
+                "Young carers" = "young carers", "Ethnicity and language" = "ethnicity and language",
+                "Prior attainment and neighbourhood" = "prior attainment and neighbourhood",
+                "Mobility and sex" = "mobility and sex", "The school" = "the kinds of school",
+                "Place" = "how rural or urban it is")
+n_mod <- adec$n[1]
+# The authority's own effect for each kind, after intake, and its rank of 152
+LA_FOR <- if (TIER == "district") PARENT else LAS
+la_rk <- AC$la_effects |> group_by(outcome) |> mutate(rank = rank(-la_pct), n_la = n()) |> ungroup() |>
+  filter(la %in% LA_FOR)
+rk <- function(la, o, col) la_rk[[col]][la_rk$la == la & la_rk$outcome == o]
+pc0 <- function(x) sprintf("%+.0f%%", x)
+ml <- function(x) if (abs(x) < 0.5) "about the same absence as" else if (x > 0) sprintf("%.0f%% more absence than", x) else sprintf("%.0f%% less absence than", -x)
+disp <- function(a) ifelse(a == "South East", "the South East", a)
+hl <- function(x) if (x >= 0) sprintf("%.0f%% higher", x) else sprintf("%.0f%% lower", -x)
+asch <- abs_expected(AC, w$URN) |>
+  mutate(over = overall_obs - overall_exp) |> arrange(desc(over))
+ab_over <- asch |> filter(over > 1); ab_under <- asch |> filter(over < -1)
+```
+
+The [national absence analysis](@@ROOT@@absence_causes.qmd)
+models seven kinds of absence in every secondary school in England, using
+autumn and spring 2025/26 and the January 2026 census. Here it is applied to
+`r NAME`'s `r n_mod` schools with full data. It compares them with England,
+`r paste0("with ", and_list(disp(setdiff(ABS_COMPS, ABS_NB))), if (length(ABS_NB)) paste0(", and with the neighbouring ", vb(length(ABS_NB), "district", "districts"), " (", and_list(ABS_NB), ")") else "", ".")`
+
+```{r fig-abs-vs-england}
+#| fig-cap: !expr paste0("Absence in ", NAME, " and its comparators against England's average school, autumn and spring 2025/26. Hollow, the whole difference; filled, the part the schools' intake, needs and setting do not account for (the national models' region, authority and school effects). Schools in brackets.")
+#| fig-height: !expr 1.4 + 0.42 * length(abs_sets)
+#| fig-width: 10
+fig_abs_vs_england(ve_plot, ve_lab$lab[ve_lab$area == NAME])
+```
+
+- **Overall**, `r NAME`'s schools have `r ml(ve_at(NAME, "overall", "total"))`
+  England's average school. Once their intake is allowed for, the
+  difference is `r pc0(ve_at(NAME, "overall", "rest"))`.
+- **By kind**, against England (in brackets, once intake is allowed for):
+  illness is `r hl(ve_at(NAME, "illness", "total"))` (`r hl(ve_at(NAME, "illness", "rest"))`),
+  unauthorised absence `r hl(ve_at(NAME, "unauth", "total"))` (`r hl(ve_at(NAME, "unauth", "rest"))`),
+  and severe absence `r hl(ve_at(NAME, "severe", "total"))` (`r hl(ve_at(NAME, "severe", "rest"))`).
+- `r if (top_up("overall")$pct >= 0.5) paste0("**What pushes absence up most** here, against England, is ", GROUP_WORD[[top_up("overall")$group]], " (", pc0(top_up("overall")$pct), " overall).") else "**Nothing in the intake** pushes absence up much here, against England."`
+  `r if (top_dn("overall")$pct <= -0.5) paste0("**What holds it down most** is ", GROUP_WORD[[top_dn("overall")$group]], " (", pc0(top_dn("overall")$pct), ").") else "Nothing in the intake holds it down much."`
+  For illness, the biggest push is `r GROUP_WORD[[top_up("illness")$group]]`
+  (`r pc0(top_up("illness")$pct)`).
+`r paste0("- **", LA_FOR, "'s own effect**, after intake: illness ", pc0(sapply(LA_FOR, rk, o = "illness", col = "la_pct")), " (", sapply(sapply(LA_FOR, rk, o = "illness", col = "rank"), ord), " of ", la_rk$n_la[1], " authorities), unauthorised ", pc0(sapply(LA_FOR, rk, o = "unauth", col = "la_pct")), " (", sapply(sapply(LA_FOR, rk, o = "unauth", col = "rank"), ord), ").", collapse = "\n")`
+
+```{r fig-abs-decomp}
+#| fig-cap: !expr paste0("Why absence in ", NAME, "'s schools differs from England's, group by group, autumn and spring 2025/26. Each group's part is its national coefficients times the gap between the area's and England's average characteristics. Blue is what is left, the region, authority and the schools themselves. The parts add up on the log scale, so they are close to, but not exactly, additive as percentages.")
+#| fig-height: 4.4
+#| fig-width: 10
+fig_abs_decomp(adec, NULL)
+```
+
+`r if (!nrow(ab_over)) paste0("- **No school** in ", NAME, " runs more than a point above the absence its intake predicts.") else if (nrow(ab_over) <= FEW) paste0("- **", and_list(ab_over$SCHNAME), "** ", vb(nrow(ab_over), "runs", "each run"), " more than a point above the absence ", vb(nrow(ab_over), "its", "their"), " intake predicts.") else paste0("- **", nrow(ab_over), " schools** run more than a point above the absence their intake predicts: the top of the table below.")`
+`r if (!nrow(ab_under)) "" else if (nrow(ab_under) <= FEW) paste0("- **", and_list(ab_under$SCHNAME), "** ", vb(nrow(ab_under), "runs", "run"), " more than a point below.") else paste0("- **", nrow(ab_under), " schools** run more than a point below: the foot of the table.")`
+
+```{r tbl-abs-expected}
+#| tbl-cap: "Each school's absence by kind, autumn and spring 2025/26, with what its intake, needs and setting predict anywhere in England in brackets (national models; % of sessions, and % of pupils for severe). Ordered by overall absence above prediction."
+f2 <- function(o, e) sprintf("%.1f (%.1f)", o, e)
+asch |> transmute(School = SCHNAME, Overall = f2(overall_obs, overall_exp), `Above prediction` = sh(over),
+                 Illness = f2(illness_obs, illness_exp), Unauthorised = f2(unauth_obs, unauth_exp),
+                 `Severe (50%+)` = f2(severe_obs, severe_exp)) |>
+  kt(align = "lrrrrr")
+```
+
+### For heads and governors {#absence-heads}
+
+```{r abs-heads-setup}
+#| include: false
+# Each school against schools with the same intake, needs and setting in the
+# same authority (the national models' school-level residuals), two years
+rsd <- AC$resid |> filter(URN %in% w$URN, outcome %in% c("overall", "unauth", "severe")) |>
+  mutate(across(c(r_2425, r_2526), ~ 100 * (exp(.x) - 1))) |>
+  inner_join(w |> select(URN, SCHNAME), by = "URN")
+both_hi <- rsd |> filter(outcome == "unauth", r_2425 > 20, r_2526 > 20) |> arrange(desc(r_2526))
+both_lo <- rsd |> filter(outcome == "unauth", r_2425 < -20, r_2526 < -20) |> arrange(r_2526)
+nm <- function(d) if (nrow(d) <= FEW) paste0("**", and_list(d$SCHNAME), "**") else paste0("**", nrow(d), " schools**")
+```
+
+The national page sets out
+[what the school's part in absence is](@@ROOT@@absence_causes.qmd#sec-school).
+In short:
+
+- Who runs a school, its size and its religious character make little
+  difference to absence once intake is allowed for.
+- Schools with the same intake can differ a great deal, and the
+  differences persist from year to year.
+
+The table compares each of `r NAME`'s schools with similar schools in its
+own authority, in 2024/25 and 2025/26.
+
+`r if (nrow(both_hi)) paste0("- ", nm(both_hi), " ", vb(nrow(both_hi), "has", "have"), " unauthorised absence more than 20% above similar schools in both years. That is the pattern worth asking about.") else "- **No school** here has unauthorised absence more than 20% above similar schools in both years."`
+`r if (nrow(both_lo)) paste0("- ", nm(both_lo), " ", vb(nrow(both_lo), "has", "have"), " unauthorised absence more than 20% below similar schools in both years. What ", vb(nrow(both_lo), "it does", "they do"), " may be worth sharing.") else ""`
+
+```{r tbl-abs-heads}
+#| tbl-cap: "Each school's absence against schools with the same intake, needs and setting in the same local authority (%; the national models' school-level residuals), 2024/25 full year and 2025/26 autumn and spring. Ordered by unauthorised absence in 2025/26."
+fp <- function(x) ifelse(is.na(x), "", sprintf("%+.0f%%", x))
+rsd |> tidyr::pivot_wider(id_cols = c(URN, SCHNAME), names_from = outcome, values_from = c(r_2425, r_2526)) |>
+  arrange(desc(r_2526_unauth)) |>
+  transmute(School = SCHNAME,
+            `Overall 24/25` = fp(r_2425_overall), `Overall 25/26` = fp(r_2526_overall),
+            `Unauthorised 24/25` = fp(r_2425_unauth), `Unauthorised 25/26` = fp(r_2526_unauth),
+            `Severe 24/25` = fp(r_2425_severe), `Severe 25/26` = fp(r_2526_severe)) |>
+  kt(align = "lrrrrrr")
+```
+
 **Suspensions** were `r sprintf("%.1f", ex_at(NAME))` episodes per 100
 pupils in `r yr(ex_last)`, against `r sprintf("%.1f", ex_at("England"))`
 for England. One pupil can be suspended several times:

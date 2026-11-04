@@ -241,3 +241,92 @@ fig_area_years <- function(yrs, w, name) {
     labs(x = NULL, y = "Mean value added (points)", title = paste0(name, ": the schools' average, year by year")) +
     theme_note()
 }
+
+# ---- What goes with absence, locally (R/08_absence_causes.R) -----------------
+# The national models of seven kinds of absence (2025/26, autumn and spring)
+# applied to an area's schools: how far its absence differs from England's,
+# how much of that its schools' characteristics account for, group by group,
+# and each school against what its characteristics predict anywhere in England.
+load_abs_causes <- function() readRDS(here::here("data", "absence_causes.rds"))
+ABS_SHOW <- c(overall = "Overall", illness = "Illness", unauth = "Unauthorised", severe = "Severe (50%+)")
+ABS_REST <- "Place and the schools themselves"
+
+#' Why a set of schools' absence differs from England's, by group of
+#' characteristics, on the log scale (so the parts add up): each group's
+#' coefficients times the gap between the set's mean characteristics and
+#' England's; what is left is the set's region, authority and school effects.
+abs_decomp <- function(AC, urns, outcomes = names(ABS_SHOW)) {
+  L <- AC$local; i <- which(L$schools$URN %in% urns)
+  if (!length(i)) return(NULL)
+  dx <- colMeans(L$mm[i, , drop = FALSE]) - colMeans(L$mm)
+  g <- L$col_group[names(dx)]
+  bind_rows(lapply(outcomes, function(o) {
+    b <- AC$coefs |> filter(outcome == o)
+    contrib <- setNames(b$b, b$term)[names(dx)] * dx
+    by_g <- tapply(contrib[!is.na(g)], g[!is.na(g)], sum)
+    delta <- mean(L$ly[i, o]) - mean(L$ly[, o])
+    tibble::tibble(outcome = o, group = c(names(by_g), ABS_REST),
+                   logc = c(as.vector(by_g), delta - sum(by_g)), delta = delta, n = length(i))
+  }))
+}
+
+#' For each area: its absence against England's (%), and the part its
+#' schools' characteristics do not account for (%), kind by kind
+abs_vs_england <- function(AC, sets, outcomes = names(ABS_SHOW)) {
+  bind_rows(lapply(names(sets), function(a) {
+    d <- abs_decomp(AC, sets[[a]], outcomes)
+    if (is.null(d)) return(NULL)
+    d |> group_by(outcome) |>
+      summarise(total = 100 * (exp(first(delta)) - 1),
+                rest = 100 * (exp(logc[group == ABS_REST]) - 1), n = first(n), .groups = "drop") |>
+      mutate(area = a)
+  }))
+}
+
+#' Each school's absence and what its characteristics predict (back-transformed
+#' with the national smearing factor), kind by kind
+abs_expected <- function(AC, urns, outcomes = names(ABS_SHOW)) {
+  L <- AC$local; i <- which(L$schools$URN %in% urns)
+  out <- L$schools[i, c("URN", "SCHNAME")]
+  for (o in outcomes) {
+    b <- AC$coefs |> filter(outcome == o)
+    out[[paste0(o, "_obs")]] <- L$schools[[o]][i]
+    out[[paste0(o, "_exp")]] <- exp(as.vector(L$mm[i, b$term, drop = FALSE] %*% b$b)) * L$smear[[o]] - 0.1
+  }
+  out
+}
+
+#' The area against England and its comparators, kind by kind: the whole
+#' difference (hollow) and the part intake does not account for (filled)
+fig_abs_vs_england <- function(ve, focus) {
+  d <- ve |> mutate(kind = factor(ABS_SHOW[outcome], ABS_SHOW),
+                    area = factor(area, rev(unique(area))), hl = area == focus)
+  ggplot(d, aes(y = area)) +
+    geom_vline(xintercept = 0, colour = LIGHT) +
+    geom_segment(aes(x = total, xend = rest, yend = area), colour = LIGHT, linewidth = 1) +
+    geom_point(aes(x = total, colour = hl), shape = 21, fill = "white", size = 2.8, stroke = 1.1) +
+    geom_point(aes(x = rest, colour = hl, fill = hl), shape = 21, size = 2.8) +
+    facet_wrap(~ kind, nrow = 1) +
+    scale_colour_manual(values = c(`TRUE` = DPURPLE, `FALSE` = GREY), guide = "none") +
+    scale_fill_manual(values = c(`TRUE` = DPURPLE, `FALSE` = GREY), guide = "none") +
+    scale_x_continuous(labels = function(x) sprintf("%+d%%", round(x))) +
+    labs(x = "Against England's average school", y = NULL) + theme_note() +
+    theme(panel.spacing.x = unit(1.2, "lines"))
+}
+
+#' The area's difference from England, group by group, for each kind
+fig_abs_decomp <- function(dec, title) {
+  lv <- c(sub("^Place$", "Rural or urban", names(ABS_GROUP_ORDER)), ABS_REST)
+  d <- dec |> mutate(group = ifelse(group == "Place", "Rural or urban", group),kind = factor(ABS_SHOW[outcome], ABS_SHOW), pct = 100 * (exp(logc) - 1),
+                     group = factor(group, rev(lv)), rest = group == ABS_REST)
+  ggplot(d, aes(pct, group, fill = rest)) +
+    geom_vline(xintercept = 0, colour = LIGHT) +
+    geom_col(width = 0.7) +
+    facet_wrap(~ kind, nrow = 1) +
+    scale_fill_manual(values = c(`TRUE` = BLUE, `FALSE` = BPURPLE), guide = "none") +
+    scale_x_continuous(labels = function(x) sprintf("%+d%%", round(x))) +
+    labs(title = title, x = "Contribution to the difference from England", y = NULL) + theme_note() +
+    theme(panel.spacing.x = unit(1.2, "lines"))
+}
+ABS_GROUP_ORDER <- c("Poverty" = 1, "SEND" = 2, "Young carers" = 3, "Ethnicity and language" = 4,
+                     "Prior attainment and neighbourhood" = 5, "Mobility and sex" = 6, "The school" = 7, "Place" = 8)

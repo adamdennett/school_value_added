@@ -285,6 +285,122 @@ The kinds of absence split cleanly in two:
 That is the case for v2.1's sensitivity test that counts illness separately
 from other absence ([Methodology](method.qmd#sec-v21)).
 
+## The school's part {#sec-school}
+
+"The school" carries `r round(100 * A$shapley$shapley[A$shapley$outcome == "unauth" & A$shapley$group == "The school"])`
+to `r round(100 * A$shapley$shapley[A$shapley$outcome == "persistent" & A$shapley$group == "The school"])`
+points of R² for unauthorised, persistent and severe absence above. That
+does not mean schools are to blame for that much absence. The group is five
+measured features:
+
+- size;
+- whether the school has a sixth form;
+- its admissions (selective, or non-selective);
+- who runs it;
+- whether it has a religious character.
+
+What schools *do* is not measured at all. Splitting the group into its
+five features shows where the credit goes:
+
+```{r}
+#| label: fig-school-split
+#| fig-cap: "The school group's share of R², split into its five features: Shapley values with each feature as a player of its own and the other seven groups as before (OLS, region in Place), 2025/26 autumn and spring."
+#| fig-height: 3.4
+#| fig-width: 9
+SCHOOL_LAB <- c(ADMPOL_PT = "Admissions (selective or not)", mat = "Who runs it", size = "Size",
+                sixth = "Sixth form", faith = "Religious character")
+ss <- A$shap_school |> filter(player %in% names(SCHOOL_LAB)) |>
+  mutate(player = factor(SCHOOL_LAB[player], rev(SCHOOL_LAB)), out = factor(OUT_SHORT[outcome], OUT_SHORT))
+ggplot(ss, aes(100 * shapley, player)) +
+  geom_col(fill = DPURPLE, width = 0.7) +
+  geom_text(aes(label = sprintf("%.1f", 100 * shapley)), hjust = -0.2, size = 3.2, colour = INK) +
+  facet_wrap(~ out, nrow = 1) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.3))) +
+  labs(x = "Percentage points of R²", y = NULL) + theme_note() +
+  theme(panel.grid.major.y = element_blank())
+sc <- function(o, p) 100 * A$shap_school$shapley[A$shap_school$outcome == o & A$shap_school$player == p]
+sp <- function(o, col) A$school_spread[[col]][A$school_spread$outcome == o]
+```
+
+**Most of it is selection.** Admissions accounts for
+`r pp(sc("unauth", "ADMPOL_PT"))` of the points for unauthorised absence,
+`r pp(sc("persistent", "ADMPOL_PT"))` for persistent and
+`r pp(sc("severe", "ADMPOL_PT"))` for severe. Selective schools choose
+their pupils. Prior attainment and free school meals measure some of what
+selection does, but not all of it, and admissions picks up the rest. That
+is a fact about who comes to the school, not about how it is run. Who runs
+it (`r pp(sc("unauth", "mat"))` points), size, sixth form and religious
+character each add little.
+
+**What a school does shows up somewhere else: in how far apart similar
+schools are.** Take schools with the same intake, needs and setting, in the
+same local authority. What is left over (the models' school-level
+residuals) is what the measured characteristics cannot explain. That
+includes how a school runs attendance, and also anything about its pupils
+the data does not see.
+
+```{r}
+#| label: tbl-school-spread
+#| tbl-cap: "How far apart schools with the same intake, needs and setting, in the same local authority, are on each kind of absence (2025/26 autumn and spring), and whether the differences repeat (the same models on 2024/25 full-year absence)."
+A$school_spread |> mutate(o = factor(outcome, names(OUT))) |> arrange(o) |>
+  transmute(Outcome = unname(OUT[outcome]),
+            `Quarter from top vs quarter from bottom` = sprintf("%+.0f%%", iqr_pct),
+            `Tenth from top vs tenth from bottom` = sprintf("%+.0f%%", p90_10_pct),
+            `Correlation with 2024/25` = sprintf("%.2f", r_years),
+            `Top quarter in 2025/26 also top quarter in 2024/25` = sprintf("%.0f%%", 100 * top_q_again)) |>
+  kt(align = "lrrrr")
+```
+
+- **The gaps are large.** Among otherwise similar schools in the same
+  authority, the one a quarter of the way from the top has
+  `r sprintf("%.0f%%", sp("unauth", "iqr_pct"))` more unauthorised absence
+  than the one a quarter of the way from the bottom. For severe absence the
+  gap is `r sprintf("%.0f%%", sp("severe", "iqr_pct"))`; for overall
+  absence, `r sprintf("%.0f%%", sp("overall", "iqr_pct"))`.
+- **They repeat.** A school's unexplained absence in 2025/26 correlates
+  `r sprintf("%.2f", sp("unauth", "r_years"))` with its own in 2024/25 for
+  unauthorised absence, and `r sprintf("%.2f", sp("overall", "r_years"))`
+  overall. Of the schools in the top quarter for unexplained unauthorised
+  absence in 2025/26, `r sprintf("%.0f%%", 100 * sp("unauth", "top_q_again"))`
+  were in the top quarter the year before; chance would give 25%. These are
+  stable features of schools or their communities, not noise.
+- **That stability is not proof of a school effect.** The same 2026
+  characteristics are used for both years, and pupils the data does not see
+  are as stable as a school's practice. Only following schools whose
+  practice changed would separate the two.
+
+::: {.callout-tip}
+## For heads and governors
+
+1. **Judge absence against what your intake predicts, not against the
+   national average.** The area pages give each Sussex school's absence by
+   kind, its prediction, and how it compares with similar schools in the
+   same authority over two years.
+2. **Structure is not the lever.** Being in a multi-academy trust, its
+   size, and its religious character make little difference once intake is
+   allowed for. Most of what looks like a "school" effect in the averages is
+   selective admissions, which is about who is admitted.
+3. **Practice may well be the lever.** Schools with the same intake differ
+   by half again or more in unauthorised and severe absence, and the
+   differences persist. A school well above similar schools, year after
+   year, should ask what its look-alikes below the line are doing
+   differently.
+4. **Look at the kind of absence.** Unauthorised, persistent and severe
+   absence are where similar schools differ most. Illness differs mostly by
+   place, and partly by how readily it is authorised.
+5. **The research points to where to look.** It is consistent on:
+   - early identification;
+   - relationships and belonging;
+   - support for social, emotional and mental health needs (the type of
+     need that goes most with absence here);
+   - work with families. Parental engagement is the one approach with
+     consistent support from randomised trials, though most were in the
+     United States.
+6. **Schools with a sixth form** have `r sg(e("sixthTRUE", "overall"))`
+   more absence among their 11-16 pupils than comparable 11-16 schools.
+   That is worth a look in 11-18 schools.
+:::
+
 ## Place, once the intake is allowed for {#sec-place}
 
 ```{r}
