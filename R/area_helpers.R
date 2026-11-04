@@ -1,7 +1,7 @@
-# area_helpers.R - The original area documents' charts and tables, on v2.0
+# area_helpers.R - The original area documents' charts and tables, on v2.1
 # ---------------------------------------------------------------------------
 # Ported from school_attainment_tool's R/area_report_helpers.R. Each now
-# reads Value Added v2.0 and the v2 absence-against-intake measure, in the
+# reads Value Added v2.1 and the v2 absence-against-intake measure, in the
 # site's palette. Sourced by the area pages after site_helpers.R.
 # ---------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ fig_reasons <- function(rs, areas, title) {
 }
 
 #' The two questions, one against the other, as an interactive chart: does
-#' the school add value (Value Added v2.0, absence allowed for), and does it
+#' the school add value (Value Added v2.1, absence allowed for), and does it
 #' hold attendance (absence against intake). Neither contains the other, so
 #' the corners mean what they say. Every school in England in grey, the
 #' area's schools coloured by authority, each with its figures on hover;
@@ -90,7 +90,7 @@ fig_plane_live <- function(all_schools, focus) {
   xl <- c(min(xl[1], -4), max(xl[2], 4.5)); yl <- c(min(yl[1], -6), max(yl[2], 6))
   bg <- ok(all_schools) |> filter(!URN %in% focus$URN)
   fg <- ok(focus) |>
-    mutate(tip = sprintf("<b>%s</b><br>%s<br>Value added v2.0: %s<br>Absence against intake: %s pp<br>Value added with no allowance for absence: %s",
+    mutate(tip = sprintf("<b>%s</b><br>%s<br>Value added v2.1: %s<br>Absence against intake: %s pp<br>Value added with no allowance for absence: %s",
                          SCHNAME, coalesce(lad, LANAME), sgn(va_shrunk_all), sgn(abs_excess),
                          ifelse(is.na(va_m2), "n/a", sgn(va_m2))))
   cols <- area_cols(unique(fg$LANAME))
@@ -107,7 +107,7 @@ fig_plane_live <- function(all_schools, focus) {
   p |> plotly::layout(
     xaxis = list(title = "Absence above what the intake predicts (percentage points)", range = xl,
                  zeroline = TRUE, zerolinecolor = GREY, gridcolor = "#ece8f3"),
-    yaxis = list(title = "Value added v2.0 (Attainment 8 points)", range = yl,
+    yaxis = list(title = "Value added v2.1 (Attainment 8 points)", range = yl,
                  zeroline = TRUE, zerolinecolor = GREY, gridcolor = "#ece8f3"),
     legend = list(orientation = "h", y = -0.15), font = list(family = "inherit", color = INK),
     paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
@@ -143,7 +143,7 @@ fig_governance <- function(g, title = "Schools by who ran them in 2024/25") {
     facet_grid(run_by ~ ., scales = "free_y", space = "free_y", switch = "y") +
     scale_shape_manual(values = c(21, 22, 24, 23), name = NULL, drop = FALSE) +
     scale_y_discrete(position = "right") +
-    labs(x = "Value added v2.0, all pupils (Attainment 8 points, against England)", y = NULL, title = title) +
+    labs(x = "Value added v2.1, all pupils (Attainment 8 points, against England)", y = NULL, title = title) +
     theme_note(10) +
     theme(strip.placement = "outside",
           strip.text.y.left = element_text(angle = 0, hjust = 1, face = "bold", colour = DPURPLE, size = 8),
@@ -201,7 +201,7 @@ va_by_year <- function(V, urns, g, names) {
     arrange(desc(Shrunk)) |>
     mutate(`95% interval` = sprintf("%+.1f to %+.1f", lo, hi),
            across(where(is.double), ~ifelse(is.na(.x), "", sprintf("%+.1f", .x)))) |>
-    select(School = SCHNAME, starts_with("20"), `v2.0, four years (shrunk)` = Shrunk, `95% interval`,
+    select(School = SCHNAME, starts_with("20"), `v2.1, four years (shrunk)` = Shrunk, `95% interval`,
            `2025/26 (provisional)` = Prov)
 }
 

@@ -1,8 +1,8 @@
-# 04_place_and_absence.R - The v1 area analyses, refitted on Value Added v2.0
+# 04_place_and_absence.R - The v1 area analyses, refitted on Value Added v2.1
 # ---------------------------------------------------------------------------
 # The original Sussex documents (school_attainment_tool, AREA_REPORTS.md)
 # rest on five model-based analyses beyond value added itself. This refits
-# each on the v2.0 specification:
+# each on the v2.1 specification:
 #
 #   1. Absence against intake. log(absence) on the v2 intake terms with
 #      year and region effects but no local authority effect, so an
@@ -26,13 +26,13 @@ source(here::here("R", "00_config.R"))
 suppressPackageStartupMessages(library(lme4))
 
 INTAKE <- c("log(PTFSM6CLA1A)", "log(PNUMEAL)", "ks2_c", "ADMPOL_PT", "z_l4", "sen_support",
-            "sen_ehcp", "mobile", "girls_school", "boys_school")
+            "sen_ehcp", "mobile", "girls_school", "boys_school", "age16")
 SUSSEX_LADS <- c("Brighton and Hove", "Eastbourne", "Hastings", "Lewes", "Rother", "Wealden", "Adur",
                  "Arun", "Chichester", "Crawley", "Horsham", "Mid Sussex", "Worthing")
 
 base_rows <- function(d) {
   keep <- !d$excluded & d$PTFSM6CLA1A > 0 & d$PERCTOT > 0 & d$PNUMEAL > 0 &
-    complete.cases(d[, c("ks2_c", "ADMPOL_PT", "z_l4", "sen_support", "sen_ehcp", "mobile",
+    complete.cases(d[, c("ks2_c", "ADMPOL_PT", "z_l4", "sen_support", "sen_ehcp", "mobile", "age16",
                          "gor_name", "LANAME", "PTFSM6CLA1A", "PERCTOT", "PNUMEAL")])
   d[which(keep), ] |>
     mutate(year_label = factor(year_label), gor_name = factor(gor_name), LANAME = factor(LANAME))

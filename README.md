@@ -1,4 +1,4 @@
-# School Value Added v2.0
+# School Value Added v2.1
 
 **How much does a school add? And how much does absence (or anything else) take away?**
 
@@ -9,7 +9,7 @@ pupils, girls and boys.
 
 **Site:** https://adamdennett.github.io/school_value_added/
 
-v2.0 follows on from
+v2.1 follows on from
 [How to Pull the Right Lever](https://github.com/adamdennett/school_attainment_tool)
 and is built on the recommendations of its value-added review
 (`review.qmd`). Built from published DfE and Ofsted data and the 2021
@@ -21,13 +21,13 @@ Everything the model needs is built from public sources by this
 repository: DfE's performance tables (Compare School and College
 Performance), Explore Education Statistics, GIAS, the 2021 Census (nomis,
 ONS), postcodes.io and Ofsted. The scripts are in `pipeline/`, taken from
-the original project and cut to what v2.0 uses; downloads go to `data-raw/`
+the original project and cut to what v2.1 uses; downloads go to `data-raw/`
 and `data/`, both git-ignored.
 
 ```
 Rscript R/00_fetch_data.R    # download and build the inputs (first run: about an hour)
 Rscript R/01_inputs.R        # assemble data/inputs.rds
-Rscript R/02_fit_va.R        # fit v2.0 for every group -> data/va_v2.rds, data/va_v2_schools.csv
+Rscript R/02_fit_va.R        # fit v2.1 for every group -> data/va_v2.rds, data/va_v2_schools.csv
 Rscript R/04_place_and_absence.R  # absence against intake, district test, trusts, scenarios on v2 (~15 min)
 Rscript R/05_provisional_2526.R   # provisional 2025/26, predicted from the fitted model
 Rscript R/06_bh_effect.R          # why Brighton and Hove's authority effect is large (~5 min)
@@ -73,7 +73,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 
 1. Add the year to `YEAR_CONFIG` in `pipeline/helpers.R` (and its KS4 file:
    final or provisional), then `Rscript R/00_fetch_data.R`.
-2. Rerun the build steps above. v2.0 takes its years from the data;
+2. Rerun the build steps above. v2.1 takes its years from the data;
    nothing in the model is tied to a year.
 
 ## Files
@@ -86,9 +86,9 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/refresh_ofsted.R`, `.github/workflows/refresh-ofsted.yml` | the monthly Ofsted refresh |
 | `R/snapshot_area.R`, `data/area/` | the original project's Sussex area analyses, snapshotted |
 | `data/lookups/` | fixed lookups: v1 as published, URN families, combined authorities, DfE region codes |
-| `R/02_fit_va.R` | the v2.0 models and value added |
+| `R/02_fit_va.R` | the v2.1 models and value added |
 | `R/03_area_pages.R` | area pages from `templates/area.qmd` (format: `AREA_REPORTS.md`) |
-| `R/04_place_and_absence.R` | the original area analyses refitted on v2.0 |
+| `R/04_place_and_absence.R` | the original area analyses refitted on v2.1 |
 | `R/05_provisional_2526.R` | provisional 2025/26 value added |
 | `R/06_bh_effect.R` | Brighton and Hove's authority effect, term by term (`bh_effect.qmd`) |
 | `R/07_v21_candidates.R` | the v2.1 candidates (kind of absence, 11–16) and the importance charts |

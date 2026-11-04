@@ -54,15 +54,14 @@ dg <- with_reasons(model_rows(d, "all"))
 base <- fixed_for("all")
 no_abs <- setdiff(base, "log(PERCTOT)")
 specs <- list(
-  v2 = list(label = "Value Added v2.0", terms = base),
+  v2 = list(label = "Value Added v2.1", terms = base),
   no_absence = list(label = "Without absence", terms = no_abs),
   no_l4 = list(label = "Without neighbourhood education", terms = setdiff(base, "z_l4")),
   no_ks2 = list(label = "Without prior attainment (KS2)", terms = setdiff(base, "ks2_c")),
   ill_share = list(label = "Plus the illness share of absence", terms = c(base, "ill_share")),
   split = list(label = "Absence split: illness and the rest", terms = c(no_abs, "log(illness)", "log(other)")),
-  age16 = list(label = "Plus an 11-16 school flag", terms = c(base, "age16")),
-  segregation = list(label = "Plus local segregation (Gorard index)", terms = c(base, "gorard_segregation")),
-  both = list(label = "Plus the illness share and the 11-16 flag", terms = c(base, "ill_share", "age16")))
+  age16 = list(label = "Without the 11-16 flag (v2.0)", terms = setdiff(base, "age16")),
+  segregation = list(label = "Plus local segregation (Gorard index)", terms = c(base, "gorard_segregation")))
 fits <- lapply(specs, function(s) fit_la(dg, "ATT8SCR", s$terms))
 tests <- tibble(spec = names(specs), label = vapply(specs, `[[`, "", "label"),
                 effect = vapply(fits, `[[`, 0, "effect"), se = vapply(fits, `[[`, 0, "se"),
@@ -72,7 +71,7 @@ tests <- tibble(spec = names(specs), label = vapply(specs, `[[`, "", "label"),
 coef_of <- function(spec, term) unname(fixef(fits[[spec]]$m)[term])
 coefs <- c(absence = coef_of("v2", "log(PERCTOT)"), ill_share = coef_of("ill_share", "ill_share"),
            illness = coef_of("split", "log(illness)"), other = coef_of("split", "log(other)"),
-           age16 = coef_of("age16", "age16"))
+           age16 = coef_of("v2", "age16"))
 
 # Does absence cost less inside the authority? An interaction on the v2 rows
 dg$in_la <- as.numeric(dg$LANAME == TARGET)

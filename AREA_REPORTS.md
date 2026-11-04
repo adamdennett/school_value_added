@@ -1,9 +1,9 @@
-# Area pages: the format (Value Added v2.0)
+# Area pages: the format (Value Added v2.1)
 
 The record of how the v2 area pages are laid out, so the format can be
 changed in one place and carried to every page. It follows the original
 project's `AREA_REPORTS.md` (school_attainment_tool), with every
-model-based analysis refitted on Value Added v2.0. To change the format,
+model-based analysis refitted on Value Added v2.1. To change the format,
 edit `templates/area.qmd` (or `districts.qmd`) and this file together,
 then rebuild.
 
@@ -27,7 +27,7 @@ writes one `.qmd` per area (git-ignored; the template is the source).
 
 ```
 Rscript R/01_inputs.R            # modelling data from the original project
-Rscript R/02_fit_va.R            # Value Added v2.0, five groups
+Rscript R/02_fit_va.R            # Value Added v2.1, five groups
 Rscript R/04_place_and_absence.R # absence against intake, district test, trusts, M2, scenarios (~15 min)
 Rscript R/03_area_pages.R        # area pages from the template
 quarto render                    # the site, into docs/
@@ -41,20 +41,23 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
 
 | Analysis | v1 (original) | v2 (here) |
 |---|---|---|
-| Value added | published model, within the LA | v2.0, against England, shrunk with intervals |
+| Value added | published model, within the LA | v2.1, against England, shrunk with intervals |
 | Absence against intake | intake-only stage 1 on v1 terms | intake-only stage 1 on the **v2 intake terms** (`R/04`) |
-| Decomposition | published model | v2.0 model (`decompose()`) |
-| District test | `(1 | gor_name/LANAME/lad)`, with and without `(1 | URN)` | the same on v2.0 (`R/04`) |
-| Trusts | trust level with route and school term | the same on v2.0 (`R/04`) |
-| Joint-signal plane | M2 (published model without absence) | v2.0 without its absence term (`R/04`) |
-| Scenarios | published absence coefficients | v2.0 absence coefficients (`R/04`) |
+| Decomposition | published model | v2.1 model (`decompose()`) |
+| District test | `(1 | gor_name/LANAME/lad)`, with and without `(1 | URN)` | the same on v2.1 (`R/04`) |
+| Trusts | trust level with route and school term | the same on v2.1 (`R/04`) |
+| Joint-signal plane | M2 (published model without absence) | v2.1 without its absence term (`R/04`) |
+| Scenarios | published absence coefficients | v2.1 absence coefficients (`R/04`) |
 | Absence series, reasons, suspensions | DfE data | the same data, reused |
 
 ## Conventions
 
-- **Value added** is v2.0 against England, shrunk by reliability, with a
+- **Value added** is v2.1 against England, shrunk by reliability, with a
   95% interval; "significantly above / below" means the interval excludes
   zero. Five groups: all, disadvantaged, non-disadvantaged, girls, boys.
+  Value added allowing for the kind of absence (v2.1 plus the illness
+  share) is on every map and gets one paragraph in "Value added and
+  attendance"; it is never the headline.
 - **Absence against intake** is observed absence minus what the v2 intake
   terms predict (with year and region, without the authority), mean over
   2021/22 to 2024/25, in percentage points. It is on the map, in the
@@ -78,7 +81,7 @@ reasons, suspensions, school-level reasons, and the comparator profiles.
 - **Exclusions.** A school-year is left out of every model when its pupils
   averaged fewer than three GCSE entries or fewer than half achieved any
   qualification (`R/01_inputs.R`, `excluded`). The method page lists them.
-- **2025/26 is provisional.** Predicted from the fitted v2.0 model on
+- **2025/26 is provisional.** Predicted from the fitted v2.1 model on
   DfE's provisional KS4 results (`R/05_provisional_2526.R`): absence
   bridged from autumn and spring, the unpublished intake data carried
   forward, the year centred on England. It appears as its own column
@@ -112,7 +115,7 @@ attendance against what that intake predicts.
 1. **Summary.** Schools and mean value added, significant above/below;
    groups; strongest and weakest; absence against intake (with the
    authority's rank, and schools more than a point above); value added
-   and attendance quadrant counts (Value Added v2.0 against absence
+   and attendance quadrant counts (Value Added v2.1 against absence
    against intake); the
    authority's own effect (authority tier); the district test (district
    and authority tiers, not unitary); suspensions both ways and reduced
@@ -126,7 +129,7 @@ attendance against what that intake predicts.
    (governance chart).
 3. **Value added and attendance** (`#school-by-school`). The joint-signal
    plane, interactive (`fig_plane_live()`, plotly): absence against intake
-   (across) by Value Added v2.0 (up), every school in England
+   (across) by Value Added v2.1 (up), every school in England
    in grey; quadrant counts (`plane_quadrants()`); the schools furthest
    above and below; value added with no allowance for absence explained
    and kept off the chart, since it contains absence against intake.

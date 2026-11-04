@@ -1,6 +1,6 @@
 ---
 title: "Explore by area"
-subtitle: "Choose a region, a combined or mayoral authority, or a local authority, and see its schools' Value Added v2.0 on a map and in a table."
+subtitle: "Choose a region, a combined or mayoral authority, or a local authority, and see its schools' Value Added v2.1 on a map and in a table."
 toc: false
 ---
 
@@ -70,7 +70,7 @@ notes <- setNames(as.list(rep("New mayoral strategic authority, from the Devolut
 ```
 
 Every state-funded mainstream secondary school in England has a Value
-Added v2.0 figure for all pupils, disadvantaged and non-disadvantaged
+Added v2.1 figure for all pupils, disadvantaged and non-disadvantaged
 pupils, girls and boys, `r yl(min(V$spec$years))` to `r yl(max(V$spec$years))`:
 Attainment 8 points against England, shrunk by reliability. Choose a
 level and an area; the map zooms to its schools, a chart shows how each

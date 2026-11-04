@@ -1,6 +1,6 @@
 ---
 title: "Brighton and Hove's authority effect"
-subtitle: "Why the city's schools sit so far above what Value Added v2.0 expects, what explains it, and what might."
+subtitle: "Why the city's schools sit so far above what Value Added v2.1 expects, what explains it, and what might."
 ---
 
 ```{r setup}
@@ -36,7 +36,7 @@ lat_eng <- mean(wl$absence, na.rm = TRUE)
 ::: {.callout-note appearance="simple"}
 ## In short
 
-On the v2.0 model `r LA` has the `r ord(t_at("v2", "rank"))` largest local
+On the v2.1 model `r LA` has the `r ord(t_at("v2", "rank"))` largest local
 authority effect of `r t_at("v2", "n_la")`: its schools' Attainment 8 runs
 `r pc(t_at("v2", "effect"))` above what intake and context predict, after
 neighbourhood education is taken into account. **Almost all of it is an
@@ -53,9 +53,9 @@ family-level resources are one of the likely answers.
 The effect is there for every group of pupils and in every year:
 
 ```{r tbl-groups}
-#| tbl-cap: !expr paste0(LA, "'s authority effect on the v2.0 model, by group. The effect on Attainment 8 and its rank among authorities (1 = most above expectation), with and without the absence term.")
+#| tbl-cap: !expr paste0(LA, "'s authority effect on the v2.1 model, by group. The effect on Attainment 8 and its rank among authorities (1 = most above expectation), with and without the absence term.")
 B$groups |> transmute(Group = GROUP_LABELS[group],
-                      `v2.0 effect` = pc(effect), `v2.0 rank` = paste(rank, "of", n_la),
+                      `v2.1 effect` = pc(effect), `v2.1 rank` = paste(rank, "of", n_la),
                       `Without absence` = pc(effect_no_abs), `Rank without absence` = paste(rank_no_abs, "of", n_la)) |>
   kt(align = "lrrrr")
 ```
@@ -84,9 +84,9 @@ all-pupils model with one change, on the
 absence reasons:
 
 ```{r tbl-tests}
-#| tbl-cap: !expr paste0(LA, "'s authority effect, all pupils, as the v2.0 model changes. AIC compares fit (lower is better; the published model is the reference). The last column is how closely every authority's effect matches the published model's.")
+#| tbl-cap: !expr paste0(LA, "'s authority effect, all pupils, as the v2.1 model changes. AIC compares fit (lower is better; the published model is the reference). The last column is how closely every authority's effect matches the published model's.")
 B$tests |> transmute(Model = label, Effect = pc(effect), Rank = paste(rank, "of", n_la),
-                     `AIC vs v2.0` = sprintf("%+.0f", aic - aic[spec == "v2"]),
+                     `AIC vs v2.1` = sprintf("%+.0f", aic - aic[spec == "v2"]),
                      `Correlation of effects` = sprintf("%.2f", r_v2)) |>
   kt(align = "lrrrr")
 ```
@@ -100,10 +100,12 @@ B$tests |> transmute(Model = label, Effect = pc(effect), Rank = paste(rank, "of"
   [neighbourhood education](#sec-neighbourhood) below.
 - **Local segregation** changes nothing. `r LA`'s catchment admissions,
   with random allocation as a tie-break, keep its schools relatively mixed, but that does not explain the effect.
-- **An 11–16 flag** takes a little off. `r sprintf("%.0f%%", 100 * c_at(LA, "age16"))`
-  of `r LA`'s school-years are at 11–16 schools, against
-  `r sprintf("%.0f%%", 100 * c_at("England", "age16"))` in England.
-  Nationally, 11–16 schools score `r pc(B$coefs[["age16"]])` higher.
+- **The 11–16 flag**, added in v2.1, takes a little off: without it, as
+  in v2.0, the effect is `r pc(t_at("age16", "effect"))`.
+  `r sprintf("%.0f%%", 100 * c_at(LA, "age16"))` of `r LA`'s school-years
+  are at 11–16 schools, against
+  `r sprintf("%.0f%%", 100 * c_at("England", "age16"))` in England, and
+  nationally 11–16 schools score `r pc(B$coefs[["age16"]])` higher.
 
 **The arithmetic.** Over 2021/22 to 2024/25, the four years the model is
 fitted on, `r LA`'s schools average `r sprintf("%.1f%%", c_at(LA, "total"))`
@@ -115,7 +117,7 @@ In `r abs_yr` alone, the year the
 uses, it was `r sprintf("%.1f%%", lat_la)` against
 `r sprintf("%.1f%%", lat_eng)` (means of schools): the gap has
 `r ifelse(lat_la - lat_eng > gap("total"), "widened", "narrowed")`.
-On the v2.0 absence coefficient (`r sprintf("%.3f", B$coefs[["absence"]])`,
+On the v2.1 absence coefficient (`r sprintf("%.3f", B$coefs[["absence"]])`,
 an elasticity), that difference lowers expected Attainment 8 by
 `r sprintf("%.1f%%", -100 * B$cost)`. The authority effect, `r pc(t_at("v2", "effect"))`, almost
 exactly gives it back. `r LA`'s schools attain about what similar intakes
@@ -169,7 +171,7 @@ best <- N |> filter(spec != "none") |> slice_min(aic, n = 1)
 sc <- NP$schools |> left_join(V$schools |> select(URN, SCHNAME), by = "URN") |> arrange(desc(l4))
 ```
 
-v2.0 measures neighbourhood education as the share of adults with a
+v2.1 measures neighbourhood education as the share of adults with a
 degree-level (level 4+) qualification in the 150 Census output areas
 nearest each school, from the 2021 Census. It is there because a school's
 results follow the education of the families around it, and FSM sees only
@@ -217,9 +219,9 @@ neighbourhood drawn at every scale the original project built, and with
 the share of adults with no qualifications:
 
 ```{r tbl-neigh}
-#| tbl-cap: !expr paste0(LA, "'s authority effect, all pupils, with neighbourhood education measured in different ways. AIC is against v2.0 (lower is better). Fitted on every school-year with each measure, so the v2.0 row matches the published effect.")
+#| tbl-cap: !expr paste0(LA, "'s authority effect, all pupils, with neighbourhood education measured in different ways. AIC is against v2.1 (lower is better). Fitted on every school-year with each measure, so the v2.1 row matches the published effect.")
 N |> transmute(Measure = label, Effect = pc(effect), Rank = paste(rank, "of", n_la),
-               `AIC vs v2.0` = sprintf("%+.0f", aic - aic[spec == "k150"])) |>
+               `AIC vs v2.1` = sprintf("%+.0f", aic - aic[spec == "k150"])) |>
   kt(align = "lrrr")
 ```
 
@@ -260,7 +262,7 @@ what is above, and they are not exclusive.
    over-predicts its cost. In `r LA` it is mostly authorised illness,
    which may include anxiety and other health-related absence that
    follows a different pattern from disengagement. On this reading the authority effect is partly an artefact of
-   how v2.0 treats absence, not something the schools do.
+   how v2.1 treats absence, not something the schools do.
 3. **Recording.** Schools and authorities differ in when they authorise
    illness and how they code it. A practice that authorises more
    parent-reported illness raises recorded absence without changing
@@ -283,7 +285,7 @@ All of these are published:
 - **Census 2021 qualifications for parents rather than all adults**:
   households with dependent children by the household reference person's
   qualification or NS-SeC, for school neighbourhoods. This would test
-  reading 1 directly, and would improve v2.0's neighbourhood term
+  reading 1 directly, and would improve v2.1's neighbourhood term
   everywhere students and young graduates are concentrated.
 - **Persistent absence and absence reasons by authority over time**, against
   attainment. Reading 3 predicts the city's illness authorisation sits apart
@@ -294,16 +296,18 @@ All of these are published:
 - **Attainment by prior-attainment band** in the KS4 performance tables:
   whether the effect sits with high, middle or low prior attainers.
 
-# What it means for v2.0
+# What it means for v2.1
 
-v2.0 treats a day of absence the same whatever its cause. Adding the
-illness share of absence improves the model's fit (AIC
-`r sprintf("%+.0f", t_at("ill_share", "aic") - t_at("v2", "aic"))`) and
-barely changes other authorities' effects (correlation
-`r sprintf("%.3f", t_at("ill_share", "r_v2"))`). It is a candidate for a
-v2.1, with the 11–16 flag
-(`r sprintf("%+.0f", t_at("age16", "aic") - t_at("v2", "aic"))`). Neither
-removes `r LA`'s effect. Until the questions above are answered, read the
+v2.1 took the 11–16 flag into the expectation: it is a school's
+structure, like its admissions policy. It treats a day of absence the
+same whatever its cause. Adding the illness share of absence improves the
+fit (AIC `r sprintf("%+.0f", t_at("ill_share", "aic") - t_at("v2", "aic"))`)
+and barely changes other authorities' effects (correlation
+`r sprintf("%.3f", t_at("ill_share", "r_v2"))`), but whether an absence is
+authorised as illness is partly the school's own coding, so it stays out
+of the headline. Value added allowing for the kind of absence is
+published beside it instead ([the methodology](method.qmd#sec-v21)).
+Neither removes `r LA`'s effect. Until the questions above are answered, read the
 city's authority effect this way: its schools achieve as much as similar
 schools elsewhere despite unusually high, mostly illness, absence. It is
 not evidence that the city's schools add more than others. With

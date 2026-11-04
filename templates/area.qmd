@@ -87,10 +87,10 @@ TE <- P$trusts$effects |> mutate(name = tidy_trust(trust_group)) |> filter(name 
 ::: {.callout-note appearance="simple"}
 ## About this page
 
-Value Added v2.0 for `r NAME`'s state-funded secondary schools,
+Value Added v2.1 for `r NAME`'s state-funded secondary schools,
 `r yl(min(yrs))` to `r yl(max(yrs))`, measured against England (see
 [the method](@@ROOT@@method.qmd)), with the analyses of the original
-`r orig("Sussex document")` refitted on the v2.0 model. Built from
+`r orig("Sussex document")` refitted on the v2.1 model. Built from
 published DfE and Ofsted data; nothing uses pupil-level records.
 :::
 
@@ -121,15 +121,15 @@ b <- c(
             sh(pct(ed$effect)), ord(ed$rank))
   },
   if (TIER != "region" && !UNITARY) {
-    if (!length(pub)) "**No district effect can be found** on the v2.0 model."
-    else if (!length(sch)) paste0("**District effects on the v2.0 model (", and_list(pub),
+    if (!length(pub)) "**No district effect can be found** on the v2.1 model."
+    else if (!length(sch)) paste0("**District effects on the v2.1 model (", and_list(pub),
                                   ") disappear once each school's own record is counted:** they belong to schools, not places.")
     else paste0("**A district effect survives each school's own record:** ", and_list(sch), ".")
   },
   sprintf("**Suspensions: %s episodes per 100 pupils (England %s); %s pupils per 100 suspended at least once (England %s).** Reduced timetables run at %s times the national rate.",
           sprintf("%.1f", ex_at(NAME)), sprintf("%.1f", ex_at("England")), sprintf("%.1f", ep$pupil_rate),
           sprintf("%.1f", ex_at("England", "pupil_rate")), sprintf("%.1f", rt_ratio)),
-  if (nrow(TE |> filter(sig))) paste0("**Trusts that stand out nationally on v2.0:** ",
+  if (nrow(TE |> filter(sig))) paste0("**Trusts that stand out nationally on v2.1:** ",
     and_list(TE |> filter(sig) |> group_by(name) |>
                summarise(t = sprintf("%s (%s)", first(name), and_list(sprintf("%s %s%%", ow(outcome), sh(pct(effect))))),
                          .groups = "drop") |> pull(t)), "."),
@@ -143,13 +143,13 @@ cat(paste0("- ", b[!is.na(b) & nzchar(b)], collapse = "\n"), "\n")
 # The schools
 
 ```{r map}
-#| fig-cap: "Each school coloured by Value Added v2.0 for all pupils; choose another measure, including absence against intake, from the menu. Circle size is the school's roll; hover for every group's value added, absence against intake, the published v1 figure, and Ofsted."
+#| fig-cap: "Each school coloured by Value Added v2.1 for all pupils; choose another measure, including absence against intake, from the menu. Circle size is the school's roll; hover for every group's value added, absence against intake, the published v1 figure, and Ofsted."
 map_schools(w, lads, height = if (TIER == "district") 440 else 560, X = X)
 ```
 
 ::: {.school-table}
 ```{r tbl-schools}
-#| tbl-cap: !expr paste0("Every school, with Value Added v2.0 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, the latest Ofsted judgement as at ", format(V$ofsted_as_at, "%d %B %Y"), ", and provisional 2025/26 value added for all pupils. ", PROV_NOTE)
+#| tbl-cap: !expr paste0("Every school, with Value Added v2.1 against England (Attainment 8 points, 95% interval for all pupils), absence against what the intake predicts (percentage points, 2021/22 to 2024/25), the published v1 figure, the latest Ofsted judgement as at ", format(V$ofsted_as_at, "%d %B %Y"), ", and provisional 2025/26 value added for all pupils. ", PROV_NOTE)
 w |>
   transmute(School = SCHNAME, District = lad,
             `All pupils` = va_txt(va_shrunk_all, va_lo_all, va_hi_all),
@@ -173,7 +173,7 @@ if (nrow(g)) cat("## Who runs them\n")
 
 ```{r fig-governance}
 #| include: !expr nrow(g) > 0
-#| fig-cap: "Who ran each school in 2024/25, and its Value Added v2.0 for all pupils. Each panel is a governing body; the shape is how the school came to be run that way."
+#| fig-cap: "Who ran each school in 2024/25, and its Value Added v2.1 for all pupils. Each panel is a governing body; the shape is how the school came to be run that way."
 #| fig-height: !expr max(3, 0.32 * nrow(g) + 1.6)
 if (nrow(g)) fig_governance(g, paste0(NAME, "'s schools by who ran them in 2024/25"))
 ```
@@ -191,7 +191,7 @@ flip <- w |> filter(va_shrunk_all > 0, va_m2 < 0) |> arrange(desc(abs_excess))
 ```
 
 Two questions, kept apart. **Does the school add value?** Value Added
-v2.0 answers that with absence allowed for: a school with more absence is
+v2.1 answers that with absence allowed for: a school with more absence is
 expected to score lower, so it is judged on what it achieves given its
 attendance. **Does it hold attendance?** Absence against intake answers
 that: how far its absence runs above or below what pupils like its own
@@ -199,7 +199,7 @@ would predict. The chart sets one against the other. Neither contains
 the other, so the four corners mean what they say.
 
 ```{r fig-plane}
-#| fig-cap: "Every school in England on the two questions, 2021/22 to 2024/25. Across, absence above or below what its intake predicts. Up, Value Added v2.0. The area's schools in colour; hover for each school's figures, drag to zoom, double-click to reset."
+#| fig-cap: "Every school in England on the two questions, 2021/22 to 2024/25. Across, absence above or below what its intake predicts. Up, Value Added v2.1. The area's schools in colour; hover for each school's figures, drag to zoom, double-click to reset."
 #| fig-height: 6.5
 fig_plane_live(W, w)
 ```
@@ -214,20 +214,34 @@ Across England the two are `r if (abs(r_eng) < 0.2) "close to independent" else 
 added from the model without its absence term. It does not excuse a
 school its absence: for every percentage point its absence runs above
 what its intake predicts, it loses about `r sprintf("%.1f", -nb)`
-Attainment 8 points against Value Added v2.0. It is the two axes above
+Attainment 8 points against Value Added v2.1. It is the two axes above
 folded into one number, so it belongs on the map, not on this chart,
 where it would contain the absence it is plotted against.
-`r if (nrow(flip)) paste0(and_list(head(flip$SCHNAME, 2)), ifelse(min(nrow(flip), 2) == 1, " shows", " show"), " the difference: above expectation on Value Added v2.0 (", and_list(sh(head(flip$va_shrunk_all, 2))), "), below it with no allowance for absence (", and_list(sh(head(flip$va_m2, 2))), "), because absence runs ", and_list(sh(head(flip$abs_excess, 2))), " points above what the intake predicts.") else ""`
+`r if (nrow(flip)) paste0(and_list(head(flip$SCHNAME, 2)), ifelse(min(nrow(flip), 2) == 1, " shows", " show"), " the difference: above expectation on Value Added v2.1 (", and_list(sh(head(flip$va_shrunk_all, 2))), "), below it with no allowance for absence (", and_list(sh(head(flip$va_m2, 2))), "), because absence runs ", and_list(sh(head(flip$abs_excess, 2))), " points above what the intake predicts.") else ""`
 See the [methodology](@@ROOT@@method.qmd#sec-no-allowance).
 
+```{r kind-setup}
+#| include: false
+kd <- w |> filter(!is.na(va_kind_all), !is.na(va_shrunk_all)) |>
+  mutate(shift = va_kind_all - va_shrunk_all) |> arrange(desc(abs(shift)))
+```
+
+**Value added allowing for the kind of absence.** The map also offers value
+added with the illness share of absence in the expectation: where more of
+a school's absence is illness, the same absence is expected to cost less.
+It is published beside Value Added v2.1, not in it, because what is
+authorised as illness is partly the school's own coding
+([methodology](@@ROOT@@method.qmd#sec-v21)).
+`r if (nrow(kd) > 1) paste0("Across ", NAME, "'s schools the two agree at ", sprintf("%.2f", cor(kd$va_kind_all, kd$va_shrunk_all)), "; ", if (abs(kd$shift[1]) >= 0.5) paste0("the largest difference is at ", kd$SCHNAME[1], " (", sh(kd$va_shrunk_all[1]), " on v2.1, ", sh(kd$va_kind_all[1]), " allowing for the kind of absence).") else "no school moves by as much as half a point.") else ""`
+
 ```{r tbl-plane}
-#| tbl-cap: "The schools furthest above and below expectation on Value Added v2.0 (Attainment 8 points, 2021/22 to 2024/25), with absence against intake and value added with no allowance for absence."
+#| tbl-cap: "The schools furthest above and below expectation on Value Added v2.1 (Attainment 8 points, 2021/22 to 2024/25), with absence against intake and value added with no allowance for absence."
 k <- min(8, floor(sum(!is.na(w$va_shrunk_all)) / 2))
 tb <- w |> filter(!is.na(va_shrunk_all)) |> arrange(desc(va_shrunk_all))
 if (k > 0) {
   tt <- bind_rows(head(tb, k) |> mutate(g = "Furthest above"), tail(tb, k) |> mutate(g = "Furthest below")) |>
     transmute(g, School = SCHNAME, District = coalesce(lad, LANAME),
-              `Value added v2.0` = sh(va_shrunk_all), `Absence vs intake` = sh(abs_excess),
+              `Value added v2.1` = sh(va_shrunk_all), `Absence vs intake` = sh(abs_excess),
               `No allowance for absence` = ifelse(is.na(va_m2), "", sh(va_m2)), `Run by (2024/25)` = coalesce(run_by, ""))
   tt |> select(-g) |> kt(align = "llrrrl") |> kableExtra::pack_rows(index = table(factor(tt$g, unique(tt$g))))
 }
@@ -274,7 +288,7 @@ full-year absence in `r abs_yr`, the mean of schools; value added covers
 model is set out in the [methodology](@@ROOT@@method.qmd#sec-add-take).
 
 ```{r fig-add-take-area}
-#| fig-cap: !expr sprintf("%s and its comparators. Blue is what the area absence level in %s (full year, mean of schools) is worth against the England average, through the national gradient. Purple is mean Value Added v2.0, which is measured against England already. The diamond is the two together, and zero is the England average.", NAME, abs_yr)
+#| fig-cap: !expr sprintf("%s and its comparators. Blue is what the area absence level in %s (full year, mean of schools) is worth against the England average, through the national gradient. Purple is mean Value Added v2.1, which is measured against England already. The diamond is the two together, and zero is the England average.", NAME, abs_yr)
 #| fig-width: 9
 #| fig-height: !expr max(3.1, 1.15 + 0.78 * nrow(cmp))
 lv <- rev(cmp$area)
@@ -325,7 +339,7 @@ gain by changing it.
 # How `r NAME` compares
 
 ```{r tbl-profile}
-#| tbl-cap: !expr paste0(NAME, " against ", and_list(COMPS), " and England, ", yl(X$latest_panel), ". Means of school-level figures; ", if (TIER == "district") "ranks among England's districts with five or more schools" else "ranks among all local authorities", " (1 = highest). Value added and absence against intake are v2.0, 2021/22 to 2024/25.")
+#| tbl-cap: !expr paste0(NAME, " against ", and_list(COMPS), " and England, ", yl(X$latest_panel), ". Means of school-level figures; ", if (TIER == "district") "ranks among England's districts with five or more schools" else "ranks among all local authorities", " (1 = highest). Value added and absence against intake are v2.1, 2021/22 to 2024/25.")
 latest <- X$latest_panel
 prof <- X$profiles |> filter(year_label == latest)
 ap <- X$area_profile |> filter(year_label == latest)
@@ -346,8 +360,8 @@ bind_rows(
   row("Attainment 8, non-disadvantaged", "att8_non"), row("Disadvantage gap (points)", "gap"),
   row("Disadvantaged (FSM6) %", "fsm"), row("Overall absence %", "absence"),
   row("Persistent absence %", "persistent"), row("Mean KS2 (centred)", "ks2_c", 2), row("EAL %", "eal"),
-  v2row("Value added v2.0, all pupils", function(a) sh(m_area(a, "all"))),
-  v2row("Value added v2.0, disadvantaged", function(a) sh(m_area(a, "disadvantaged"))),
+  v2row("Value added v2.1, all pupils", function(a) sh(m_area(a, "all"))),
+  v2row("Value added v2.1, disadvantaged", function(a) sh(m_area(a, "disadvantaged"))),
   v2row("Absence against intake (pp)", function(a) sh(abs_ex(a)))) |>
   kt(align = paste0("l", strrep("r", 2 + length(COMPS))))
 ```
@@ -368,7 +382,7 @@ pieces <- function(a, g, min_abs = 0.25) dec |>
 ```
 
 ```{r fig-decomp}
-#| fig-cap: !expr paste0("Why average Attainment 8 differs from England's, by factor, all school-years, on the v2.0 model, for ", and_list(areas), ". Approximate Attainment 8 points; the pieces sum to each panel's gap. 'Unexplained (school)' is the schools' own residual, before shrinkage and net of the authority and region effects.")
+#| fig-cap: !expr paste0("Why average Attainment 8 differs from England's, by factor, all school-years, on the v2.1 model, for ", and_list(areas), ". Approximate Attainment 8 points; the pieces sum to each panel's gap. 'Unexplained (school)' is the schools' own residual, before shrinkage and net of the authority and region effects.")
 #| fig-height: !expr 1.4 + 3.2 * length(areas)
 fig_decomp(dec)
 ```
@@ -392,7 +406,7 @@ for (g in c("All pupils", "Disadvantaged")) {
 # Place: authorities and districts
 
 ```{r fig-la}
-#| fig-cap: "Local authority effects on the v2.0 model, all and disadvantaged pupils, every authority in England with a 95% interval. Sussex's authorities picked out."
+#| fig-cap: "Local authority effects on the v2.1 model, all and disadvantaged pupils, every authority in England with a 95% interval. Sussex's authorities picked out."
 #| fig-height: 5
 V$la |>
   filter(group %in% c("all", "disadvantaged")) |>
@@ -417,23 +431,23 @@ if ("Brighton and Hove" %in% c(LAS, COMPS) && TIER != "district")
   cat("Brighton and Hove's large authority effect is almost all an absence effect: the city's schools attain what similar intakes attain elsewhere, despite unusually high, mostly illness, absence. See [Brighton and Hove's authority effect](@@ROOT@@bh_effect.qmd).\n")
 ```
 
-The district test adds a district level to the v2.0 model, with and
+The district test adds a district level to the v2.1 model, with and
 without each school's own record. An effect that disappears once schools
 are counted belongs to particular schools; one that survives is something
 the district's schools share.
 
 ```{r fig-districts}
 #| include: !expr nrow(deff) > 0
-#| fig-cap: "District effects over and above each authority's, on the v2.0 model, with 95% intervals, without and with a school term."
+#| fig-cap: "District effects over and above each authority's, on the v2.1 model, with 95% intervals, without and with a school term."
 #| fig-height: !expr max(2.6, 0.38 * length(area_lads) + 1.8)
 if (nrow(deff)) fig_effects(deff, NULL)
 ```
 
-`r if (UNITARY) paste0(NAME, " is a unitary authority, its own single district, so a district term would only duplicate the authority effect above; the test does not apply.") else if (!length(pub)) paste0("None of ", if (TIER == "district") NAME else paste0(NAME, "'s districts"), " has a district effect distinguishable from zero on the v2.0 model.") else if (!length(sch)) paste0("Without each school's own record: ", and_list(pub), ". With it, none remains: the differences belong to particular schools, not to the districts as places.") else paste0("Without each school's own record: ", and_list(pub), ". With it, ", and_list(sch), " remains: the nearest thing in the data to a genuine place effect.")`
+`r if (UNITARY) paste0(NAME, " is a unitary authority, its own single district, so a district term would only duplicate the authority effect above; the test does not apply.") else if (!length(pub)) paste0("None of ", if (TIER == "district") NAME else paste0(NAME, "'s districts"), " has a district effect distinguishable from zero on the v2.1 model.") else if (!length(sch)) paste0("Without each school's own record: ", and_list(pub), ". With it, none remains: the differences belong to particular schools, not to the districts as places.") else paste0("Without each school's own record: ", and_list(pub), ". With it, ", and_list(sch), " remains: the nearest thing in the data to a genuine place effect.")`
 
 ```{r tbl-districts}
 #| include: !expr TIER != "district"
-#| tbl-cap: "Mean Value Added v2.0 and absence against intake by district (Attainment 8 points; percentage points)."
+#| tbl-cap: "Mean Value Added v2.1 and absence against intake by district (Attainment 8 points; percentage points)."
 if (TIER != "district") {
   w |> group_by(District = lad) |>
     summarise(Schools = n(), `All pupils` = sh(mean(va_shrunk_all, na.rm = TRUE)),
@@ -450,14 +464,14 @@ if (TIER != "district") {
 
 ```{r trusts-head}
 #| results: asis
-if (nrow(TE)) cat("# Trusts\n\nThe v2.0 model with a multi-academy trust level, allowing for each school's own record and for how it came to be an academy, so trusts that take on struggling schools are not penalised for it. Nationally a trust moves results by about ",
+if (nrow(TE)) cat("# Trusts\n\nThe v2.1 model with a multi-academy trust level, allowing for each school's own record and for how it came to be an academy, so trusts that take on struggling schools are not penalised for it. Nationally a trust moves results by about ",
                   sprintf("%.1f%%", 100 * P$trusts$tests$sd_trust[P$trusts$tests$outcome == "All pupils"]),
                   ", and absence by about ", sprintf("%.1f%%", 100 * P$trusts$tests$sd_trust[P$trusts$tests$outcome == "Absence (intake-adjusted)"]), ".\n", sep = "")
 ```
 
 ```{r fig-trusts}
 #| include: !expr nrow(TE) > 0
-#| fig-cap: "The v2.0 effect of each trust that ran one of the area's schools in 2024/25, with 95% intervals; its number of schools in the national data in brackets."
+#| fig-cap: "The v2.1 effect of each trust that ran one of the area's schools in 2024/25, with 95% intervals; its number of schools in the national data in brackets."
 #| fig-height: !expr max(2.6, 0.36 * n_distinct(TE$name) + 1.8)
 if (nrow(TE)) fig_trusts(TE, NULL)
 ```
@@ -465,7 +479,7 @@ if (nrow(TE)) fig_trusts(TE, NULL)
 # The disadvantaged gap, and girls and boys
 
 ```{r fig-va}
-#| fig-cap: "Each school's Value Added v2.0 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability."
+#| fig-cap: "Each school's Value Added v2.1 against England with its 95% interval, for all, disadvantaged and non-disadvantaged pupils. Attainment 8 points, mean over the four years, shrunk by reliability."
 #| fig-height: !expr max(3.2, 0.42 * n + 1.8)
 fig_va(w, title = paste0(NAME, ": value added by school"))
 ```
@@ -523,7 +537,7 @@ fig_abs_series(ser, c(NAME, COMPS), paste0(NAME, " against ", and_list(COMPS), "
   for England. These are all sessions together, so a large school counts
   for more than a small one; the full-year `r abs_yr` figures in
   [what absence takes away](#add-take) are a mean of schools.
-- **Against its intake**, on the v2.0 intake terms, the area's schools ran
+- **Against its intake**, on the v2.1 intake terms, the area's schools ran
   `r sprintf("%.2f", abs(abs_ex(NAME)))` points
   `r ifelse(abs_ex(NAME) >= 0, "above", "below")` what their pupils'
   profiles predict over 2021/22 to 2024/25
@@ -532,7 +546,7 @@ fig_abs_series(ser, c(NAME, COMPS), paste0(NAME, " against ", and_list(COMPS), "
 `r if (!nrow(under)) "" else if (nrow(under) <= FEW) paste0("- **", and_list(under$SCHNAME), "** ", ifelse(nrow(under) == 1, "runs", "run"), " more than a point below.") else paste0("- **", nrow(under), " schools** run more than a point below: the foot of the table.")`
 
 ```{r tbl-absence}
-#| tbl-cap: !expr paste0("Each school's absence against what its intake predicts (v2.0 intake terms, mean 2021/22 to 2024/25), and its reasons in autumn and spring ", yr(abs_last), " (percentage of sessions).")
+#| tbl-cap: !expr paste0("Each school's absence against what its intake predicts (v2.1 intake terms, mean 2021/22 to 2024/25), and its reasons in autumn and spring ", yr(abs_last), " (percentage of sessions).")
 w |>
   select(URN, SCHNAME, abs_obs, abs_exp, abs_excess) |>
   left_join(X$sch_reasons |> transmute(URN = as.integer(urn), illness, unauth_other, reduced, excluded), by = "URN") |>
@@ -570,7 +584,7 @@ X$excl_schools |> arrange(desc(susp_rate)) |>
 ```
 
 ```{r tbl-scenario}
-#| tbl-cap: !expr paste0("Predicted Attainment 8 gain if each school's absence fell to England's school average (", sprintf("%.1f", P$scenarios$nat_abs[1]), "%, ", yl(P$scenarios$year[1]), "), on the v2.0 absence coefficients. Indicative only.")
+#| tbl-cap: !expr paste0("Predicted Attainment 8 gain if each school's absence fell to England's school average (", sprintf("%.1f", P$scenarios$nat_abs[1]), "%, ", yl(P$scenarios$year[1]), "), on the v2.1 absence coefficients. Indicative only.")
 w |> filter(gain_all > 0) |> arrange(desc(gain_all)) |>
   transmute(School = SCHNAME, `Absence %` = sprintf("%.1f", absence),
             `Gain, all pupils` = sh(gain_all), `Gain, disadvantaged` = sh(gain_dis)) |>
@@ -641,35 +655,35 @@ good deal.
 ## All pupils
 
 ```{r lt-all}
-#| tbl-cap: "Value Added v2.0, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval."
+#| tbl-cap: "Value Added v2.1, all pupils, by year (against England, unshrunk), then the four-year figure shrunk by reliability with its interval."
 va_by_year(V, w$URN, "all", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Disadvantaged
 
 ```{r lt-dis}
-#| tbl-cap: "Value Added v2.0, disadvantaged pupils. Small groups: read across years."
+#| tbl-cap: "Value Added v2.1, disadvantaged pupils. Small groups: read across years."
 va_by_year(V, w$URN, "disadvantaged", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Non-disadvantaged
 
 ```{r lt-non}
-#| tbl-cap: "Value Added v2.0, non-disadvantaged pupils."
+#| tbl-cap: "Value Added v2.1, non-disadvantaged pupils."
 va_by_year(V, w$URN, "non_disadvantaged", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Girls
 
 ```{r lt-girls}
-#| tbl-cap: "Value Added v2.0, girls."
+#| tbl-cap: "Value Added v2.1, girls."
 va_by_year(V, w$URN, "girls", names_) |> kt(align = "lrrrrrrr")
 ```
 
 ## Boys
 
 ```{r lt-boys}
-#| tbl-cap: "Value Added v2.0, boys."
+#| tbl-cap: "Value Added v2.1, boys."
 va_by_year(V, w$URN, "boys", names_) |> kt(align = "lrrrrrrr")
 ```
 
@@ -693,14 +707,14 @@ q <- c(
   else if (abs_piece < -0.3 || abs_ex(NAME) > 0.5) paste0("**Attendance is a modest lever.** Absence costs ", sprintf("%.1f", abs(abs_piece)),
     " points against England.")
   else "**Attendance is not the area's main lever**, though individual schools above their predicted absence are worth a look.",
-  if (TIER != "region" && !UNITARY) { if (!length(sch)) "**Schools, not the place.** No district effect survives each school's own record on v2.0: the differences that matter are between schools."
+  if (TIER != "region" && !UNITARY) { if (!length(sch)) "**Schools, not the place.** No district effect survives each school's own record on v2.1: the differences that matter are between schools."
     else paste0("**Something the schools share.** ", and_list(sch), " survives each school's own record. What do these schools have in common?") },
   { prac <- c(if (rt_ratio > 1.5) sprintf("reduced timetables run at %.1f times", rt_ratio),
               if (sus_ratio > 1.3) sprintf("suspension episodes run at %.1f times", sus_ratio))
     if (length(prac)) paste0("**Practice.** In ", NAME, ", ", and_list(prac), " the national rate. These are choices made within schools.")
     else "**Practice.** Reduced timetables and suspensions are close to or below the national rate." },
   if (TIER != "region") { la <- if (TIER == "la") NAME else PARENT; le <- la_at(la, "disadvantaged")
-    paste0("**The authority.** ", la, "'s own v2.0 effect for disadvantaged pupils is ", sh(pct(le$effect)), "% (", ord(le$rank), " of ", le$n_la, ")",
+    paste0("**The authority.** ", la, "'s own v2.1 effect for disadvantaged pupils is ", sh(pct(le$effect)), "% (", ord(le$rank), " of ", le$n_la, ")",
            ifelse(le$sig, ", distinguishable from zero.", ", not distinguishable from zero.")) })
 q <- q[!is.na(q) & nzchar(q)]
 cat(paste0(seq_along(q), ". ", q, collapse = "\n"), "\n")
@@ -708,10 +722,10 @@ cat(paste0(seq_along(q), ". ", q, collapse = "\n"), "\n")
 
 # Notes on method {.unnumbered}
 
-Value Added v2.0 is described on [the method page](@@ROOT@@method.qmd). The
+Value Added v2.1 is described on [the method page](@@ROOT@@method.qmd). The
 absence-against-intake measure, the district test, the trust analysis,
 the attendance-counted-in value added and the scenarios are refitted on
-the v2.0 specification by `R/04_place_and_absence.R`. The absence series,
+the v2.1 specification by `R/04_place_and_absence.R`. The absence series,
 reasons and suspensions are the original project's (`R/17_area_analysis.R`).
 School districts come from each school's postcode. The decomposition
 splits each area's mean log Attainment 8 against England's into one piece

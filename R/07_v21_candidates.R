@@ -1,4 +1,4 @@
-# 07_v21_candidates.R - Value Added v2.1: does the kind of absence belong?
+# 07_v21_candidates.R - Value Added v2.1: what was tested, and what matters most
 # ---------------------------------------------------------------------------
 # v2.0 counts absence by its amount only. Brighton and Hove's authority
 # effect (bh_effect.qmd) suggested its kind matters: illness absence goes
@@ -15,7 +15,10 @@
 #   - what moves: how closely schools' value added and authorities'
 #     effects agree with v2.0, and Brighton and Hove's effect.
 #
-# And, for v2.0 and the fullest candidate, what matters most in each model:
+# The 11-16 flag was adopted (v2.1); the illness share is published beside
+# it as value added allowing for the kind of absence. So the comparison is
+# against v2.0, and what matters most is for v2.1 and for v2.1 with the
+# kind of absence:
 #   - standardised coefficients: the change in Attainment 8 for a one
 #     standard deviation change in each term, with its 95% interval
 #     (strength and direction);
@@ -41,8 +44,10 @@ rows_for <- function(g) {
   model_rows(d0, g) |> filter(!is.na(ill_share), !is.na(age16)) |>
     mutate(age16 = as.numeric(age16))
 }
+#' v2.0's terms: v2.1's without the 11-16 flag
+v20_for <- function(g) setdiff(fixed_for(g), "age16")
 f_for <- function(g, extra, re = RANDOM_V2) {
-  as.formula(paste0("log(", GROUPS[[g]], ") ~ ", paste(c(fixed_for(g), extra, re), collapse = " + ")))
+  as.formula(paste0("log(", GROUPS[[g]], ") ~ ", paste(c(v20_for(g), extra, re), collapse = " + ")))
 }
 
 #' Value added against England per school (mean over its years, unshrunk),
@@ -101,14 +106,14 @@ compare_group <- function(g) {
 # ---- what matters most ----------------------------------------------------
 TERM_NAMES <- c(TERM_LABELS, ill_share = "Illness share of absence (%)", age16 = "11-16 school")
 
-standardised <- function(g, extra) {
+standardised <- function(g, extra, spec) {
   d <- rows_for(g)
   m <- lmer(f_for(g, extra), data = d, REML = TRUE, control = CTRL)
   X <- getME(m, "X")
   cf <- summary(m)$coefficients
   keep <- setdiff(colnames(X), "(Intercept)")
   sdx <- apply(X[, keep, drop = FALSE], 2, sd)
-  tibble(group = g, spec = if (length(extra)) "v2.1" else "v2.0", term = keep,
+  tibble(group = g, spec = spec, term = keep,
          label = coalesce(unname(TERM_NAMES[keep]), keep),
          beta = cf[keep, 1], se = cf[keep, 2], sd = sdx) |>
     mutate(std = 100 * (exp(beta * sd) - 1), lo = 100 * (exp((beta - 1.96 * se) * sd) - 1),
@@ -118,9 +123,9 @@ standardised <- function(g, extra) {
 #' Shapley values of R-squared over the intake terms: OLS on the same rows,
 #' year effects in every model, so a term is credited only with what it
 #' explains beyond the year. A factor (admissions) is one term.
-shapley <- function(g, extra) {
+shapley <- function(g, extra, spec) {
   d <- rows_for(g)
-  terms <- c(fixed_for(g), extra)
+  terms <- c(v20_for(g), extra)
   y <- log(d[[GROUPS[[g]]]])
   r2 <- function(s) {
     f <- as.formula(paste("y ~", paste(c("year_label", s), collapse = " + ")))
@@ -142,7 +147,7 @@ shapley <- function(g, extra) {
     }
     s
   })
-  tibble(group = g, spec = if (length(extra)) "v2.1" else "v2.0", term = terms,
+  tibble(group = g, spec = spec, term = terms,
          label = coalesce(unname(TERM_NAMES[terms]), terms), shapley = unname(phi),
          r2_full = unname(val[paste(rep(1L, p), collapse = "")]), r2_year = unname(val[paste(rep(0L, p), collapse = "")]))
 }
@@ -151,10 +156,10 @@ message("Comparing the candidates ...")
 comparison <- bind_rows(lapply(names(GROUPS), compare_group))
 message("Importance ...")
 importance <- bind_rows(lapply(names(GROUPS), function(g) bind_rows(
-  standardised(g, character(0)), standardised(g, CANDIDATES$both))))
-message("Shapley (all pupils and disadvantaged) ...")
-shap <- bind_rows(lapply(c("all", "disadvantaged"), function(g) bind_rows(
-  shapley(g, character(0)), shapley(g, CANDIDATES$both))))
+  standardised(g, "age16", "v2.1"), standardised(g, c("age16", "ill_share"), "kind"))))
+message("Shapley (all, disadvantaged and non-disadvantaged pupils) ...")
+shap <- bind_rows(lapply(c("all", "disadvantaged", "non_disadvantaged"), function(g) bind_rows(
+  shapley(g, character(0), "v2.0"), shapley(g, "age16", "v2.1"), shapley(g, c("age16", "ill_share"), "kind"))))
 
 # Is illness share something a school might steer? How it moves within a
 # school from year to year, against how it differs between schools

@@ -1,5 +1,5 @@
 ---
-title: "Methodology – Value Added v2.0"
+title: "Methodology – Value Added v2.1"
 subtitle: "The specification, the model for each pupil group, how it compares with the published measure, and how the figures built on it are made."
 ---
 
@@ -23,17 +23,19 @@ yrs <- V$spec$years
 ::: {.callout-note appearance="simple"}
 ## In one line
 
-Value added v2.0 is each school's Attainment 8 above or below what a
+Value added v2.1 is each school's Attainment 8 above or below what a
 multilevel model expects from its intake and context, measured against
 England, for five groups of pupils, `r yl(min(yrs))` to `r yl(max(yrs))`.
 :::
 
 # What changed from v1
 
-v2.0 adopts every recommendation of [the review](review.qmd):
+v2.0 adopted every recommendation of [the review](review.qmd); v2.1 adds
+one term, whether a school stops at 16 ([below](#sec-v21)):
 
-| | v1 (published) | v2.0 |
+| | v1 (published) | v2.1 |
 |---|---|---|
+| School stops at 16 (no sixth form) | No | **Yes** (new in v2.1): 11–16 schools score ~1% higher from structure alone |
 | Ofsted grade in the expectation | Yes (random effect) | **No**: it is judged partly on the same results |
 | Teacher retention, leadership pay, sickness | Yes | **No**: partly in a school's own hands |
 | LA segregation | Yes | **No**: added nothing |
@@ -129,7 +131,7 @@ shap_shares <- function(g, sp) {
     mutate(label = coalesce(unname(SHAP_LAB[term]), label),
            share = 100 * shapley / sum(shapley))
 }
-fig_std <- function(g, sp = "v2.0") {
+fig_std <- function(g, sp = "v2.1") {
   e <- std_effects(g, sp)
   ggplot(e, aes(eff, reorder(label, abs(eff)), colour = dir)) +
     geom_vline(xintercept = 0, colour = GREY) +
@@ -140,7 +142,7 @@ fig_std <- function(g, sp = "v2.0") {
          title = "Strength and direction") +
     theme_note(15)
 }
-fig_shap <- function(g, sp = "v2.0") {
+fig_shap <- function(g, sp = "v2.1") {
   s <- shap_shares(g, sp)
   ggplot(s, aes(share, reorder(label, share))) +
     geom_col(fill = DPURPLE, width = 0.7) +
@@ -150,8 +152,8 @@ fig_shap <- function(g, sp = "v2.0") {
          title = "Importance") +
     theme_note(15)
 }
-sh_all <- shap_shares("all", "v2.0") |> arrange(desc(share))
-r2a <- IMP$shapley |> filter(group == "all", spec == "v2.0") |> slice(1)
+sh_all <- shap_shares("all", "v2.1") |> arrange(desc(share))
+r2a <- IMP$shapley |> filter(group == "all", spec == "v2.1") |> slice(1)
 ```
 
 Two ways of asking which terms matter most, side by side. **Strength and
@@ -172,7 +174,7 @@ of the variation in log Attainment 8 beyond the year.
 ## All pupils
 
 ```{r fig-std-all}
-#| fig-cap: "Strength and direction, all pupils: each term's effect on expected Attainment 8 in Value Added v2.0, with its 95% interval."
+#| fig-cap: "Strength and direction, all pupils: each term's effect on expected Attainment 8 in Value Added v2.1, with its 95% interval."
 #| fig-height: 5.2
 #| fig-width: 9.5
 fig_std("all")
@@ -188,7 +190,7 @@ fig_shap("all")
 ## Disadvantaged pupils
 
 ```{r fig-std-dis}
-#| fig-cap: "Strength and direction, disadvantaged pupils: each term's effect on expected Attainment 8 in Value Added v2.0, with its 95% interval."
+#| fig-cap: "Strength and direction, disadvantaged pupils: each term's effect on expected Attainment 8 in Value Added v2.1, with its 95% interval."
 #| fig-height: 5.2
 #| fig-width: 9.5
 fig_std("disadvantaged")
@@ -199,6 +201,22 @@ fig_std("disadvantaged")
 #| fig-height: 4.6
 #| fig-width: 9.5
 fig_shap("disadvantaged")
+```
+
+## Non-disadvantaged pupils
+
+```{r fig-std-non}
+#| fig-cap: "Strength and direction, non-disadvantaged pupils: each term's effect on expected Attainment 8 in Value Added v2.1, with its 95% interval."
+#| fig-height: 5.2
+#| fig-width: 9.5
+fig_std("non_disadvantaged")
+```
+
+```{r fig-shap-non}
+#| fig-cap: "Importance, non-disadvantaged pupils: each term's Shapley share of the variation in Attainment 8 the intake explains."
+#| fig-height: 4.6
+#| fig-width: 9.5
+fig_shap("non_disadvantaged")
 ```
 :::
 
@@ -295,10 +313,10 @@ while this one shrinks a mean log residual and then converts it. For most
 schools the two are close. For schools with short records or unusual
 intakes they are not, and the shrunken figure is the one to read.
 
-# How v2.0 compares with v1
+# How v2.1 compares with v1
 
 ```{r fig-v1}
-#| fig-cap: "Each school's value added, v1 as published (within its local authority) against v2.0 (against England, shrunk), all pupils, mean over the four years."
+#| fig-cap: "Each school's value added, v1 as published (within its local authority) against v2.1 (against England, shrunk), all pupils, mean over the four years."
 #| fig-height: 6
 jj <- j |> filter(group == "all")
 ggplot(jj, aes(va_v1, va_shrunk)) +
@@ -306,13 +324,13 @@ ggplot(jj, aes(va_v1, va_shrunk)) +
   geom_point(colour = MPURPLE, alpha = 0.35, size = 0.9) +
   geom_smooth(method = "lm", se = FALSE, colour = DPURPLE, linewidth = 0.8) +
   coord_cartesian(xlim = quantile(jj$va_v1, c(.002, .998)), ylim = quantile(jj$va_shrunk, c(.002, .998))) +
-  labs(x = "v1 value added (published, within the LA)", y = "v2.0 value added (against England, shrunk)",
-       title = sprintf("v1 and v2.0 agree broadly (r = %.2f) but rank many schools differently", c_at("all", "r"))) +
+  labs(x = "v1 value added (published, within the LA)", y = "v2.1 value added (against England, shrunk)",
+       title = sprintf("v1 and v2.1 agree broadly (r = %.2f) but rank many schools differently", c_at("all", "r"))) +
   theme_note()
 ```
 
 ```{r tbl-v1}
-#| tbl-cap: "Agreement between v1 and v2.0 across schools, by group. v1 has no girls or boys measure."
+#| tbl-cap: "Agreement between v1 and v2.1 across schools, by group. v1 has no girls or boys measure."
 cmp |> transmute(Group = GROUP_LABELS[group], Schools = format(n, big.mark = ","),
                  `r, v2 against England` = sprintf("%.2f", r),
                  `r, v2 within the LA` = sprintf("%.2f", r_la),
@@ -321,7 +339,7 @@ cmp |> transmute(Group = GROUP_LABELS[group], Schools = format(n, big.mark = ","
 ```
 
 The two measures agree broadly but not closely: `r sprintf("%.0f%%", 100 * c_at("all", "moved"))`
-of schools fall in a different quintile on v2.0 for all pupils. Measured
+of schools fall in a different quintile on v2.1 for all pupils. Measured
 within the authority, as v1 was, the correlation is
 `r sprintf("%.2f", c_at("all", "r_la"))`. The remaining difference is the
 specification: the Ofsted grade and workforce terms coming out, and the
@@ -331,7 +349,7 @@ each change contributes.
 # Girls and boys
 
 ```{r fig-gb}
-#| fig-cap: "Each mixed school's value added for its girls and for its boys (v2.0, shrunk, against England). Schools far from the diagonal do markedly better by one group."
+#| fig-cap: "Each mixed school's value added for its girls and for its boys (v2.1, shrunk, against England). Schools far from the diagonal do markedly better by one group."
 #| fig-height: 6
 ggplot(gb, aes(va_shrunk_boys, va_shrunk_girls)) +
   geom_abline(colour = GREY, linetype = "dashed") +
@@ -355,7 +373,7 @@ assumed alike.
 # Local authorities
 
 ```{r fig-la}
-#| fig-cap: "Local authority effects in v2.0, all pupils and disadvantaged pupils, with 95% intervals. Sussex's three authorities highlighted."
+#| fig-cap: "Local authority effects in v2.1, all pupils and disadvantaged pupils, with 95% intervals. Sussex's three authorities highlighted."
 #| fig-height: 6
 V$la |>
   filter(group %in% c("all", "disadvantaged")) |>
@@ -382,7 +400,7 @@ for anyone who wants it.
 # Schools and years left out {#sec-excluded}
 
 Attainment 8 only measures a school fairly if its pupils take the
-qualifications it counts. A school-year is left out of every v2.0 model,
+qualifications it counts. A school-year is left out of every v2.1 model,
 and so has no value added for that year, when either:
 
 - **its pupils averaged fewer than three GCSE entries**, so the school does
@@ -396,7 +414,7 @@ The rule is about what was entered, not how low the results were, so a
 school with weak results is never excluded for them.
 
 ```{r tbl-excluded}
-#| tbl-cap: "Every school-year left out, with the measure that put it there. A school excluded in every year has no v2.0 value added; one excluded in some years keeps the rest."
+#| tbl-cap: "Every school-year left out, with the measure that put it there. A school excluded in every year has no v2.1 value added; one excluded in some years keeps the rest."
 V$excluded |>
   arrange(SCHNAME, year_label) |>
   group_by(URN, School = SCHNAME, `Local authority` = LANAME, Reason = reason) |>
@@ -431,7 +449,7 @@ ag <- function(g) PV$agree$r[PV$agree$group == g]
 DfE has published provisional KS4 results for 2025/26, but not yet the
 year's school census, SEN or mobility data. So 2025/26 is not part of the
 fitted model. Instead each school's 2025/26 result is set against what the
-**fitted v2.0 model** predicts for it, as the original project did when it
+**fitted v2.1 model** predicts for it, as the original project did when it
 extended v1. The four model years do not move.
 
 - **Absence.** 2025/26 publishes autumn and spring only. Full-year absence
@@ -561,7 +579,7 @@ $$\text{points} = \bar{A}_{\text{England}} \times \left(r^{\beta} - 1\right)$$
 **The home page's waterfall.**
 
 ```{r tbl-add-take}
-#| tbl-cap: !expr paste0("How the home page's three steps are computed. Absence is each school's full-year absence in ", abs_yr, "; value added is each school's four-year shrunk Value Added v2.0, all pupils.")
+#| tbl-cap: !expr paste0("How the home page's three steps are computed. Absence is each school's full-year absence in ", abs_yr, "; value added is each school's four-year shrunk Value Added v2.1, all pupils.")
 tibble::tibble(
   Step = c("Typical absence", "High absence", "Ratio r", "Proportional change, r^β − 1",
            "What absence takes away", "Typical value added", "Top-decile value added",
@@ -627,7 +645,7 @@ r_m2 <- cor(na_w$abs_excess, na_w$va_m2); r_v2 <- cor(na_w$abs_excess, na_w$va_s
 flips <- sum(na_w$va_shrunk_all > 0 & na_w$va_m2 < 0)
 ```
 
-Value Added v2.0 includes absence in what a school is expected to
+Value Added v2.1 includes absence in what a school is expected to
 achieve: a school with more absence is expected to score lower, so it is
 not marked down for it. That is the right question for "what does the
 school do with the pupils who attend?", and it leaves attendance to be
@@ -637,29 +655,29 @@ absence runs above or below what its intake predicts.
 The map also offers **value added with no allowance for absence**: the
 same model refitted without its absence term (`R/04_place_and_absence.R`;
 v1 called this M2). Now a school's absence earns it no allowance. It is,
-almost exactly, Value Added v2.0 less a fixed cost for absence above what
+almost exactly, Value Added v2.1 less a fixed cost for absence above what
 the intake predicts. Across England's schools:
 
-$$\text{no allowance} \approx `r sprintf("%.2f", na_b[["va_shrunk_all"]])` \times \text{Value Added v2.0} `r sprintf("%+.2f", na_b[["abs_excess"]])` \times \text{absence against intake}$$
+$$\text{no allowance} \approx `r sprintf("%.2f", na_b[["va_shrunk_all"]])` \times \text{Value Added v2.1} `r sprintf("%+.2f", na_b[["abs_excess"]])` \times \text{absence against intake}$$
 
 with R² = `r sprintf("%.2f", na_r2)`. So
 `r format(flips, big.mark = ",")` schools are above expectation on Value
-Added v2.0 and below it with no allowance for absence. They are schools
+Added v2.1 and below it with no allowance for absence. They are schools
 that achieve well with the pupils who attend, but whose absence runs well
 above what their intake predicts.
 
-**Why the value added and attendance chart uses Value Added v2.0.** Plotted
+**Why the value added and attendance chart uses Value Added v2.1.** Plotted
 against absence against intake, value added with no allowance for absence
 would contain the very thing on the other axis. The two would correlate
 at `r sprintf("%.2f", r_m2)` across England largely by construction,
 suggesting that schools which hold attendance add more. With Value Added
-v2.0 on the vertical axis the correlation is `r sprintf("%.2f", r_v2)`:
+v2.1 on the vertical axis the correlation is `r sprintf("%.2f", r_v2)`:
 adding value and holding attendance are close to independent. The chart
 therefore asks two separate questions, and value added with no allowance
 for absence is kept to the map, where it is one number answering both at
 once.
 
-# Towards v2.1: the kind of absence {#sec-v21}
+# From v2.0 to v2.1: school structure and the kind of absence {#sec-v21}
 
 ```{r v21-setup}
 #| include: false
@@ -668,24 +686,29 @@ CMP <- IMP$comparison |> group_by(group) |>
 c_at <- function(g, sp, col) CMP[[col]][CMP$group == g & CMP$spec == sp]
 IS <- IMP$ill_stats
 ill_sd <- function(g, sp = "ill_share") 100 * (exp(c_at(g, sp, "b_ill") * IS$sd) - 1)
+VK <- va_wide(V) |> filter(!is.na(va_kind_all), !is.na(va_shrunk_all))
+k_r <- cor(VK$va_kind_all, VK$va_shrunk_all)
+k_moved <- mean(ntile(VK$va_kind_all, 5) != ntile(VK$va_shrunk_all, 5))
+k_half <- sum(abs(VK$va_kind_all - VK$va_shrunk_all) >= 0.5)
 ```
 
-v2.0 counts absence by its amount. [Brighton and Hove's authority
-effect](bh_effect.qmd) suggested its kind matters too: illness absence
-goes with a smaller fall in attainment than other absence. Two candidate
-terms for a v2.1 have been tested, for every pupil group, against v2.0
-and on identical rows (`R/07_v21_candidates.R`):
+v2.0 counted absence by its amount and treated every school's structure
+alike. [Brighton and Hove's authority effect](bh_effect.qmd) suggested
+both mattered: illness absence goes with a smaller fall in attainment than
+other absence, and schools that stop at 16 do slightly better. Two terms
+were tested, for every pupil group, against v2.0 and on identical rows
+(`R/07_v21_candidates.R`):
 
+- **an 11–16 school**: the school stops at 16, with no sixth form;
 - **the illness share of absence**: illness as a percentage of all
   absence, from DfE's school absence data by reason (a school averages
   `r sprintf("%.0f%%", IS$mean)`, with a standard deviation of
-  `r sprintf("%.0f", IS$sd)` points);
-- **an 11–16 school**: the school stops at 16, with no sixth form.
+  `r sprintf("%.0f", IS$sd)` points).
 
 ```{r tbl-v21}
-#| tbl-cap: "The candidates against v2.0, by group. AIC is the change in fit (negative is better). Out of sample is the change in error predicting 2024/25 from a model fitted on the three years before. Effects are on expected Attainment 8: illness share per standard deviation, 11–16 against not; t statistics in brackets. The last column is the share of schools whose value-added quintile changes."
+#| tbl-cap: "The two terms tested against v2.0, by group. AIC is the change in fit (negative is better). Out of sample is the change in error predicting 2024/25 from a model fitted on the three years before. Effects are on expected Attainment 8: illness share per standard deviation, 11–16 against not; t statistics in brackets. The last column is the share of schools whose value-added quintile changes."
 CMP |> filter(spec != "v2.0") |>
-  transmute(Group = GROUP_LABELS[group], Candidate = sub("^\\+ ", "", label),
+  transmute(Group = GROUP_LABELS[group], Tested = sub("+ ", "", label, fixed = TRUE),
             AIC = sprintf("%+.0f", d_aic), `Out of sample` = sprintf("%+.1f%%", oos),
             `Illness share` = ifelse(is.na(b_ill), "", sprintf("%+.2f%% (%.1f)", 100 * (exp(b_ill * IS$sd) - 1), t_ill)),
             `11–16` = ifelse(is.na(b_age16), "", sprintf("%+.2f%% (%.1f)", 100 * (exp(b_age16) - 1), t_age16)),
@@ -694,40 +717,32 @@ CMP |> filter(spec != "v2.0") |>
   kt(align = "llrrrrrr")
 ```
 
-**What the tests show.**
+**v2.1 adds the 11–16 flag.** It improves the fit for every group, by
+about `r sprintf("%.0f%%", 100 * (exp(c_at("all", "age16", "b_age16")) - 1))`
+of expected Attainment 8 (AIC `r sprintf("%+.0f", c_at("all", "age16", "d_aic"))`
+for all pupils). Stopping at 16 is a school's structure, like its
+admissions policy, which the model already treats as context: an 11–16
+school is now compared with schools like it, and its small structural
+advantage is no longer counted as value it adds.
 
-- **The 11–16 flag helps every group**, by about
-  `r sprintf("%.0f%%", 100 * (exp(c_at("all", "age16", "b_age16")) - 1))`
-  of expected Attainment 8 (AIC `r sprintf("%+.0f", c_at("all", "age16", "d_aic"))`
-  for all pupils). Schools that stop at 16 score a little higher than
-  similar schools with sixth forms.
-- **The illness share helps every group but one**: a standard deviation
-  more illness in the mix goes with `r sprintf("%+.1f%%", ill_sd("all"))`
-  for all pupils and `r sprintf("%+.1f%%", ill_sd("disadvantaged"))` for
-  disadvantaged pupils, and it predicts the year it was not fitted on
-  better (`r sprintf("%+.1f%%", c_at("all", "ill_share", "oos"))` error for
-  all pupils). For non-disadvantaged pupils it does nothing
-  (t = `r sprintf("%.1f", c_at("non_disadvantaged", "ill_share", "t_ill"))`).
-- **Little moves.** With both, schools' value added agrees with v2.0 at
-  `r sprintf("%.3f", c_at("all", "both", "r_school"))` and
-  `r sprintf("%.0f%%", 100 * c_at("all", "both", "moved_quintile"))` change
-  quintile; Brighton and Hove's authority effect goes from
-  `r sprintf("%+.1f%%", 100 * c_at("all", "v2.0", "bh_effect"))` to
-  `r sprintf("%+.1f%%", 100 * c_at("all", "both", "bh_effect"))`
-  (`r ord(c_at("all", "both", "bh_rank"))`).
-
-```{r fig-v21-shapley}
-#| fig-cap: "Each term's Shapley share of the variation the intake explains, all pupils, in v2.0 and with both candidates."
-#| fig-height: 4.8
-bind_rows(shap_shares("all", "v2.0") |> mutate(model = "v2.0"),
-          shap_shares("all", "v2.1") |> mutate(model = "With both candidates")) |>
-  mutate(model = factor(model, c("v2.0", "With both candidates"))) |>
-  ggplot(aes(share, reorder(label, share), fill = model)) +
-  geom_col(position = position_dodge(width = 0.8), width = 0.75) +
-  scale_fill_manual(values = c("v2.0" = LIGHT, "With both candidates" = DPURPLE), name = NULL) +
-  labs(x = "Share of the variation the intake explains (%)", y = NULL) +
-  theme_note(14)
-```
+**The kind of absence is published beside the headline, not in it.** The
+illness share improves the fit for every group but one: a standard
+deviation more illness in the mix goes with
+`r sprintf("%+.1f%%", ill_sd("all"))` for all pupils and
+`r sprintf("%+.1f%%", ill_sd("disadvantaged"))` for disadvantaged pupils,
+and it predicts the year it was not fitted on better
+(`r sprintf("%+.1f%%", c_at("all", "ill_share", "oos"))` error for all
+pupils). For non-disadvantaged pupils it does nothing
+(t = `r sprintf("%.1f", c_at("non_disadvantaged", "ill_share", "t_ill"))`).
+But every term in the headline is intake or context, and the illness share
+is not cleanly either: illness absence is reported by families, but
+whether an absence is *authorised* as illness is the school's decision,
+and practice differs. In the headline it would credit a school for how it
+codes absence. So **value added allowing for the kind of absence** is
+fitted as v2.1 plus the illness share and published alongside it, on every
+map. Across England's schools the two agree at `r sprintf("%.3f", k_r)`;
+`r sprintf("%.0f%%", 100 * k_moved)` of schools change quintile and
+`r format(k_half, big.mark = ",")` move by half a point or more.
 
 **What the illness share is.** It is mostly a fixed feature of a school:
 `r sprintf("%.0f%%", 100 * IS$icc)` of its variation lies between schools
@@ -738,23 +753,21 @@ unauthorised. That is why the Shapley decomposition credits it with a
 sizeable share of what the intake explains even though its own effect is
 small: much of what it carries, disadvantage and absence carry too.
 
-**Two questions before either is adopted.**
-
-1. **Is the illness share intake, or something the school does?** Every
-   v2.0 term is intake or context. Illness absence is reported by
-   families, but whether an absence is authorised as illness is the
-   school's decision, and practice differs. To the extent the share
-   reflects a school's recording, it would credit a school for how it
-   codes absence. Against that, its effect is concentrated among
-   disadvantaged pupils, which looks more like family circumstance than
-   coding.
-2. **Is stopping at 16 context, or a choice?** It is a school's
-   structure, like its admissions policy, which v2.0 already treats as
-   context. Putting it in the expectation removes the small advantage
-   11–16 schools have from their value added; leaving it out credits them
-   with it.
-
-v2.0 remains the published measure until these are settled.
+```{r fig-v21-shapley}
+#| fig-cap: "Each term's Shapley share of the variation the intake explains, all pupils: v2.0, v2.1, and v2.1 allowing for the kind of absence."
+#| fig-height: 5.6
+#| fig-width: 9.5
+bind_rows(shap_shares("all", "v2.0") |> mutate(model = "v2.0"),
+          shap_shares("all", "v2.1") |> mutate(model = "v2.1"),
+          shap_shares("all", "kind") |> mutate(model = "v2.1, allowing for the kind of absence")) |>
+  mutate(model = factor(model, c("v2.0", "v2.1", "v2.1, allowing for the kind of absence"))) |>
+  ggplot(aes(share, reorder(label, share), fill = model)) +
+  geom_col(position = position_dodge(width = 0.85), width = 0.8) +
+  scale_fill_manual(values = c("v2.0" = LIGHT, "v2.1" = DPURPLE,
+                               "v2.1, allowing for the kind of absence" = MPURPLE), name = NULL) +
+  labs(x = "Share of the variation the intake explains (%)", y = NULL) +
+  theme_note(14) + theme(legend.position = "bottom", legend.direction = "vertical")
+```
 
 # Data
 

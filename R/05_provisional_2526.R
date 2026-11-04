@@ -1,16 +1,16 @@
-# 05_provisional_2526.R - Provisional Value Added v2.0 for 2025/26
+# 05_provisional_2526.R - Provisional Value Added v2.1 for 2025/26
 # ---------------------------------------------------------------------------
 # DfE's provisional 2025/26 KS4 results are out; the revised results follow
 # in February 2027, and the census, SEN and mobility data for the year later
-# still. So 2025/26 is PREDICTED from the fitted v2.0 model, not refitted,
+# still. So 2025/26 is PREDICTED from the fitted v2.1 model, not refitted,
 # exactly as the original project extended v1 (school_attainment_tool,
 # R/05b_value_added_2526.R). The four model years are untouched.
 #
 #   - Absence: 2025/26 publishes autumn and spring only. Full-year absence
 #     is bridged from the two-term figure, a log-log fit on every earlier
 #     school-year with both.
-#   - Prior attainment, SEN support and EHCP rates, mobility and the
-#     single-sex flag are carried forward from each school's latest earlier
+#   - Prior attainment, SEN support and EHCP rates, mobility, the
+#     single-sex flag and whether the school stops at 16 are carried forward from each school's latest earlier
 #     year. Disadvantage and EAL are 2025/26's own.
 #   - Neighbourhood education is the 2021 Census figure, as for every year.
 #   - The year effect for 2025/26 is not estimated by the model, so it is set
@@ -45,7 +45,7 @@ build_provisional <- function() {
   ids <- d_in |> distinct(urn_published, URN)
   # Each school's latest earlier values, to carry forward
   carry <- d_in |> arrange(URN, desc(year_label)) |> distinct(URN, .keep_all = TRUE) |>
-    transmute(URN, ks2_c, sen_support, sen_ehcp, mobile, girls_school, boys_school, z_l4,
+    transmute(URN, ks2_c, sen_support, sen_ehcp, mobile, girls_school, boys_school, z_l4, age16,
               gor_name = as.character(gor_name), LANAME_m = as.character(LANAME))
 
   new <- p5 |>
@@ -80,7 +80,7 @@ build_provisional <- function() {
       b[["ks2_c"]] * dg$ks2_c + b[["z_l4"]] * dg$z_l4 + b[["sen_support"]] * dg$sen_support +
       b[["sen_ehcp"]] * dg$sen_ehcp + b[["mobile"]] * dg$mobile +
       coalesce(b[paste0("ADMPOL_PT", dg$ADMPOL_PT)], 0) +
-      b[[paste0(ss, "TRUE")]] * as.numeric(dg[[ss]])
+      b[[paste0(ss, "TRUE")]] * as.numeric(dg[[ss]]) + b[["age16TRUE"]] * as.numeric(dg$age16)
     # England's schools average zero: the year effect the model would give
     u_year <- mean(log(dg[[y]]) - xb)
     pred <- exp(xb + u_year) * exp(0.5 * sig^2)
@@ -94,7 +94,7 @@ build_provisional <- function() {
   res <- list(va = out, agree = agree, bridge_r2 = br$r2, bridge_n = br$n,
               schools = nrow(new), year = NEW_YEAR, release = RELEASE, next_release = NEXT,
               carried = c("prior attainment (KS2)", "SEN support and EHCP rates", "pupil mobility",
-                          "the single-sex flag"),
+                          "the single-sex flag", "whether the school stops at 16"),
               built_at = Sys.time())
   saveRDS(res, here::here("data", "va_2526_provisional.rds"))
   readr::write_csv(out |> select(URN, group, att8_2526, expected_2526, va_2526) |>

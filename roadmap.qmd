@@ -1,6 +1,6 @@
 ---
 title: "Roadmap"
-subtitle: "What v2.0 does now, and what comes next."
+subtitle: "What v2.1 does now, and what comes next."
 ---
 
 ## Done in the first pass
@@ -28,11 +28,11 @@ subtitle: "What v2.0 does now, and what comes next."
 
 - [ ] **Policy simulator v2.0.** Rebuild the
       [Pull the Right Lever simulator](https://adamdennett.github.io/school_attainment_tool/)
-      on the v2.0 model, with the girls/boys groups and the new intake
+      on the v2.1 model, with the girls/boys groups and the new intake
       terms as levers.
 - [ ] **Adding a new year.** When DfE publishes a new year's KS4 results,
       add it to `YEAR_CONFIG` in `pipeline/helpers.R`, run
-      `R/00_fetch_data.R`, then the build steps. The v2.0 model takes its
+      `R/00_fetch_data.R`, then the build steps. The v2.1 model takes its
       years from the data, and no longer needs the workforce file, which
       was the slowest to arrive. See the README.
 - [x] **A self-contained data pipeline for the model.** `R/00_fetch_data.R`
@@ -53,18 +53,27 @@ subtitle: "What v2.0 does now, and what comes next."
 - [x] **v2.1 candidates tested across every group:** the illness share of
       absence and an 11–16 flag ([the methodology](method.qmd#sec-v21)),
       with a chart of what matters most in the model.
-- [ ] **Decide v2.1.** Whether to adopt either candidate, which turns on
-      whether each is intake and context or something a school does. Then
-      look at a parents' qualification measure from the 2021 Census in
-      place of neighbourhood education for all adults.
+- [x] **v2.1 published.** The 11–16 flag is in the expectation (a school's
+      structure, like its admissions policy). Value added allowing for the
+      kind of absence is published beside it, not in it, because what is
+      authorised as illness is partly a school's own coding.
+- [ ] **Parents, not adults.** Try a parents' qualification measure from
+      the 2021 Census (households with dependent children) in place of
+      neighbourhood education for all adults.
 - [ ] **What causes school-level absence.** A deeper analysis of why
       absence differs between schools, beyond what intake predicts: its
       kinds, its timing, the pupils it falls on and what is known from the
       research on its causes. Waiting on a reading of that research first.
+- [ ] **Independent schools.** A value added of sorts for independent
+      schools. Their published data are thinner (KS4 results where they
+      enter pupils for qualifications that count, but no prior attainment,
+      FSM or absence in the same form), so this would need a reduced
+      specification, clearly labelled, and a look at what can and cannot be
+      compared with state-funded schools.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [x] **Monthly Ofsted refresh.** A GitHub Actions workflow picks up
       Ofsted's new release on the 20th of each month, updates every
       school's latest judgement without refitting, rerenders and commits.
-- [ ] **Publish v2.0 alongside v1** in the original reports, labelled, with
+- [ ] **Publish v2.1 alongside v1** in the original reports, labelled, with
       a note on how rankings change.

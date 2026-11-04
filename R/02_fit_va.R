@@ -1,4 +1,4 @@
-# 02_fit_va.R - Fit Value Added v2.0 for every pupil group
+# 02_fit_va.R - Fit Value Added v2.1 for every pupil group
 # ---------------------------------------------------------------------------
 # For each group (all, disadvantaged, non-disadvantaged, girls, boys):
 #
@@ -15,6 +15,8 @@
 #      back to points against the school's expected Attainment 8.
 #   4. The contribution of every term to each school-year's prediction, so
 #      an area's gap to England splits exactly into one piece per term.
+#   5. The same again with the kind of absence (KIND_TERM) added: value
+#      added allowing for it, published beside the headline (va_kind).
 #
 # Output: data/va_v2.rds (models summarised, not stored) and
 #         data/va_v2_schools.csv (one row a school, every group).
@@ -29,12 +31,13 @@ COMPONENT <- function(col) dplyr::case_when(
   col == "log(PNUMEAL)" ~ "English as an additional language", col == "ks2_c" ~ "Prior attainment (KS2)",
   startsWith(col, "ADMPOL_PT") ~ "Admissions (selection)", col == "z_l4" ~ "Neighbourhood education",
   startsWith(col, "sen_") ~ "Special educational needs", col == "mobile" ~ "Pupil mobility",
-  grepl("_school", col) ~ "Single-sex school", TRUE ~ NA_character_)
+  grepl("_school", col) ~ "Single-sex school", startsWith(col, "age16") ~ "School stops at 16",
+  col == "ill_share" ~ "Kind of absence", TRUE ~ NA_character_)
 
-fit_group <- function(d, group) {
+fit_group <- function(d, group, extra = character(0)) {
   y <- GROUPS[[group]]
-  dg <- model_rows(d, group)
-  f <- as.formula(paste0("log(", y, ") ~ ", paste(fixed_for(group), collapse = " + "), " + ",
+  dg <- model_rows(d, group, extra)
+  f <- as.formula(paste0("log(", y, ") ~ ", paste(c(fixed_for(group), extra), collapse = " + "), " + ",
                          paste(RANDOM_V2, collapse = " + ")))
   message(sprintf("  %s: %d school-years, %d schools", group, nrow(dg), n_distinct(dg$URN)))
   m  <- lmer(f, data = dg, REML = TRUE, control = CTRL)
@@ -124,6 +127,9 @@ build_va <- function() {
   d <- readRDS(here::here("data", "inputs.rds"))
   fits <- lapply(names(GROUPS), function(g) fit_group(d, g)) |> setNames(names(GROUPS))
   pick <- function(k) bind_rows(lapply(fits, `[[`, k))
+  message("Allowing for the kind of absence ...")
+  kind <- lapply(names(GROUPS), function(g) fit_group(d, g, KIND_TERM)) |> setNames(names(GROUPS))
+  pick_kind <- function(k) bind_rows(lapply(kind, `[[`, k))
 
   latest <- max(d$year_label)
   schools <- d |>
@@ -139,11 +145,13 @@ build_va <- function() {
               ofsted_latest, ofsted_latest_date, ofsted_kind, ofsted_rc, ofsted_nog, run_by, gov, route)
 
   out <- list(
-    spec = list(fixed = FIXED_V2, random = RANDOM_V2, groups = GROUPS, labels = GROUP_LABELS,
-                years = sort(unique(d$year_label))),
+    spec = list(version = VERSION, fixed = FIXED_V2, random = RANDOM_V2, kind = KIND_TERM,
+                groups = GROUPS, labels = GROUP_LABELS, years = sort(unique(d$year_label))),
     summary = pick("summary"), coefs = pick("coefs"), vc = pick("vc"),
     school_years = pick("school_years"), va = pick("schools"), contrib = pick("contrib"),
     la = pick("la"), v1 = v1_va(d |> distinct(urn_published, URN)), schools = schools,
+    va_kind = pick_kind("schools") |> select(URN, group, years, va_nat, va_shrunk, va_lo, va_hi, sig),
+    coefs_kind = pick_kind("coefs"), summary_kind = pick_kind("summary"),
     excluded = d |> filter(excluded) |>
       transmute(URN, SCHNAME, LANAME = as.character(LANAME), year_label, att8 = ATT8SCR,
                 gcse_entries = TAVENT_G_PTQ_EE, any_qual = PTANYQ_PTQ_EE, reason = excl_reason),
@@ -155,6 +163,9 @@ build_va <- function() {
     pivot_wider(names_from = group, values_from = c(years, va_nat, va_shrunk, va_lo, va_hi, va_la),
                 names_glue = "{group}_{.value}") |>
     left_join(schools |> select(URN, SCHNAME, LANAME, lad, TOWN), by = "URN") |>
+    left_join(out$va_kind |> select(URN, group, va_shrunk) |>
+                pivot_wider(names_from = group, values_from = va_shrunk, names_glue = "{group}_va_kind_shrunk"),
+              by = "URN") |>
     relocate(URN, SCHNAME, TOWN, LANAME, lad) |>
     mutate(across(where(is.double), ~round(.x, 2)))
   readr::write_csv(wide, here::here("data", "va_v2_schools.csv"))

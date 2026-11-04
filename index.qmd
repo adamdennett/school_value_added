@@ -14,7 +14,7 @@ S <- V$summary
 ::: {.hero}
 # How much does a school add? And how much does absence (or anything else) take away?
 
-<p class="lead">Value Added v2.0 measures each secondary school in England
+<p class="lead">Value Added v2.1 measures each secondary school in England
 against what its intake and context would lead us to expect: for all
 pupils, for disadvantaged and non-disadvantaged pupils, and now for girls
 and boys. It is the next step from
@@ -141,8 +141,15 @@ direction and the order of magnitude are what to take from it. How each
 number is computed from the model is set out in the
 [methodology](method.qmd#sec-add-take).
 
-## What is new in v2.0
+## What is new since v1
 
+- **v2.1: schools that stop at 16** are compared with schools like them.
+  An 11–16 school scores a little higher than a similar school with a
+  sixth form; that is its structure, like its admissions policy, so it is
+  now in the expectation.
+- **The kind of absence.** Value added allowing for how much of a school's
+  absence is illness is published beside the headline, on every map
+  ([why it is not the headline](method.qmd#sec-v21)).
 - **Measured against intake and context only.** The Ofsted grade and the
   teacher workforce terms are out of the expectation: they partly reflect
   the very performance being measured.

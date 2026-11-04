@@ -27,13 +27,13 @@ v1_doc <- function(name, tier) {
 
 AREAS <- c(
   list(list(name = "Sussex", tier = "region", las = SUSSEX_LAS, parent = "", file = "sussex.qmd", root = "",
-            title = "Sussex", subtitle = "Value Added v2.0 across East Sussex, West Sussex and Brighton and Hove.")),
+            title = "Sussex", subtitle = "Value Added v2.1 across East Sussex, West Sussex and Brighton and Hove.")),
   lapply(SUSSEX_LAS, function(la) list(name = la, tier = "la", las = la, parent = "Sussex",
          file = file.path("areas", paste0(slug(la), ".qmd")), root = "../", title = la,
-         subtitle = paste0("Value Added v2.0 for ", la, "'s secondary schools."))),
+         subtitle = paste0("Value Added v2.1 for ", la, "'s secondary schools."))),
   unlist(lapply(names(DISTRICTS), function(la) lapply(DISTRICTS[[la]], function(d) list(
     name = d, tier = "district", las = la, parent = la, file = file.path("areas", paste0(slug(d), ".qmd")),
-    root = "../", title = d, subtitle = paste0("Value Added v2.0 for the secondary schools of ", d, ", ", la, ".")))),
+    root = "../", title = d, subtitle = paste0("Value Added v2.1 for the secondary schools of ", d, ", ", la, ".")))),
     recursive = FALSE))
 
 write_area <- function(a) {

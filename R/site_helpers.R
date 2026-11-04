@@ -62,6 +62,10 @@ va_wide <- function(V) {
   v1 <- V$v1 |> select(URN, group, va_v1) |>
     pivot_wider(names_from = group, values_from = va_v1, names_glue = "v1_{group}")
   out <- V$schools |> inner_join(w, by = "URN") |> left_join(v1, by = "URN")
+  # Value added allowing for the kind of absence, published beside the headline
+  if (!is.null(V$va_kind)) out <- out |> left_join(
+    V$va_kind |> select(URN, group, va_shrunk) |>
+      pivot_wider(names_from = group, values_from = va_shrunk, names_glue = "va_kind_{group}"), by = "URN")
   # Provisional 2025/26, predicted from the fitted model (R/05_provisional_2526.R)
   pv <- load_prov()
   if (!is.null(pv)) out <- out |> left_join(
@@ -116,7 +120,7 @@ colour_caps <- function() {
     w <- w |> left_join(pa$abs_schools |> select(URN, abs_excess), by = "URN") |>
       left_join(pa$va_m2 |> filter(group == "all") |> select(URN, va_m2), by = "URN")
   }
-  vars <- intersect(c(grep("^va_shrunk_|^va_2526_", names(w), value = TRUE), "v1_all", "abs_excess", "va_m2"), names(w))
+  vars <- intersect(c(grep("^va_shrunk_|^va_2526_|^va_kind_", names(w), value = TRUE), "v1_all", "abs_excess", "va_m2"), names(w))
   sapply(vars, function(v) round(unname(quantile(abs(w[[v]]), 0.975, na.rm = TRUE)), 1))
 }
 
@@ -127,7 +131,7 @@ load_prov <- function() {
 }
 
 #' The sentence every provisional figure carries
-PROV_NOTE <- paste("2025/26 is provisional: predicted from the v2.0 model using DfE's provisional KS4",
+PROV_NOTE <- paste("2025/26 is provisional: predicted from the v2.1 model using DfE's provisional KS4",
                    "results (October 2026), with absence bridged from autumn and spring and the intake",
                    "data not yet published carried forward. It will be updated with the revised KS4",
                    "release in February 2027.")
@@ -159,7 +163,7 @@ fig_va <- function(w, groups = c("all", "disadvantaged", "non_disadvantaged"), t
 # ---- Decomposition: why an area's average differs from England's ---------
 COMP_ORDER <- c("Absence", "Prior attainment (KS2)", "Disadvantage", "English as an additional language",
                 "Special educational needs", "Pupil mobility", "Neighbourhood education",
-                "Single-sex school", "Admissions (selection)", "Region", "Local authority",
+                "Single-sex school", "School stops at 16", "Admissions (selection)", "Region", "Local authority",
                 "Year", "Unexplained (school)")
 
 #' Each component's mean contribution in the area minus England's, in
@@ -201,11 +205,13 @@ source(here::here("R", "map_js.R"))
 
 MAP_VARS <- tribble(
   ~var,              ~label,                                                     ~group,           ~scale, ~good,  ~dp, ~unit,
-  "va_shrunk_all",   "Value added v2, all pupils",                               "Value added",    "div",  "high", 1,   " pts",
-  "va_shrunk_disadvantaged", "Value added v2, disadvantaged pupils",             "Value added",    "div",  "high", 1,   " pts",
-  "va_shrunk_non_disadvantaged", "Value added v2, non-disadvantaged pupils",     "Value added",    "div",  "high", 1,   " pts",
-  "va_shrunk_girls", "Value added v2, girls",                                    "Value added",    "div",  "high", 1,   " pts",
-  "va_shrunk_boys",  "Value added v2, boys",                                     "Value added",    "div",  "high", 1,   " pts",
+  "va_shrunk_all",   "Value added v2.1, all pupils",                               "Value added",    "div",  "high", 1,   " pts",
+  "va_shrunk_disadvantaged", "Value added v2.1, disadvantaged pupils",             "Value added",    "div",  "high", 1,   " pts",
+  "va_shrunk_non_disadvantaged", "Value added v2.1, non-disadvantaged pupils",     "Value added",    "div",  "high", 1,   " pts",
+  "va_shrunk_girls", "Value added v2.1, girls",                                    "Value added",    "div",  "high", 1,   " pts",
+  "va_shrunk_boys",  "Value added v2.1, boys",                                     "Value added",    "div",  "high", 1,   " pts",
+  "va_kind_all",     "Value added allowing for the kind of absence, all pupils", "Value added",  "div",  "high", 1,   " pts",
+  "va_kind_disadvantaged", "Value added allowing for the kind of absence, disadvantaged pupils", "Value added", "div", "high", 1, " pts",
   "va_m2",           "Value added with no allowance for absence, all pupils",    "Value added",    "div",  "high", 1,   " pts",
   "va_2526_all",     "Value added 2025/26 PROVISIONAL, all pupils",              "Value added",    "div",  "high", 1,   " pts",
   "v1_all",          "Value added v1 (published, within the LA), all pupils",    "Value added",    "div",  "high", 1,   " pts",
@@ -302,7 +308,7 @@ map_schools <- function(w, lads, height = 520, X = NULL) {
   bb <- sf::st_bbox(lads)
   dat <- w |>
     mutate(pupils = coalesce(pupils, 900),
-           tip = sprintf(paste0("<b>%s</b> (%s)<br>Value added v2: all %s, disadvantaged %s, girls %s, boys %s",
+           tip = sprintf(paste0("<b>%s</b> (%s)<br>Value added v2.1: all %s, disadvantaged %s, girls %s, boys %s",
                                 "<br>Value added v1 (published): %s<br>Attainment 8 %.1f, FSM %.0f%%, absence %.1f%%%s",
                                 "<br>Ofsted latest: %s%s"),
                          SCHNAME, coalesce(lad, LANAME),
