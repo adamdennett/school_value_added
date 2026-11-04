@@ -1,0 +1,90 @@
+# Refresh Ofsted: bring in Ofsted's newest monthly management information,
+# update every school's latest judgement (no refit: nothing in the model
+# uses Ofsted), rerender the site and commit. Ofsted publishes around the
+# middle of each month, so this runs on the 20th; it can also be started by
+# hand from the Actions tab. If the site already has the newest release it
+# stops after the check and commits nothing.
+name: Refresh Ofsted
+
+on:
+  schedule:
+    - cron: "0 6 20 * *"
+  workflow_dispatch:
+    inputs:
+      render_anyway:
+        description: "Render the site even if Ofsted has not changed (a test: nothing is committed unless it has)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: refresh-ofsted
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::here
+            any::dplyr
+            any::tidyr
+            any::tibble
+            any::readr
+            any::lubridate
+            any::jsonlite
+            any::ggplot2
+            any::ggrepel
+            any::scales
+            any::knitr
+            any::rmarkdown
+            any::kableExtra
+            any::sf
+            any::leaflet
+            any::htmlwidgets
+            any::plotly
+            any::lme4
+            any::nabor
+            any::concaveman
+
+      - name: Fetch Ofsted's newest release
+        id: ofsted
+        run: Rscript R/refresh_ofsted.R
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        if: steps.ofsted.outputs.changed == 'true' || inputs.render_anyway
+        with:
+          version: 1.8.27
+
+      - name: Render the site
+        if: steps.ofsted.outputs.changed == 'true' || inputs.render_anyway
+        run: |
+          Rscript R/03_area_pages.R
+          quarto render
+
+      - name: Commit and push
+        if: steps.ofsted.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/va_v2.rds docs
+          git commit -m "Refresh Ofsted to the release as at ${{ steps.ofsted.outputs.as_at }}"
+          git push
+
+      - name: Ask GitHub Pages to rebuild
+        if: steps.ofsted.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

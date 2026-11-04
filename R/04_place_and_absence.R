@@ -109,7 +109,7 @@ route_of <- function(nftype) case_when(
   nftype %in% c("CY", "FD", "VA", "VC") ~ "Maintained", TRUE ~ "Other")
 
 trust_by_year <- function() {
-  zip <- tail(sort(list.files(sat("data-raw", "ees"), "^exclusions_school_.*\\.zip$", full.names = TRUE)), 1)
+  zip <- tail(sort(list.files(here::here("data-raw", "ees"), "^exclusions_school_.*\\.zip$", full.names = TRUE)), 1)
   t <- readr::read_csv(unz(zip, "data/exc_school.csv"), col_types = readr::cols(.default = "c"),
                        progress = FALSE) |>
     transmute(year_label = paste0(substr(time_period, 1, 4), "-", substr(time_period, 5, 6)),

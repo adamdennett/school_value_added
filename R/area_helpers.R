@@ -6,8 +6,13 @@
 # ---------------------------------------------------------------------------
 
 #' The original project's area file for a place: absence series, reasons,
-#' suspensions and profiles. These are data, not model output, so v2 reuses them.
-load_area_v1 <- function(slug) readRDS(sat("data", paste0("area_", slug, ".rds")))
+#' suspensions and profiles. These are data, not model output, so v2 reuses
+#' them. Read from the snapshot in data/area/ (R/snapshot_area.R), so the
+#' site renders without the original project; failing that, from it.
+load_area_v1 <- function(slug) {
+  f <- here::here("data", "area", paste0("area_", slug, ".rds"))
+  readRDS(if (file.exists(f)) f else sat("data", paste0("area_", slug, ".rds")))
+}
 load_place <- function() readRDS(here::here("data", "place_absence.rds"))
 
 #' Suspensions counted both ways for a set of schools: episodes per 100

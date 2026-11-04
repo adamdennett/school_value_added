@@ -31,14 +31,19 @@ subtitle: "What v2.0 does now, and what comes next."
       on the v2.0 model, with the girls/boys groups and the new intake
       terms as levers.
 - [ ] **Adding a new year.** When DfE publishes a new year's KS4 results,
-      absence, census and SEN data, extend the panel in the original
-      project, then rerun `R/01_inputs.R`, `R/02_fit_va.R` and
-      `R/03_area_pages.R` here. The v2.0 model takes its years from the
-      data, and no longer needs the workforce file, which was the slowest
-      to arrive. See the README.
-- [ ] **A self-contained data pipeline.** Bring the DfE and Ofsted fetch
-      steps into this repository, so it no longer reads from the original
-      project's folder.
+      add it to `YEAR_CONFIG` in `pipeline/helpers.R`, run
+      `R/00_fetch_data.R`, then the build steps. The v2.0 model takes its
+      years from the data, and no longer needs the workforce file, which
+      was the slowest to arrive. See the README.
+- [x] **A self-contained data pipeline for the model.** `R/00_fetch_data.R`
+      builds every model input from public sources (DfE, GIAS, ONS, nomis,
+      postcodes.io, Ofsted), with the scripts in `pipeline/`. Rebuilt from
+      the same downloads it reproduces the inputs, and every value-added
+      figure, exactly.
+- [ ] **The Sussex area analyses, self-contained too.** The area pages
+      still reuse the original project's area analyses (a snapshot in
+      `data/area/`), its Sussex governance and its absence reasons. Port
+      its R/15, R/17 and R/19 next.
 - [ ] **Update 2025/26 with the revised KS4 release (February 2027).**
       2025/26 is shown now, provisional, predicted from the fitted model on
       DfE's October results with absence bridged and the unpublished intake
@@ -53,7 +58,8 @@ subtitle: "What v2.0 does now, and what comes next."
       neighbourhood education for all adults.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
-- [ ] **Monthly Ofsted refresh.** Pick up Ofsted's new monthly release
-      automatically.
+- [x] **Monthly Ofsted refresh.** A GitHub Actions workflow picks up
+      Ofsted's new release on the 20th of each month, updates every
+      school's latest judgement without refitting, rerenders and commits.
 - [ ] **Publish v2.0 alongside v1** in the original reports, labelled, with
       a note on how rankings change.

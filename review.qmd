@@ -470,7 +470,7 @@ supportive, underpowered.
 #| message: false
 #| warning: false
 suppressPackageStartupMessages(library(sf))
-oa <- readRDS(sat("data", "cache", "oa_pwc_2021.rds"))
+oa <- readRDS(here::here("data", "cache", "oa_pwc_2021.rds"))   # pipeline/08_census.R
 ds <- va_wide(load_va()) |> filter(grepl("Dorothy Stringer", SCHNAME)) |> slice(1)
 sch <- st_as_sf(ds, coords = c("lon", "lat"), crs = 4326) |> st_transform(27700)
 nn  <- nabor::knn(as.matrix(oa[, c("easting", "northing")]), st_coordinates(sch), k = 150)

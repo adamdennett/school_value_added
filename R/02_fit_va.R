@@ -107,15 +107,14 @@ fit_group <- function(d, group) {
 }
 
 #' v1 value added, as published (within the LA), mean over the four years,
-#' under the same one-identity-per-school URNs as v2 (ids: urn_published -> URN)
+#' under the same one-identity-per-school URNs as v2 (ids: urn_published -> URN).
+#' v1 is fixed history: its yearly residuals are a snapshot of the original
+#' project's published model, in data/lookups/v1_published.csv.
 v1_va <- function(ids) {
-  readRDS(sat("data", "panel_data.rds")) |>
-    filter(year_label %in% c("2021-22", "2022-23", "2023-24", "2024-25")) |>
-    mutate(urn_published = as.integer(URN)) |>
+  read.csv(here::here("data", "lookups", "v1_published.csv")) |>
+    rename(URN = urn_published) |> mutate(urn_published = URN) |>
     left_join(ids, by = "urn_published") |>
-    transmute(URN = coalesce(URN.y, urn_published), all = residual_ATT8SCR_imputed,
-              disadvantaged = residual_ATT8SCR_FSM6CLA1A_imputed,
-              non_disadvantaged = residual_ATT8SCR_NFSM6CLA1A_imputed) |>
+    transmute(URN = coalesce(URN.y, urn_published), all, disadvantaged, non_disadvantaged) |>
     pivot_longer(-URN, names_to = "group", values_to = "va") |>
     filter(!is.na(va)) |>
     group_by(URN, group) |> summarise(va_v1 = mean(va), years_v1 = n(), .groups = "drop")

@@ -3,8 +3,23 @@
 .RData
 .Rproj.user
 
-# Inputs rebuilt from the original project
+# Inputs, rebuilt from public sources by R/00_fetch_data.R and R/01_inputs.R
 data/inputs.rds
+data-raw/
+data/extracted/
+data/year_data_list.rds
+data/panel_raw.rds
+data/panel_data.rds
+data/panel_data_5yr.rds
+data/school_lookup.rds
+data/la_lookup.rds
+data/gias/
+data/census/
+data/ofsted/
+data/cache/*
+# kept: the Census centroids the review's neighbourhood map draws, so the
+# site renders without the pipeline having run
+!data/cache/oa_pwc_2021.rds
 
 # Generated from templates/area.qmd by R/03_area_pages.R
 areas/*.qmd

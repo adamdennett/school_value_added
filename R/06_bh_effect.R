@@ -109,7 +109,7 @@ cost <- coefs[["absence"]] * gap_log
 # and with the share of adults with no qualifications in its place or
 # beside it, to see whether a different measure of the same thing takes
 # the authority effect away.
-census <- readRDS(sat("data", "census", "school_census_context.rds")) |> mutate(URN = as.integer(URN))
+census <- readRDS(here::here("data", "census", "school_census_context.rds")) |> mutate(URN = as.integer(URN))
 da <- model_rows(d, "all")
 da <- da |> left_join(census |> rename(urn_published = URN), by = "urn_published")
 zs <- function(x) (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)

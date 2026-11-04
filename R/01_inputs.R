@@ -1,16 +1,18 @@
 # 01_inputs.R - Assemble the modelling data for Value Added v2.0
 # ---------------------------------------------------------------------------
-# Reads the school panel and its companions from the sibling repository
-# school_attainment_tool and writes one table, data/inputs.rds (git-ignored),
+# Reads the school panel and its companions, built from public sources by
+# R/00_fetch_data.R, and writes one table, data/inputs.rds (git-ignored),
 # with every variable the v2 model and the site need:
 #
-#   panel_data.rds                   Attainment 8 by group, intake, absence (DfE)
-#   census/school_census_context.rds neighbourhood education, 150 nearest OAs
-#   cache/school_lad.rds             each school's district (ONS, postcodes.io)
-#   area_sussex.rds                  district fill for Sussex schools placed later
-#   ofsted/ofsted_latest.rds         latest Ofsted judgement (monthly MI)
-#   trust_effects.rds                who ran each Sussex school
-#   data-raw/gias/links_*.csv        predecessor / successor URNs
+#   data/panel_data.rds                   Attainment 8 by group, intake, absence (DfE)
+#   data/census/school_census_context.rds neighbourhood education, 150 nearest OAs
+#   data/cache/school_lad.rds             each school's district (ONS, postcodes.io)
+#   data/ofsted/ofsted_latest.rds         latest Ofsted judgement (monthly MI)
+#   data/gias/gias_establishments.rds     locations the panel lacks
+#   data-raw/gias/links_*.csv             predecessor / successor URNs
+#
+# and, from the original project (school_attainment_tool) if it is there,
+# who ran each Sussex school (its trust analysis; display only).
 #
 #   Rscript R/01_inputs.R
 # ---------------------------------------------------------------------------
@@ -18,12 +20,12 @@
 source(here::here("R", "00_config.R"))
 
 stop_if_missing <- function(f) if (!file.exists(f))
-  stop("Missing ", f, ". Build it in school_attainment_tool first (see README.md).")
+  stop("Missing ", f, ". Build it with Rscript R/00_fetch_data.R (see README.md).")
 
 #' Each URN's family through GIAS links: URN = the panel school, urn = any
 #' URN it has filed under. Used to find a re-opened school's Ofsted record.
 urn_links <- function(urns) {
-  f <- tail(sort(list.files(sat("data-raw", "gias"), "^links_edubasealldata.*csv$", full.names = TRUE)), 1)
+  f <- tail(sort(list.files(here::here("data-raw", "gias"), "^links_edubasealldata.*csv$", full.names = TRUE)), 1)
   self <- tibble(URN = urns, urn = urns)
   if (!length(f)) return(self)
   l <- readr::read_csv(f, locale = readr::locale(encoding = "latin1"), progress = FALSE,
@@ -45,7 +47,7 @@ urn_links <- function(urns) {
 #' successor links to the latest URN that is itself in the panel, so the
 #' school's years are counted together under its current URN.
 current_urn <- function(urns) {
-  f <- tail(sort(list.files(sat("data-raw", "gias"), "^links_edubasealldata.*csv$", full.names = TRUE)), 1)
+  f <- tail(sort(list.files(here::here("data-raw", "gias"), "^links_edubasealldata.*csv$", full.names = TRUE)), 1)
   if (!length(f)) return(tibble(URN = urns, school_id = urns))
   succ <- readr::read_csv(f, locale = readr::locale(encoding = "latin1"), progress = FALSE,
                           col_types = readr::cols(.default = "c")) |>
@@ -62,26 +64,44 @@ current_urn <- function(urns) {
   tibble(URN = urns, school_id = id)
 }
 
+#' Each school's latest Ofsted judgement, found through its URN family (any
+#' URN it has filed under), so a school that converted or re-opened keeps
+#' its record. The family is saved to data/lookups/urn_family.csv, so the
+#' monthly refresh (R/refresh_ofsted.R) can repeat this without GIAS.
 ofsted_latest <- function(urns) {
-  f <- sat("data", "ofsted", "ofsted_latest.rds"); stop_if_missing(f)
+  family <- urn_links(urns)
+  write.csv(family |> arrange(URN, urn), here::here("data", "lookups", "urn_family.csv"), row.names = FALSE)
+  ofsted_fields(family)
+}
+
+ofsted_fields <- function(family) {
+  f <- here::here("data", "ofsted", "ofsted_latest.rds"); stop_if_missing(f)
   o <- readRDS(f)
-  best <- urn_links(urns) |>
+  best <- family |>
     inner_join(o, by = c("urn" = "URN")) |>
     filter(!is.na(ofsted_latest)) |>
     arrange(URN, desc(ofsted_latest_date)) |>
     distinct(URN, .keep_all = TRUE) |>
     transmute(URN, ofsted_latest, ofsted_latest_date, ofsted_kind, ofsted_rc = rc_achievement,
               # one grade for an inspection with no overall grade: the most
-              # common of its key judgements (R/15b_ofsted_latest.R there)
+              # common of its key judgements (pipeline/10_ofsted_latest.R)
               ofsted_nog = if ("oeif_modal" %in% names(o)) ifelse(ofsted_kind == "No overall grade", oeif_modal, NA_character_)
                            else NA_character_)
   attr(best, "as_at") <- attr(o, "as_at")
   best
 }
 
-#' Who ran each Sussex school in 2024/25 and now, from the trust analysis
+#' Who ran each Sussex school in 2024/25, from the original project's trust
+#' analysis (its R/19). Sussex only, and display only: without the file the
+#' columns are left empty and nothing in the model changes.
 sussex_governance <- function() {
-  tr <- readRDS(sat("data", "trust_effects.rds"))
+  f <- sat("data", "trust_effects.rds")
+  if (!file.exists(f)) {
+    message("  no ", f, ": Sussex governance left empty")
+    return(tibble(URN = integer(), route = character(), trust_kind = character(),
+                  run_by = character(), gov = character()))
+  }
+  tr <- readRDS(f)
   tidy <- function(x) ifelse(is.na(x), NA_character_, sub(" Limited$", "", gsub("\\bOf\\b", "of",
     gsub("\\bAnd\\b", "and", tools::toTitleCase(tolower(x))))))
   tr$sussex_years |>
@@ -99,21 +119,17 @@ sussex_governance <- function() {
 }
 
 build_inputs <- function() {
-  for (f in c(sat("data", "panel_data.rds"), sat("data", "census", "school_census_context.rds"),
-              sat("data", "cache", "school_lad.rds"))) stop_if_missing(f)
-  panel <- readRDS(sat("data", "panel_data.rds")) |>
+  src <- function(...) here::here("data", ...)
+  for (f in c(src("panel_data.rds"), src("census", "school_census_context.rds"),
+              src("cache", "school_lad.rds"))) stop_if_missing(f)
+  panel <- readRDS(src("panel_data.rds")) |>
     filter(MINORGROUP %in% c("Academy", "Maintained school"), !is.na(ATT8SCR), ATT8SCR > 0) |>
     mutate(URN = as.integer(URN), SCHNAME = gsub("\\s+", " ", trimws(SCHNAME)))
 
-  l4 <- readRDS(sat("data", "census", "school_census_context.rds")) |>
+  l4 <- readRDS(src("census", "school_census_context.rds")) |>
     transmute(URN = as.integer(URN), l4 = cens_l4plus_k150)
-  lad_map <- readRDS(sat("data", "cache", "school_lad.rds")) |> transmute(URN = as.integer(URN), lad)
-  # Sussex schools that only the area build placed (by postcode)
-  sx <- sat("data", "area_sussex.rds")
-  if (file.exists(sx)) {
-    placed <- readRDS(sx)$schools |> transmute(URN = as.integer(URN), lad = district)
-    lad_map <- bind_rows(lad_map, placed[!placed$URN %in% lad_map$URN, ])
-  }
+  # every school in the panel is placed (pipeline/09_school_lad.R)
+  lad_map <- readRDS(src("cache", "school_lad.rds")) |> transmute(URN = as.integer(URN), lad)
 
   d <- panel |>
     left_join(l4, by = "URN") |>
@@ -125,7 +141,7 @@ build_inputs <- function() {
            ADMPOL_PT = factor(ADMPOL_PT))
 
   # Location for the maps: the panel's own easting and northing, else GIAS
-  gias <- readRDS(sat("data", "gias", "gias_establishments.rds")) |>
+  gias <- readRDS(here::here("data", "gias", "gias_establishments.rds")) |>
     transmute(URN = as.integer(urn), e_g = as.numeric(easting), n_g = as.numeric(northing)) |>
     distinct(URN, .keep_all = TRUE)
   xy <- d |> select(URN, easting, northing) |>

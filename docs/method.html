@@ -817,7 +817,7 @@ Table&nbsp;5: Every school-year left out, with the measure that put it there. A 
 </div>
 <p>DfE has published provisional KS4 results for 2025/26, but not yet the year’s school census, SEN or mobility data. So 2025/26 is not part of the fitted model. Instead each school’s 2025/26 result is set against what the <strong>fitted v2.0 model</strong> predicts for it, as the original project did when it extended v1. The four model years do not move.</p>
 <ul>
-<li><strong>Absence.</strong> 2025/26 publishes autumn and spring only. Full-year absence is estimated from the two-term figure by a log-log fit on every earlier school-year with both (R² = 0.970, 12,958 school-years).</li>
+<li><strong>Absence.</strong> 2025/26 publishes autumn and spring only. Full-year absence is estimated from the two-term figure by a log-log fit on every earlier school-year with both (R² = 0.968, 12,958 school-years).</li>
 <li><strong>Carried forward</strong> from each school’s latest earlier year: prior attainment (KS2), SEN support and EHCP rates, pupil mobility and the single-sex flag. Disadvantage and EAL are 2025/26’s own; neighbourhood education is the 2021 Census figure, as for every year.</li>
 <li><strong>The year effect</strong> for 2025/26 is set so England’s schools average zero, as the model’s year effects do for the fitted years.</li>
 <li><strong>Not shrunk.</strong> It is one provisional year, shown beside the four-year figure, never averaged into it.</li>
@@ -842,7 +842,7 @@ Table&nbsp;6: How one provisional year sits against each school’s four-year va
 <tr class="odd">
 <td style="text-align: left;">All pupils</td>
 <td style="text-align: right;">3,134</td>
-<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.69</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Boys</td>
@@ -871,7 +871,7 @@ Table&nbsp;6: How one provisional year sits against each school’s four-year va
 </figure>
 </div>
 </div>
-<p>3,210 schools have a provisional 2025/26 figure. A single year agrees with the four-year measure at 0.68 for all pupils and less for the smaller groups (0.55 for disadvantaged pupils), which is why it is reported as a separate, provisional column. The figures are in <a href="data/va_2526_provisional.csv">va_2526_provisional.csv</a>.</p>
+<p>3,210 schools have a provisional 2025/26 figure. A single year agrees with the four-year measure at 0.69 for all pupils and less for the smaller groups (0.55 for disadvantaged pupils), which is why it is reported as a separate, provisional column. The figures are in <a href="data/va_2526_provisional.csv">va_2526_provisional.csv</a>.</p>
 </section>
 <section id="sec-over-time" class="level1">
 <h1>Value added over time</h1>
@@ -897,7 +897,7 @@ Table&nbsp;7: How far a school’s yearly value added carries from one year to t
 <tr class="odd">
 <td style="text-align: left;">All pupils</td>
 <td style="text-align: right;">0.67</td>
-<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.46</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Disadvantaged</td>
@@ -926,7 +926,7 @@ Table&nbsp;7: How far a school’s yearly value added carries from one year to t
 </figure>
 </div>
 </div>
-<p>For all pupils, adjacent years correlate at 0.67 and 2021/22 with 2025/26 at 0.47; for disadvantaged pupils, where cohorts are smaller, at 0.48 and 0.31. Value added changes gradually, and part of any one year’s movement is noise.</p>
+<p>For all pupils, adjacent years correlate at 0.67 and 2021/22 with 2025/26 at 0.46; for disadvantaged pupils, where cohorts are smaller, at 0.48 and 0.31. Value added changes gradually, and part of any one year’s movement is noise.</p>
 <p>That is why the <a href="./explore.html">explorer</a> and the area pages offer a <strong>centred moving average</strong>: the mean of the yearly figures over a window of one, three or five years centred on a chosen year. A three-year average centred on 2023/24 is the mean of 2022/23, 2023/24 and 2024/25. A window that runs past the first or last year uses the years there are, so a three-year average centred on 2021/22 covers two years. A school missing a year is averaged over the years it has. A window that includes 2025/26 includes a provisional figure and is flagged. Moving averages are not shrunk, and the four-year figure remains the headline measure.</p>
 </section>
 <section id="sec-add-take" class="level1">
@@ -1025,7 +1025,7 @@ Table&nbsp;8: How the home page’s three steps are computed. Absence is each sc
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
-<p>Every school’s v2.0 value added, for every group, with intervals and the within-authority version, is in <a href="data/va_v2_schools.csv">va_v2_schools.csv</a>. Inputs are the DfE performance tables, school census and absence data, the 2021 Census and Ofsted’s monthly management information, assembled by the <a href="https://github.com/adamdennett/school_attainment_tool">original project</a>. The build is described in the <a href="https://github.com/adamdennett/school_value_added#readme">repository README</a>.</p>
+<p>Every school’s v2.0 value added, for every group, with intervals and the within-authority version, is in <a href="data/va_v2_schools.csv">va_v2_schools.csv</a>. Inputs are the DfE performance tables, school census and absence data, GIAS, the 2021 Census and Ofsted’s monthly management information, downloaded and assembled by this repository’s own pipeline (<code>R/00_fetch_data.R</code>, from the <a href="https://github.com/adamdennett/school_attainment_tool">original project</a>’s scripts). Ofsted judgements are refreshed each month. The build is described in the <a href="https://github.com/adamdennett/school_value_added#readme">repository README</a>.</p>
 
 
 </section>

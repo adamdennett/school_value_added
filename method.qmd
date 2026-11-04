@@ -554,8 +554,9 @@ once.
 Every school's v2.0 value added, for every group, with intervals and the
 within-authority version, is in
 [va_v2_schools.csv](data/va_v2_schools.csv). Inputs are the DfE
-performance tables, school census and absence data, the 2021 Census and
-Ofsted's monthly management information, assembled by the
-[original project](https://github.com/adamdennett/school_attainment_tool).
-The build is described in the
+performance tables, school census and absence data, GIAS, the 2021 Census
+and Ofsted's monthly management information, downloaded and assembled by
+this repository's own pipeline (`R/00_fetch_data.R`, from the
+[original project](https://github.com/adamdennett/school_attainment_tool)'s
+scripts). Ofsted judgements are refreshed each month. The build is described in the
 [repository README](https://github.com/adamdennett/school_value_added#readme).

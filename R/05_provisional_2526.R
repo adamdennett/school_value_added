@@ -38,7 +38,7 @@ bridge_absence <- function(p) {
 build_provisional <- function() {
   V <- readRDS(here::here("data", "va_v2.rds"))
   d_in <- readRDS(here::here("data", "inputs.rds"))
-  p5 <- readRDS(sat("data", "panel_data_5yr.rds")) |>
+  p5 <- readRDS(here::here("data", "panel_data_5yr.rds")) |>
     mutate(year_label = as.character(year_label))
   br <- bridge_absence(p5)
 
