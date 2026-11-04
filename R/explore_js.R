@@ -17,9 +17,25 @@ function(el, x, data) {
   var GROUPS = ["all", "disadvantaged", "non_disadvantaged", "girls", "boys"];
   var GLAB = {all: "All pupils", disadvantaged: "Disadv.", non_disadvantaged: "Non-disadv.", girls: "Girls", boys: "Boys"};
   var markers = L.layerGroup().addTo(map);
-  var DIV = [[31,127,160],[232,230,238],[54,26,84]];
-  function ramp(t) { t = Math.max(0, Math.min(1, t)); var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;
-    return "rgb(" + [0,1,2].map(function(k) { return Math.round(DIV[i][k] + f * (DIV[i+1][k] - DIV[i][k])); }).join(",") + ")"; }
+  // Bad -> good, centred on zero: ColorBrewer RdYlGn, or
+  // one of two colour-blind-safe schemes from the Colours menu (shared
+  // with the area maps)
+  var PALS = {
+    rag: {name: "Red, amber, green", good: "green",
+          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[255,255,191],[217,239,139],[166,217,106],[102,189,99],[26,152,80]]},
+    rdylbu: {name: "Red, yellow, blue (colour-blind safe)", good: "blue",
+          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]]},
+    prgn: {name: "Purple, green (colour-blind safe)", good: "green", bad: "purple",
+          c: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]]}};
+  var scheme = "rag";
+  try { var s0 = localStorage.getItem("va-pal"); if (PALS[s0]) scheme = s0; } catch (e) {}
+  function DIV() { return PALS[scheme].c; }
+  function badWord() { return PALS[scheme].bad || "red"; }
+  function ramp(t) { var C = DIV(), n = C.length - 1; t = Math.max(0, Math.min(1, t));
+    var i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
+    return "rgb(" + [0,1,2].map(function(k) { return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(",") + ")"; }
+  function grad(rev) { var C = DIV().slice(); if (rev) C.reverse();
+    return C.map(function(c) { return "rgb(" + c.join(",") + ")"; }).join(","); }
   function fmt(v, d) { if (v == null || isNaN(v)) return ""; var s = (+v).toFixed(d == null ? 1 : d);
     if (+s === 0) return s.replace("-", ""); return (v > 0 ? "+" : "") + s; }
   function esc(s) { return s == null ? "" : String(s).replace(/[&<>]/g, function(c) { return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
@@ -42,6 +58,9 @@ function(el, x, data) {
   opts(sCentre, YEARS.map(function(y) { return [y, yl(y)]; }));
   opts(sWin, [["1", "1 year"], ["3", "3 years"], ["5", "5 years"]]);
   sCentre.value = YEARS[YEARS.length - 3] || YEARS[0]; sWin.value = "3";
+  var sPal = sel("Colours", "x-colours");
+  opts(sPal, Object.keys(PALS).map(function(k) { return [k, PALS[k].name]; }));
+  sPal.value = scheme;
   el.parentNode.insertBefore(bar, el);
 
   var summary = document.createElement("div"); summary.className = "explore-summary";
@@ -237,8 +256,8 @@ function(el, x, data) {
       var v = value(d, m), t = v == null ? null : (v + hi) / (2 * hi);
       if (t != null && m.good === "low") t = 1 - t;
       L.circleMarker([d.lat, d.lon], {radius: Math.max(4, Math.sqrt(d.pupils || 900) / 4.5),
-        fillColor: t == null ? "#ffffff" : ramp(t), fillOpacity: t == null ? 0.6 : 0.9,
-        color: t == null ? "#8a8aa3" : "white", weight: 1})
+        fillColor: t == null ? "#ffffff" : ramp(t), fillOpacity: t == null ? 0.6 : 0.92,
+        color: t == null ? "#8a8aa3" : "rgba(40,40,50,0.55)", weight: t == null ? 1 : 0.8})
         .bindTooltip("<b>" + esc(d.SCHNAME) + "</b> (" + esc(d.LANAME) + ")<br>Four years: all pupils " + fmt(d.va_shrunk_all) +
           ", disadvantaged " + fmt(d.va_shrunk_disadvantaged) + ", girls " + fmt(d.va_shrunk_girls) + ", boys " + fmt(d.va_shrunk_boys) +
           "<br>Absence vs intake " + fmt(d.abs_excess) + " pp<br>Ofsted: " + esc(d.ofsted_latest || "not known") +
@@ -249,9 +268,10 @@ function(el, x, data) {
     if (pts.length) map.fitBounds(pts, {padding: [24, 24], maxZoom: 13});
     legDiv.innerHTML = "<strong>" + m.label + "</strong>" + (isVA ? "<div class=\\"note\\">" + periodText() + "</div>" : "") +
       "<div class=\\"bar\\" style=\\"background:linear-gradient(to right," +
-      (m.good === "low" ? "rgb(54,26,84),rgb(232,230,238),rgb(31,127,160)" : "rgb(31,127,160),rgb(232,230,238),rgb(54,26,84)") +
+      grad(m.good === "low") +
       ")\\"></div><span>&le; " + fmt(-hi) + "</span><span style=\\"float:right\\">&ge; " + fmt(hi) + "</span><div class=\\"note\\">" +
-      (m.good === "low" ? "purple below what the intake predicts, blue above" : "blue below expectation, purple above") + "</div>";
+      (m.good === "low" ? badWord() + " above what the intake predicts, " + PALS[scheme].good + " below"
+                        : badWord() + " below expectation, " + PALS[scheme].good + " above") + "</div>";
 
     var g = m.group || "all";
     var vals = rows.map(function(d) { return val(d, g); }).filter(function(v) { return v != null; });
@@ -274,6 +294,9 @@ function(el, x, data) {
 
   sLevel.addEventListener("change", function() { fillAreas(); draw(); });
   [sArea, sMeasure, sPeriod, sCentre, sWin].forEach(function(s) { s.addEventListener("change", draw); });
+  sPal.addEventListener("change", function() { scheme = sPal.value;
+    try { localStorage.setItem("va-pal", scheme); } catch (e) {}
+    draw(); });
   sLevel.value = DEFAULT.level; fillAreas(DEFAULT.area); draw();
 }
 '

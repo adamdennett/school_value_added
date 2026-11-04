@@ -6,12 +6,35 @@ function(el, x, data) {
   var heads = data.heads || {};
   var defaultVar = "va_shrunk_all";
 
-  // Sequential: pale purple -> mid purple -> dark purple. Diverging: blue -> grey -> dark purple.
-  var SEQ = [[238,222,255],[186,130,255],[54,26,84]];
-  var DIV = [[31,127,160],[232,230,238],[54,26,84]];
+  // Every ramp runs bad -> good. Diverging (value added, absence against
+  // intake): red -> amber -> pale yellow at zero -> green, ColorBrewer RdYlGn.
+  // Sequential with a good direction (absence, attainment): the same hues
+  // without the pale middle, so every value reads. Measures with no good or
+  // bad direction (FSM, EAL, ...) keep a neutral purple ramp. The
+  // reader can swap to one of two colour-blind-safe schemes from a menu
+  // (ColorBrewer RdYlBu, red still bad; PRGn, purple bad), remembered
+  // across pages.
+  var PAL = {
+    rag: {name: "Red, amber, green",
+          div: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[255,255,191],[217,239,139],[166,217,106],[102,189,99],[26,152,80]],
+          seq: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[217,239,139],[145,207,96],[26,152,80]],
+          words: ["red", "green"]},
+    rdylbu: {name: "Red, yellow, blue (colour-blind safe)",
+          div: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]],
+          seq: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[171,217,233],[116,173,209],[69,117,180]],
+          words: ["red", "blue"]},
+    prgn: {name: "Purple, green (colour-blind safe)",
+          div: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]],
+          seq: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[166,219,160],[90,174,97],[27,120,55]],
+          words: ["purple", "green"]}
+  };
+  var NEUTRAL = [[238,222,255],[186,130,255],[54,26,84]];
+  var scheme = "rag";
+  try { var s0 = localStorage.getItem("va-pal"); if (PAL[s0]) scheme = s0; } catch (e) {}
+  function pal() { return PAL[scheme]; }
   function ramp(C, t) {
     t = Math.max(0, Math.min(1, t));
-    var i = Math.min(Math.floor(t * 2), 1), f = t * 2 - i;
+    var n = C.length - 1, i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
     return "rgb(" + [0,1,2].map(function(k) {
       return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(",") + ")";
   }
@@ -44,10 +67,12 @@ function(el, x, data) {
       // a fixed national cap (R: colour_caps()) so colours mean the same in every area
       hi = m.cap || Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;
       colour = function(v) { var t = (v - lo) / (hi - lo);
-        return ramp(DIV, m.good === "high" ? t : 1 - t); };
+        return ramp(pal().div, m.good === "high" ? t : 1 - t); };
     } else {
       lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);
-      colour = function(v) { return ramp(SEQ, (v - lo) / ((hi - lo) || 1)); };
+      colour = function(v) { var t = (v - lo) / ((hi - lo) || 1);
+        if (!m.good) return ramp(NEUTRAL, t);
+        return ramp(pal().seq, m.good === "high" ? t : 1 - t); };
     }
     var missing = 0, counts = {};
     schools.forEach(function(d) {
@@ -55,8 +80,9 @@ function(el, x, data) {
       if (none) missing++; else if (m.scale === "cat") counts[v] = (counts[v] || 0) + 1;
       L.circleMarker([d.lat, d.lon], {
         radius: Math.sqrt(d.pupils) / 4,
-        fillColor: none ? "#ffffff" : colour(v), fillOpacity: none ? 0.6 : 0.9,
-        color: none ? "#8a8aa3" : "white", weight: none ? 1.5 : 1
+        fillColor: none ? "#ffffff" : colour(v), fillOpacity: none ? 0.6 : 0.92,
+        // a thin dark rim, so the pale middle of the ramp still shows on the basemap
+        color: none ? "#8a8aa3" : "rgba(40,40,50,0.55)", weight: none ? 1.5 : 0.8
       }).bindTooltip(d.tip + "<br><b>" + m.label + ": " +
           (m.scale === "cat" ? (v || none[name] || "not known") : fmt(v, m)) + "</b>")
         .addTo(markers);
@@ -77,13 +103,17 @@ function(el, x, data) {
           k + " (" + counts[k] + ")</div>";
       });
     } else {
-      var C = m.scale === "div" ? (m.good === "high" ? DIV : DIV.slice().reverse()) : SEQ;
+      var base = m.scale === "div" ? pal().div : (m.good ? pal().seq : NEUTRAL);
+      var C = (m.good === "low") ? base.slice().reverse() : base;
+      var wd = pal().words;
       h += "<div style=\\"height:12px;border-radius:2px;margin:4px 0;background:" + css(C) + "\\"></div>" +
         "<span>" + (m.cap ? "&le; " : "") + fmt(lo, m) + "</span>" +
         (m.scale === "div" ? "<span style=\\"position:absolute;left:50%;transform:translateX(-50%)\\">0</span>" : "") +
         "<span style=\\"float:right\\">" + (m.cap ? "&ge; " : "") + fmt(hi, m) + "</span>";
       if (m.scale === "div") h += "<div style=\\"font-size:11px;color:#666\\">" +
-        (m.good === "high" ? "blue below expectation, purple above" : "purple below expectation, blue above") + "</div>";
+        (m.good === "high" ? wd[0] + " below expectation, " + wd[1] + " above"
+                           : wd[0] + " above what the intake predicts, " + wd[1] + " below") + "</div>";
+      else if (m.good) h += "<div style=\\"font-size:11px;color:#666\\">" + wd[1] + " is better, " + wd[0] + " worse</div>";
     }
     if (missing) h += "<div style=\\"font-size:11px;color:#666;margin-top:2px\\">" +
       "<span style=\\"display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;" +
@@ -207,6 +237,23 @@ function(el, x, data) {
     og.appendChild(o);
   });
   wrap.appendChild(lbl); wrap.appendChild(sel);
+  // red and green are hard to tell apart for about one man in twelve
+  var pl = document.createElement("label");
+  pl.textContent = "Colours:";
+  pl.style.cssText = "font-weight:bold;margin-left:10px;";
+  var ps = document.createElement("select");
+  ps.setAttribute("aria-label", "Colour scheme");
+  ps.style.cssText = sel.style.cssText;
+  Object.keys(PAL).forEach(function(k) {
+    var o = document.createElement("option"); o.value = k; o.textContent = PAL[k].name;
+    if (k === scheme) o.selected = true; ps.appendChild(o);
+  });
+  wrap.appendChild(pl); wrap.appendChild(ps);
+  ps.addEventListener("change", function() {
+    scheme = ps.value;
+    try { localStorage.setItem("va-pal", scheme); } catch (e) {}
+    draw(sel.value);
+  });
   el.parentNode.insertBefore(wrap, el);
   sel.addEventListener("change", function() { draw(sel.value); });
   draw(defaultVar);
