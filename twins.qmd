@@ -19,7 +19,7 @@ ADM <- c("SEL" = "Selective", "OTHER NON SEL" = "Non-selective",
          "NON SEL IN HIGHLY SEL AREA" = "Non-selective, selective area")
 d <- L |>
   left_join(w |> select(URN, lad, gor_name, att8, va_all = va_shrunk_all, va_dis = va_shrunk_disadvantaged,
-                        l4, run_by, ofsted_latest), by = "URN") |>
+                        l4, run_by, ofsted_latest, lat, lon), by = "URN") |>
   left_join(rs, by = "URN") |>
   left_join(readRDS(here::here("data", "school_context.rds")) |> select(URN, run_by_nat), by = "URN") |>
   mutate(run_by = coalesce(run_by, run_by_nat)) |>
@@ -32,8 +32,8 @@ d <- L |>
             place = as.character(place), faith = ifelse(faith, "Religious character", "None"),
             gov = as.character(mat), run_by, ofsted = ofsted_latest,
             overall, illness, unauth, persistent, severe, r_overall, r_unauth,
-            att8, va_all, va_dis) |>
-  mutate(across(where(is.double), ~ round(.x, 3)))
+            att8, va_all, va_dis, lat = round(lat, 4), lon = round(lon, 4)) |>
+  mutate(across(where(is.double) & !c(lat, lon), ~ round(.x, 3)))
 # Areas: each school sits in a region, a local authority and a district
 areas <- list(region = sort(unique(d$rg)), la = sort(unique(d$la)), district = sort(unique(d$lad)))
 payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)))
@@ -53,7 +53,8 @@ payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)))
    - higher value added or Attainment 8;
    - or absence and value added together.
 
-Click a twin to compare its fact card with your school's. The address bar
+Click a twin, in the chart, on the map or in the table, to compare its fact
+card with your school's. The address bar
 keeps your choice, so a link takes someone else to the same comparison.
 :::
 
@@ -85,9 +86,19 @@ cat("<script>window.TWINS = ", jsonlite::toJSON(payload, dataframe = "rows", na 
 .tw-better { background: #d9f0d3; }
 .tw-worse { background: #e7d4e8; }
 .tw-h3 { margin-top: 1.2em; }
+.tw-map { height: 440px; border: 1px solid #e3dcef; border-radius: 6px; margin: 4px 0; }
+.tw-num { display: inline-block; min-width: 18px; height: 18px; line-height: 18px; border-radius: 9px; background: #993bff;
+  color: #fff; font-size: 11px; font-weight: 700; text-align: center; margin-right: 6px; }
+.tw-pin { background: #993bff; color: #fff; border: 1.5px solid #fff; border-radius: 50%; font: 700 11px/19px sans-serif;
+  text-align: center; box-shadow: 0 0 0 1px rgba(40,40,50,.45); cursor: pointer; }
+.tw-pin.sel { box-shadow: 0 0 0 2.5px #1a1a2e; }
+.tw-home { background: #361a54; border: 2px solid #fff; box-shadow: 0 0 0 1px #361a54; transform: rotate(45deg); }
+.tw-home.sel { box-shadow: 0 0 0 2.5px #1a1a2e; }
 .tw-table, .tw-cards { overflow-x: auto; }
 @media (max-width: 600px) { .tw-ctl select { max-width: 100%; } .tw-bar { flex-direction: column; } }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <div id="twins-app"></div>
 <script src="twins.js"></script>
 ```

@@ -24,6 +24,32 @@ subtitle: "What v2.1 does now, and what comes next."
       trajectories in the explorer and on every area page, and a centred
       moving average over one, three or five years around a chosen year
 
+## Done since: absence, schools and twins {#done-absence}
+
+- [x] **What goes with school absence.** [A page](absence_causes.qmd) that
+      starts from a map of the UK research (with links to the sources),
+      shows the trend by reason since 2016/17, and models seven kinds of
+      absence in 2025/26 on every secondary school's intake, needs and
+      setting, with each school nested in its authority and region. Shapley
+      shares say how much each group of characteristics explains, and the
+      full models (coefficients, random effects, fit) are on the page.
+- [x] **The school's part.** What the models attribute to "the school" is
+      mostly selection through admissions; what is left between similar
+      schools is wide and lasts from one year to the next. A message for
+      heads and governors, nationally and on every area page.
+- [x] **Absence on every Sussex page.** Each authority's and district's
+      absence against England, its neighbours and the tier above, what in
+      its intake raises or lowers it, and its schools against similar
+      schools in both years.
+- [x] **[Find a twin](twins.qmd).** Choose a school and find the schools in
+      England most like it in intake and setting, or the look-alikes that do
+      better on absence, attainment or value added, on a chart and a map,
+      with fact cards side by side. Linked from the absence page and every
+      area page, and every comparison has its own link.
+- [x] **The explorer.** Ofsted colours that work across both inspection
+      regimes, in each palette, and the spread of schools on the map
+      beneath it, as on the Sussex pages.
+
 ## Next
 
 - [ ] **Policy simulator v2.0.** Rebuild the
@@ -60,14 +86,15 @@ subtitle: "What v2.1 does now, and what comes next."
 - [ ] **Parents, not adults.** Try a parents' qualification measure from
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.
-- [ ] **What causes school-level absence.** Started:
-      [What goes with school absence](absence_causes.qmd) frames the
-      question with a map of the UK research, shows the trend by reason, and
-      models seven kinds of absence on every secondary school's intake,
-      needs and setting for 2025/26. Next: within-school change over time,
-      whether high-illness places record absence differently, the severe
-      tail on its own, and absence against intake by kind as a candidate
-      for a future version of the model.
+- [ ] **What causes school-level absence, continued.** The cross-section
+      is done ([above](#done-absence)). Next:
+      within-school change over time, whether high-illness places such as
+      Brighton and Hove record absence differently, the severe tail on its
+      own, and absence against intake by kind as a candidate for a future
+      version of the model.
+- [ ] **Twins, further.** Weight the matching by what matters for the
+      measure chosen, add the twins' value added over time to the fact
+      cards, and a printable comparison for a governors' meeting.
 - [ ] **Geographical effects: distance to school.** A page beside Brighton
       and Hove's under Geographical effects, on how far pupils travel to
       school and what it does to attendance, building on

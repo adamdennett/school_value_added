@@ -94,6 +94,9 @@
 
   var summary = el("div", {"class": "tw-summary"}); root.appendChild(summary);
   var chart = el("div", {"class": "tw-chart"}); root.appendChild(chart);
+  var mapWrap = el("div"); root.appendChild(mapWrap);
+  var mapNote = el("div", {"class": "tw-note"}); mapWrap.appendChild(mapNote);
+  var mapDiv = el("div", {"class": "tw-map", role: "region", "aria-label": "Map of the chosen school and its twins"}); mapWrap.appendChild(mapDiv);
   var table = el("div", {"class": "tw-table"}); root.appendChild(table);
   var cards = el("div", {"class": "tw-cards"}); root.appendChild(cards);
 
@@ -149,7 +152,12 @@
       on: o.k, scope: scope, pool: sPool.value, n: sN.value,
       match: GROUPS.filter(function (g) { return groupsOn[g]; }).join("|")});
     try { history.replaceState(null, "", "?" + p.toString() + location.hash); } catch (e) {}
-    draw();
+    draw(); drawMap(true);
+  }
+  // a click on a twin anywhere (chart, map, table) shows its card
+  function pick(urn) {
+    picked = S.find(function (x) { return String(x.URN) === String(urn); }) || picked;
+    drawChart(); drawTable(); drawCards(); drawMap(false);
   }
 
   // ---- drawing -------------------------------------------------------------
@@ -196,8 +204,62 @@
       (o.combo ? " (overall absence, lower, and value added, higher, in national standard deviations)" : "") +
       ". Purple, the schools listed below; click any point for its card.</div>" +
       "<svg viewBox='0 0 " + W + " " + H + "' width='100%' role='img' aria-label='Similar schools by similarity and " + esc(o.l) + "'>" + s + "</svg>";
-    chart.querySelectorAll("circle").forEach(function (n) { n.addEventListener("click", function () {
-      picked = S.find(function (x) { return String(x.URN) === n.getAttribute("data-urn"); }); drawChart(); drawTable(); drawCards(); }); });
+    chart.querySelectorAll("circle").forEach(function (n) { n.addEventListener("click", function () { pick(n.getAttribute("data-urn")); }); });
+  }
+
+  // ---- map: the chosen school, the listed twins (numbered as in the table),
+  // and the rest of the similar schools, on the explorer's grey basemap ------
+  var map = null, layer = null;
+  function drawMap(fit) {
+    if (!window.L) { mapWrap.style.display = "none"; return; }
+    if (!map) {
+      map = L.map(mapDiv, {scrollWheelZoom: false, minZoom: 5});
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        {attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ", maxZoom: 16}).addTo(map);
+      layer = L.layerGroup().addTo(map);
+    }
+    layer.clearLayers();
+    var c = current, f = c.focal, o = c.o, num = {}, has = function (s) { return s.lat != null && s.lon != null; };
+    c.list.forEach(function (x, i) { num[x.s.URN] = i + 1; });
+    var tip = function (s, sim, v) { return "<b>" + esc(s.n) + "</b><br>" + where(s) +
+      (sim != null ? "<br>Similarity " + sim.toFixed(0) + "%" : "") +
+      "<br>" + esc(o.combo ? "Combined score" : o.l) + ": " + fmt(v, o.dp, o.u, o.sign); };
+    var isSel = function (s) { return picked && s.URN === picked.URN; };
+    // the rest of the pool, small and grey
+    c.pool.forEach(function (p) {
+      if (num[p.s.URN] || !has(p.s)) return;
+      L.circleMarker([p.s.lat, p.s.lon], {radius: isSel(p.s) ? 6 : 4, fillColor: "#d3cde0", fillOpacity: 0.95,
+        color: isSel(p.s) ? "#1a1a2e" : "#8a8aa3", weight: isSel(p.s) ? 2.5 : 0.8})
+        .bindTooltip(tip(p.s, p.sim, p.val)).on("click", function () { pick(p.s.URN); }).addTo(layer);
+    });
+    // lines from the chosen school to each listed twin
+    if (has(f)) c.list.forEach(function (x) { if (!has(x.s)) return;
+      L.polyline([[f.lat, f.lon], [x.s.lat, x.s.lon]], {color: "#993bff", weight: 1.5, opacity: 0.45, dashArray: "4 5", interactive: false}).addTo(layer); });
+    // the listed twins, numbered
+    c.list.forEach(function (x, i) { if (!has(x.s)) return;
+      L.marker([x.s.lat, x.s.lon], {zIndexOffset: 500 + (isSel(x.s) ? 100 : 0), keyboard: true, title: x.s.n,
+        icon: L.divIcon({className: "tw-pin" + (isSel(x.s) ? " sel" : ""), html: String(i + 1), iconSize: [22, 22]})})
+        .bindTooltip(tip(x.s, x.sim, x.val)).on("click", function () { pick(x.s.URN); }).addTo(layer);
+    });
+    // the chosen school, a dark diamond
+    if (has(f)) L.marker([f.lat, f.lon], {zIndexOffset: 1000, title: f.n,
+      icon: L.divIcon({className: "tw-home", iconSize: [14, 14]})})
+      .bindTooltip("<b>" + esc(f.n) + "</b> (chosen)<br>" + where(f) + "<br>" + esc(o.combo ? "Combined score" : o.l) + ": " + fmt(score(f, o), o.dp, o.u, o.sign))
+      .addTo(layer);
+    var far = c.list.filter(function (x) { return has(x.s); }).map(function (x) { return [x.s.lat, x.s.lon]; });
+    if (fit) {
+      var pts = far.concat(has(f) ? [[f.lat, f.lon]] : []);
+      if (pts.length > 1) map.fitBounds(pts, {padding: [36, 36], maxZoom: 11});
+      else if (pts.length) map.setView(pts[0], 10);
+    }
+    var km = function (a) { var R = 6371, r = Math.PI / 180, dl = (a.lat - f.lat) * r, dn = (a.lon - f.lon) * r,
+      h = Math.sin(dl / 2) * Math.sin(dl / 2) + Math.cos(f.lat * r) * Math.cos(a.lat * r) * Math.sin(dn / 2) * Math.sin(dn / 2);
+      return 2 * R * Math.asin(Math.sqrt(h)); };
+    var d = has(f) ? c.list.filter(function (x) { return has(x.s); }).map(function (x) { return km(x.s); }).sort(function (a, b) { return a - b; }) : [];
+    mapNote.innerHTML = "<strong>Where they are.</strong> The diamond is " + esc(f.n) + "; the numbered points are the schools listed below" +
+      (d.length ? " (" + (d.length === 1 ? Math.round(d[0]) + " km away" : Math.round(d[0]) + " to " + Math.round(d[d.length - 1]) + " km away") + ")" : "") +
+      "; grey points are the rest of the " + c.pool.length + " most similar. Click any point for its card.";
+    setTimeout(function () { map.invalidateSize(); }, 0);
   }
 
   function drawTable() {
@@ -209,17 +271,17 @@
     h += "<tr class='tw-focal'><td>" + esc(c.focal.n) + " <em>(chosen)</em></td><td>" + esc(c.focal.la) + "</td><td class='r'>–</td><td class='r'>" +
       fmt(score(c.focal, o), o.dp, o.u, o.sign) + "</td><td></td><td class='r'>" + fmt(c.focal.overall, 1, "%") + "</td><td class='r'>" +
       fmt(c.focal.unauth, 1, "%") + "</td><td class='r'>" + fmt(c.focal.va_all, 1, "", true) + "</td></tr>";
-    c.list.forEach(function (x) {
+    c.list.forEach(function (x, i) {
       var sel = picked && x.s.URN === picked.URN;
-      h += "<tr data-urn='" + x.s.URN + "' class='" + (sel ? "tw-sel" : "") + "' style='cursor:pointer'><td>" + esc(x.s.n) + "</td><td>" + esc(x.s.la) +
+      h += "<tr data-urn='" + x.s.URN + "' class='" + (sel ? "tw-sel" : "") + "' style='cursor:pointer'><td><span class='tw-num'>" + (i + 1) + "</span>" +
+        esc(x.s.n) + "</td><td>" + esc(x.s.la) +
         "</td><td class='r'>" + x.sim.toFixed(0) + "%</td><td class='r'>" + fmt(x.val, o.dp, o.u, o.sign) + "</td><td class='r'>" +
         (x.gap == null ? "–" : (x.gap > 0 ? "" : "−") + Math.abs(x.gap).toFixed(o.dp) + (o.u === "%" && !o.sign ? " pts" : "")) +
         "</td><td class='r'>" + fmt(x.s.overall, 1, "%") + "</td><td class='r'>" + fmt(x.s.unauth, 1, "%") + "</td><td class='r'>" +
         fmt(x.s.va_all, 1, "", true) + "</td></tr>";
     });
     table.innerHTML = h + "</tbody></table>";
-    table.querySelectorAll("tr[data-urn]").forEach(function (r) { r.addEventListener("click", function () {
-      picked = S.find(function (x) { return String(x.URN) === r.getAttribute("data-urn"); }); drawChart(); drawTable(); drawCards(); }); });
+    table.querySelectorAll("tr[data-urn]").forEach(function (r) { r.addEventListener("click", function () { pick(r.getAttribute("data-urn")); }); });
   }
 
   // fact cards: the chosen school and the picked twin side by side
