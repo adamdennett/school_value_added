@@ -240,6 +240,87 @@ much about the families whose children attend the schools. A measure of
 parents' qualifications, from the Census tables for households with
 dependent children, would test this directly (reading 1 below).
 
+# Would different admissions change it? {#sec-admissions}
+
+```{r adm-setup}
+#| include: false
+W2 <- va_wide(V)
+zc <- function(g) exp(V$coefs$estimate[V$coefs$group == g & V$coefs$term == "z_l4"]) - 1
+fsm_dis <- V$coefs |> filter(group == "disadvantaged", term == "log(PTFSM6CLA1A)")
+m8d <- V$summary$mean_att8[V$summary$group == "disadvantaged"]
+m8n <- V$summary$mean_att8[V$summary$group == "non_disadvantaged"]
+gq <- W2 |> filter(!is.na(att8_dis), !is.na(att8_non), !is.na(l4)) |> mutate(q = ntile(l4, 5))
+lon_top <- mean(gq$gor_name[gq$q == 5] == "London")
+nl <- gq |> filter(gor_name != "London") |> mutate(q = ntile(l4, 5)) |>
+  group_by(q) |> summarise(gap = mean(att8_non - att8_dis), .groups = "drop")
+gfit <- W2 |> filter(!is.na(att8_dis), !is.na(att8_non), !is.na(l4), !is.na(ks2_c), fsm > 0, absence > 0) |>
+  mutate(gap = att8_non - att8_dis, z = (l4 - mean(l4)) / sd(l4)) |>
+  (\(x) summary(lm(gap ~ z + ks2_c + log(fsm) + log(absence), data = x))$coefficients["z", ])()
+vd <- W2 |> filter(!is.na(va_shrunk_disadvantaged), !is.na(l4))
+r_all <- cor(vd$va_shrunk_disadvantaged, vd$l4)
+r_nl <- with(vd |> filter(gor_name != "London"), cor(va_shrunk_disadvantaged, l4))
+r_la <- vd |> group_by(LANAME) |> mutate(a = l4 - mean(l4), b = va_shrunk_disadvantaged - mean(va_shrunk_disadvantaged)) |>
+  ungroup() |> summarise(r = cor(a, b)) |> pull(r)
+```
+
+Because neighbourhood education matters, it is tempting to argue that
+admissions should open schools in well-educated neighbourhoods to children
+from elsewhere, so that more disadvantaged pupils share in it. The
+published data do not support that argument.
+
+**The term measures families, not the place.** It sits on top of each
+school's own prior attainment and disadvantage, so it is not the brighter
+children a school admits. It fits best at about the scale of a secondary
+catchment, and it is weaker for faith schools, which recruit less by
+distance ([the review](review.qmd#sec-l4-how)). It describes the families
+around a school, who are, under catchment admissions, the families whose
+children attend it. Admitting children from elsewhere changes who the
+pupils are, not what the school does for them.
+
+**It is worth little to disadvantaged pupils.** A standard deviation of
+neighbourhood education is worth `r pc(zc("disadvantaged"), 1)` of
+Attainment 8 for disadvantaged pupils, about
+`r sprintf("%.1f", m8d * zc("disadvantaged"))` points, against
+`r pc(zc("non_disadvantaged"), 1)` (about
+`r sprintf("%.1f", m8n * zc("non_disadvantaged"))` points) for
+non-disadvantaged pupils.
+
+**Schools in more educated neighbourhoods have wider gaps, not narrower.**
+Outside London, the gap between non-disadvantaged and disadvantaged pupils'
+Attainment 8 rises from `r sprintf("%.1f", nl$gap[1])` points in the least
+educated fifth of neighbourhoods to `r sprintf("%.1f", nl$gap[5])` in the
+most. Holding prior attainment, disadvantage and absence fixed, each
+standard deviation of neighbourhood education widens it by
+`r sprintf("%.1f", gfit[["Estimate"]])` points (t = `r sprintf("%.0f", gfit[["t value"]])`).
+
+**Disadvantaged pupils' value added does not rise with the school's
+neighbourhood.** Across England the two correlate at
+`r sprintf("%.2f", r_all)`, but that is London, which makes up
+`r sprintf("%.0f%%", 100 * lon_top)` of the most educated fifth of
+neighbourhoods and where disadvantaged pupils do unusually well. Outside
+London the correlation is `r sprintf("%.2f", r_nl)`, and within local
+authorities `r sprintf("%.2f", r_la)`.
+
+**Nor do disadvantaged pupils do better among fewer disadvantaged peers.**
+Given their prior attainment, they do slightly *better* where more of
+their schoolmates are disadvantaged: the disadvantage term in their model
+has an elasticity of `r sprintf("%+.3f", fsm_dis$estimate)`
+(t = `r sprintf("%.1f", fsm_dis$t)`).
+
+**And `r LA` already runs catchments with random allocation.** Its schools
+are relatively mixed, and adding local segregation to the model changes
+the authority's effect not at all (`r pc(t_at("segregation", "effect"))`
+against `r pc(t_at("v2", "effect"))`).
+
+In one line: neighbourhood education measures the families a school
+serves, not something the building confers; outside London, disadvantaged
+pupils at schools in educated neighbourhoods add no more value and face
+wider gaps. Two cautions. This is school-level evidence, which can show
+what schools look like but cannot isolate what one pupil would gain by
+moving, so it does not settle questions of peer effects. And the
+disadvantaged pupils who attend schools in advantaged neighbourhoods now
+need not be like those who would under different rules.
+
 # So what is it?
 
 The data are school-level, so they cannot settle this. Four readings fit
