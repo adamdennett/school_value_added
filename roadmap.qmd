@@ -56,6 +56,10 @@ subtitle: "What v2.0 does now, and what comes next."
       them across every group before adopting either, and look at a
       parents' qualification measure from the 2021 Census in place of
       neighbourhood education for all adults.
+- [ ] **What causes school-level absence.** A deeper analysis of why
+      absence differs between schools, beyond what intake predicts: its
+      kinds, its timing, the pupils it falls on and what is known from the
+      research on its causes. Waiting on a reading of that research first.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [x] **Monthly Ofsted refresh.** A GitHub Actions workflow picks up

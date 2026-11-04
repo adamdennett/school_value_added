@@ -17,17 +17,17 @@ function(el, x, data) {
   var GROUPS = ["all", "disadvantaged", "non_disadvantaged", "girls", "boys"];
   var GLAB = {all: "All pupils", disadvantaged: "Disadv.", non_disadvantaged: "Non-disadv.", girls: "Girls", boys: "Boys"};
   var markers = L.layerGroup().addTo(map);
-  // Bad -> good, centred on zero: ColorBrewer RdYlGn, or
-  // one of two colour-blind-safe schemes from the Colours menu (shared
+  // Bad -> good, centred on zero: ColorBrewer PRGn by default, or red,
+  // amber and green or red, yellow and blue from the Colours menu (shared
   // with the area maps)
   var PALS = {
+    prgn: {name: "Purple, green (colour-blind safe)", good: "green", bad: "purple",
+          c: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]]},
     rag: {name: "Red, amber, green", good: "green",
           c: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[255,255,191],[217,239,139],[166,217,106],[102,189,99],[26,152,80]]},
     rdylbu: {name: "Red, yellow, blue (colour-blind safe)", good: "blue",
-          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]]},
-    prgn: {name: "Purple, green (colour-blind safe)", good: "green", bad: "purple",
-          c: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]]}};
-  var scheme = "rag";
+          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]]}};
+  var scheme = "prgn";
   try { var s0 = localStorage.getItem("va-pal"); if (PALS[s0]) scheme = s0; } catch (e) {}
   function DIV() { return PALS[scheme].c; }
   function badWord() { return PALS[scheme].bad || "red"; }

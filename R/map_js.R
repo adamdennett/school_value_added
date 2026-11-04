@@ -7,14 +7,18 @@ function(el, x, data) {
   var defaultVar = "va_shrunk_all";
 
   // Every ramp runs bad -> good. Diverging (value added, absence against
-  // intake): red -> amber -> pale yellow at zero -> green, ColorBrewer RdYlGn.
-  // Sequential with a good direction (absence, attainment): the same hues
-  // without the pale middle, so every value reads. Measures with no good or
-  // bad direction (FSM, EAL, ...) keep a neutral purple ramp. The
-  // reader can swap to one of two colour-blind-safe schemes from a menu
-  // (ColorBrewer RdYlBu, red still bad; PRGn, purple bad), remembered
-  // across pages.
+  // intake): purple -> pale grey at zero -> green, ColorBrewer PRGn, which
+  // reads for those who cannot tell red from green. Sequential with a good
+  // direction (absence, attainment): the same hues without the pale middle,
+  // so every value reads. Measures with no good or bad direction (FSM,
+  // EAL, ...) take a neutral grey ramp, carrying no judgement. The reader
+  // can swap to red, amber and green (RdYlGn) or red, yellow and blue
+  // (RdYlBu) from a menu, remembered across pages.
   var PAL = {
+    prgn: {name: "Purple, green (colour-blind safe)",
+          div: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]],
+          seq: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[166,219,160],[90,174,97],[27,120,55]],
+          words: ["purple", "green"]},
     rag: {name: "Red, amber, green",
           div: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[255,255,191],[217,239,139],[166,217,106],[102,189,99],[26,152,80]],
           seq: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[217,239,139],[145,207,96],[26,152,80]],
@@ -22,14 +26,10 @@ function(el, x, data) {
     rdylbu: {name: "Red, yellow, blue (colour-blind safe)",
           div: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]],
           seq: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[171,217,233],[116,173,209],[69,117,180]],
-          words: ["red", "blue"]},
-    prgn: {name: "Purple, green (colour-blind safe)",
-          div: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]],
-          seq: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[166,219,160],[90,174,97],[27,120,55]],
-          words: ["purple", "green"]}
+          words: ["red", "blue"]}
   };
-  var NEUTRAL = [[238,222,255],[186,130,255],[54,26,84]];
-  var scheme = "rag";
+  var NEUTRAL = [[241,241,245],[158,158,176],[58,58,78]];
+  var scheme = "prgn";
   try { var s0 = localStorage.getItem("va-pal"); if (PAL[s0]) scheme = s0; } catch (e) {}
   function pal() { return PAL[scheme]; }
   function ramp(C, t) {
