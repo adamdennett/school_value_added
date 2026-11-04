@@ -32,6 +32,8 @@ function(el, x, data) {
   var scheme = "prgn";
   try { var s0 = localStorage.getItem("va-pal"); if (PAL[s0]) scheme = s0; } catch (e) {}
   function pal() { return PAL[scheme]; }
+  // Ofsted grades take the chosen scheme (good to bad); other categories keep their own colours
+  function catsOf(n) { var o = (data.cats_s || {})[scheme]; return (o && o[n]) || cats[n] || {}; }
   function ramp(C, t) {
     t = Math.max(0, Math.min(1, t));
     var n = C.length - 1, i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
@@ -62,7 +64,7 @@ function(el, x, data) {
                       .filter(function(v) { return v != null && (m.scale === "cat" || !isNaN(v)); });
     var lo = 0, hi = 1, colour;
     if (m.scale === "cat") {
-      colour = function(v) { return cats[name][v] || "#c9c9d6"; };
+      colour = function(v) { return catsOf(name)[v] || "#c9c9d6"; };
     } else if (m.scale === "div") {
       // a fixed national cap (R: colour_caps()) so colours mean the same in every area
       hi = m.cap || Math.max.apply(null, vals.map(Math.abs)) || 1; lo = -hi;
@@ -91,7 +93,7 @@ function(el, x, data) {
     var h = "<strong>" + m.label + "</strong><br>";
     if (m.scale === "cat") {
       var curHead = null;
-      Object.keys(cats[name]).forEach(function(k) {
+      Object.keys(catsOf(name)).forEach(function(k) {
         if (!counts[k]) return;
         var hd = heads[name] ? heads[name][k] : null;
         if (hd && hd !== curHead) {
@@ -99,7 +101,7 @@ function(el, x, data) {
           curHead = hd;
         }
         h += "<div><span style=\\"display:inline-block;width:11px;height:11px;border-radius:50%;" +
-          "margin-right:6px;vertical-align:-1px;background:" + cats[name][k] + "\\"></span>" +
+          "margin-right:6px;vertical-align:-1px;background:" + catsOf(name)[k] + "\\"></span>" +
           k + " (" + counts[k] + ")</div>";
       });
     } else {
@@ -145,7 +147,7 @@ function(el, x, data) {
     var s = "", H, ih, cap;
 
     if (m.scale === "cat") {
-      var keys = Object.keys(cats[name]).filter(function(k) { return counts[k]; });
+      var keys = Object.keys(catsOf(name)).filter(function(k) { return counts[k]; });
       if (!keys.length) { distBox.innerHTML = ""; return; }
       var bh = 15, gap = 4, lw = 190;
       ih = keys.length * (bh + gap) - gap; H = T + ih + B;
@@ -154,7 +156,7 @@ function(el, x, data) {
       keys.forEach(function(k, j) {
         var y = T + j * (bh + gap), w = (counts[k] / mxc) * (iw - lw - 34);
         s += "<rect x=\\"" + (L + lw) + "\\" y=\\"" + y + "\\" width=\\"" + w.toFixed(1) +
-             "\\" height=\\"" + bh + "\\" rx=\\"2\\" fill=\\"" + cats[name][k] + "\\"></rect>";
+             "\\" height=\\"" + bh + "\\" rx=\\"2\\" fill=\\"" + catsOf(name)[k] + "\\"></rect>";
         s += at(L + lw - 7, y + bh - 3.5, "end", 11, "#333", esc2(k));
         s += at(L + lw + w + 5, y + bh - 3.5, null, 11, "#666", counts[k]);
       });

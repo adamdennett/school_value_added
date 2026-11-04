@@ -38,6 +38,8 @@ function(el, x, data) {
   var scheme = "prgn";
   try { var s0 = localStorage.getItem("va-pal"); if (PALS[s0]) scheme = s0; } catch (e) {}
   function DIV() { return PALS[scheme].c; }
+  // Ofsted grades take the chosen scheme (good to bad); other categories keep their own colours
+  function catsOf(n) { var o = (data.cats_s || {})[scheme]; return (o && o[n]) || CATS[n] || {}; }
   function badWord() { return PALS[scheme].bad || "red"; }
   function rampC(C, t) { var n = C.length - 1; t = Math.max(0, Math.min(1, t));
     var i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
@@ -59,7 +61,7 @@ function(el, x, data) {
   // and the ends of its scale (a fixed national cap for diverging measures,
   // the range within the area for the rest)
   function scaleFor(rows, m) {
-    if (m.scale === "cat") return {colour: function(v) { return (CATS[m.var] || {})[v] || "#c9c9d6"; }};
+    if (m.scale === "cat") return {colour: function(v) { return (catsOf(m.var) || {})[v] || "#c9c9d6"; }};
     if (m.scale === "div") {
       var hi = cap(m) || 1;
       return {lo: -hi, hi: hi, colour: function(v) { var t = (v + hi) / (2 * hi);
@@ -105,9 +107,11 @@ function(el, x, data) {
   var tableBox = document.createElement("div"); tableBox.className = "explore-table";
   el.parentNode.insertBefore(tableBox, el.nextSibling);
   el.parentNode.insertBefore(traj, el.nextSibling);
-  var distBox = document.createElement("div"); distBox.className = "explore-dist";
-  el.parentNode.insertBefore(distBox, el.nextSibling);
   el.parentNode.insertBefore(summary, el.nextSibling);
+  // the spread of the mapped values sits straight under the map, as on the area pages
+  var distBox = document.createElement("div"); distBox.className = "explore-dist";
+  distBox.style.margin = "6px 0 14px";
+  el.parentNode.insertBefore(distBox, el.nextSibling);
 
   var legDiv, leg = L.control({position: "bottomright"});
   leg.onAdd = function() { legDiv = L.DomUtil.create("div"); legDiv.className = "explore-legend"; return legDiv; };
@@ -235,7 +239,7 @@ function(el, x, data) {
   function drawDist(rows, m, sc, counts) {
     var W = 720, L = 10, R = 10, T = 12, B = 20, iw = W - L - R, s = "", H, ih, note;
     if (m.scale === "cat") {
-      var keys = Object.keys(CATS[m.var] || {}).filter(function(k) { return counts[k]; });
+      var keys = Object.keys(catsOf(m.var) || {}).filter(function(k) { return counts[k]; });
       if (!keys.length) { distBox.innerHTML = ""; return; }
       var bh = 15, gap = 4, lw = 230, mx0 = 0;
       ih = keys.length * (bh + gap) - gap; H = T + ih + B;
@@ -243,7 +247,7 @@ function(el, x, data) {
       keys.forEach(function(k, j) {
         var y = T + j * (bh + gap), w = (counts[k] / mx0) * (iw - lw - 34);
         s += "<rect x=\\"" + (L + lw) + "\\" y=\\"" + y + "\\" width=\\"" + w.toFixed(1) + "\\" height=\\"" + bh +
-             "\\" rx=\\"2\\" fill=\\"" + CATS[m.var][k] + "\\"></rect>" +
+             "\\" rx=\\"2\\" fill=\\"" + catsOf(m.var)[k] + "\\"></rect>" +
              "<text x=\\"" + (L + lw - 7) + "\\" y=\\"" + (y + bh - 3.5) + "\\" text-anchor=\\"end\\" font-size=\\"11\\" fill=\\"#333\\">" + esc(k) + "</text>" +
              "<text x=\\"" + (L + lw + w + 5) + "\\" y=\\"" + (y + bh - 3.5) + "\\" font-size=\\"11\\" fill=\\"#666\\">" + counts[k] + "</text>";
       });
@@ -291,21 +295,23 @@ function(el, x, data) {
            "<text x=\\"" + (L + iw) + "\\" y=\\"" + (T + ih + 15) + "\\" text-anchor=\\"end\\" font-size=\\"10\\" fill=\\"#666\\">" +
            (m.scale === "div" ? "&ge; " : "") + fmtM(sc.hi, m) + "</text>";
     }
-    distBox.innerHTML = "<svg viewBox=\\"0 0 " + W + " " + H + "\\" width=\\"100%\\" height=\\"" + H +
+    distBox.innerHTML = "<div style=\\"font-size:12px;color:#444;margin-bottom:2px\\"><b>" + esc(m.label) +
+      "</b> &mdash; how the schools on the map are spread</div>" +
+      "<svg viewBox=\\"0 0 " + W + " " + H + "\\" width=\\"100%\\" height=\\"" + H +
       "\\" preserveAspectRatio=\\"xMidYMin meet\\" role=\\"img\\" aria-label=\\"Spread of " + esc(m.label) +
-      "\\">" + s + "</svg><div class=\\"note\\">" + note + "</div>";
+      "\\">" + s + "</svg><div style=\\"font-size:11px;color:#666\\">" + note + "</div>";
   }
 
   function legendFor(m, sc, counts, missing) {
     var h = "<strong>" + m.label + "</strong>" + (m.group ? "<div class=\\"note\\">" + periodText() + "</div>" : "");
     if (m.scale === "cat") {
       var cur = null;
-      Object.keys(CATS[m.var] || {}).forEach(function(k) {
+      Object.keys(catsOf(m.var) || {}).forEach(function(k) {
         if (!counts[k]) return;
         var hd = HEADS[m.var] ? HEADS[m.var][k] : null;
         if (hd && hd !== cur) { h += "<div class=\\"note\\" style=\\"margin-top:4px\\">" + hd + "</div>"; cur = hd; }
         h += "<div><span style=\\"display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;background:" +
-             CATS[m.var][k] + "\\"></span>" + esc(k) + " (" + counts[k] + ")</div>";
+             catsOf(m.var)[k] + "\\"></span>" + esc(k) + " (" + counts[k] + ")</div>";
       });
     } else {
       var C = m.scale === "div" ? DIV() : (m.good ? PALS[scheme].seq : NEUTRAL);

@@ -153,7 +153,7 @@ payload <- list(
   schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 6),
   levels = jsonlite::toJSON(levels, dataframe = "rows"),
   measures = jsonlite::toJSON(measures |> mutate(cap = unname(colour_caps()[var])), dataframe = "rows", na = "null"),
-  cats = jsonlite::toJSON(lapply(CATS, as.list), auto_unbox = TRUE),
+  cats = cats_json(CATS)$cats, cats_s = cats_json(CATS)$cats_s,
   heads = jsonlite::toJSON(lapply(MAP_CAT_HEADS, as.list), auto_unbox = TRUE),
   none = jsonlite::toJSON(NONE, auto_unbox = TRUE),
   notes = jsonlite::toJSON(notes, auto_unbox = TRUE),

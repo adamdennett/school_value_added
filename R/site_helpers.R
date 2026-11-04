@@ -239,23 +239,48 @@ MAP_VARS <- tribble(
   "ofsted_combined", "Ofsted, report card where there is one, else the latest graded judgements", "The school", "cat", "", 0, "",
   "religion",        "Religious character",                                      "The school",     "cat",  "",     0,   "")
 
-MAP_CATS <- list(
+# Ofsted grades run good to bad, so they take the reader's chosen colour
+# scheme (the Colours menu): good in its good colour, bad in its bad one.
+# The report card and the old graded inspection are two regimes on one map,
+# so each grade has a sibling shade in the other: two greens, two yellows,
+# two reds under red, amber and green, and likewise in the other schemes.
+#   Exceptional ~ Outstanding, Strong ~ Good, Needs attention ~ Requires
+#   Improvement, Urgent improvement ~ Inadequate; Expected has no twin.
+OFSTED_PALS <- list(
+  prgn = list(rc = c("Exceptional" = "#00441b", "Strong standard" = "#1b7837",
+                     "Expected standard" = "#a6dba0", "Needs attention" = "#c2a5cf",
+                     "Urgent improvement" = "#762a83"),
+              graded = c("Outstanding" = "#01665e", "Good" = "#35978f",
+                         "Requires Improvement" = "#f1b6da", "Inadequate" = "#c51b7d")),
+  rag = list(rc = c("Exceptional" = "#006837", "Strong standard" = "#1a9850",
+                    "Expected standard" = "#c7e9a0", "Needs attention" = "#fdae61",
+                    "Urgent improvement" = "#e8432d"),
+             graded = c("Outstanding" = "#00695c", "Good" = "#4db6ac",
+                        "Requires Improvement" = "#fee34d", "Inadequate" = "#99001c")),
+  rdylbu = list(rc = c("Exceptional" = "#313695", "Strong standard" = "#4575b4",
+                       "Expected standard" = "#d1e5f0", "Needs attention" = "#fdae61",
+                       "Urgent improvement" = "#e8432d"),
+                graded = c("Outstanding" = "#00727f", "Good" = "#41b6c4",
+                           "Requires Improvement" = "#fee34d", "Inadequate" = "#99001c")))
+ofsted_cats <- function(p) list(ofsted_rc = p$rc, ofsted = p$graded,
+                                ofsted_combined = c(p$rc, p$graded))
+# The scheme-dependent category colours, for the maps' scripts to swap in
+MAP_CATS_BY_SCHEME <- lapply(OFSTED_PALS, ofsted_cats)
+
+MAP_CATS <- c(list(
   gov = c("Maintained" = DPURPLE, "Multi-academy trust, converter or free school" = BPURPLE,
           "Multi-academy trust, sponsored" = BLUE, "Single-academy trust or not recorded" = GREY),
-  ofsted_rc = c("Exceptional" = DPURPLE, "Strong standard" = BPURPLE, "Expected standard" = LPURPLE,
-                "Needs attention" = HERITAGE, "Urgent improvement" = BLUE),
-  ofsted = c("Outstanding" = DPURPLE, "Good" = BPURPLE, "Requires Improvement" = HERITAGE,
-             "Inadequate" = BLUE),
   religion = c("None" = GREY, "Church of England" = BPURPLE, "Roman Catholic" = DPURPLE,
-               "Christian" = HERITAGE, "Other faith" = BLUE),
-  # Two regimes on one map, so two ramps: both run dark (best) to light
-  # (worst), and the hue says which regime a school is being read under.
-  # Purple is the current report card, teal the old graded inspection.
-  ofsted_combined = c("Exceptional" = "#2a0f45", "Strong standard" = "#5b21a8",
-                      "Expected standard" = "#8f5cf0", "Needs attention" = "#b98cff",
-                      "Urgent improvement" = "#e0ccff",
-                      "Outstanding" = "#07343a", "Good" = "#11636e",
-                      "Requires Improvement" = "#3f9aa6", "Inadequate" = "#9fd3d9"))
+               "Christian" = HERITAGE, "Other faith" = BLUE)),
+  ofsted_cats(OFSTED_PALS$prgn))
+
+#' The category colours as JSON for a map's payload: the defaults, and the
+#' Ofsted sets for each colour scheme
+cats_json <- function(cats = MAP_CATS) {
+  list(cats = jsonlite::toJSON(lapply(cats, as.list), auto_unbox = TRUE),
+       cats_s = jsonlite::toJSON(lapply(MAP_CATS_BY_SCHEME, function(s) lapply(s, as.list)),
+                                 auto_unbox = TRUE))
+}
 
 # Which regime each grade belongs to, for the legend. Defined for every
 # grade, not just the first of each block, so a regime whose top grade has
@@ -326,7 +351,7 @@ map_schools <- function(w, lads, height = 520, X = NULL) {
     schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 4),
     vars = jsonlite::toJSON(MAP_VARS |> filter(var %in% names(dat)) |>
                               mutate(cap = unname(COLOUR_CAPS[var])), dataframe = "rows", na = "null"),
-    cats = jsonlite::toJSON(lapply(MAP_CATS, as.list), auto_unbox = TRUE),
+    cats = cats_json()$cats, cats_s = cats_json()$cats_s,
     heads = jsonlite::toJSON(lapply(MAP_CAT_HEADS, as.list), auto_unbox = TRUE),
     none = jsonlite::toJSON(as.list(MAP_NONE), auto_unbox = TRUE))
   leaflet::leaflet(height = height, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
