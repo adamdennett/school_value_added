@@ -100,6 +100,9 @@ fit_group <- function(d, group, extra = character(0)) {
   r2 <- performance::r2_nakagawa(m, tolerance = 1e-10)
   list(
     summary = tibble(group = group, rows = nrow(dg), schools = n_distinct(dg$URN),
+                     n_la = n_distinct(dg$LANAME), n_region = n_distinct(dg$gor_name),
+                     n_year = n_distinct(dg$year_label),
+                     loglik = as.numeric(logLik(refitML(m))), aic = AIC(refitML(m)), bic = BIC(refitML(m)),
                      r2_marginal = r2$R2_marginal, r2_conditional = r2$R2_conditional,
                      sigma = sigma(m), tau_school = sqrt(tau2), tau_school_nat = sqrt(tau2_nat),
                      reliability_4yr = mean(tau2_nat / (tau2_nat + sig2 / 4)),

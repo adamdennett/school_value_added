@@ -63,7 +63,9 @@ year effect; within the authority it carries every random effect. A
 school's value added is the mean over its years, shrunk towards zero by
 its reliability, $\tau^2 / (\tau^2 + \sigma^2 / n)$, where $\tau^2$ is the
 persistent between-school variance (from a fit with a school random
-intercept) and $n$ its number of years.
+intercept) and $n$ its number of years. The full specification, with every
+coefficient, variance and fit statistic for each group, is
+[below](#sec-full-spec).
 
 ```{r tbl-coefs}
 #| tbl-cap: "Fixed effects by pupil group, as the percentage change in Attainment 8 (t statistic in brackets). Neighbourhood education is per standard deviation; SEN, mobility are per percentage point; disadvantage, absence and EAL are elasticities (per 1% change)."
@@ -228,6 +230,158 @@ comes first. The two views can disagree, and the difference is worth
 reading: a term with a large effect but little spread across schools
 (single-sex schools) explains little variation, and one that moves with
 others shares its credit. Neither is a causal ranking.
+
+## The full v2.1 specification, group by group {#sec-full-spec}
+
+For school $i$ in local authority $l$, region $r$ and year $t$, and for each
+pupil group $g$ (all, disadvantaged, non-disadvantaged, girls, boys)
+separately:
+
+$$
+\begin{aligned}
+\log(\text{Att8}^{g}_{it}) = \;& \beta_0 + \beta_1 \log(\text{FSM6}_{it}) + \beta_2 \log(\text{absence}_{it}) + \beta_3 \log(\text{EAL}_{it}) + \beta_4\, \text{KS2}_{it} \\
+&+ \beta_5\, \text{selective}_{i} + \beta_6\, \text{non-selective elsewhere}_{i} + \beta_7\, \text{neighbourhood}_{i} \\
+&+ \beta_8\, \text{SEN support}_{it} + \beta_9\, \text{EHCP}_{it} + \beta_{10}\, \text{mobility}_{it} + \beta_{11}\, \text{single-sex}_{i} + \beta_{12}\, \text{11--16}_{i} \\
+&+ u_t + v_r + w_{l(r)} + e_{it}
+\end{aligned}
+$$
+
+$$u_t \sim N(0, \sigma^2_\text{year}), \quad v_r \sim N(0, \sigma^2_\text{region}), \quad w_{l(r)} \sim N(0, \sigma^2_\text{LA}), \quad e_{it} \sim N(0, \sigma^2)$$
+
+FSM6 is the share of the KS4 cohort disadvantaged; absence the overall
+absence rate; EAL the share with English as an additional language; KS2
+the cohort's mean KS2 scaled score less 100; admissions are relative to a
+non-selective school in a highly selective area; neighbourhood is the
+share of adults qualified to level 4+ in the 150 nearest Census output
+areas, standardised; SEN support, EHCP and mobility are percentages of
+pupils; single-sex is a girls' school (for boys, a boys' school);
+11--16 is a school that stops at 16. Local authorities are nested in
+regions. Fitted by restricted maximum likelihood in `lme4`
+(`R/02_fit_va.R`); log-likelihood, AIC and BIC are from the
+maximum-likelihood refit. R² is Nakagawa's: marginal for the fixed effects
+alone, conditional with the random effects too.
+
+```{r fullspec-setup}
+#| include: false
+UNIT <- c("log(PTFSM6CLA1A)" = "elasticity", "log(PERCTOT)" = "elasticity", "log(PNUMEAL)" = "elasticity",
+          "ks2_c" = "per scaled-score point", "ADMPOL_PTSEL" = "yes vs no", "ADMPOL_PTOTHER NON SEL" = "yes vs no",
+          "z_l4" = "per SD", "sen_support" = "per percentage point", "sen_ehcp" = "per percentage point",
+          "mobile" = "per percentage point", "girls_schoolTRUE" = "yes vs no", "boys_schoolTRUE" = "yes vs no",
+          "age16TRUE" = "yes vs no", "(Intercept)" = "")
+RE_LAB <- c("year_label" = "Year", "gor_name" = "Region", "LANAME:gor_name" = "Local authority (within region)",
+            "Residual" = "Residual (school-year)")
+fixed_tbl <- function(g) {
+  V$coefs |> filter(group == g) |>
+    mutate(elas = UNIT[term] == "elasticity",
+           eff = ifelse(elas, sprintf("%+.3f%% per 1%%", estimate),
+                        ifelse(term == "(Intercept)", "",
+                               sprintf("%+.2f%% (%+.2f to %+.2f)", pct(estimate),
+                                       pct(estimate - 1.96 * se), pct(estimate + 1.96 * se))))) |>
+    transmute(Term = coalesce(unname(TERM_LABELS[term]), term), Unit = unname(UNIT[term]),
+              Estimate = sprintf("%+.4f", estimate), SE = sprintf("%.4f", se), t = sprintf("%.1f", t),
+              `Effect on Attainment 8 (95% interval)` = eff)
+}
+re_tbl <- function(g) {
+  V$vc |> filter(group == g) |>
+    mutate(share = vcov / sum(vcov)) |>
+    transmute(Level = RE_LAB[grp], Variance = sprintf("%.5f", vcov), SD = sprintf("%.4f", sdcor),
+              `Share of variance` = sprintf("%.1f%%", 100 * share))
+}
+fit_tbl <- function(g) {
+  s <- S |> filter(group == g)
+  tibble(Measure = c("School-years", "Schools", "Local authorities", "Regions", "Years",
+                     "Log-likelihood (ML)", "AIC", "BIC", "Marginal R²", "Conditional R²",
+                     "Residual SD (log scale)", "Persistent school SD, against England",
+                     "Reliability of a four-year figure"),
+         Value = c(format(s$rows, big.mark = ","), format(s$schools, big.mark = ","), s$n_la, s$n_region,
+                   s$n_year, sprintf("%.1f", s$loglik), sprintf("%.1f", s$aic), sprintf("%.1f", s$bic),
+                   sprintf("%.3f", s$r2_marginal), sprintf("%.3f", s$r2_conditional), sprintf("%.4f", s$sigma),
+                   sprintf("%.4f", s$tau_school_nat), sprintf("%.2f", s$reliability_4yr)))
+}
+fit_plot <- function(g) {
+  s <- S |> filter(group == g)
+  d <- V$school_years |> filter(group == g)
+  lim <- range(c(d$obs, d$exp_la))
+  ggplot(d, aes(exp_la, obs)) +
+    geom_point(colour = DPURPLE, alpha = 0.12, size = 0.8) +
+    geom_abline(colour = GREY, linetype = "22") +
+    annotate("label", x = lim[1], y = lim[2], hjust = 0, vjust = 1, size = 4, label.size = 0,
+             label = sprintf("Marginal R² %.2f\nConditional R² %.2f\n%s school-years",
+                             s$r2_marginal, s$r2_conditional, format(s$rows, big.mark = ","))) +
+    coord_equal(xlim = lim, ylim = lim) +
+    labs(x = "Fitted Attainment 8", y = "Observed Attainment 8", title = "Fit") +
+    theme_note(14)
+}
+spec_figure <- function(g) {
+  patchwork::wrap_plots(fig_std(g, "v2.1") + labs(title = "Effects (per SD, or yes vs no)"),
+                        fit_plot(g), ncol = 1, heights = c(1.15, 1))
+}
+```
+
+::: {.panel-tabset}
+```{r fullspec-tables}
+#| output: asis
+for (g in names(GROUPS)) {
+  cat("\n## ", GROUP_LABELS[[g]], "\n\n", sep = "")
+  cat(as.character(kt(fixed_tbl(g), align = "llrrrr",
+                      caption = paste0("Fixed effects, ", tolower(GROUP_LABELS[[g]]), ". Estimates are on the log scale; effects are the % change in Attainment 8 for the unit shown (for an elasticity, per 1% change)."))), "\n\n")
+  cat(as.character(kt(re_tbl(g), align = "lrrr", caption = "Random effects: variance at each level.")), "\n\n")
+  cat(as.character(kt(fit_tbl(g), align = "lr", caption = "Data and fit.")), "\n\n")
+}
+```
+:::
+
+The same, as pictures: each term's effect on expected Attainment 8 with
+its 95% interval, on a common scale (a standard deviation for a measure,
+yes against no for a flag), and how closely the fitted values follow the
+observed ones, school-year by school-year.
+
+::: {.panel-tabset}
+## All pupils
+
+```{r fig-spec-all}
+#| fig-cap: "Value Added v2.1, all pupils: effects and fit."
+#| fig-width: 9.5
+#| fig-height: 11
+spec_figure("all")
+```
+
+## Disadvantaged
+
+```{r fig-spec-dis}
+#| fig-cap: "Value Added v2.1, disadvantaged pupils: effects and fit."
+#| fig-width: 9.5
+#| fig-height: 11
+spec_figure("disadvantaged")
+```
+
+## Non-disadvantaged
+
+```{r fig-spec-non}
+#| fig-cap: "Value Added v2.1, non-disadvantaged pupils: effects and fit."
+#| fig-width: 9.5
+#| fig-height: 11
+spec_figure("non_disadvantaged")
+```
+
+## Girls
+
+```{r fig-spec-girls}
+#| fig-cap: "Value Added v2.1, girls: effects and fit."
+#| fig-width: 9.5
+#| fig-height: 11
+spec_figure("girls")
+```
+
+## Boys
+
+```{r fig-spec-boys}
+#| fig-cap: "Value Added v2.1, boys: effects and fit."
+#| fig-width: 9.5
+#| fig-height: 11
+spec_figure("boys")
+```
+:::
 
 # Shrinkage, and what the four-year figure is {#sec-shrinkage}
 
