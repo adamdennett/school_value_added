@@ -146,13 +146,35 @@ fit_one <- function(y) {
                  la_full = unname(v1["la:region"] / sum(v0)), region_full = unname(v1["region"] / sum(v0)),
                  school_full = unname(v1["Residual"] / sum(v0)),
                  r2_fixed = unname(1 - sum(v1) / sum(v0)))
-  list(eff = eff, la = la, part = part)
+  # The full outputs, for the page's model tables: every coefficient with
+  # its t, the variance at each level before and after, and the fit
+  all_cf <- summary(full)$coefficients
+  coefs <- tibble(outcome = y, term = rownames(all_cf), b = all_cf[, 1], se = all_cf[, 2], t = all_cf[, 3])
+  vfix <- var(as.vector(getME(full, "X") %*% fixef(full)))
+  random <- tibble(outcome = y, level = c("Region", "Local authority", "School"),
+                   var_null = unname(v0[c("region", "la:region", "Residual")]),
+                   var_full = unname(v1[c("region", "la:region", "Residual")]))
+  ml <- update(full, REML = FALSE)
+  fit <- tibble(outcome = y, n_school = nobs(full), n_la = ngrps(full)[["la:region"]],
+                n_region = ngrps(full)[["region"]], mean_y = mean(Z[[y]]),
+                r2_marginal = vfix / (vfix + sum(v1)), r2_conditional = (vfix + v1[["region"]] + v1[["la:region"]]) / (vfix + sum(v1)),
+                loglik = as.numeric(logLik(ml)), aic = AIC(ml), bic = BIC(ml),
+                loglik_null = as.numeric(logLik(update(null, REML = FALSE))))
+  list(eff = eff, la = la, part = part, coefs = coefs, random = random, fit = fit)
 }
 message("Fitting the multilevel models ...")
 fits <- lapply(names(OUTCOMES), fit_one)
 effects <- bind_rows(lapply(fits, `[[`, "eff"))
 la_effects <- bind_rows(lapply(fits, `[[`, "la"))
 partition <- bind_rows(lapply(fits, `[[`, "part"))
+coefs <- bind_rows(lapply(fits, `[[`, "coefs"))
+random <- bind_rows(lapply(fits, `[[`, "random"))
+fit_stats <- bind_rows(lapply(fits, `[[`, "fit"))
+# What one SD is in each characteristic's own units, and how common each category is
+x_desc <- tibble(var = names(CONT), mean = sapply(dat[, names(CONT)], mean), sd = sapply(dat[, names(CONT)], sd))
+cat_desc <- bind_rows(lapply(names(FACT), function(f) {
+  tb <- table(dat[[f]]); tibble(var = f, level = names(tb), n = as.integer(tb))
+}))
 
 # Shapley shares of R-squared, by group of characteristics (OLS)
 GROUPS_X <- list(
@@ -194,7 +216,8 @@ cors <- cor(dat[, names(OUTCOMES)])
 
 saveRDS(list(trend = trend, effects = effects, la_effects = la_effects, partition = partition, shapley = shap,
              outcomes = OUTCOMES, cont = CONT, fact = FACT, groups = GROUPS_X, desc = desc, cors = cors,
-             n_schools = nrow(dat), n_absence = nrow(ab), sds = sapply(dat[, names(CONT)], sd)),
+             n_schools = nrow(dat), n_absence = nrow(ab), sds = sapply(dat[, names(CONT)], sd),
+             coefs = coefs, random = random, fit = fit_stats, x_desc = x_desc, cat_desc = cat_desc),
         here::here("data", "absence_causes.rds"))
 message("Saved data/absence_causes.rds")
 print(partition)

@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -187,6 +216,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#sec-effects" id="toc-sec-effects" class="nav-link" data-scroll-target="#sec-effects">What goes with absence, school by school</a></li>
   <li><a href="#sec-shapley" id="toc-sec-shapley" class="nav-link" data-scroll-target="#sec-shapley">How much each group explains</a></li>
   <li><a href="#sec-place" id="toc-sec-place" class="nav-link" data-scroll-target="#sec-place">Place, once the intake is allowed for</a></li>
+  <li><a href="#sec-full" id="toc-sec-full" class="nav-link" data-scroll-target="#sec-full">The full models</a></li>
   <li><a href="#sec-limits" id="toc-sec-limits" class="nav-link" data-scroll-target="#sec-limits">What this cannot tell us</a></li>
   <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next">Next steps</a></li>
   <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
@@ -496,6 +526,4512 @@ Figure&nbsp;5: Each local authority’s illness absence against what its schools
 </div>
 <p><strong>Brighton and Hove</strong> records +27% more illness absence than its schools’ intakes predict, the 2nd highest of 152 authorities. Its unauthorised absence is -5% against intake (110th). The city’s high absence, which the <a href="./bh_effect.html">Geographical effects</a> page finds costs its pupils so little attainment, is illness absence, and its intake does not explain it. That fits both readings above: an unusual amount of illness, or a habit of authorising absence as illness that elsewhere would go unauthorised. Which it is matters for value added. If it is recording, the city’s absence is not the kind that costs attainment, and the model’s absence term over-forgives it.</p>
 </section>
+<section id="sec-full" class="level2">
+<h2 class="anchored" data-anchor-id="sec-full">The full models</h2>
+<p>Each of the seven outcomes has the same multilevel model. For school <span class="math inline">\(i\)</span> in local authority <span class="math inline">\(j\)</span> in region <span class="math inline">\(k\)</span>:</p>
+<p><span class="math display">\[\log(y_{ijk} + 0.1) = \beta_0 + \sum_p \beta_p\, x_{p,ijk} + u_k + v_{jk} + e_{ijk}\]</span></p>
+<p><span class="math display">\[u_k \sim N(0, \sigma^2_{\text{region}}), \quad v_{jk} \sim N(0, \sigma^2_{\text{LA}}), \quad e_{ijk} \sim N(0, \sigma^2_{\text{school}})\]</span></p>
+<ul>
+<li><strong>The outcome</strong> <span class="math inline">\(y\)</span> is a percentage: of possible sessions for the five kinds of absence, of pupils for persistent and severe. The 0.1 lets severe absence be zero.</li>
+<li><strong>The measured characteristics</strong> <span class="math inline">\(x\)</span> are standardised to mean 0 and SD 1, so each <span class="math inline">\(\beta\)</span> is the change in log absence for one SD, and <span class="math inline">\(100\,(e^{\beta} - 1)\)</span> is the % difference shown in <a href="#fig-effects" class="quarto-xref">Figure&nbsp;3</a>.</li>
+<li><strong>The categories</strong> are compared with a reference: 11-16, non-selective in a selective area, maintained, no religious character, and urban near a major town or city.</li>
+<li><strong>Estimation</strong> is REML in <code>lme4</code>. The log-likelihoods, AIC and BIC are from the same models refitted by maximum likelihood. The marginal R² is the variance of the fixed-effect predictions over the total; the conditional R² adds the region and authority effects (Nakagawa and Schielzeth). “Explained by the characteristics” is the fall in total variance from the model with no characteristics.</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Illness</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Medical appointments</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Other authorised</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Unauthorised</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Persistent (10%+)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Severe (50%+)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Overall absence: fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+2.059
+</td>
+<td style="text-align:right;">
+0.025
+</td>
+<td style="text-align:right;">
+81.4
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+0.102
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+16.0
+</td>
+<td style="text-align:right;">
++10.7 (+9.3 to +12.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+-0.015
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+-1.7
+</td>
+<td style="text-align:right;">
+-1.5 (-3.1 to +0.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+-0.006
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+-1.2
+</td>
+<td style="text-align:right;">
+-0.6 (-1.5 to +0.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.048
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+7.6
+</td>
+<td style="text-align:right;">
++4.9 (+3.6 to +6.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
++1.6 (+0.6 to +2.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+0.9
+</td>
+<td style="text-align:right;">
++0.6 (-0.6 to +1.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
++0.2 (-0.6 to +0.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.027
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+-3.3
+</td>
+<td style="text-align:right;">
+-2.6 (-4.2 to -1.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.089
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+9.2
+</td>
+<td style="text-align:right;">
++9.3 (+7.2 to +11.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
++1.9 (+1.2 to +2.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
++1.6 (+0.9 to +2.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.045
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+11.5
+</td>
+<td style="text-align:right;">
++4.6 (+3.8 to +5.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+-0.064
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+-8.7
+</td>
+<td style="text-align:right;">
+-6.2 (-7.5 to -4.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
++0.1 (-0.9 to +1.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+-0.006
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+-1.5
+</td>
+<td style="text-align:right;">
+-0.6 (-1.4 to +0.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.051
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
++5.3 (+3.5 to +7.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.022
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+<td style="text-align:right;">
++1.4 (-2.8 to +5.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.130
+</td>
+<td style="text-align:right;">
+0.030
+</td>
+<td style="text-align:right;">
+-4.4
+</td>
+<td style="text-align:right;">
+-12.2 (-17.2 to -7.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.024
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+-2.5
+</td>
+<td style="text-align:right;">
+-2.4 (-4.2 to -0.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.027
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-2.2
+</td>
+<td style="text-align:right;">
+-2.7 (-5.0 to -0.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.044
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+-4.9
+</td>
+<td style="text-align:right;">
+-4.3 (-6.0 to -2.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.8
+</td>
+<td style="text-align:right;">
++1.2 (-1.7 to +4.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+-0.005
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-0.4
+</td>
+<td style="text-align:right;">
+-0.5 (-2.7 to +1.8)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0066
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:right;">
+1%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0057
+</td>
+<td style="text-align:right;">
+0.0034
+</td>
+<td style="text-align:right;">
+4%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.0767
+</td>
+<td style="text-align:right;">
+0.0323
+</td>
+<td style="text-align:right;">
+36%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+8.14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.591
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.594
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.639
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.601
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+861.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-500.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+-1669.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+-1505.9
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Illness: fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+1.356
+</td>
+<td style="text-align:right;">
+0.045
+</td>
+<td style="text-align:right;">
+30.1
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+-0.094
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+-9.5
+</td>
+<td style="text-align:right;">
+-9.0 (-10.7 to -7.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+-0.015
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+-1.2
+</td>
+<td style="text-align:right;">
+-1.5 (-4.0 to +1.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+-0.000
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+-0.1
+</td>
+<td style="text-align:right;">
+-0.0 (-1.5 to +1.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
++2.4 (+0.5 to +4.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
++1.7 (+0.3 to +3.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
++1.0 (-0.7 to +2.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
++0.8 (-0.4 to +1.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.029
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-2.4
+</td>
+<td style="text-align:right;">
+-2.9 (-5.2 to -0.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.052
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
++5.3 (+2.3 to +8.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
++0.1 (-1.0 to +1.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
++1.8 (+0.8 to +2.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
++1.5 (+0.4 to +2.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+-0.030
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+-2.7
+</td>
+<td style="text-align:right;">
+-3.0 (-5.1 to -0.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:right;">
++0.4 (-1.2 to +1.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+-0.012
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+-2.0
+</td>
+<td style="text-align:right;">
+-1.2 (-2.4 to -0.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.033
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
++3.4 (+0.8 to +6.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+-0.068
+</td>
+<td style="text-align:right;">
+0.035
+</td>
+<td style="text-align:right;">
+-1.9
+</td>
+<td style="text-align:right;">
+-6.5 (-12.8 to +0.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.274
+</td>
+<td style="text-align:right;">
+0.045
+</td>
+<td style="text-align:right;">
+-6.1
+</td>
+<td style="text-align:right;">
+-24.0 (-30.4 to -17.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.046
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+-3.2
+</td>
+<td style="text-align:right;">
+-4.5 (-7.2 to -1.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.037
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+-2.0
+</td>
+<td style="text-align:right;">
+-3.7 (-7.1 to -0.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.011
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+-0.8
+</td>
+<td style="text-align:right;">
+-1.1 (-3.8 to +1.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+0.062
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
++6.4 (+1.8 to +11.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
++4.0 (+0.4 to +7.6)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0135
+</td>
+<td style="text-align:right;">
+0.0046
+</td>
+<td style="text-align:right;">
+4%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0243
+</td>
+<td style="text-align:right;">
+0.0128
+</td>
+<td style="text-align:right;">
+11%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.0833
+</td>
+<td style="text-align:right;">
+0.0726
+</td>
+<td style="text-align:right;">
+60%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+3.71
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.257
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.218
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.369
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.296
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+-440.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-700.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+935.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+1098.5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Medical appointments: fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+-0.869
+</td>
+<td style="text-align:right;">
+0.037
+</td>
+<td style="text-align:right;">
+-23.5
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+-0.043
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+-4.9
+</td>
+<td style="text-align:right;">
+-4.2 (-5.9 to -2.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+-0.007
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
+-0.7 (-3.0 to +1.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
++0.7 (-0.6 to +2.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+<td style="text-align:right;">
++0.6 (-1.1 to +2.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
++0.7 (-0.6 to +2.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
++0.9 (-0.8 to +2.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
++0.2 (-0.8 to +1.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.007
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+-0.7
+</td>
+<td style="text-align:right;">
+-0.7 (-2.9 to +1.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.071
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
++7.4 (+4.6 to +10.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
++0.1 (-0.9 to +1.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+0.033
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+7.3
+</td>
+<td style="text-align:right;">
++3.4 (+2.5 to +4.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+<td style="text-align:right;">
++0.4 (-0.7 to +1.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
++1.2 (-0.8 to +3.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
++2.1 (+0.7 to +3.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+-0.041
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+-7.1
+</td>
+<td style="text-align:right;">
+-4.0 (-5.1 to -2.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.063
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
++6.5 (+4.1 to +9.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+0.038
+</td>
+<td style="text-align:right;">
+0.029
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
++3.8 (-1.9 to +9.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.013
+</td>
+<td style="text-align:right;">
+0.041
+</td>
+<td style="text-align:right;">
+-0.3
+</td>
+<td style="text-align:right;">
+-1.3 (-8.9 to +7.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.032
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+-2.4
+</td>
+<td style="text-align:right;">
+-3.2 (-5.7 to -0.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.006
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+-0.3
+</td>
+<td style="text-align:right;">
+-0.6 (-3.8 to +2.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+-0.2
+</td>
+<td style="text-align:right;">
+-0.3 (-2.7 to +2.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
++3.9 (-0.2 to +8.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+0.112
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+7.0
+</td>
+<td style="text-align:right;">
++11.9 (+8.4 to +15.5)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0032
+</td>
+<td style="text-align:right;">
+0.0028
+</td>
+<td style="text-align:right;">
+3%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0148
+</td>
+<td style="text-align:right;">
+0.0056
+</td>
+<td style="text-align:right;">
+6%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.0702
+</td>
+<td style="text-align:right;">
+0.0619
+</td>
+<td style="text-align:right;">
+70%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.203
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.207
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.301
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.238
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+-156.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-406.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+367.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+530.6
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Other authorised: fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+0.046
+</td>
+<td style="text-align:right;">
+0.062
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+0.123
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+8.9
+</td>
+<td style="text-align:right;">
++13.1 (+10.1 to +16.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+-0.026
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+-1.4
+</td>
+<td style="text-align:right;">
+-2.6 (-6.1 to +1.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+0.030
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
++3.0 (+0.9 to +5.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.080
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
++8.3 (+5.4 to +11.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:right;">
++0.5 (-1.5 to +2.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
++1.5 (-1.1 to +4.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
++1.4 (-0.3 to +3.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.047
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+-2.7
+</td>
+<td style="text-align:right;">
+-4.6 (-7.8 to -1.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.053
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
++5.4 (+1.1 to +9.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.022
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
++2.2 (+0.6 to +3.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+-0.3
+</td>
+<td style="text-align:right;">
+-0.2 (-1.6 to +1.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
++4.8 (+3.1 to +6.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+-0.052
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+-3.3
+</td>
+<td style="text-align:right;">
+-5.0 (-7.9 to -2.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:right;">
++2.4 (+0.2 to +4.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+-0.028
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+-3.1
+</td>
+<td style="text-align:right;">
+-2.7 (-4.4 to -1.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.061
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
++6.3 (+2.5 to +10.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+0.048
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
++2.1 (-7.0 to +12.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.053
+</td>
+<td style="text-align:right;">
+0.064
+</td>
+<td style="text-align:right;">
+-0.8
+</td>
+<td style="text-align:right;">
+-5.2 (-16.4 to +7.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.064
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+-3.1
+</td>
+<td style="text-align:right;">
+-6.2 (-10.0 to -2.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.041
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+-1.5
+</td>
+<td style="text-align:right;">
+-4.0 (-8.8 to +1.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.062
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+-3.2
+</td>
+<td style="text-align:right;">
+-6.0 (-9.6 to -2.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:right;">
+0.032
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
++4.0 (-2.4 to +10.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+-0.058
+</td>
+<td style="text-align:right;">
+0.025
+</td>
+<td style="text-align:right;">
+-2.3
+</td>
+<td style="text-align:right;">
+-5.6 (-10.1 to -0.8)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0110
+</td>
+<td style="text-align:right;">
+0.0089
+</td>
+<td style="text-align:right;">
+4%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0186
+</td>
+<td style="text-align:right;">
+0.0186
+</td>
+<td style="text-align:right;">
+8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.2066
+</td>
+<td style="text-align:right;">
+0.1489
+</td>
+<td style="text-align:right;">
+63%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+1.06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.253
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.268
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.383
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.307
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+-1553.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-2065.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+3160.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+3324.4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Unauthorised: fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+0.929
+</td>
+<td style="text-align:right;">
+0.052
+</td>
+<td style="text-align:right;">
+17.9
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+0.313
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+24.3
+</td>
+<td style="text-align:right;">
++36.7 (+33.3 to +40.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
++0.2 (-3.1 to +3.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+-0.024
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+-2.4
+</td>
+<td style="text-align:right;">
+-2.4 (-4.2 to -0.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.064
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
++6.6 (+4.0 to +9.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
++2.1 (+0.2 to +4.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+-0.016
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-1.3
+</td>
+<td style="text-align:right;">
+-1.5 (-3.9 to +0.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+-0.4
+</td>
+<td style="text-align:right;">
+-0.3 (-1.8 to +1.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.020
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+-1.2
+</td>
+<td style="text-align:right;">
+-1.9 (-5.0 to +1.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.114
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
++12.1 (+7.9 to +16.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:right;">
++1.5 (+0.1 to +3.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
++2.1 (+0.8 to +3.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.079
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+9.9
+</td>
+<td style="text-align:right;">
++8.2 (+6.5 to +9.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+-0.130
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+-8.9
+</td>
+<td style="text-align:right;">
+-12.2 (-14.7 to -9.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+-0.022
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+-2.1
+</td>
+<td style="text-align:right;">
+-2.2 (-4.1 to -0.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
++2.2 (+0.5 to +3.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.056
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
++5.8 (+2.3 to +9.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+0.068
+</td>
+<td style="text-align:right;">
+0.044
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
++7.0 (-1.9 to +16.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.469
+</td>
+<td style="text-align:right;">
+0.060
+</td>
+<td style="text-align:right;">
+-7.9
+</td>
+<td style="text-align:right;">
+-37.5 (-44.4 to -29.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
++0.5 (-3.2 to +4.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.066
+</td>
+<td style="text-align:right;">
+0.025
+</td>
+<td style="text-align:right;">
+-2.7
+</td>
+<td style="text-align:right;">
+-6.4 (-10.8 to -1.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.113
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+-6.2
+</td>
+<td style="text-align:right;">
+-10.7 (-13.8 to -7.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+-0.055
+</td>
+<td style="text-align:right;">
+0.030
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-5.3 (-10.7 to +0.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+-0.086
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+-3.7
+</td>
+<td style="text-align:right;">
+-8.2 (-12.3 to -3.9)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0332
+</td>
+<td style="text-align:right;">
+0.0025
+</td>
+<td style="text-align:right;">
+1%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0544
+</td>
+<td style="text-align:right;">
+0.0159
+</td>
+<td style="text-align:right;">
+3%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.3694
+</td>
+<td style="text-align:right;">
+0.1297
+</td>
+<td style="text-align:right;">
+28%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+3.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.676
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.664
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.706
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.679
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+-1331.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-3004.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+2716.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+2880.2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Persistent absence (10%+): fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+3.021
+</td>
+<td style="text-align:right;">
+0.031
+</td>
+<td style="text-align:right;">
+96.3
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+0.140
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+17.0
+</td>
+<td style="text-align:right;">
++15.1 (+13.2 to +17.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+-0.015
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+-1.3
+</td>
+<td style="text-align:right;">
+-1.5 (-3.7 to +0.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+-0.019
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+-2.9
+</td>
+<td style="text-align:right;">
+-1.8 (-3.1 to -0.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.054
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
++5.6 (+3.9 to +7.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
++1.7 (+0.5 to +3.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
++0.2 (-1.4 to +1.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
++0.0 (-1.0 to +1.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.021
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+-2.0
+</td>
+<td style="text-align:right;">
+-2.1 (-4.1 to -0.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.097
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
++10.2 (+7.5 to +13.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
++1.9 (+1.0 to +2.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
++1.9 (+1.0 to +2.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.054
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+10.3
+</td>
+<td style="text-align:right;">
++5.6 (+4.5 to +6.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+-0.100
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+-10.4
+</td>
+<td style="text-align:right;">
+-9.6 (-11.2 to -7.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+-0.012
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-1.2 (-2.5 to +0.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+-0.017
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+-3.1
+</td>
+<td style="text-align:right;">
+-1.7 (-2.8 to -0.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.071
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
++7.4 (+5.1 to +9.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+0.027
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+<td style="text-align:right;">
++1.8 (-3.4 to +7.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.414
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:right;">
+-10.5
+</td>
+<td style="text-align:right;">
+-33.9 (-38.8 to -28.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.040
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+-3.1
+</td>
+<td style="text-align:right;">
+-3.9 (-6.3 to -1.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.030
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-3.0 (-6.0 to +0.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.063
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-5.2
+</td>
+<td style="text-align:right;">
+-6.1 (-8.3 to -3.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+0.030
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
++3.0 (-0.9 to +7.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+<td style="text-align:right;">
++1.1 (-1.9 to +4.3)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0082
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:right;">
+0%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0114
+</td>
+<td style="text-align:right;">
+0.0041
+</td>
+<td style="text-align:right;">
+2%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.1571
+</td>
+<td style="text-align:right;">
+0.0579
+</td>
+<td style="text-align:right;">
+33%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+21.97
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.646
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.648
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.650
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+-37.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-1625.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+128.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+291.6
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Severe absence (50%+): fixed effects. Estimates are on the log scale, per SD for a measured characteristic, against the reference for a category.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Term
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+% difference (95% CI)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept (reference school, mean characteristics)
+</td>
+<td style="text-align:right;">
+1.098
+</td>
+<td style="text-align:right;">
+0.064
+</td>
+<td style="text-align:right;">
+17.2
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Free school meals (%)
+</td>
+<td style="text-align:right;">
+0.199
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+12.9
+</td>
+<td style="text-align:right;">
++22.0 (+18.3 to +25.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEN support (%)
+</td>
+<td style="text-align:right;">
+-0.030
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+-1.4
+</td>
+<td style="text-align:right;">
+-3.0 (-6.9 to +1.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EHC plans (%)
+</td>
+<td style="text-align:right;">
+-0.007
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
+-0.7 (-2.9 to +1.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social, emotional and mental health need (%)
+</td>
+<td style="text-align:right;">
+0.091
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
++9.6 (+6.3 to +12.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Autism (%)
+</td>
+<td style="text-align:right;">
+0.031
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
++3.1 (+0.8 to +5.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Learning difficulty, moderate or specific (%)
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
++0.1 (-2.8 to +3.0)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Young carers (%)
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+0.9
+</td>
+<td style="text-align:right;">
++0.8 (-1.0 to +2.7)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English as an additional language (%)
+</td>
+<td style="text-align:right;">
+-0.010
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+-0.5
+</td>
+<td style="text-align:right;">
+-1.0 (-4.7 to +2.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+White British (%)
+</td>
+<td style="text-align:right;">
+0.259
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+11.0
+</td>
+<td style="text-align:right;">
++29.5 (+23.7 to +35.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gypsy, Roma and Traveller (%)
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
++2.6 (+0.9 to +4.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Girls (%)
+</td>
+<td style="text-align:right;">
+0.056
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
++5.7 (+4.1 to +7.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joined mid-phase (%)
+</td>
+<td style="text-align:right;">
+0.090
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+9.4
+</td>
+<td style="text-align:right;">
++9.4 (+7.4 to +11.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS2 prior attainment
+</td>
+<td style="text-align:right;">
+-0.161
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+-9.1
+</td>
+<td style="text-align:right;">
+-14.9 (-17.8 to -11.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Neighbourhood education
+</td>
+<td style="text-align:right;">
+0.046
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
++4.7 (+2.2 to +7.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size (log pupils)
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:right;">
++2.0 (+0.0 to +4.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Has a sixth form (vs 11-16)
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
++4.8 (+0.6 to +9.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non-selective elsewhere (vs same)
+</td>
+<td style="text-align:right;">
+0.060
+</td>
+<td style="text-align:right;">
+0.050
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
++6.2 (-3.7 to +17.1)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Selective (vs non-selective, selective area)
+</td>
+<td style="text-align:right;">
+-0.658
+</td>
+<td style="text-align:right;">
+0.072
+</td>
+<td style="text-align:right;">
+-9.1
+</td>
+<td style="text-align:right;">
+-48.2 (-55.1 to -40.3)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multi-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
++0.2 (-4.3 to +4.9)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-academy trust (vs maintained)
+</td>
+<td style="text-align:right;">
+-0.061
+</td>
+<td style="text-align:right;">
+0.030
+</td>
+<td style="text-align:right;">
+-2.0
+</td>
+<td style="text-align:right;">
+-5.9 (-11.3 to -0.2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Religious character (vs none)
+</td>
+<td style="text-align:right;">
+-0.093
+</td>
+<td style="text-align:right;">
+0.022
+</td>
+<td style="text-align:right;">
+-4.2
+</td>
+<td style="text-align:right;">
+-8.8 (-12.7 to -4.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urban, further from a city (vs nearer)
+</td>
+<td style="text-align:right;">
+0.041
+</td>
+<td style="text-align:right;">
+0.036
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
++4.2 (-2.9 to +11.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rural (vs urban, nearer a city)
+</td>
+<td style="text-align:right;">
+-0.029
+</td>
+<td style="text-align:right;">
+0.028
+</td>
+<td style="text-align:right;">
+-1.0
+</td>
+<td style="text-align:right;">
+-2.9 (-8.1 to +2.7)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Random effects: the variance at each level, with no characteristics and in the full model.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Level
+</th>
+<th style="text-align:right;">
+Variance, no characteristics
+</th>
+<th style="text-align:right;">
+Variance, full model
+</th>
+<th style="text-align:right;">
+Share of the starting total, after
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Region
+</td>
+<td style="text-align:right;">
+0.0530
+</td>
+<td style="text-align:right;">
+0.0083
+</td>
+<td style="text-align:right;">
+2%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authority
+</td>
+<td style="text-align:right;">
+0.0434
+</td>
+<td style="text-align:right;">
+0.0149
+</td>
+<td style="text-align:right;">
+3%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+0.4468
+</td>
+<td style="text-align:right;">
+0.1929
+</td>
+<td style="text-align:right;">
+36%
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Data and fit.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Schools
+</td>
+<td style="text-align:right;">
+3,147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Local authorities
+</td>
+<td style="text-align:right;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Regions
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean outcome (%)
+</td>
+<td style="text-align:right;">
+3.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Explained by the characteristics
+</td>
+<td style="text-align:right;">
+0.602
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marginal R² (fixed effects)
+</td>
+<td style="text-align:right;">
+0.588
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conditional R² (with region and authority)
+</td>
+<td style="text-align:right;">
+0.632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS R² (Shapley total, region fixed)
+</td>
+<td style="text-align:right;">
+0.622
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood (ML)
+</td>
+<td style="text-align:right;">
+-1938.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log-likelihood, no characteristics (ML)
+</td>
+<td style="text-align:right;">
+-3285.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:right;">
+3930.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:right;">
+4093.9
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>What one standard deviation is, in each characteristic’s own units, for the 3,147 schools in the models, and how many schools fall in each category:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Measured characteristics</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Categories</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div id="tbl-x-desc" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-x-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Measured characteristics: mean and standard deviation across the schools in the models. KS2 prior attainment is centred and neighbourhood education is already a z-score; size is the log of pupils on roll.
+</figcaption>
+<div aria-describedby="tbl-x-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Characteristic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">One SD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">28.76</td>
+<td style="text-align: right;">14.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">14.61</td>
+<td style="text-align: right;">5.84</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">3.68</td>
+<td style="text-align: right;">2.11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Social, emotional and mental health need (%)</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">2.71</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Autism (%)</td>
+<td style="text-align: right;">3.02</td>
+<td style="text-align: right;">2.01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Learning difficulty, moderate or specific (%)</td>
+<td style="text-align: right;">5.60</td>
+<td style="text-align: right;">3.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Young carers (%)</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">1.85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">19.06</td>
+<td style="text-align: right;">17.89</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">White British (%)</td>
+<td style="text-align: right;">60.41</td>
+<td style="text-align: right;">28.97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gypsy, Roma and Traveller (%)</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.86</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">49.56</td>
+<td style="text-align: right;">16.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Joined mid-phase (%)</td>
+<td style="text-align: right;">4.49</td>
+<td style="text-align: right;">3.87</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">KS2 prior attainment</td>
+<td style="text-align: right;">4.48</td>
+<td style="text-align: right;">2.72</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood education</td>
+<td style="text-align: right;">-0.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">6.92</td>
+<td style="text-align: right;">0.41</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div id="tbl-cat-desc" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cat-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Categories: schools in each, with the reference category first.
+</figcaption>
+<div aria-describedby="tbl-cat-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Characteristic</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Category</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sixth form</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1178</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sixth form</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">1969</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Admissions</td>
+<td style="text-align: left;">Non-selective in a selective area</td>
+<td style="text-align: right;">203</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Admissions</td>
+<td style="text-align: left;">Non-selective elsewhere</td>
+<td style="text-align: right;">2781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Admissions</td>
+<td style="text-align: left;">Selective</td>
+<td style="text-align: right;">163</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Governance</td>
+<td style="text-align: left;">Maintained</td>
+<td style="text-align: right;">526</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Governance</td>
+<td style="text-align: left;">Multi-academy trust</td>
+<td style="text-align: right;">2129</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Governance</td>
+<td style="text-align: left;">Single-academy trust or not recorded</td>
+<td style="text-align: right;">492</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Religious character</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">2578</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Religious character</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">569</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rural or urban</td>
+<td style="text-align: left;">Urban, near a major town or city</td>
+<td style="text-align: right;">2519</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rural or urban</td>
+<td style="text-align: left;">Urban, further from one</td>
+<td style="text-align: right;">222</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rural or urban</td>
+<td style="text-align: left;">Rural</td>
+<td style="text-align: right;">406</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="sec-limits" class="level2">
 <h2 class="anchored" data-anchor-id="sec-limits">What this cannot tell us</h2>
 <ul>
@@ -518,20 +5054,20 @@ Figure&nbsp;5: Each local authority’s illness absence against what its schools
 </section>
 <section id="sources" class="level2">
 <h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<p>The research summary draws on a research map of UK work since 2016, including:</p>
+<p>The research summary draws on a <a href="https://github.com/adamdennett/school_value_added/blob/main/Elicit%20-%20UK%20School%20Absence%20Research%20Map%2C%202016%E2%80%932026.md">research map of UK work since 2016</a> (compiled with Elicit), including:</p>
 <ul>
-<li>Department for Education, <em>Pupil absence in schools in England</em> (2025).</li>
-<li>Education Policy Institute, <em>Examining post-pandemic absences in England</em> (2025).</li>
-<li>Finning et al.&nbsp;(2019), practitioners’ beliefs about risk factors for attendance problems, <em>Emotional and Behavioural Difficulties</em>.</li>
-<li>Lereya et al.&nbsp;(2022), special educational need and absence over time and across need types, <em>European Journal of Special Needs Education</em>.</li>
-<li>McDonald, Lester and Michelson (2022), attendance problems in the context of COVID-19, <em>British Journal of Educational Psychology</em>.</li>
-<li>Klein et al.&nbsp;(2019), socioeconomic inequalities in school absenteeism.</li>
-<li>Anders et al.&nbsp;(2025), the post-pandemic rise in teenage skipping across English-speaking countries, <em>Educational Assessment, Evaluation and Accountability</em>.</li>
-<li>Dräger, Klein and Sosu (2025), whether the timing of absence changes its effect on achievement, <em>American Educational Research Journal</em>.</li>
-<li>Dräger et al.&nbsp;(2026), absence as a mediator of the socioeconomic achievement gap, <em>Research in Social Stratification and Mobility</em>.</li>
-<li>Epstein et al.&nbsp;(2026), absence and later mental health in adolescents in England, <em>Child and Adolescent Mental Health</em>.</li>
-<li>Troncoso et al.&nbsp;(2026), disadvantage, attendance and exclusions in Scotland, <em>International Journal of Population Data Science</em>.</li>
-<li>Strelitz et al.&nbsp;(2026), interventions to improve school attendance, <em>Journal of Epidemiology and Community Health</em>.</li>
+<li>Department for Education (2025), <a href="https://explore-education-statistics.service.gov.uk/find-statistics/pupil-absence-in-schools-in-england/2024-25-autumn-and-spring-term"><em>Pupil absence in schools in England: autumn and spring term 2024/25</em></a>.</li>
+<li>Hunt and Wielar (2025), <a href="https://epi.org.uk/publications-and-research/examining-post-pandemic-absences-in-england-5/"><em>Examining post-pandemic absences in England (5)</em></a>, Education Policy Institute.</li>
+<li>Finning et al.&nbsp;(2019), <a href="https://doi.org/10.1080/13632752.2019.1647684">practitioners’ beliefs about risk factors for attendance problems</a>, <em>Emotional and Behavioural Difficulties</em>.</li>
+<li>Lereya et al.&nbsp;(2022), <a href="https://doi.org/10.1080/08856257.2022.2059631">special educational need and absence over time and across need types</a>, <em>European Journal of Special Needs Education</em>.</li>
+<li>McDonald, Lester and Michelson (2022), <a href="https://sussex.figshare.com/articles/journal_contribution/_She_didn_t_know_how_to_go_back_school_attendance_problems_in_the_context_of_the_COVID-19_pandemic_-_a_multiple_stakeholder_qualitative_study_with_parents_and_professionals/23493092">attendance problems in the context of COVID-19</a>, <em>British Journal of Educational Psychology</em> (accepted manuscript).</li>
+<li>Klein, Dare and Sosu (2019), <a href="https://strathprints.strath.ac.uk/id/eprint/72714">socioeconomic inequalities in school absenteeism</a>, European Conference on Educational Research paper.</li>
+<li>Anders et al.&nbsp;(2025), <a href="https://doi.org/10.1007/s11092-025-09470-z">the post-pandemic rise in teenage skipping across English-speaking countries</a>, <em>Educational Assessment, Evaluation and Accountability</em>.</li>
+<li>Dräger, Klein and Sosu (2025), <a href="https://doi.org/10.3102/00028312251347666">whether the timing of absence changes its effect on achievement</a>, <em>American Educational Research Journal</em>.</li>
+<li>Dräger, Klein and Sosu (2026), <a href="https://strathprints.strath.ac.uk/97231/">absence as a mediator of the socioeconomic achievement gap</a>, <em>Research in Social Stratification and Mobility</em>.</li>
+<li>Epstein et al.&nbsp;(2026), <a href="https://doi.org/10.1111/camh.70113">absence and later mental health in adolescents in England</a>, <em>Child and Adolescent Mental Health</em>.</li>
+<li>Troncoso et al.&nbsp;(2026), <a href="https://doi.org/10.23889/ijpds.v11i5.3529">disadvantage, attendance and exclusions in Scotland</a>, <em>International Journal of Population Data Science</em>.</li>
+<li>Strelitz et al.&nbsp;(2026), <a href="https://doi.org/10.1136/jech-2025-225671">interventions to improve school attendance</a>, <em>Journal of Epidemiology and Community Health</em>.</li>
 </ul>
 <p>Data: DfE school-level absence (2016/17 to 2024/25, full years; 2025/26, autumn and spring), the January 2026 school census and SEN school-level data, GIAS, and the Value Added v2.1 inputs. Code: <code>R/08_absence_causes.R</code>.</p>
 
