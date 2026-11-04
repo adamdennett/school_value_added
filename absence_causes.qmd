@@ -583,9 +583,10 @@ A$cat_desc |> transmute(Characteristic = unname(CAT_LAB[var]),
 
 ## Next steps {#sec-next}
 
-1. **Within-school change.** Follow schools from 2021/22 to 2025/26 to see
-   whether absence moves when intake does. That is a stronger test than one
-   year's snapshot.
+1. **Within-school change.** Started: [How school absence
+   changes](absence_change.qmd) follows every school from 2016/17 to
+   2025/26, tests whether absence moves when intake does, and looks at
+   academy conversion and changes of trust.
 2. **Illness or recording?** Look at how illness and unauthorised absence
    trade off within authorities, to see whether high-illness places are
    recording differently.

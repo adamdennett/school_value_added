@@ -1,0 +1,2748 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>How school absence changes – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./method.html"> 
+<span class="menu-text">Methodology</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-absence" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Absence</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-absence">    
+        <li>
+    <a class="dropdown-item" href="./absence_causes.html">
+ <span class="dropdown-text">What goes with absence</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./absence_change.html">
+ <span class="dropdown-text">How absence changes</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./twins.html"> 
+<span class="menu-text">Find a twin</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-follow-schools-over-time" id="toc-why-follow-schools-over-time" class="nav-link active" data-scroll-target="#why-follow-schools-over-time">Why follow schools over time</a></li>
+  <li><a href="#sec-data" id="toc-sec-data" class="nav-link" data-scroll-target="#sec-data">The data</a></li>
+  <li><a href="#sec-trend" id="toc-sec-trend" class="nav-link" data-scroll-target="#sec-trend">Ten years of absence</a></li>
+  <li><a href="#sec-variance" id="toc-sec-variance" class="nav-link" data-scroll-target="#sec-variance">What stays with a school and what moves</a></li>
+  <li><a href="#sec-stability" id="toc-sec-stability" class="nav-link" data-scroll-target="#sec-stability">Do schools keep their place?</a></li>
+  <li><a href="#sec-shift" id="toc-sec-shift" class="nav-link" data-scroll-target="#sec-shift">Before the pandemic and now</a></li>
+  <li><a href="#sec-within" id="toc-sec-within" class="nav-link" data-scroll-target="#sec-within">When a school’s own intake changes</a></li>
+  <li><a href="#sec-events" id="toc-sec-events" class="nav-link" data-scroll-target="#sec-events">Becoming an academy, or changing trust</a></li>
+  <li><a href="#sec-means" id="toc-sec-means" class="nav-link" data-scroll-target="#sec-means">What it means</a></li>
+  <li><a href="#sec-limits" id="toc-sec-limits" class="nav-link" data-scroll-target="#sec-limits">What this cannot tell us</a></li>
+  <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next">Next steps</a></li>
+  <li><a href="#sec-full" id="toc-sec-full" class="nav-link" data-scroll-target="#sec-full">The full results</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How school absence changes</h1>
+<p class="subtitle lead">Following every secondary school in England from 2016/17 to 2025/26: what stays with a school, what moves, and what happens when its intake, status or trust changes.</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Work in progress
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This page continues the <a href="./absence_causes.html">absence analysis</a>. That page compares different schools in one year. This one follows the same schools over ten years. Every figure comes from published school-level data, so every result is about schools, not pupils.</p>
+</div>
+</div>
+<section id="why-follow-schools-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="why-follow-schools-over-time">Why follow schools over time</h2>
+<p>Comparing schools in one year mixes up two things: what a school’s pupils and community bring, and what the school does. Following the <em>same</em> school over time holds constant everything about it that does not change: its neighbourhood, its buildings, its reputation, most of its intake. What is left is change. So this page asks:</p>
+<ol type="1">
+<li>How much of a school’s absence is lasting, and how much moves from year to year?</li>
+<li>Do schools keep their place?</li>
+<li>Who rose most between before the pandemic and now?</li>
+<li>When a school’s own intake changes, does its absence change with it?</li>
+<li>What happens to absence when a school becomes an academy, or moves to a new trust?</li>
+</ol>
+</section>
+<section id="sec-data" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data">The data</h2>
+<ul>
+<li><strong>Absence.</strong> DfE’s school-level absence for the autumn and spring terms, 2016/17 to 2025/26. It is the one file that covers every year on the same basis, including 2025/26, whose full-year figures are not published until 2027. 2019/20 was not collected. 2020/21 is shown in the trend but left out of every model: in a year of lockdowns, pupils told to stay home were not counted as absent.</li>
+<li><strong>Schools.</strong> Every state-funded secondary school: 30,592 school-years, 3,524 schools. A school that becomes an academy, or moves trust, gets a new URN. The 4,271 URNs are joined into schools with GIAS’s one-to-one predecessor and successor links. Mergers, amalgamations and splits end a school’s record.</li>
+<li><strong>Intake.</strong> The January school census for 2018/19 and 2021/22 to 2024/25 (the performance tables’ census files) and 2025/26 (the January 2026 school census and SEN files). Earlier years are no longer published in the same form.</li>
+</ul>
+</section>
+<section id="sec-trend" class="level2">
+<h2 class="anchored" data-anchor-id="sec-trend">Ten years of absence</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-index" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-index-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_change_files/figure-html/fig-index-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-index-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Absence in England’s state-funded secondary schools, autumn and spring terms, indexed to 2018/19 = 100 (sessions-weighted for the reasons; % of pupils for persistent and severe). 2019/20 was not collected; 2020/21 (shaded) was a year of partial closure.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Absence across the autumn and spring terms rose from 5.2% of sessions in 2018/19 to 8.7% in 2022/23. It has eased only to 8.0% in 2025/26. Illness has fallen most of the way back. Unauthorised and other authorised absence have not. Severe absence, pupils missing half their schooling or more, has risen from 1.2% of pupils to 3.6%, and is still near its peak.</p>
+</section>
+<section id="sec-variance" class="level2">
+<h2 class="anchored" data-anchor-id="sec-variance">What stays with a school and what moves</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-variance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-variance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_change_files/figure-html/fig-variance-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-variance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Where the variation in each kind of absence lies, once the national year-to-year swing is taken out: multilevel models of log absence with year effects and region, local authority and school random effects, 2016/17 to 2025/26 without 2020/21. ‘Year to year’ is a school’s movement around its own lasting level.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Most absence is lasting.</strong> Once the national swing from year to year is taken out, 66% of the variation in overall absence, 69% of unauthorised and 68% of persistent absence is a school’s lasting level. Its region and local authority account for about a tenth; the rest is movement from year to year.</li>
+<li><strong>Illness moves more, and is more about place.</strong> Only 38% of the variation in illness is lasting to a school, 41% moves from year to year, and 14% is the local authority. That fits the cross-section, where illness was the kind of absence most tied to place.</li>
+<li><strong>The national swing is large.</strong> Year alone accounts for 38% of all the variation in overall absence over the period, and 31% of severe. Any one school’s change from last year is mostly the country’s change.</li>
+</ul>
+</section>
+<section id="sec-stability" class="level2">
+<h2 class="anchored" data-anchor-id="sec-stability">Do schools keep their place?</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-cors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_change_files/figure-html/fig-cors-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Correlation between years of each school’s absence relative to England that year (log scale), for the schools present in both years. 2020/21 is included here for completeness.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>From one year to the next, schools barely move: the correlation of overall absence between 2024/25 and 2025/26 is 0.94. Over longer stretches they do. Between 2018/19, before the pandemic, and 2025/26 the correlation is 0.68 for overall absence, 0.76 for unauthorised and only 0.41 for illness.</p>
+<p>Put another way, of the fifth of schools with the highest unauthorised absence before the pandemic (2016/17 to 2018/19), 62% are still in the top fifth now (2023/24 to 2025/26). For overall absence it is 54%. If nothing changed, it would be 20%. If nothing moved, 100%. A school’s place is sticky, but it is not fixed: more than a third of the schools with the most absence before the pandemic no longer have.</p>
+</section>
+<section id="sec-shift" class="level2">
+<h2 class="anchored" data-anchor-id="sec-shift">Before the pandemic and now</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-shift" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shift-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_change_files/figure-html/fig-shift-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shift-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Average absence before the pandemic (2016/17 to 2018/19, pale) and now (2023/24 to 2025/26, dark), by fifth of schools on free school meals in 2018/19. Labels: the rise as % of where each group started.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-shift" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-shift-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Average school absence before the pandemic and now, schools with at least two years in each period.
+</figcaption>
+<div aria-describedby="tbl-shift-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of absence</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2016/17 to 2018/19</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2023/24 to 2025/26</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Change (points)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Change (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Overall absence</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">5.32</td>
+<td style="text-align: right;">8.34</td>
+<td style="text-align: right;">+3.02</td>
+<td style="text-align: right;">+57</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Illness</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">2.93</td>
+<td style="text-align: right;">3.84</td>
+<td style="text-align: right;">+0.91</td>
+<td style="text-align: right;">+31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Medical appointments</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">+0.03</td>
+<td style="text-align: right;">+10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other authorised</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">+0.48</td>
+<td style="text-align: right;">+83</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unauthorised</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">1.48</td>
+<td style="text-align: right;">3.07</td>
+<td style="text-align: right;">+1.59</td>
+<td style="text-align: right;">+108</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Persistent absence (10%+)</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">13.29</td>
+<td style="text-align: right;">22.82</td>
+<td style="text-align: right;">+9.53</td>
+<td style="text-align: right;">+72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Severe absence (50%+)</td>
+<td style="text-align: right;">3,302</td>
+<td style="text-align: right;">1.13</td>
+<td style="text-align: right;">3.64</td>
+<td style="text-align: right;">+2.51</td>
+<td style="text-align: right;">+222</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>The rise was broadly proportional.</strong> Schools with the fewest pupils on free school meals saw overall absence rise by 46%. Schools with the most saw 60%. In percentage points, the gap widened: 2.1 points against 3.7.</li>
+<li><strong>Unauthorised absence doubled almost everywhere</strong>, slightly less in the poorest schools in relative terms (+98% against +121%) but by far more in points.</li>
+<li><strong>Severe absence roughly tripled in every fifth</strong>, from 0.7% of pupils to 2.2% in the least disadvantaged schools and from 1.6% to 5.0% in the most.</li>
+<li><strong>Illness rose least in the poorest schools</strong> (+24% against +35% in the second fifth).</li>
+</ul>
+<p>So the pandemic did not reorder schools so much as scale them up. A school’s absence now is best compared with where it was <em>relative to England</em> before, not with its own pre-pandemic figure.</p>
+</section>
+<section id="sec-within" class="level2">
+<h2 class="anchored" data-anchor-id="sec-within">When a school’s own intake changes</h2>
+<p>The cross-section shows that schools with more pupils on free school meals or SEN support have more absence. That could be because of those pupils, or because of everything else that goes with being that kind of school. Following the same school as its intake changes separates the two. If a school’s absence moves with its own intake, the intake matters directly. If not, the cross-school pattern is mostly about the kind of school and community.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-within" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-within-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_change_files/figure-html/fig-within-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-within-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Difference in absence (%) with a change in intake, between schools (pooled, with year effects; pale) and within the same school over time (school and year fixed effects; dark), 2018/19 and 2021/22 to 2025/26, with 95% intervals clustered by school.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Between schools, disadvantage goes with far more unauthorised absence than within one.</strong> Across schools, five points more pupils on free school meals goes with +20% unauthorised absence. When one school’s own share rises by as much, its unauthorised absence rises by +5%. Most of the cross-school gradient is about the kind of school and community, not the marginal pupil.</li>
+<li><strong>The same holds for SEN support</strong>: +10% between schools, +2% within.</li>
+<li><strong>For overall absence the two are closer</strong> (+5.6% and +3.8% for FSM), so a school taking more disadvantaged pupils should expect somewhat more absence.</li>
+<li><strong>Intake change explains little of how a school’s absence moves.</strong> The changes in intake account for 4.8% of the within-school variation in overall absence, 2.0% of unauthorised and 2.3% of persistent. Intake does not move much within a school (<a href="#tbl-move" class="quarto-xref">Table&nbsp;2</a>), and when absence moves, it is mostly something else.</li>
+</ul>
+<div class="cell">
+<div id="tbl-move" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-move-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: How much intake varies between schools and within a school over time (standard deviations, 2018/19 and 2021/22 to 2025/26).
+</figcaption>
+<div aria-describedby="tbl-move-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Characteristic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Between schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Within a school over time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">12.60</td>
+<td style="text-align: right;">4.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">2.86</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">1.88</td>
+<td style="text-align: right;">0.93</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">18.17</td>
+<td style="text-align: right;">3.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">16.19</td>
+<td style="text-align: right;">1.86</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The share of pupils on free school meals almost doubled over the period (15.1% in 2018/19, 28.8% in 2025/26), much of it because pupils who became eligible under Universal Credit kept their eligibility. The year effects take out the national rise, but where it rose faster it may not mean more poverty. Leaving out 2025/26, whose intake comes from a different file, makes little difference (see <a href="#sec-full">the full results</a>).</p>
+</section>
+<section id="sec-events" class="level2">
+<h2 class="anchored" data-anchor-id="sec-events">Becoming an academy, or changing trust</h2>
+<p>Two kinds of change give a school a new URN, so they can be dated precisely:</p>
+<ul>
+<li><strong>Becoming an academy.</strong> 374 maintained schools converted between 2017/18 and 2025/26 and can be followed either side, compared with schools that were maintained throughout and those that had yet to convert.</li>
+<li><strong>A change of trust.</strong> 155 academies moved to a new trust, compared with academies that stayed put.</li>
+</ul>
+<p>Each is an event study (Sun and Abraham’s estimator, with school and year effects): how absence moved, relative to similar schools that did not change, in the years before and after. The years count only the years with data, so the pandemic gap is one step.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-events" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="absence_change_files/figure-html/fig-events-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Absence before and after a school becomes an academy (top) or moves to a new trust (bottom), relative to the year before (0) and to schools that did not change, % with 95% intervals clustered by school. Event times with fewer than 25 schools are not shown.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-events" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Average difference in absence in the years after the change (% with 95% interval), and in the pupils.
+</figcaption>
+<div aria-describedby="tbl-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Becoming an academy</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Converter academies only</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">A change of trust</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="6">
+<td colspan="4" style="border-bottom: 1px solid"><strong>Absence</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Overall absence</td>
+<td style="text-align: right;">+0.8% (-1.2 to +2.9)</td>
+<td style="text-align: right;">+1.5% (-0.9 to +3.9)</td>
+<td style="text-align: right;">-5.5% (-9.0 to -2.0)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Illness</td>
+<td style="text-align: right;">-1.0% (-4.2 to +2.3)</td>
+<td style="text-align: right;">+0.4% (-2.7 to +3.5)</td>
+<td style="text-align: right;">+0.9% (-7.4 to +9.9)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Other authorised</td>
+<td style="text-align: right;">-4.7% (-9.1 to -0.1)</td>
+<td style="text-align: right;">-0.4% (-5.8 to +5.3)</td>
+<td style="text-align: right;">-12.5% (-19.6 to -4.7)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Unauthorised</td>
+<td style="text-align: right;">+1.6% (-2.4 to +5.8)</td>
+<td style="text-align: right;">+2.7% (-1.7 to +7.4)</td>
+<td style="text-align: right;">-12.1% (-18.1 to -5.7)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Persistent absence (10%+)</td>
+<td style="text-align: right;">-2.6% (-5.5 to +0.4)</td>
+<td style="text-align: right;">+1.3% (-2.3 to +5.0)</td>
+<td style="text-align: right;">-15.7% (-19.9 to -11.3)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Severe absence (50%+)</td>
+<td style="text-align: right;">-1.6% (-8.6 to +6.0)</td>
+<td style="text-align: right;">-0.2% (-8.6 to +8.9)</td>
+<td style="text-align: right;">-6.6% (-17.8 to +6.2)</td>
+</tr>
+<tr class="even" data-grouplength="3">
+<td colspan="4" style="border-bottom: 1px solid"><strong>Pupils</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Pupils on roll</td>
+<td style="text-align: right;">-2.6% (-5.0 to -0.2)</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">-6.3% (-13.0 to +0.9)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Free school meals (points)</td>
+<td style="text-align: right;">+1.3 (+0.6 to +2.0)</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">+2.7 (+1.4 to +4.0)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">SEN support (points)</td>
+<td style="text-align: right;">+0.2 (-0.4 to +0.9)</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">-0.6 (-2.2 to +1.1)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Becoming an academy makes no clear difference.</strong> In the years after conversion, overall absence was within 0.8% of schools that stayed maintained (95% interval -1.2% to +2.9%). But the converting schools were already on a different path: their absence was rising relative to schools that stayed maintained in the years before, and that rise stopped. So the honest reading is no visible effect of conversion itself, among schools whose trajectory was already diverging.</p>
+<p><strong>A change of trust is followed by lower absence.</strong> In the years after a move, unauthorised absence was 12% lower and persistent absence 16% lower, relative to academies that stayed with their trust. Overall absence was 6% lower. Three things to weigh:</p>
+<ol type="1">
+<li><strong>The schools were getting worse first.</strong> Absence rose in the two or three years before the move (persistent absence three years before was 11% lower than in the year before), which is often why a school is moved. Some of the fall is recovery. But persistent and unauthorised absence fell well below where they had been three years before the move.</li>
+<li><strong>The pupils did not get easier.</strong> The share on free school meals rose by +2.7 points relative to other academies, and the roll changed little.</li>
+<li><strong>Recording may change too.</strong> A new trust brings new attendance policies, and how sessions are coded is partly a school’s choice. Other authorised absence also fell, so this is not just unauthorised absence being authorised instead.</li>
+</ol>
+</section>
+<section id="sec-means" class="level2">
+<h2 class="anchored" data-anchor-id="sec-means">What it means</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>For heads and governors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Judge your absence against England’s year, not your own last year.</strong> The national swing is the largest single thing in any school’s change from one year to the next.</li>
+<li><strong>Compare with where you stood relative to England before the pandemic, not with your pre-pandemic figures.</strong> Everyone’s rose, and roughly in proportion.</li>
+<li><strong>A school’s absence is mostly lasting, but not fixed.</strong> Two-thirds of the variation is a school’s own level, and the same schools tend to stay high. More than a third of the highest-absence schools before the pandemic are no longer in the top fifth.</li>
+<li><strong>A change in intake is rarely the reason absence moved.</strong> Within a school, changes in its pupils explain only a few per cent of changes in absence.</li>
+<li><strong>What happens in the school seems to matter.</strong> A change of trust, which usually means new leadership and new attendance policies, is followed by lower unauthorised and persistent absence, even with more disadvantaged pupils. To see who has done it with an intake like yours, <a href="./twins.html">Find a twin</a>.</li>
+</ol>
+</div>
+</div>
+<p>For policy, the same results say that the post-pandemic rise is a national shift, not something concentrated in a few kinds of school, and that structural change (becoming an academy) is not by itself a lever on attendance. What a new trust does might be.</p>
+</section>
+<section id="sec-limits" class="level2">
+<h2 class="anchored" data-anchor-id="sec-limits">What this cannot tell us</h2>
+<ul>
+<li><strong>It is about schools, not pupils.</strong> A school’s absence can change because its pupils change, or because the same pupils attend differently. Published data cannot tell these apart.</li>
+<li><strong>Event studies are not experiments.</strong> Schools are moved to a new trust for reasons, often falling standards. The comparison schools did not face the same pressures, and the pre-move rise shows it.</li>
+<li><strong>Recording practice varies.</strong> Whether a session is coded as illness, authorised or unauthorised is partly a school’s choice, and can change with a new head or trust.</li>
+<li><strong>The intake series is short and its FSM measure shifted.</strong> Intake by year is available for six years, and eligibility under Universal Credit raised FSM shares in ways that do not all reflect more poverty.</li>
+<li><strong>Chains break.</strong> A school that merges or splits starts a new record, so the most disrupted schools are under-represented.</li>
+</ul>
+</section>
+<section id="sec-next" class="level2">
+<h2 class="anchored" data-anchor-id="sec-next">Next steps</h2>
+<ol type="1">
+<li><strong>Each school’s own path</strong>, relative to England, on the area pages and in <a href="./twins.html">Find a twin</a>’s fact cards.</li>
+<li><strong>Illness or recording?</strong> Whether high-illness places, such as Brighton and Hove, record absence differently.</li>
+<li><strong>The severe tail</strong>, which has tripled and is not falling, on its own.</li>
+<li><strong>Trusts.</strong> Whether particular trusts’ schools move together after joining, which would point to what the trust does.</li>
+<li><strong>Back into value added</strong>: absence against intake, by kind, as a candidate for a future version of the model.</li>
+</ol>
+</section>
+<section id="sec-full" class="level2">
+<h2 class="anchored" data-anchor-id="sec-full">The full results</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Within against between</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Who rose most</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Event studies</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Variance shares</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div id="tbl-wb-full" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-wb-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Difference in each kind of absence (%) with the change shown, between schools (pooled with year effects) and within the same school (school and year fixed effects), 95% intervals clustered by school.
+</figcaption>
+<div aria-describedby="tbl-wb-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of absence</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Change</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Overall absence</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+3.8</td>
+<td style="text-align: right;">+3.3 to +4.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.4 to +1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+1.1 to +1.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-1.5 to -0.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-2.2 to +0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.6 to +1.1</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+5.6</td>
+<td style="text-align: right;">+5.3 to +6.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+5.1</td>
+<td style="text-align: right;">+4.4 to +5.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+0.8 to +1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-2.8</td>
+<td style="text-align: right;">-3.0 to -2.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-0.1 to +0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+0.0 to +0.4</td>
+</tr>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Illness</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-1.1 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">+0.2 to +1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.1 to +1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-2.7 to -1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">-0.2 to +6.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.3 to +1.0</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-3.8 to -2.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+2.5 to +4.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+1.1 to +2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-2.7 to -2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.3 to +1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-0.4 to -0.1</td>
+</tr>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Medical appointments</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">-0.6 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">+0.1 to +1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+0.8 to +1.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-0.2</td>
+<td style="text-align: right;">-0.9 to +0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">-1.1 to +3.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">+0.2 to +0.8</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-3.7 to -3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-0.1 to +1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+1.5 to +2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-1.2 to -0.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+1.4 to +2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">-0.7 to -0.3</td>
+</tr>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Other authorised</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+5.0</td>
+<td style="text-align: right;">+3.8 to +6.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+0.6 to +2.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+2.7 to +4.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-2.3 to -0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">-0.9</td>
+<td style="text-align: right;">-4.5 to +2.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+1.0 to +2.0</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+6.1</td>
+<td style="text-align: right;">+5.4 to +6.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+7.1</td>
+<td style="text-align: right;">+5.9 to +8.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+2.0 to +3.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-4.1 to -3.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-0.9 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">-0.3 to +0.3</td>
+</tr>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Unauthorised</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+4.9</td>
+<td style="text-align: right;">+3.9 to +5.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+0.7 to +2.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+0.8 to +2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-1.0 to +0.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-5.7 to -0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+0.9 to +2.0</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+20.2</td>
+<td style="text-align: right;">+19.3 to +21.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+9.9</td>
+<td style="text-align: right;">+8.4 to +11.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+0.2 to +2.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-3.0</td>
+<td style="text-align: right;">-3.5 to -2.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-1.1 to +1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+1.0 to +1.7</td>
+</tr>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Persistent absence (10%+)</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+2.2 to +3.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-0.1 to +1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+0.4 to +1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-2.7 to -1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-3.6 to +0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+0.8 to +1.8</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+8.3</td>
+<td style="text-align: right;">+7.9 to +8.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+7.2</td>
+<td style="text-align: right;">+6.2 to +8.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+1.1 to +2.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-3.5 to -2.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-0.4 to +1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-0.0 to +0.5</td>
+</tr>
+<tr class="odd">
+<td rowspan="12" style="text-align: left; vertical-align: top !important;">Severe absence (50%+)</td>
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Within</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+6.7</td>
+<td style="text-align: right;">+4.8 to +8.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+0.8 to +3.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+4.3</td>
+<td style="text-align: right;">+3.1 to +5.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-3.6 to -0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-8.1 to +2.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+2.2 to +4.3</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Between</td>
+<td style="text-align: left;">5 points more pupils on FSM</td>
+<td style="text-align: right;">+14.6</td>
+<td style="text-align: right;">+13.7 to +15.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more on SEN support</td>
+<td style="text-align: right;">+13.8</td>
+<td style="text-align: right;">+11.8 to +15.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1 point more with EHC plans</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+2.0 to +5.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 points more with EAL</td>
+<td style="text-align: right;">-6.9</td>
+<td style="text-align: right;">-7.4 to -6.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 points more girls</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+1.5 to +4.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10% more pupils</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+1.3 to +2.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Without 2025/26, overall absence within a school rises +4.0% with five points more FSM (against +3.8% with it), and unauthorised +5.7% (against +4.9%).</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div id="tbl-shift-reg" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-shift-reg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: The rise in each kind of absence from 2016/17–2018/19 to 2023/24–2025/26 (difference in log absence, as %) with one standard deviation more of each characteristic in 2018/19, with region effects; heteroskedasticity-robust 95% intervals.
+</figcaption>
+<div aria-describedby="tbl-shift-reg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of absence</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Characteristic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">% per SD</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Overall absence</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+2.1 to +4.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+1.3 to +3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">+0.7</td>
+<td style="text-align: right;">-0.0 to +1.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">-2.2</td>
+<td style="text-align: right;">-3.1 to -1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+1.8</td>
+<td style="text-align: right;">+1.0 to +2.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+0.8 to +2.5</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Illness</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">-4.4</td>
+<td style="text-align: right;">-6.2 to -2.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">-1.0 to +1.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+0.1 to +2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+0.3 to +4.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+0.6 to +2.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">-1.1</td>
+<td style="text-align: right;">-2.4 to +0.2</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Medical appointments</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-0.9 to +2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+0.9</td>
+<td style="text-align: right;">-0.3 to +2.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">-0.6</td>
+<td style="text-align: right;">-1.7 to +0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-3.0 to -0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">+0.1 to +2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">-0.4 to +2.0</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Other authorised</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">+3.6</td>
+<td style="text-align: right;">+1.5 to +5.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+5.2</td>
+<td style="text-align: right;">+3.2 to +7.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+0.6 to +4.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">-6.4</td>
+<td style="text-align: right;">-8.4 to -4.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+0.8 to +4.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">+3.4</td>
+<td style="text-align: right;">+1.4 to +5.4</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Unauthorised</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">-2.3 to +1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+0.7 to +4.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">-0.8 to +2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">-5.0</td>
+<td style="text-align: right;">-6.7 to -3.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">+1.0 to +4.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: right;">+0.7 to +4.4</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Persistent absence (10%+)</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-2.6 to +0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+0.5 to +2.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">+0.1</td>
+<td style="text-align: right;">-0.9 to +1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">-0.3 to +2.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+1.7 to +4.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+1.1 to +3.6</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">Severe absence (50%+)</td>
+<td style="text-align: left;">Free school meals (%)</td>
+<td style="text-align: right;">+4.5</td>
+<td style="text-align: right;">+1.8 to +7.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEN support (%)</td>
+<td style="text-align: right;">+6.5</td>
+<td style="text-align: right;">+4.1 to +9.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EHC plans (%)</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+1.0 to +5.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">English as an additional language (%)</td>
+<td style="text-align: right;">-9.7</td>
+<td style="text-align: right;">-12.2 to -7.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Girls (%)</td>
+<td style="text-align: right;">+6.9</td>
+<td style="text-align: right;">+4.4 to +9.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">+4.1</td>
+<td style="text-align: right;">+1.4 to +6.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div id="tbl-ev-full" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ev-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Event-time estimates (% relative to the year before the change), all outcomes, with the number of changing schools observed at each event time.
+</figcaption>
+<div aria-describedby="tbl-ev-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:420px; ">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Study</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Kind of absence</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Event time</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">%</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">95% interval</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Schools</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="66" style="text-align: left; vertical-align: top !important;">A change of trust</td>
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Overall absence</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-11.8</td>
+<td style="text-align: right;">-18.1 to -4.9</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-9.9</td>
+<td style="text-align: right;">-15.9 to -3.5</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-8.1</td>
+<td style="text-align: right;">-12.0 to -4.0</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-0.4</td>
+<td style="text-align: right;">-3.3 to +2.7</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-6.9 to +0.6</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">-10.6 to -3.3</td>
+<td style="text-align: right;">149</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-9.5 to -1.0</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-6.0</td>
+<td style="text-align: right;">-10.3 to -1.5</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-6.4</td>
+<td style="text-align: right;">-10.7 to -1.8</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-3.6</td>
+<td style="text-align: right;">-8.2 to +1.2</td>
+<td style="text-align: right;">72</td>
+</tr>
+<tr class="even">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Illness</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-4.9</td>
+<td style="text-align: right;">-14.5 to +5.9</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-9.5</td>
+<td style="text-align: right;">-26.1 to +10.8</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-11.3 to +10.1</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">+4.9</td>
+<td style="text-align: right;">-0.2 to +10.2</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-6.9 to +8.4</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-10.4 to +6.2</td>
+<td style="text-align: right;">149</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">-8.1 to +11.5</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">-8.0 to +14.3</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">-7.2 to +16.3</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">+6.7</td>
+<td style="text-align: right;">-7.1 to +22.5</td>
+<td style="text-align: right;">72</td>
+</tr>
+<tr class="odd">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Other authorised</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-25.4</td>
+<td style="text-align: right;">-38.1 to -10.1</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-23.1</td>
+<td style="text-align: right;">-39.3 to -2.7</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-20.5</td>
+<td style="text-align: right;">-29.4 to -10.5</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-5.0</td>
+<td style="text-align: right;">-12.1 to +2.6</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-6.4</td>
+<td style="text-align: right;">-13.6 to +1.5</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-12.9</td>
+<td style="text-align: right;">-20.5 to -4.5</td>
+<td style="text-align: right;">149</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-10.5</td>
+<td style="text-align: right;">-19.4 to -0.6</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-13.6</td>
+<td style="text-align: right;">-22.5 to -3.7</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-13.9</td>
+<td style="text-align: right;">-23.5 to -3.2</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-14.7</td>
+<td style="text-align: right;">-24.6 to -3.6</td>
+<td style="text-align: right;">72</td>
+</tr>
+<tr class="even">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Unauthorised</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-8.6</td>
+<td style="text-align: right;">-22.8 to +8.1</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-8.0</td>
+<td style="text-align: right;">-21.6 to +7.9</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">-14.9 to +1.7</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-5.9 to +5.7</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-3.9</td>
+<td style="text-align: right;">-10.1 to +2.6</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-9.2</td>
+<td style="text-align: right;">-15.8 to -2.1</td>
+<td style="text-align: right;">149</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-10.5</td>
+<td style="text-align: right;">-18.3 to -2.0</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-15.5</td>
+<td style="text-align: right;">-22.8 to -7.5</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-18.4</td>
+<td style="text-align: right;">-25.6 to -10.5</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-17.0</td>
+<td style="text-align: right;">-24.8 to -8.3</td>
+<td style="text-align: right;">72</td>
+</tr>
+<tr class="odd">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Persistent absence (10%+)</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-11.7</td>
+<td style="text-align: right;">-19.6 to -3.0</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-9.7</td>
+<td style="text-align: right;">-17.0 to -1.6</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-10.7</td>
+<td style="text-align: right;">-16.6 to -4.3</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-2.1</td>
+<td style="text-align: right;">-6.8 to +2.7</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-11.3</td>
+<td style="text-align: right;">-16.6 to -5.6</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-15.7</td>
+<td style="text-align: right;">-20.1 to -11.0</td>
+<td style="text-align: right;">149</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-17.1</td>
+<td style="text-align: right;">-22.0 to -12.0</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-17.4</td>
+<td style="text-align: right;">-22.3 to -12.3</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-17.3</td>
+<td style="text-align: right;">-22.2 to -12.1</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-14.2</td>
+<td style="text-align: right;">-20.1 to -8.0</td>
+<td style="text-align: right;">72</td>
+</tr>
+<tr class="even">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Severe absence (50%+)</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-22.3</td>
+<td style="text-align: right;">-45.7 to +11.0</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-20.5</td>
+<td style="text-align: right;">-41.8 to +8.7</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-10.4</td>
+<td style="text-align: right;">-24.0 to +5.8</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">+7.7</td>
+<td style="text-align: right;">-6.1 to +23.4</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-10.0 to +14.4</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-10.1</td>
+<td style="text-align: right;">-22.1 to +3.8</td>
+<td style="text-align: right;">149</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-4.8</td>
+<td style="text-align: right;">-17.9 to +10.4</td>
+<td style="text-align: right;">134</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-5.3</td>
+<td style="text-align: right;">-18.8 to +10.5</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-8.1</td>
+<td style="text-align: right;">-21.8 to +7.9</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-11.1</td>
+<td style="text-align: right;">-25.3 to +5.7</td>
+<td style="text-align: right;">72</td>
+</tr>
+<tr class="odd">
+<td rowspan="66" style="text-align: left; vertical-align: top !important;">Becoming an academy</td>
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Overall absence</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-9.6</td>
+<td style="text-align: right;">-13.8 to -5.1</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-7.3</td>
+<td style="text-align: right;">-11.1 to -3.3</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-5.8 to -1.5</td>
+<td style="text-align: right;">207</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-3.6 to -0.4</td>
+<td style="text-align: right;">274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">-0.0 to +3.0</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">-0.3 to +3.7</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">-0.7 to +4.7</td>
+<td style="text-align: right;">325</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">-1.6 to +3.9</td>
+<td style="text-align: right;">294</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-0.3</td>
+<td style="text-align: right;">-3.2 to +2.6</td>
+<td style="text-align: right;">272</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-1.5</td>
+<td style="text-align: right;">-5.3 to +2.6</td>
+<td style="text-align: right;">164</td>
+</tr>
+<tr class="even">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Illness</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-5.0</td>
+<td style="text-align: right;">-10.0 to +0.3</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-7.4 to +3.1</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">-2.1 to +6.0</td>
+<td style="text-align: right;">207</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">-2.2 to +3.4</td>
+<td style="text-align: right;">274</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-1.5 to +3.7</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+0.4</td>
+<td style="text-align: right;">-2.9 to +3.8</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-1.3</td>
+<td style="text-align: right;">-5.5 to +3.1</td>
+<td style="text-align: right;">325</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-2.4</td>
+<td style="text-align: right;">-6.8 to +2.3</td>
+<td style="text-align: right;">294</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-1.6</td>
+<td style="text-align: right;">-6.1 to +3.2</td>
+<td style="text-align: right;">272</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-1.9</td>
+<td style="text-align: right;">-7.4 to +3.9</td>
+<td style="text-align: right;">164</td>
+</tr>
+<tr class="odd">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Other authorised</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-20.0</td>
+<td style="text-align: right;">-29.5 to -9.3</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-12.4</td>
+<td style="text-align: right;">-21.1 to -2.8</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-8.7</td>
+<td style="text-align: right;">-13.5 to -3.6</td>
+<td style="text-align: right;">207</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-8.2 to -0.8</td>
+<td style="text-align: right;">274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-3.3</td>
+<td style="text-align: right;">-6.7 to +0.1</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-8.5 to +0.7</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-3.1</td>
+<td style="text-align: right;">-9.1 to +3.2</td>
+<td style="text-align: right;">325</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-3.4</td>
+<td style="text-align: right;">-9.4 to +3.0</td>
+<td style="text-align: right;">294</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-6.4</td>
+<td style="text-align: right;">-12.6 to +0.2</td>
+<td style="text-align: right;">272</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-10.5</td>
+<td style="text-align: right;">-18.1 to -2.1</td>
+<td style="text-align: right;">164</td>
+</tr>
+<tr class="even">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Unauthorised</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-12.5</td>
+<td style="text-align: right;">-20.8 to -3.4</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-13.1</td>
+<td style="text-align: right;">-20.4 to -5.0</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">-11.8 to -2.0</td>
+<td style="text-align: right;">207</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-6.2 to +0.6</td>
+<td style="text-align: right;">274</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+0.3 to +6.4</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">-1.6 to +6.4</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">-1.8 to +8.3</td>
+<td style="text-align: right;">325</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">-3.2 to +7.9</td>
+<td style="text-align: right;">294</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-0.5</td>
+<td style="text-align: right;">-6.2 to +5.6</td>
+<td style="text-align: right;">272</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-9.0 to +4.9</td>
+<td style="text-align: right;">164</td>
+</tr>
+<tr class="odd">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Persistent absence (10%+)</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-7.7</td>
+<td style="text-align: right;">-13.6 to -1.4</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-4.5</td>
+<td style="text-align: right;">-9.6 to +1.0</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-3.2</td>
+<td style="text-align: right;">-6.5 to +0.3</td>
+<td style="text-align: right;">207</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-2.9</td>
+<td style="text-align: right;">-5.4 to -0.3</td>
+<td style="text-align: right;">274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+1.0</td>
+<td style="text-align: right;">-1.5 to +3.5</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-2.9 to +2.7</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-2.0</td>
+<td style="text-align: right;">-5.5 to +1.6</td>
+<td style="text-align: right;">325</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-4.0</td>
+<td style="text-align: right;">-7.6 to -0.2</td>
+<td style="text-align: right;">294</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-5.7</td>
+<td style="text-align: right;">-9.6 to -1.5</td>
+<td style="text-align: right;">272</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">-11.2 to -0.9</td>
+<td style="text-align: right;">164</td>
+</tr>
+<tr class="even">
+<td rowspan="11" style="text-align: left; vertical-align: top !important;">Severe absence (50%+)</td>
+<td style="text-align: right;">-5</td>
+<td style="text-align: right;">-13.8</td>
+<td style="text-align: right;">-26.4 to +1.0</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">-12.0</td>
+<td style="text-align: right;">-22.3 to -0.3</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-3</td>
+<td style="text-align: right;">-9.8</td>
+<td style="text-align: right;">-17.5 to -1.4</td>
+<td style="text-align: right;">207</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">-3.7</td>
+<td style="text-align: right;">-10.6 to +3.7</td>
+<td style="text-align: right;">274</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">reference</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-3.0</td>
+<td style="text-align: right;">-8.5 to +2.9</td>
+<td style="text-align: right;">374</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">-4.0 to +10.2</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">-6.7 to +10.3</td>
+<td style="text-align: right;">325</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-0.1</td>
+<td style="text-align: right;">-8.6 to +9.3</td>
+<td style="text-align: right;">294</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">-11.1 to +7.4</td>
+<td style="text-align: right;">272</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-7.9</td>
+<td style="text-align: right;">-19.3 to +5.1</td>
+<td style="text-align: right;">164</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div id="tbl-var" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7: Share of the variation in log absence at each level, after national year effects, and the share of all variation that the year effects themselves account for.
+</figcaption>
+<div aria-describedby="tbl-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of absence</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Region</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Local authority</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">School (lasting)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Year to year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">National year effects (of all)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Overall absence</td>
+<td style="text-align: right;">6%</td>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">66%</td>
+<td style="text-align: right;">23%</td>
+<td style="text-align: right;">38%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Illness</td>
+<td style="text-align: right;">7%</td>
+<td style="text-align: right;">14%</td>
+<td style="text-align: right;">38%</td>
+<td style="text-align: right;">41%</td>
+<td style="text-align: right;">22%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Medical appointments</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: right;">13%</td>
+<td style="text-align: right;">43%</td>
+<td style="text-align: right;">40%</td>
+<td style="text-align: right;">1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other authorised</td>
+<td style="text-align: right;">3%</td>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">48%</td>
+<td style="text-align: right;">44%</td>
+<td style="text-align: right;">17%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unauthorised</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">69%</td>
+<td style="text-align: right;">17%</td>
+<td style="text-align: right;">18%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Persistent absence (10%+)</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">68%</td>
+<td style="text-align: right;">24%</td>
+<td style="text-align: right;">33%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Severe absence (50%+)</td>
+<td style="text-align: right;">6%</td>
+<td style="text-align: right;">6%</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">37%</td>
+<td style="text-align: right;">31%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Method.</strong> Absence is modelled as log(% + 0.1), so effects read as % differences. The variance shares come from <code>lme4</code> models with year fixed effects and random intercepts for region, local authority and school. The within and between models are <code>fixest</code> regressions of log absence on the intake with school and year fixed effects (within) or year effects only (between). The event studies use <code>fixest::sunab</code>, which estimates each cohort’s path separately and averages, avoiding the bias of a single two-way fixed-effects estimate when changes are staggered; the reference is the year before the change, and the comparison schools are those that did not change in the period plus those yet to. A change is dated by the new URN’s opening date. Built by <code>R/09_absence_change.R</code>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

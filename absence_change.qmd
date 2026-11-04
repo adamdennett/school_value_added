@@ -1,0 +1,535 @@
+---
+title: "How school absence changes"
+subtitle: "Following every secondary school in England from 2016/17 to 2025/26: what stays with a school, what moves, and what happens when its intake, status or trust changes."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+A <- readRDS(here::here("data", "absence_change.rds"))
+OUT <- A$outcomes
+OUT_SHORT <- c(overall = "Overall", illness = "Illness", appointments = "Medical\nappointments",
+               auth_other = "Other\nauthorised", unauth = "Unauthorised", persistent = "Persistent\n(10%+)",
+               severe = "Severe\n(50%+)")
+OUT_LOW <- c(overall = "overall absence", illness = "illness absence", appointments = "medical appointments",
+             auth_other = "other authorised absence", unauth = "unauthorised absence",
+             persistent = "persistent absence", severe = "severe absence")
+tr  <- function(tp, col) A$trend[[col]][A$trend$tp == tp]
+vd  <- function(o, lev) 100 * A$var_dec$share[A$var_dec$outcome == o & A$var_dec$level == lev]
+cr  <- function(o, a, b) A$cors$r[A$cors$outcome == o & A$cors$a == a & A$cors$b == b]
+sa  <- function(o, col) A$shift$all[[col]][A$shift$all$outcome == o]
+sq  <- function(o, q, col) A$shift$by_fsm[[col]][A$shift$by_fsm$outcome == o & A$shift$by_fsm$fsm_q == q]
+ktop <- function(o, col) A$shift$keep_top[[col]][A$shift$keep_top$outcome == o]
+wbv <- function(o, m, t, col = "pct") A$wb[[col]][A$wb$outcome == o & A$wb$model == m & A$wb$term == t]
+wr2 <- function(o) 100 * A$wb$r2_within[A$wb$outcome == o & A$wb$model == "Within"][1]
+xm  <- function(t, col) A$x_move[[col]][A$x_move$term == t]
+it  <- function(tp, col) A$intake_trend[[col]][A$intake_trend$tp == tp]
+ATT <- bind_rows(lapply(A$es, `[[`, "att")) |>
+  mutate(pct = pct(est), lo = pct(est - 1.96 * se), hi = pct(est + 1.96 * se))
+att <- function(st, o, col = "pct") ATT[[col]][ATT$study == st & ATT$outcome == o]
+EV <- bind_rows(lapply(A$es[c("conversion", "trust")], `[[`, "event")) |>
+  mutate(pct = pct(est), lo = pct(est - 1.96 * se), hi = pct(est + 1.96 * se))
+evp <- function(st, o, r) EV$pct[EV$study == st & EV$outcome == o & EV$rel == r]
+nev <- function(k) sum(A$es[[k]]$n$n[A$es[[k]]$n$kind != "Never"])
+comp <- function(st, m, col = "est") A$es_comp[[col]][A$es_comp$study == st & A$es_comp$measure == m]
+X_LAB <- c(fsm = "Free school meals", sen_sup = "SEN support", ehcp = "EHC plans", eal = "EAL",
+           girls = "Girls", lsize = "Size")
+UNIT_LAB <- c(fsm = "5 points more pupils on FSM", sen_sup = "5 points more on SEN support",
+              ehcp = "1 point more with EHC plans", eal = "5 points more with EAL",
+              girls = "10 points more girls", lsize = "10% more pupils")
+P <- A$panel
+yrs <- function(x) paste0(substr(x, 1, 4), "/", substr(x, 5, 6))
+```
+
+::: {.callout-note}
+## Work in progress
+
+This page continues the [absence analysis](absence_causes.qmd). That page
+compares different schools in one year. This one follows the same schools
+over ten years. Every figure comes from published school-level data, so
+every result is about schools, not pupils.
+:::
+
+## Why follow schools over time
+
+Comparing schools in one year mixes up two things: what a school's pupils
+and community bring, and what the school does. Following the *same* school
+over time holds constant everything about it that does not change: its
+neighbourhood, its buildings, its reputation, most of its intake. What is
+left is change. So this page asks:
+
+1. How much of a school's absence is lasting, and how much moves from
+   year to year?
+2. Do schools keep their place?
+3. Who rose most between before the pandemic and now?
+4. When a school's own intake changes, does its absence change with it?
+5. What happens to absence when a school becomes an academy, or moves to a
+   new trust?
+
+## The data {#sec-data}
+
+- **Absence.** DfE's school-level absence for the autumn and spring terms,
+  2016/17 to 2025/26. It is the one file that covers every year on the same
+  basis, including 2025/26, whose full-year figures are not published
+  until 2027. 2019/20 was not collected. 2020/21 is shown in the trend but left
+  out of every model: in a year of lockdowns, pupils told to stay home were
+  not counted as absent.
+- **Schools.** Every state-funded secondary school: `r format(P$school_years, big.mark = ",")`
+  school-years, `r format(P$schools, big.mark = ",")` schools. A school
+  that becomes an academy, or moves trust, gets a new URN. The
+  `r format(P$urns, big.mark = ",")` URNs are joined into schools with
+  GIAS's one-to-one predecessor and successor links. Mergers,
+  amalgamations and splits end a school's record.
+- **Intake.** The January school census for 2018/19 and 2021/22 to
+  2024/25 (the performance tables' census files) and 2025/26 (the January
+  2026 school census and SEN files). Earlier years are no longer published
+  in the same form.
+
+## Ten years of absence {#sec-trend}
+
+```{r}
+#| label: fig-index
+#| fig-cap: "Absence in England's state-funded secondary schools, autumn and spring terms, indexed to 2018/19 = 100 (sessions-weighted for the reasons; % of pupils for persistent and severe). 2019/20 was not collected; 2020/21 (shaded) was a year of partial closure."
+#| fig-height: 4.6
+ix <- A$trend |>
+  transmute(tp, Overall = overall, Illness, `Other authorised`,
+            Unauthorised = `Unauthorised holiday` + `Other unauthorised`,
+            `Persistent (10%+)` = persistent, `Severe (50%+)` = severe) |>
+  tidyr::pivot_longer(-tp, names_to = "measure", values_to = "v") |>
+  group_by(measure) |> mutate(ix = 100 * v / v[tp == 201819L]) |> ungroup() |>
+  mutate(x = tp %/% 100)
+ix <- bind_rows(ix, tibble(x = 2019L, measure = unique(ix$measure))) |>
+  mutate(measure = factor(measure, c("Severe (50%+)", "Other authorised", "Unauthorised",
+                                     "Persistent (10%+)", "Overall", "Illness")))
+# spread the end labels so they do not collide
+lab <- ix |> filter(x == 2025) |> arrange(ix) |> mutate(y = ix)
+for (i in seq_len(nrow(lab))[-1]) lab$y[i] <- max(lab$y[i], lab$y[i - 1] + 11)
+ggplot(ix, aes(x, ix, colour = measure)) +
+  annotate("rect", xmin = 2019.5, xmax = 2020.5, ymin = -Inf, ymax = Inf, fill = PPURPLE) +
+  geom_hline(yintercept = 100, colour = LIGHT) +
+  geom_line(linewidth = 0.9, na.rm = TRUE) + geom_point(size = 1.8, na.rm = TRUE) +
+  geom_text(data = lab, aes(y = y, label = paste0(measure, "  ", round(ix))),
+            hjust = 0, nudge_x = 0.15, size = 3.3, show.legend = FALSE) +
+  scale_colour_manual(values = c(DPURPLE, BPURPLE, BLUE, MPURPLE, INK, GREY), guide = "none") +
+  scale_x_continuous(breaks = 2016:2025, labels = function(x) paste0(x, "/", substr(x + 1, 3, 4)),
+                     expand = expansion(mult = c(0.02, 0.3))) +
+  labs(x = NULL, y = "2018/19 = 100") + theme_note()
+```
+
+Absence across the autumn and spring terms rose from
+`r pp(tr(201819L, "overall"))`% of sessions in 2018/19 to
+`r pp(tr(202223L, "overall"))`% in 2022/23. It has eased only to
+`r pp(tr(202526L, "overall"))`% in 2025/26. Illness has fallen most of the
+way back. Unauthorised and other authorised absence have not.
+Severe absence, pupils missing half their schooling or more, has risen
+from `r pp(tr(201819L, "severe"))`% of pupils to
+`r pp(tr(202526L, "severe"))`%, and is still near its peak.
+
+## What stays with a school and what moves {#sec-variance}
+
+```{r}
+#| label: fig-variance
+#| fig-cap: "Where the variation in each kind of absence lies, once the national year-to-year swing is taken out: multilevel models of log absence with year effects and region, local authority and school random effects, 2016/17 to 2025/26 without 2020/21. 'Year to year' is a school's movement around its own lasting level."
+#| fig-height: 3.8
+LEV_COL <- c("Region" = GREY, "Local authority" = BLUE, "School (lasting)" = DPURPLE, "Year to year" = LPURPLE)
+vdf <- A$var_dec |>
+  mutate(level = factor(level, rev(names(LEV_COL))), out = factor(OUT_SHORT[outcome], rev(OUT_SHORT)))
+ggplot(vdf, aes(100 * share, out, fill = level)) +
+  geom_col(width = 0.7, colour = "white", linewidth = 0.5) +
+  geom_text(aes(label = ifelse(share >= 0.08, round(100 * share), "")), position = position_stack(vjust = 0.5),
+            colour = ifelse(vdf$level %in% c("School (lasting)", "Local authority", "Region"), "white", INK), size = 3.4) +
+  scale_fill_manual(values = LEV_COL, breaks = names(LEV_COL), name = NULL) +
+  scale_x_continuous(expand = c(0, 0), labels = function(x) paste0(x, "%")) +
+  labs(x = "% of the variation, after national year effects", y = NULL) + theme_note() +
+  theme(panel.grid.major.y = element_blank())
+```
+
+- **Most absence is lasting.** Once the national swing from year to year
+  is taken out, `r round(vd("overall", "School (lasting)"))`% of the
+  variation in overall absence, `r round(vd("unauth", "School (lasting)"))`%
+  of unauthorised and `r round(vd("persistent", "School (lasting)"))`% of
+  persistent absence is a school's lasting level. Its region and local
+  authority account for about a tenth; the rest is movement from year to
+  year.
+- **Illness moves more, and is more about place.** Only
+  `r round(vd("illness", "School (lasting)"))`% of the variation in illness
+  is lasting to a school, `r round(vd("illness", "Year to year"))`% moves
+  from year to year, and `r round(vd("illness", "Local authority"))`% is the
+  local authority. That fits the cross-section, where illness was the kind
+  of absence most tied to place.
+- **The national swing is large.** Year alone accounts for
+  `r round(100 * A$year_share[["overall"]])`% of all the variation in
+  overall absence over the period, and `r round(100 * A$year_share[["severe"]])`%
+  of severe. Any one school's change from last year is mostly the country's
+  change.
+
+## Do schools keep their place? {#sec-stability}
+
+```{r}
+#| label: fig-cors
+#| fig-cap: "Correlation between years of each school's absence relative to England that year (log scale), for the schools present in both years. 2020/21 is included here for completeness."
+#| fig-height: 7.2
+#| fig-width: 9
+cc <- A$cors |> filter(outcome %in% c("overall", "unauth", "illness", "severe"), a > b) |>
+  mutate(out = factor(sub("\n", " ", OUT_SHORT[outcome]), sub("\n", " ", OUT_SHORT)), A_ = yrs(a), B_ = yrs(b))
+ggplot(cc, aes(B_, A_, fill = r)) +
+  geom_tile(colour = "white", linewidth = 0.8) +
+  geom_text(aes(label = sprintf("%.2f", r), colour = r > 0.7), size = 2.9) +
+  scale_fill_gradientn(colours = c("#f7f4fb", LPURPLE, MPURPLE, BPURPLE, DPURPLE), limits = c(0.2, 1),
+                       oob = scales::squish, name = "Correlation") +
+  scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = INK), guide = "none") +
+  facet_wrap(~ out, ncol = 2) +
+  labs(x = NULL, y = NULL) + theme_note(11) +
+  theme(panel.grid = element_blank(), axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.key.width = unit(1.4, "cm"))
+```
+
+From one year to the next, schools barely move: the correlation of overall
+absence between 2024/25 and 2025/26 is `r pp(cr("overall", 202526L, 202425L), 2)`.
+Over longer stretches they do. Between 2018/19, before the pandemic, and
+2025/26 the correlation is `r pp(cr("overall", 202526L, 201819L), 2)` for
+overall absence, `r pp(cr("unauth", 202526L, 201819L), 2)` for
+unauthorised and only `r pp(cr("illness", 202526L, 201819L), 2)` for
+illness.
+
+Put another way, of the fifth of schools with the highest unauthorised
+absence before the pandemic (2016/17 to 2018/19),
+`r round(100 * ktop("unauth", "stay"))`% are still in the top fifth now
+(2023/24 to 2025/26). For overall absence it is
+`r round(100 * ktop("overall", "stay"))`%. If nothing changed, it would be
+20%. If nothing moved, 100%. A school's place is sticky, but it is not
+fixed: more than a third of the schools with the most absence before the
+pandemic no longer have.
+
+## Before the pandemic and now {#sec-shift}
+
+```{r}
+#| label: fig-shift
+#| fig-cap: "Average absence before the pandemic (2016/17 to 2018/19, pale) and now (2023/24 to 2025/26, dark), by fifth of schools on free school meals in 2018/19. Labels: the rise as % of where each group started."
+#| fig-height: 5.4
+QL <- A$shift$base_q |> mutate(lab = paste0(c("Fewest", "2nd", "3rd", "4th", "Most"), "\n",
+                                            round(lo), "–", round(hi), "%"))
+sh <- A$shift$by_fsm |> filter(outcome %in% c("overall", "unauth", "persistent", "severe")) |>
+  mutate(out = factor(sub("\n", " ", OUT_SHORT[outcome]), sub("\n", " ", OUT_SHORT)), q = factor(QL$lab[fsm_q], QL$lab))
+ggplot(sh, aes(q)) +
+  geom_segment(aes(xend = q, y = pre, yend = post), colour = LIGHT, linewidth = 2) +
+  geom_point(aes(y = pre), colour = MPURPLE, size = 3) +
+  geom_point(aes(y = post), colour = DPURPLE, size = 3) +
+  geom_text(aes(y = post, label = sprintf("+%.0f%%", pct)), vjust = -1, size = 3.1, colour = INK) +
+  facet_wrap(~ out, scales = "free_y", ncol = 2) +
+  scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.18))) +
+  labs(x = "Schools by share of pupils on free school meals, 2018/19 (fifths)", y = "%") + theme_note(11)
+```
+
+```{r}
+#| label: tbl-shift
+#| tbl-cap: "Average school absence before the pandemic and now, schools with at least two years in each period."
+A$shift$all |> mutate(o = factor(outcome, names(OUT))) |> arrange(o) |>
+  transmute(`Kind of absence` = OUT[outcome], Schools = format(schools, big.mark = ","),
+            `2016/17 to 2018/19` = pp(pre, 2), `2023/24 to 2025/26` = pp(post, 2),
+            `Change (points)` = sgn(pp, 2), `Change (%)` = sgn(pct, 0)) |>
+  kt(align = "lrrrrr")
+```
+
+- **The rise was broadly proportional.** Schools with the fewest pupils on
+  free school meals saw overall absence rise by
+  `r round(sq("overall", 1, "pct"))`%. Schools with the most saw
+  `r round(sq("overall", 5, "pct"))`%. In percentage points, the gap
+  widened: `r pp(sq("overall", 1, "pp"))` points against
+  `r pp(sq("overall", 5, "pp"))`.
+- **Unauthorised absence doubled almost everywhere**, slightly less in
+  the poorest schools in relative terms
+  (`r sgn(sq("unauth", 5, "pct"), 0)`% against `r sgn(sq("unauth", 1, "pct"), 0)`%)
+  but by far more in points.
+- **Severe absence roughly tripled in every fifth**, from
+  `r pp(sq("severe", 1, "pre"))`% of pupils to `r pp(sq("severe", 1, "post"))`%
+  in the least disadvantaged schools and from `r pp(sq("severe", 5, "pre"))`%
+  to `r pp(sq("severe", 5, "post"))`% in the most.
+- **Illness rose least in the poorest schools**
+  (`r sgn(sq("illness", 5, "pct"), 0)`% against `r sgn(sq("illness", 2, "pct"), 0)`%
+  in the second fifth).
+
+So the pandemic did not reorder schools so much as scale them up. A
+school's absence now is best compared with where it was *relative to
+England* before, not with its own pre-pandemic figure.
+
+## When a school's own intake changes {#sec-within}
+
+The cross-section shows that schools with more pupils on free school meals
+or SEN support have more absence. That could be because of those pupils,
+or because of everything else that goes with being that kind of school.
+Following the same school as its intake changes separates the two. If a
+school's absence moves with its own intake, the intake matters directly.
+If not, the cross-school pattern is mostly about the kind of school and
+community.
+
+```{r}
+#| label: fig-within
+#| fig-cap: "Difference in absence (%) with a change in intake, between schools (pooled, with year effects; pale) and within the same school over time (school and year fixed effects; dark), 2018/19 and 2021/22 to 2025/26, with 95% intervals clustered by school."
+#| fig-height: 6.2
+wd <- A$wb |> filter(outcome %in% c("overall", "unauth", "persistent", "severe")) |>
+  mutate(out = factor(sub("\n", " ", OUT_SHORT[outcome]), sub("\n", " ", OUT_SHORT)),
+         lab = factor(UNIT_LAB[term], rev(UNIT_LAB)),
+         model = factor(ifelse(model == "Within", "Within the same school", "Between schools"),
+                        c("Between schools", "Within the same school")))
+ggplot(wd, aes(pct, lab, colour = model)) +
+  geom_vline(xintercept = 0, colour = LIGHT) +
+  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge(width = 0.6), linewidth = 0.8) +
+  geom_point(position = position_dodge(width = 0.6), size = 2.2) +
+  facet_wrap(~ out, ncol = 2, scales = "free_x") +
+  scale_colour_manual(values = c("Between schools" = MPURPLE, "Within the same school" = DPURPLE), name = NULL) +
+  labs(x = "% difference in absence", y = NULL) + theme_note(11) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+- **Between schools, disadvantage goes with far more unauthorised
+  absence than within one.** Across schools, five points more pupils on
+  free school meals goes with `r sgn(wbv("unauth", "Between", "fsm"), 0)`%
+  unauthorised absence. When one school's own share rises by as much, its
+  unauthorised absence rises by `r sgn(wbv("unauth", "Within", "fsm"), 0)`%.
+  Most of the cross-school gradient is about the kind of school and
+  community, not the marginal pupil.
+- **The same holds for SEN support**: `r sgn(wbv("unauth", "Between", "sen_sup"), 0)`%
+  between schools, `r sgn(wbv("unauth", "Within", "sen_sup"), 0)`% within.
+- **For overall absence the two are closer** (`r sgn(wbv("overall", "Between", "fsm"), 1)`%
+  and `r sgn(wbv("overall", "Within", "fsm"), 1)`% for FSM), so a school
+  taking more disadvantaged pupils should expect somewhat more absence.
+- **Intake change explains little of how a school's absence moves.** The
+  changes in intake account for `r pp(wr2("overall"))`% of the
+  within-school variation in overall absence, `r pp(wr2("unauth"))`% of
+  unauthorised and `r pp(wr2("persistent"))`% of persistent. Intake does
+  not move much within a school (@tbl-move), and when absence moves, it is
+  mostly something else.
+
+```{r}
+#| label: tbl-move
+#| tbl-cap: "How much intake varies between schools and within a school over time (standard deviations, 2018/19 and 2021/22 to 2025/26)."
+A$x_move |> transmute(Characteristic = A$x[term], `Between schools` = pp(between_sd, 2),
+                      `Within a school over time` = pp(within_sd, 2)) |> kt(align = "lrr")
+```
+
+The share of pupils on free school meals almost doubled over the period
+(`r pp(it(201819L, "fsm"))`% in 2018/19, `r pp(it(202526L, "fsm"))`% in
+2025/26), much of it because pupils who became eligible under Universal
+Credit kept their eligibility. The year effects take out the national rise,
+but where it rose faster it may not mean more poverty. Leaving out
+2025/26, whose intake comes from a different file, makes little difference
+(see [the full results](#sec-full)).
+
+## Becoming an academy, or changing trust {#sec-events}
+
+Two kinds of change give a school a new URN, so they can be dated
+precisely:
+
+- **Becoming an academy.** `r nev("conversion")` maintained schools
+  converted between 2017/18 and 2025/26 and can be followed either side,
+  compared with schools that were maintained throughout and those that had
+  yet to convert.
+- **A change of trust.** `r nev("trust")` academies moved to a new trust,
+  compared with academies that stayed put.
+
+Each is an event study (Sun and Abraham's estimator, with school and year
+effects): how absence moved, relative to similar schools that did not
+change, in the years before and after. The years count only the years with
+data, so the pandemic gap is one step.
+
+```{r}
+#| label: fig-events
+#| fig-cap: "Absence before and after a school becomes an academy (top) or moves to a new trust (bottom), relative to the year before (0) and to schools that did not change, % with 95% intervals clustered by school. Event times with fewer than 25 schools are not shown."
+#| fig-height: 6.4
+ev <- EV |> filter(outcome %in% c("overall", "unauth", "persistent", "severe"), rel >= -5, rel <= 5,
+                   is.na(schools) | schools >= 25) |>
+  mutate(out = factor(sub("\n", " ", OUT_SHORT[outcome]), sub("\n", " ", OUT_SHORT)),
+         study = factor(study, c("Becoming an academy", "A change of trust")))
+ggplot(ev, aes(rel, pct)) +
+  annotate("rect", xmin = -0.5, xmax = Inf, ymin = -Inf, ymax = Inf, fill = PPURPLE, alpha = 0.6) +
+  geom_hline(yintercept = 0, colour = GREY) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = LPURPLE, alpha = 0.7) +
+  geom_line(colour = DPURPLE, linewidth = 0.8) + geom_point(colour = DPURPLE, size = 1.8) +
+  facet_grid(study ~ out) +
+  scale_x_continuous(breaks = seq(-5, 5, 1)) +
+  labs(x = "Years before (−) and after the change (years with data)", y = "% difference") +
+  theme_note(10.5) + theme(strip.text.y = element_text(angle = 0, hjust = 0))
+```
+
+```{r}
+#| label: tbl-events
+#| tbl-cap: "Average difference in absence in the years after the change (% with 95% interval), and in the pupils."
+ATT |> filter(study %in% c("Becoming an academy", "Converter academies only", "A change of trust")) |>
+  mutate(o = factor(outcome, names(OUT)), s = factor(study, c("Becoming an academy", "Converter academies only", "A change of trust"))) |>
+  arrange(s, o) |>
+  transmute(s, Kind = OUT[outcome], v = sprintf("%+.1f%% (%+.1f to %+.1f)", pct, lo, hi)) |>
+  tidyr::pivot_wider(names_from = s, values_from = v) |>
+  bind_rows(A$es_comp |>
+    mutate(v = ifelse(grepl("log", measure), sprintf("%+.1f%% (%+.1f to %+.1f)", pct(est), pct(est - 1.96 * se), pct(est + 1.96 * se)),
+                      sprintf("%+.1f (%+.1f to %+.1f)", est, est - 1.96 * se, est + 1.96 * se)),
+           Kind = sub(" \\(log\\)", "", measure)) |>
+    select(study, Kind, v) |> tidyr::pivot_wider(names_from = study, values_from = v)) |>
+  mutate(across(everything(), ~ coalesce(.x, "–"))) |>
+  kt(align = "lrrr") |>
+  kableExtra::pack_rows("Absence", 1, 6) |> kableExtra::pack_rows("Pupils", 7, 9)
+```
+
+**Becoming an academy makes no clear difference.** In the years after
+conversion, overall absence was within `r pp(abs(att("Becoming an academy", "overall")))`%
+of schools that stayed maintained (95% interval
+`r sgn(att("Becoming an academy", "overall", "lo"), 1)`% to
+`r sgn(att("Becoming an academy", "overall", "hi"), 1)`%). But the converting
+schools were already on a different path: their absence was rising
+relative to schools that stayed maintained in the years before, and that
+rise stopped. So the honest reading is no visible effect of conversion
+itself, among schools whose trajectory was already diverging.
+
+**A change of trust is followed by lower absence.** In the years after a
+move, unauthorised absence was `r round(-att("A change of trust", "unauth"))`%
+lower and persistent absence `r round(-att("A change of trust", "persistent"))`%
+lower, relative to academies that stayed with their trust. Overall absence
+was `r round(-att("A change of trust", "overall"))`% lower. Three things to
+weigh:
+
+1. **The schools were getting worse first.** Absence rose in the two or
+   three years before the move (persistent absence three years before was
+   `r round(-evp("A change of trust", "persistent", -3))`% lower than in the
+   year before), which is often why a school is moved. Some of the fall is
+   recovery. But persistent and unauthorised absence fell well below where
+   they had been three years before the move.
+2. **The pupils did not get easier.** The share on free school meals rose
+   by `r sgn(comp("A change of trust", "Free school meals (points)"), 1)`
+   points relative to other academies, and the roll changed little.
+3. **Recording may change too.** A new trust brings new attendance
+   policies, and how sessions are coded is partly a school's choice. Other
+   authorised absence also fell, so this is not just unauthorised absence
+   being authorised instead.
+
+## What it means {#sec-means}
+
+::: {.callout-tip}
+## For heads and governors
+
+1. **Judge your absence against England's year, not your own last
+   year.** The national swing is the largest single thing in any school's
+   change from one year to the next.
+2. **Compare with where you stood relative to England before the pandemic,
+   not with your pre-pandemic figures.** Everyone's rose, and roughly in
+   proportion.
+3. **A school's absence is mostly lasting, but not fixed.** Two-thirds of
+   the variation is a school's own level, and the same schools tend to stay
+   high. More than a third of the highest-absence schools before the
+   pandemic are no longer in the top fifth.
+4. **A change in intake is rarely the reason absence moved.** Within a
+   school, changes in its pupils explain only a few per cent of changes in
+   absence.
+5. **What happens in the school seems to matter.** A change of trust,
+   which usually means new leadership and new attendance policies, is
+   followed by lower unauthorised and persistent absence, even with more
+   disadvantaged pupils. To see who has done it with an intake like yours,
+   [Find a twin](twins.qmd).
+:::
+
+For policy, the same results say that the post-pandemic rise is a national
+shift, not something concentrated in a few kinds of school, and that
+structural change (becoming an academy) is not by itself a lever on
+attendance. What a new trust does might be.
+
+## What this cannot tell us {#sec-limits}
+
+- **It is about schools, not pupils.** A school's absence can change
+  because its pupils change, or because the same pupils attend differently.
+  Published data cannot tell these apart.
+- **Event studies are not experiments.** Schools are moved to a new trust
+  for reasons, often falling standards. The comparison schools did not face
+  the same pressures, and the pre-move rise shows it.
+- **Recording practice varies.** Whether a session is coded as illness,
+  authorised or unauthorised is partly a school's choice, and can change
+  with a new head or trust.
+- **The intake series is short and its FSM measure shifted.** Intake by
+  year is available for six years, and eligibility under Universal Credit
+  raised FSM shares in ways that do not all reflect more poverty.
+- **Chains break.** A school that merges or splits starts a new record, so
+  the most disrupted schools are under-represented.
+
+## Next steps {#sec-next}
+
+1. **Each school's own path**, relative to England, on the area pages and
+   in [Find a twin](twins.qmd)'s fact cards.
+2. **Illness or recording?** Whether high-illness places, such as
+   Brighton and Hove, record absence differently.
+3. **The severe tail**, which has tripled and is not falling, on its own.
+4. **Trusts.** Whether particular trusts' schools move together after
+   joining, which would point to what the trust does.
+5. **Back into value added**: absence against intake, by kind, as a
+   candidate for a future version of the model.
+
+## The full results {#sec-full}
+
+::: {.panel-tabset}
+
+### Within against between
+
+```{r}
+#| label: tbl-wb-full
+#| tbl-cap: "Difference in each kind of absence (%) with the change shown, between schools (pooled with year effects) and within the same school (school and year fixed effects), 95% intervals clustered by school."
+tibble::as_tibble(A$wb) |> mutate(o = factor(outcome, names(OUT))) |> arrange(o, desc(model), match(term, names(UNIT_LAB))) |>
+  transmute(`Kind of absence` = OUT[outcome], Model = model, Change = UNIT_LAB[term],
+            `%` = sgn(pct, 1), `95% interval` = sprintf("%+.1f to %+.1f", lo, hi)) |>
+  kt(align = "lllrr") |> kableExtra::collapse_rows(columns = 1:2, valign = "top")
+```
+
+Without 2025/26, overall absence within a school rises
+`r sgn(A$wb_check$pct[A$wb_check$outcome == "overall" & A$wb_check$term == "fsm"], 1)`%
+with five points more FSM (against `r sgn(wbv("overall", "Within", "fsm"), 1)`%
+with it), and unauthorised `r sgn(A$wb_check$pct[A$wb_check$outcome == "unauth" & A$wb_check$term == "fsm"], 1)`%
+(against `r sgn(wbv("unauth", "Within", "fsm"), 1)`%).
+
+### Who rose most
+
+```{r}
+#| label: tbl-shift-reg
+#| tbl-cap: "The rise in each kind of absence from 2016/17–2018/19 to 2023/24–2025/26 (difference in log absence, as %) with one standard deviation more of each characteristic in 2018/19, with region effects; heteroskedasticity-robust 95% intervals."
+tibble::as_tibble(A$shift$reg) |> mutate(o = factor(outcome, names(OUT)), p = pct(est), lo = pct(est - 1.96 * se), hi = pct(est + 1.96 * se)) |>
+  arrange(o, match(term, names(X_LAB))) |>
+  transmute(`Kind of absence` = OUT[outcome], Characteristic = A$x[term],
+            `% per SD` = sgn(p, 1), `95% interval` = sprintf("%+.1f to %+.1f", lo, hi)) |>
+  kt(align = "llrr") |> kableExtra::collapse_rows(columns = 1, valign = "top")
+```
+
+### Event studies
+
+```{r}
+#| label: tbl-ev-full
+#| tbl-cap: "Event-time estimates (% relative to the year before the change), all outcomes, with the number of changing schools observed at each event time."
+tibble::as_tibble(EV) |> filter(rel >= -5, rel <= 5) |> mutate(o = factor(outcome, names(OUT))) |> arrange(study, o, rel) |>
+  transmute(Study = study, `Kind of absence` = OUT[outcome], `Event time` = rel,
+            `%` = sgn(pct, 1), `95% interval` = ifelse(rel == -1, "reference", sprintf("%+.1f to %+.1f", lo, hi)),
+            Schools = schools) |>
+  kt(align = "llrrrr") |> kableExtra::collapse_rows(columns = 1:2, valign = "top") |>
+  kableExtra::scroll_box(height = "420px")
+```
+
+### Variance shares
+
+```{r}
+#| label: tbl-var
+#| tbl-cap: "Share of the variation in log absence at each level, after national year effects, and the share of all variation that the year effects themselves account for."
+A$var_dec |> select(outcome, level, share) |>
+  tidyr::pivot_wider(names_from = level, values_from = share) |>
+  mutate(o = factor(outcome, names(OUT))) |> arrange(o) |>
+  transmute(`Kind of absence` = OUT[outcome],
+            across(c(Region, `Local authority`, `School (lasting)`, `Year to year`), ~ paste0(round(100 * .x), "%")),
+            `National year effects (of all)` = paste0(round(100 * A$year_share[outcome]), "%")) |>
+  kt(align = "lrrrrr")
+```
+
+:::
+
+**Method.** Absence is modelled as log(% + 0.1), so effects read as %
+differences. The variance shares come from `lme4` models with year fixed
+effects and random intercepts for region, local authority and school. The
+within and between models are `fixest` regressions of log absence on the
+intake with school and year fixed effects (within) or year effects only
+(between). The event studies use `fixest::sunab`, which estimates each
+cohort's path separately and averages, avoiding the bias of a single
+two-way fixed-effects estimate when changes are staggered; the reference is
+the year before the change, and the comparison schools are those that did
+not change in the period plus those yet to. A change is dated by the new
+URN's opening date. Built by `R/09_absence_change.R`.

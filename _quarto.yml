@@ -10,6 +10,7 @@ project:
     - districts.qmd
     - bh_effect.qmd
     - absence_causes.qmd
+    - absence_change.qmd
     - twins.qmd
     - areas/*.qmd
     - roadmap.qmd
@@ -53,8 +54,12 @@ website:
         menu:
           - href: bh_effect.qmd
             text: "Brighton and Hove"
-      - href: absence_causes.qmd
-        text: "Absence"
+      - text: "Absence"
+        menu:
+          - href: absence_causes.qmd
+            text: "What goes with absence"
+          - href: absence_change.qmd
+            text: "How absence changes"
       - href: twins.qmd
         text: "Find a twin"
       - href: roadmap.qmd

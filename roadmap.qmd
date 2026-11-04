@@ -46,6 +46,12 @@ subtitle: "What v2.1 does now, and what comes next."
       better on absence, attainment or value added, on a chart and a map,
       with fact cards side by side. Linked from the absence page and every
       area page, and every comparison has its own link.
+- [x] **[How school absence changes](absence_change.qmd)** (started).
+      Every secondary school followed from 2016/17 to 2025/26 through
+      academy conversion and changes of trust: what is lasting and what
+      moves, whether schools keep their place, who rose most since the
+      pandemic, whether absence moves when a school's own intake does, and
+      event studies of becoming an academy and of a change of trust.
 - [x] **The explorer.** Ofsted colours that work across both inspection
       regimes, in each palette, and the spread of schools on the map
       beneath it, as on the Sussex pages.
@@ -87,11 +93,12 @@ subtitle: "What v2.1 does now, and what comes next."
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.
 - [ ] **What causes school-level absence, continued.** The cross-section
-      is done ([above](#done-absence)). Next:
-      within-school change over time, whether high-illness places such as
-      Brighton and Hove record absence differently, the severe tail on its
-      own, and absence against intake by kind as a candidate for a future
-      version of the model.
+      and change over time are under way ([above](#done-absence)). Next:
+      each school's own path relative to England on the area pages and in
+      Find a twin, whether high-illness places such as Brighton and Hove
+      record absence differently, the severe tail on its own, whether
+      particular trusts' schools move together, and absence against intake
+      by kind as a candidate for a future version of the model.
 - [ ] **Twins, further.** Weight the matching by what matters for the
       measure chosen, add the twins' value added over time to the fact
       cards, and a printable comparison for a governors' meeting.
