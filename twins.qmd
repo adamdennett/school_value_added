@@ -1,0 +1,129 @@
+---
+title: "Find a twin"
+subtitle: "Choose a school and find the schools in England most like it in intake and setting, then the look-alikes that do better on absence, attainment or value added."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+AC <- readRDS(here::here("data", "absence_causes.rds"))
+V <- load_va()
+L <- AC$local$schools
+w <- va_wide(V)
+# Each school against similar schools in its own authority, 2025/26
+# (the national absence models' school-level residuals, as %)
+rs <- AC$resid |> filter(outcome %in% c("overall", "unauth")) |>
+  transmute(URN, outcome = paste0("r_", outcome), r = 100 * (exp(r_2526) - 1)) |>
+  tidyr::pivot_wider(names_from = outcome, values_from = r)
+ADM <- c("SEL" = "Selective", "OTHER NON SEL" = "Non-selective",
+         "NON SEL IN HIGHLY SEL AREA" = "Non-selective, selective area")
+d <- L |>
+  left_join(w |> select(URN, lad, gor_name, att8, va_all = va_shrunk_all, va_dis = va_shrunk_disadvantaged,
+                        l4, run_by, ofsted_latest), by = "URN") |>
+  left_join(rs, by = "URN") |>
+  left_join(readRDS(here::here("data", "school_context.rds")) |> select(URN, run_by_nat), by = "URN") |>
+  mutate(run_by = coalesce(run_by, run_by_nat)) |>
+  transmute(URN, n = SCHNAME, la = as.character(la), lad = coalesce(lad, as.character(la)),
+            rg = as.character(region),
+            fsm, ks2 = ks2_c, eal, wbri, mobile, girls, sen = sen_sup, ehcp, semh, l4z = z_l4, l4,
+            pupils = round(exp(size)), size,
+            adm = unname(coalesce(ADM[as.character(ADMPOL_PT)], as.character(ADMPOL_PT))),
+            sixth = ifelse(sixth, "Has a sixth form", "11-16"),
+            place = as.character(place), faith = ifelse(faith, "Religious character", "None"),
+            gov = as.character(mat), run_by, ofsted = ofsted_latest,
+            overall, illness, unauth, persistent, severe, r_overall, r_unauth,
+            att8, va_all, va_dis) |>
+  mutate(across(where(is.double), ~ round(.x, 3)))
+# Areas: each school sits in a region, a local authority and a district
+areas <- list(region = sort(unique(d$rg)), la = sort(unique(d$la)), district = sort(unique(d$lad)))
+payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)))
+```
+
+::: {.callout-note}
+## How to use it
+
+1. **Choose a school.** Pick a region, local authority or district, then a
+   school within it.
+2. **Choose what to match on.** Matching uses intake and setting only, never
+   results or attendance.
+3. **Closest twins** are the schools most like yours anywhere in England.
+4. **Anti-twins** are the look-alikes, from the 50 (or 25, or 100) most
+   similar, that do furthest *better* than yours on the measure you choose:
+   - lower absence of a kind;
+   - higher value added or Attainment 8;
+   - or absence and value added together.
+
+Click a twin to compare its fact card with your school's. The address bar
+keeps your choice, so a link takes someone else to the same comparison.
+:::
+
+```{r payload}
+#| output: asis
+cat("<script>window.TWINS = ", jsonlite::toJSON(payload, dataframe = "rows", na = "null", auto_unbox = TRUE, digits = 3),
+    ";</script>\n", sep = "")
+```
+
+```{=html}
+<style>
+.tw-bar { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 8px 0 6px; }
+.tw-ctl { display: flex; flex-direction: column; font-size: 12px; color: #6b6680; font-weight: 600; }
+.tw-ctl select { font-size: 14px; padding: 3px 6px; border: 1px solid #d3cde0; border-radius: 4px; max-width: 290px; color: #1a1a2e; }
+.tw-groups { font-size: 13px; margin: 6px 0 12px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.tw-groups > span { font-weight: 600; color: #6b6680; }
+.tw-summary { background: #eedeff; border-radius: 6px; padding: 10px 14px; margin: 8px 0 12px; }
+.tw-summary p { margin: 0; }
+.tw-note { font-size: 12px; color: #6b6680; margin: 4px 0; }
+.tw-t td.r, .tw-t th.r { text-align: right; }
+.tw-t tr.tw-focal td { background: #f6f0ff; font-weight: 600; }
+.tw-t tr.tw-sel td { background: #eedeff; }
+.tw-card { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tw-card th { text-align: left; padding: 6px; vertical-align: bottom; color: #361a54; width: 36%; }
+.tw-card th:first-child { width: 28%; }
+.tw-card td { padding: 3px 6px; border-bottom: 1px solid #f0ecf5; }
+.tw-card tr.tw-h td { font-weight: 700; color: #361a54; padding-top: 10px; border-bottom: 2px solid #ddbdff; }
+.tw-sub { font-weight: 400; font-size: 12px; color: #6b6680; }
+.tw-better { background: #d9f0d3; }
+.tw-worse { background: #e7d4e8; }
+.tw-h3 { margin-top: 1.2em; }
+.tw-table, .tw-cards { overflow-x: auto; }
+@media (max-width: 600px) { .tw-ctl select { max-width: 100%; } .tw-bar { flex-direction: column; } }
+</style>
+<div id="twins-app"></div>
+<script src="twins.js"></script>
+```
+
+## How the matching works {#sec-how}
+
+Every school is described by the characteristics the
+[absence models](absence_causes.qmd) use, in groups you can switch on or off:
+
+- **Pupils:** disadvantage (FSM), KS2 prior attainment, EAL, White British,
+  joining mid-phase, and the share of girls.
+- **Needs:** SEN support, EHC plans, and social, emotional and mental health
+  need.
+- **Neighbourhood and place:** neighbourhood education, and rural or urban.
+- **The school:** size, admissions, sixth form, and religious character.
+
+For each measured characteristic, the difference between two schools is
+taken in standard deviations, capped at three. For each category, it is 0
+if they match and 1 if not. The average across the characteristics is the
+distance, and *similarity* is one minus it, as a percentage. This is a form
+of Gower's distance, as in the original project's twin finder. Every
+characteristic counts equally; none is weighted by how much it matters to
+absence or results.
+
+Similar intake is not the same as identical circumstances. A twin can
+differ in what the data does not see: its pupils' health, its community,
+its buildings, its staffing. An anti-twin that does much better is a reason
+to ask what it does differently, not proof that copying it would work.
+
+**Data.** The data for each kind of measure is:
+
+- **Absence:** autumn and spring 2025/26.
+- **Characteristics:** the January 2026 school census and SEN data.
+- **Results:** Attainment 8 for `r payload$gy`; Value Added v2.1 over
+  2021/22 to 2024/25, shrunk.
+- **Absence against similar schools:** within the school's own authority,
+  as on the [absence page](absence_causes.qmd#sec-school).
+
+All of it is published school-level data.

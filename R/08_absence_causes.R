@@ -291,7 +291,7 @@ smear <- sapply(names(OUTCOMES), function(o) {
   b <- coefs |> filter(outcome == o)
   mean(exp(ly_all[, o] - as.vector(MM[, b$term] %*% b$b)))
 })
-local <- list(schools = dat |> select(URN, SCHNAME, la, region, all_of(names(OUTCOMES))),
+local <- list(schools = dat |> select(URN, SCHNAME, la, region, all_of(names(OUTCOMES)), all_of(names(CONT)), all_of(names(FACT))),
               mm = MM, ly = ly_all, col_group = col_group, smear = smear)
 
 # Where the national outcomes sit, for the text

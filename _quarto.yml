@@ -10,11 +10,13 @@ project:
     - districts.qmd
     - bh_effect.qmd
     - absence_causes.qmd
+    - twins.qmd
     - areas/*.qmd
     - roadmap.qmd
   resources:
     - fonts/
     - .nojekyll
+    - twins.js
     - data/va_v2_schools.csv
     - data/va_2526_provisional.csv
 
@@ -53,6 +55,8 @@ website:
             text: "Brighton and Hove"
       - href: absence_causes.qmd
         text: "Absence"
+      - href: twins.qmd
+        text: "Find a twin"
       - href: roadmap.qmd
         text: Roadmap
     right:

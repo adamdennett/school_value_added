@@ -671,6 +671,14 @@ rsd <- AC$resid |> filter(URN %in% w$URN, outcome %in% c("overall", "unauth", "s
   inner_join(w |> select(URN, SCHNAME), by = "URN")
 both_hi <- rsd |> filter(outcome == "unauth", r_2425 > 20, r_2526 > 20) |> arrange(desc(r_2526))
 both_lo <- rsd |> filter(outcome == "unauth", r_2425 < -20, r_2526 < -20) |> arrange(r_2526)
+# A link into Find a twin, preset to this area (and a school, if given)
+twin_url <- function(urn = NULL) {
+  lv <- if (TIER == "district") "district" else "la"
+  ar <- if (TIER == "district" || TIER == "la") rep(NAME, max(1, length(urn))) else
+    if (is.null(urn)) rep("Brighton and Hove", 1) else w$LANAME[match(urn, w$URN)]
+  u <- paste0("@@ROOT@@twins.html?level=", lv, "&area=", vapply(ar, URLencode, "", reserved = TRUE))
+  if (is.null(urn)) u else paste0(u, "&urn=", urn)
+}
 nm <- function(d) if (nrow(d) <= FEW) paste0("**", and_list(d$SCHNAME), "**") else paste0("**", nrow(d), " schools**")
 ```
 
@@ -684,7 +692,9 @@ In short:
   differences persist from year to year.
 
 The table compares each of `r NAME`'s schools with similar schools in its
-own authority, in 2024/25 and 2025/26.
+own authority, in 2024/25 and 2025/26. Click a school to open it in
+[Find a twin](`r twin_url()`), which finds its look-alikes across England,
+and the look-alikes that do much better.
 
 `r if (nrow(both_hi)) paste0("- ", nm(both_hi), " ", vb(nrow(both_hi), "has", "have"), " unauthorised absence more than 20% above similar schools in both years. That is the pattern worth asking about.") else "- **No school** here has unauthorised absence more than 20% above similar schools in both years."`
 `r if (nrow(both_lo)) paste0("- ", nm(both_lo), " ", vb(nrow(both_lo), "has", "have"), " unauthorised absence more than 20% below similar schools in both years. What ", vb(nrow(both_lo), "it does", "they do"), " may be worth sharing.") else ""`
@@ -694,11 +704,11 @@ own authority, in 2024/25 and 2025/26.
 fp <- function(x) ifelse(is.na(x), "", sprintf("%+.0f%%", x))
 rsd |> tidyr::pivot_wider(id_cols = c(URN, SCHNAME), names_from = outcome, values_from = c(r_2425, r_2526)) |>
   arrange(desc(r_2526_unauth)) |>
-  transmute(School = SCHNAME,
+  transmute(School = sprintf("<a href=\"%s\">%s</a>", twin_url(URN), htmltools::htmlEscape(SCHNAME)),
             `Overall 24/25` = fp(r_2425_overall), `Overall 25/26` = fp(r_2526_overall),
             `Unauthorised 24/25` = fp(r_2425_unauth), `Unauthorised 25/26` = fp(r_2526_unauth),
             `Severe 24/25` = fp(r_2425_severe), `Severe 25/26` = fp(r_2526_severe)) |>
-  kt(align = "lrrrrrr")
+  kt(align = "lrrrrrr", escape = FALSE)
 ```
 
 **Suspensions** were `r sprintf("%.1f", ex_at(NAME))` episodes per 100

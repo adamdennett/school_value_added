@@ -396,7 +396,11 @@ A$school_spread |> mutate(o = factor(outcome, names(OUT))) |> arrange(o) |>
    - work with families. Parental engagement is the one approach with
      consistent support from randomised trials, though most were in the
      United States.
-6. **Schools with a sixth form** have `r sg(e("sixthTRUE", "overall"))`
+6. **[Find a twin](twins.qmd)** finds the schools in England most like
+   yours in intake and setting. It also finds anti-twins: the look-alikes
+   with much lower absence, or much higher value added. These are the
+   schools worth calling.
+7. **Schools with a sixth form** have `r sg(e("sixthTRUE", "overall"))`
    more absence among their 11-16 pupils than comparable 11-16 schools.
    That is worth a look in 11-18 schools.
 :::

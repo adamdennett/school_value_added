@@ -96,6 +96,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/06_bh_effect.R` | geographical effects: Brighton and Hove's authority effect, term by term (`bh_effect.qmd`) |
 | `R/07_v21_candidates.R` | the v2.1 candidates (kind of absence, 11–16) and the importance charts |
 | `R/08_absence_causes.R` | what goes with school-level absence: trend by reason, seven outcomes on intake, needs and place (`absence_causes.qmd`) |
+| `twins.qmd`, `twins.js` | Find a twin: a school's closest look-alikes in intake and setting (Gower-type distance, in the browser) and the anti-twins that do better on absence, attainment or value added; data from `R/08` |
 | `R/area_helpers.R` | the original area documents' charts, ported |
 | `R/site_helpers.R`, `R/map_js.R` | palette, charts, decomposition, map |
 | `data/va_v2.rds`, `data/va_v2_schools.csv` | the results (committed) |
