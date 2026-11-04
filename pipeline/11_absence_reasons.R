@@ -8,7 +8,7 @@
 # absence. Value Added v2.1 tests whether the kind of absence, not just its
 # amount, belongs in the expectation.
 #
-# Output: data/absence_reasons.rds (URN, year_label, overall, illness,
+# Output: data/absence_reasons.rds (URN, year_label, overall, illness, reduced,
 # auth_other, unauthorised, ill_share).   Rscript pipeline/11_absence_reasons.R
 # ---------------------------------------------------------------------------
 
@@ -25,7 +25,8 @@ out <- read_csv(raw, show_col_types = FALSE, col_types = cols(.default = "c")) |
             overall = num(sess_overall_percent),
             illness = num(sess_auth_illness_rate),
             auth_other = num(sess_authorised_percent) - num(sess_auth_illness_rate),
-            unauthorised = num(sess_unauthorised_percent)) |>
+            unauthorised = num(sess_unauthorised_percent),
+            reduced = num(sess_auth_temp_reduced_timetable_rate)) |>
   filter(!is.na(overall), overall > 0) |>
   mutate(ill_share = 100 * illness / overall) |>
   distinct(URN, year_label, .keep_all = TRUE)

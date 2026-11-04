@@ -20,24 +20,57 @@ function(el, x, data) {
   // Bad -> good, centred on zero: ColorBrewer PRGn by default, or red,
   // amber and green or red, yellow and blue from the Colours menu (shared
   // with the area maps)
+  // Sequential versions (no pale middle) for levels with a good direction,
+  // and a neutral grey ramp for measures with none (FSM, EAL, ...), as on
+  // the area maps
   var PALS = {
     prgn: {name: "Purple, green (colour-blind safe)", good: "green", bad: "purple",
-          c: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]]},
+          c: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[247,247,247],[217,240,211],[166,219,160],[90,174,97],[27,120,55]],
+          seq: [[118,42,131],[153,112,171],[194,165,207],[231,212,232],[166,219,160],[90,174,97],[27,120,55]]},
     rag: {name: "Red, amber, green", good: "green",
-          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[255,255,191],[217,239,139],[166,217,106],[102,189,99],[26,152,80]]},
+          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[255,255,191],[217,239,139],[166,217,106],[102,189,99],[26,152,80]],
+          seq: [[215,48,39],[244,109,67],[253,174,97],[254,224,139],[217,239,139],[145,207,96],[26,152,80]]},
     rdylbu: {name: "Red, yellow, blue (colour-blind safe)", good: "blue",
-          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]]}};
+          c: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]],
+          seq: [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[171,217,233],[116,173,209],[69,117,180]]}};
+  var NEUTRAL = [[241,241,245],[158,158,176],[58,58,78]];
+  var CATS = data.cats || {}, HEADS = data.heads || {}, NONE = data.none || {};
   var scheme = "prgn";
   try { var s0 = localStorage.getItem("va-pal"); if (PALS[s0]) scheme = s0; } catch (e) {}
   function DIV() { return PALS[scheme].c; }
   function badWord() { return PALS[scheme].bad || "red"; }
-  function ramp(t) { var C = DIV(), n = C.length - 1; t = Math.max(0, Math.min(1, t));
+  function rampC(C, t) { var n = C.length - 1; t = Math.max(0, Math.min(1, t));
     var i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
     return "rgb(" + [0,1,2].map(function(k) { return Math.round(C[i][k] + f * (C[i+1][k] - C[i][k])); }).join(",") + ")"; }
-  function grad(rev) { var C = DIV().slice(); if (rev) C.reverse();
+  function ramp(t) { return rampC(DIV(), t); }
+  function gradC(C, rev) { C = C.slice(); if (rev) C.reverse();
     return C.map(function(c) { return "rgb(" + c.join(",") + ")"; }).join(","); }
+  function grad(rev) { return gradC(DIV(), rev); }
   function fmt(v, d) { if (v == null || isNaN(v)) return ""; var s = (+v).toFixed(d == null ? 1 : d);
     if (+s === 0) return s.replace("-", ""); return (v > 0 ? "+" : "") + s; }
+  // a value as the measure shows it: signed for a diverging measure, plain otherwise
+  function fmtM(v, m) {
+    if (v == null || (m.scale !== "cat" && isNaN(v))) return m.scale === "cat" ? (NONE[m.var] || "not known") : "no data";
+    if (m.scale === "cat") return String(v);
+    if (m.scale === "div") return fmt(v, m.dp) + m.unit;
+    return (+v).toFixed(m.dp) + m.unit;
+  }
+  // How a measure colours the schools of an area: a function of the value,
+  // and the ends of its scale (a fixed national cap for diverging measures,
+  // the range within the area for the rest)
+  function scaleFor(rows, m) {
+    if (m.scale === "cat") return {colour: function(v) { return (CATS[m.var] || {})[v] || "#c9c9d6"; }};
+    if (m.scale === "div") {
+      var hi = cap(m) || 1;
+      return {lo: -hi, hi: hi, colour: function(v) { var t = (v + hi) / (2 * hi);
+        return ramp(m.good === "low" ? 1 - t : t); }};
+    }
+    var vs = rows.map(function(d) { return value(d, m); }).filter(function(v) { return v != null && !isNaN(v); });
+    var lo = vs.length ? Math.min.apply(null, vs) : 0, hi2 = vs.length ? Math.max.apply(null, vs) : 1;
+    var C = m.good ? PALS[scheme].seq : NEUTRAL;
+    return {lo: lo, hi: hi2, colour: function(v) { var t = (v - lo) / ((hi2 - lo) || 1);
+      return rampC(C, m.good === "low" ? 1 - t : t); }};
+  }
   function esc(s) { return s == null ? "" : String(s).replace(/[&<>]/g, function(c) { return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
   function yl(y) { return y.replace("-", "/") + (y === PROV ? " (prov.)" : ""); }
 
@@ -53,7 +86,11 @@ function(el, x, data) {
   var sLevel = sel("Level", "x-level"), sArea = sel("Area", "x-area"), sMeasure = sel("Colour by", "x-measure");
   var sPeriod = sel("Period", "x-period"), sCentre = sel("Centred on", "x-centre"), sWin = sel("Window", "x-window");
   opts(sLevel, LEVELS.map(function(l) { return [l.key, l.label]; }));
-  opts(sMeasure, MEASURES.map(function(m) { return [m.var, m.label]; }));
+  var og = null;
+  MEASURES.forEach(function(m) {
+    if (!og || og.label !== m.grp) { og = document.createElement("optgroup"); og.label = m.grp; sMeasure.appendChild(og); }
+    var e = document.createElement("option"); e.value = m.var; e.textContent = m.label; og.appendChild(e);
+  });
   opts(sPeriod, [["four", "Four years (shrunk)"], ["ma", "Moving average"]]);
   opts(sCentre, YEARS.map(function(y) { return [y, yl(y)]; }));
   opts(sWin, [["1", "1 year"], ["3", "3 years"], ["5", "5 years"]]);
@@ -163,7 +200,11 @@ function(el, x, data) {
     var g = m.group || "all", four = sPeriod.value === "four", lim = CAPS[g]["1"];
     var cols = [{key: "SCHNAME", label: "School", txt: true}, {key: "LANAME", label: "Local authority", txt: true}];
     GROUPS.forEach(function(gg) { cols.push({key: "v_" + gg, label: GLAB[gg]}); });
-    cols.push({key: "abs_excess", label: "Absence vs intake"}, {key: "spark", label: "Trajectory, " + GLAB[g].toLowerCase(), nosort: true},
+    cols.push({key: "abs_excess", label: "Absence vs intake"});
+    // the measure on the map, when it is not already a column
+    if (!m.group && m.var !== "abs_excess")
+      cols.push({key: m.var, label: m.short || m.label, txt: m.scale === "cat", m: m});
+    cols.push({key: "spark", label: "Trajectory, " + GLAB[g].toLowerCase(), nosort: true},
               {key: "ofsted_latest", label: "Ofsted latest", txt: true});
     rows.forEach(function(d) { GROUPS.forEach(function(gg) { d["v_" + gg] = val(d, gg); }); });
     rows = rows.slice().sort(function(a, b) { var x = a[sortKey], y = b[sortKey];
@@ -176,6 +217,7 @@ function(el, x, data) {
       h += "<tr>" + cols.map(function(c) {
         if (c.key === "spark") return "<td>" + spark(d["y_" + g], lim) + "</td>";
         if (c.txt) return "<td>" + esc(d[c.key]) + "</td>";
+        if (c.m) return "<td class=\\"num\\">" + (d[c.key] == null ? "" : fmtM(d[c.key], c.m)) + "</td>";
         var v = fmt(d[c.key]), cls = "num";
         if (c.key === "v_all" && four) { cls += d.up ? " up" : (d.down ? " down" : "");
           if (d.va_lo_all != null) v += " <span class=\\"ci\\">(" + fmt(d.va_lo_all) + " to " + fmt(d.va_hi_all) + ")</span>"; }
@@ -187,59 +229,96 @@ function(el, x, data) {
         drawTable(rows, m); }); });
   }
 
-  // How the values on the map are spread, under it, in the map colours.
-  // Every measure here is diverging on a symmetric cap, so one path does it:
-  // a dot each while the schools are few, bins once they are not.
-  function drawDist(rows, m, hi) {
-    var W = 720, L = 10, R = 10, T = 12, B = 20, H = 96, iw = W - L - R, ih = H - T - B;
-    var vals = [];
-    rows.forEach(function(d) { var v = value(d, m); if (v != null && !isNaN(v)) vals.push(v); });
-    if (!vals.length) { distBox.innerHTML = ""; return; }
-    var lo = -hi, span = 2 * hi;
-    var tOf = function(v) { var t = (v - lo) / span; if (t < 0) t = 0; if (t > 1) t = 1; return t; };
-    var col = function(v) { var t = tOf(v); return ramp(m.good === "low" ? 1 - t : t); };
-    var xs = function(v) { return L + tOf(v) * iw; };
-    var s = "<line x1=\\"" + L + "\\" y1=\\"" + (T + ih) + "\\" x2=\\"" + (L + iw) +
-            "\\" y2=\\"" + (T + ih) + "\\" stroke=\\"#d8d8e0\\"></line>";
-    var note;
-    if (vals.length <= 120) {
-      var sorted = vals.slice().sort(function(a, b) { return a - b; }), lanes = [];
-      sorted.forEach(function(v) {
-        var cx = xs(v), r = 0;
-        while (lanes[r] != null && cx - lanes[r] < 7.6) r++;
-        lanes[r] = cx;
-        var cy = T + ih - 5.5 - r * 7.6; if (cy < T + 4) cy = T + 4;
-        s += "<circle cx=\\"" + cx.toFixed(1) + "\\" cy=\\"" + cy.toFixed(1) +
-             "\\" r=\\"3.4\\" fill=\\"" + col(v) + "\\" stroke=\\"#fff\\" stroke-width=\\"0.7\\"></circle>";
+  // How the values on the map are spread, under it, in the map colours: a
+  // dot each while the schools are few, bins once they are not, and count
+  // bars for a measure in categories.
+  function drawDist(rows, m, sc, counts) {
+    var W = 720, L = 10, R = 10, T = 12, B = 20, iw = W - L - R, s = "", H, ih, note;
+    if (m.scale === "cat") {
+      var keys = Object.keys(CATS[m.var] || {}).filter(function(k) { return counts[k]; });
+      if (!keys.length) { distBox.innerHTML = ""; return; }
+      var bh = 15, gap = 4, lw = 230, mx0 = 0;
+      ih = keys.length * (bh + gap) - gap; H = T + ih + B;
+      keys.forEach(function(k) { if (counts[k] > mx0) mx0 = counts[k]; });
+      keys.forEach(function(k, j) {
+        var y = T + j * (bh + gap), w = (counts[k] / mx0) * (iw - lw - 34);
+        s += "<rect x=\\"" + (L + lw) + "\\" y=\\"" + y + "\\" width=\\"" + w.toFixed(1) + "\\" height=\\"" + bh +
+             "\\" rx=\\"2\\" fill=\\"" + CATS[m.var][k] + "\\"></rect>" +
+             "<text x=\\"" + (L + lw - 7) + "\\" y=\\"" + (y + bh - 3.5) + "\\" text-anchor=\\"end\\" font-size=\\"11\\" fill=\\"#333\\">" + esc(k) + "</text>" +
+             "<text x=\\"" + (L + lw + w + 5) + "\\" y=\\"" + (y + bh - 3.5) + "\\" font-size=\\"11\\" fill=\\"#666\\">" + counts[k] + "</text>";
       });
-      note = "One dot a school, " + vals.length + " of them, coloured as on the map";
+      note = "Schools in each category";
     } else {
-      var NB = 28, bins = [], i;
-      for (i = 0; i < NB; i++) bins[i] = 0;
-      vals.forEach(function(v) { var b = Math.floor(tOf(v) * NB); if (b > NB - 1) b = NB - 1; bins[b]++; });
-      var mx = 0;
-      bins.forEach(function(c) { if (c > mx) mx = c; });
-      var bw = iw / NB;
-      bins.forEach(function(c, b) {
-        if (!c) return;
-        var hgt = (c / mx) * (ih - 4);
-        s += "<rect x=\\"" + (L + b * bw + 0.6).toFixed(1) + "\\" y=\\"" + (T + ih - hgt).toFixed(1) +
-             "\\" width=\\"" + (bw - 1.2).toFixed(1) + "\\" height=\\"" + hgt.toFixed(1) +
-             "\\" fill=\\"" + col(lo + (b + 0.5) * span / NB) + "\\"></rect>";
-      });
-      note = vals.length + " schools in " + NB + " bins, coloured as on the map";
+      var vals = [];
+      rows.forEach(function(d) { var v = value(d, m); if (v != null && !isNaN(v)) vals.push(v); });
+      if (!vals.length) { distBox.innerHTML = ""; return; }
+      H = 96; ih = H - T - B;
+      var lo = sc.lo, span = (sc.hi - sc.lo) || 1;
+      var tOf = function(v) { var t = (v - lo) / span; return t < 0 ? 0 : (t > 1 ? 1 : t); };
+      var xs = function(v) { return L + tOf(v) * iw; };
+      s = "<line x1=\\"" + L + "\\" y1=\\"" + (T + ih) + "\\" x2=\\"" + (L + iw) + "\\" y2=\\"" + (T + ih) + "\\" stroke=\\"#d8d8e0\\"></line>";
+      if (vals.length <= 120) {
+        var sorted = vals.slice().sort(function(a, b) { return a - b; }), lanes = [];
+        sorted.forEach(function(v) {
+          var cx = xs(v), r = 0;
+          while (lanes[r] != null && cx - lanes[r] < 7.6) r++;
+          lanes[r] = cx;
+          var cy = T + ih - 5.5 - r * 7.6; if (cy < T + 4) cy = T + 4;
+          s += "<circle cx=\\"" + cx.toFixed(1) + "\\" cy=\\"" + cy.toFixed(1) + "\\" r=\\"3.4\\" fill=\\"" + sc.colour(v) +
+               "\\" stroke=\\"#fff\\" stroke-width=\\"0.7\\"></circle>";
+        });
+        note = "One dot a school, " + vals.length + " of them, coloured as on the map";
+      } else {
+        var NB = 28, bins = [], i, mx = 0;
+        for (i = 0; i < NB; i++) bins[i] = 0;
+        vals.forEach(function(v) { var b = Math.floor(tOf(v) * NB); if (b > NB - 1) b = NB - 1; bins[b]++; });
+        bins.forEach(function(c) { if (c > mx) mx = c; });
+        var bw = iw / NB;
+        bins.forEach(function(c, b) {
+          if (!c) return;
+          var hgt = (c / mx) * (ih - 4);
+          s += "<rect x=\\"" + (L + b * bw + 0.6).toFixed(1) + "\\" y=\\"" + (T + ih - hgt).toFixed(1) +
+               "\\" width=\\"" + (bw - 1.2).toFixed(1) + "\\" height=\\"" + hgt.toFixed(1) +
+               "\\" fill=\\"" + sc.colour(lo + (b + 0.5) * span / NB) + "\\"></rect>";
+        });
+        note = vals.length + " schools in " + NB + " bins, coloured as on the map";
+      }
+      if (m.scale === "div") s += "<line x1=\\"" + xs(0).toFixed(1) + "\\" y1=\\"" + T + "\\" x2=\\"" + xs(0).toFixed(1) +
+        "\\" y2=\\"" + (T + ih + 4) + "\\" stroke=\\"#999\\" stroke-dasharray=\\"3 2\\"></line><text x=\\"" + xs(0).toFixed(1) +
+        "\\" y=\\"" + (T + ih + 15) + "\\" text-anchor=\\"middle\\" font-size=\\"10\\" fill=\\"#666\\">0</text>";
+      s += "<text x=\\"" + L + "\\" y=\\"" + (T + ih + 15) + "\\" font-size=\\"10\\" fill=\\"#666\\">" +
+           (m.scale === "div" ? "&le; " : "") + fmtM(sc.lo, m) + "</text>" +
+           "<text x=\\"" + (L + iw) + "\\" y=\\"" + (T + ih + 15) + "\\" text-anchor=\\"end\\" font-size=\\"10\\" fill=\\"#666\\">" +
+           (m.scale === "div" ? "&ge; " : "") + fmtM(sc.hi, m) + "</text>";
     }
-    s += "<line x1=\\"" + xs(0).toFixed(1) + "\\" y1=\\"" + T + "\\" x2=\\"" + xs(0).toFixed(1) +
-         "\\" y2=\\"" + (T + ih + 4) + "\\" stroke=\\"#999\\" stroke-dasharray=\\"3 2\\"></line>";
-    s += "<text x=\\"" + xs(0).toFixed(1) + "\\" y=\\"" + (T + ih + 15) +
-         "\\" text-anchor=\\"middle\\" font-size=\\"10\\" fill=\\"#666\\">0</text>";
-    s += "<text x=\\"" + L + "\\" y=\\"" + (T + ih + 15) + "\\" font-size=\\"10\\" fill=\\"#666\\">&le; " +
-         fmt(-hi) + m.unit + "</text>";
-    s += "<text x=\\"" + (L + iw) + "\\" y=\\"" + (T + ih + 15) +
-         "\\" text-anchor=\\"end\\" font-size=\\"10\\" fill=\\"#666\\">&ge; " + fmt(hi) + m.unit + "</text>";
     distBox.innerHTML = "<svg viewBox=\\"0 0 " + W + " " + H + "\\" width=\\"100%\\" height=\\"" + H +
       "\\" preserveAspectRatio=\\"xMidYMin meet\\" role=\\"img\\" aria-label=\\"Spread of " + esc(m.label) +
       "\\">" + s + "</svg><div class=\\"note\\">" + note + "</div>";
+  }
+
+  function legendFor(m, sc, counts, missing) {
+    var h = "<strong>" + m.label + "</strong>" + (m.group ? "<div class=\\"note\\">" + periodText() + "</div>" : "");
+    if (m.scale === "cat") {
+      var cur = null;
+      Object.keys(CATS[m.var] || {}).forEach(function(k) {
+        if (!counts[k]) return;
+        var hd = HEADS[m.var] ? HEADS[m.var][k] : null;
+        if (hd && hd !== cur) { h += "<div class=\\"note\\" style=\\"margin-top:4px\\">" + hd + "</div>"; cur = hd; }
+        h += "<div><span style=\\"display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;background:" +
+             CATS[m.var][k] + "\\"></span>" + esc(k) + " (" + counts[k] + ")</div>";
+      });
+    } else {
+      var C = m.scale === "div" ? DIV() : (m.good ? PALS[scheme].seq : NEUTRAL);
+      h += "<div class=\\"bar\\" style=\\"background:linear-gradient(to right," + gradC(C, m.good === "low") + ")\\"></div>" +
+           "<span>" + (m.scale === "div" ? "&le; " : "") + fmtM(sc.lo, m) + "</span><span style=\\"float:right\\">" +
+           (m.scale === "div" ? "&ge; " : "") + fmtM(sc.hi, m) + "</span>";
+      if (m.scale === "div") h += "<div class=\\"note\\">" + (m.good === "low" ? badWord() + " above what the intake predicts, " + PALS[scheme].good + " below"
+                                                                              : badWord() + " below expectation, " + PALS[scheme].good + " above") + "</div>";
+      else if (m.good) h += "<div class=\\"note\\">" + PALS[scheme].good + " is better, " + badWord() + " worse</div>";
+      else h += "<div class=\\"note\\">no better or worse: shading only</div>";
+    }
+    if (missing) h += "<div class=\\"note\\">" + (NONE[m.var] || "no data") + " (" + missing + ")</div>";
+    return h;
   }
 
   function draw() {
@@ -248,30 +327,26 @@ function(el, x, data) {
     sCentre.disabled = sWin.disabled = (sPeriod.value === "four");
     sPeriod.disabled = !isVA;
     var rows = S.filter(function(d) { return d[level] === area; });
-    var hi = cap(m) || 1;
+    var sc = scaleFor(rows, m);
+    var catCounts = {}, missing = 0;
     markers.clearLayers();
     var pts = [];
     rows.forEach(function(d) {
       if (d.lat == null) return;
-      var v = value(d, m), t = v == null ? null : (v + hi) / (2 * hi);
-      if (t != null && m.good === "low") t = 1 - t;
+      var v = value(d, m), none = v == null || (m.scale !== "cat" && isNaN(v));
+      if (none) missing++; else if (m.scale === "cat") catCounts[v] = (catCounts[v] || 0) + 1;
       L.circleMarker([d.lat, d.lon], {radius: Math.max(4, Math.sqrt(d.pupils || 900) / 4.5),
-        fillColor: t == null ? "#ffffff" : ramp(t), fillOpacity: t == null ? 0.6 : 0.92,
-        color: t == null ? "#8a8aa3" : "rgba(40,40,50,0.55)", weight: t == null ? 1 : 0.8})
+        fillColor: none ? "#ffffff" : sc.colour(v), fillOpacity: none ? 0.6 : 0.92,
+        color: none ? "#8a8aa3" : "rgba(40,40,50,0.55)", weight: none ? 1 : 0.8})
         .bindTooltip("<b>" + esc(d.SCHNAME) + "</b> (" + esc(d.LANAME) + ")<br>Four years: all pupils " + fmt(d.va_shrunk_all) +
           ", disadvantaged " + fmt(d.va_shrunk_disadvantaged) + ", girls " + fmt(d.va_shrunk_girls) + ", boys " + fmt(d.va_shrunk_boys) +
           "<br>Absence vs intake " + fmt(d.abs_excess) + " pp<br>Ofsted: " + esc(d.ofsted_latest || "not known") +
-          "<br><b>" + m.label + (isVA ? " (" + periodText() + ")" : "") + ": " + (v == null ? "no data" : fmt(v) + m.unit) + "</b>")
+          "<br><b>" + m.label + (isVA ? " (" + periodText() + ")" : "") + ": " + esc(fmtM(v, m)) + "</b>")
         .addTo(markers);
       pts.push([d.lat, d.lon]);
     });
     if (pts.length) map.fitBounds(pts, {padding: [24, 24], maxZoom: 13});
-    legDiv.innerHTML = "<strong>" + m.label + "</strong>" + (isVA ? "<div class=\\"note\\">" + periodText() + "</div>" : "") +
-      "<div class=\\"bar\\" style=\\"background:linear-gradient(to right," +
-      grad(m.good === "low") +
-      ")\\"></div><span>&le; " + fmt(-hi) + "</span><span style=\\"float:right\\">&ge; " + fmt(hi) + "</span><div class=\\"note\\">" +
-      (m.good === "low" ? badWord() + " above what the intake predicts, " + PALS[scheme].good + " below"
-                        : badWord() + " below expectation, " + PALS[scheme].good + " above") + "</div>";
+    legDiv.innerHTML = legendFor(m, sc, catCounts, missing);
 
     var g = m.group || "all";
     var vals = rows.map(function(d) { return val(d, g); }).filter(function(v) { return v != null; });
@@ -284,10 +359,24 @@ function(el, x, data) {
       vals.filter(function(v) { return v > 0; }).length + " above zero, " + vals.filter(function(v) { return v < 0; }).length + " below";
     var provNote = (sPeriod.value === "ma" && windowYears().some(function(k) { return YEARS[k] === PROV; })) ?
       " <em>This window includes provisional " + PROV.replace("-", "/") + ", to be updated with the revised KS4 release in February 2027.</em>" : "";
+    // what the measure on the map says about the area, when it is not value added
+    var mNote = "";
+    if (!isVA && m.var !== "abs_excess") {
+      if (m.scale === "cat") {
+        mNote = " " + m.label + ": " + Object.keys(catCounts).sort(function(a, b) { return catCounts[b] - catCounts[a]; })
+          .map(function(k) { return esc(k) + " " + catCounts[k]; }).join(", ") + ".";
+      } else {
+        var mv = rows.map(function(d) { return d[m.var]; }).filter(function(v) { return v != null && !isNaN(v); });
+        var ev = S.map(function(d) { return d[m.var]; }).filter(function(v) { return v != null && !isNaN(v); });
+        var avg = function(a) { return a.reduce(function(p, q) { return p + q; }, 0) / Math.max(a.length, 1); };
+        if (mv.length) mNote = " " + m.label + " averages " + fmtM(avg(mv), m) + " across its schools (England " + fmtM(avg(ev), m) + ").";
+      }
+    }
     summary.innerHTML = "<strong>" + esc(area) + ":</strong> " + rows.length + " schools. Value added for " + GLAB[g].toLowerCase() +
       " (" + periodText() + ") averages " + fmt(mean) + " points against England; " + counts + ". " +
-      "Absence runs " + fmt(abm) + " points against what intakes predict." + (data.notes[area] ? " <em>" + data.notes[area] + "</em>" : "") + provNote;
-    drawDist(rows, m, hi);
+      "Absence runs " + fmt(abm) + " points against what intakes predict." + mNote +
+      (data.notes[area] ? " <em>" + data.notes[area] + "</em>" : "") + provNote;
+    drawDist(rows, m, sc, catCounts);
     drawTraj(rows, g, area);
     drawTable(rows, m);
   }

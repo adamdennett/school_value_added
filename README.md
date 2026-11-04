@@ -28,6 +28,7 @@ and `data/`, both git-ignored.
 Rscript R/00_fetch_data.R    # download and build the inputs (first run: about an hour)
 Rscript R/01_inputs.R        # assemble data/inputs.rds
 Rscript R/02_fit_va.R        # fit v2.1 for every group -> data/va_v2.rds, data/va_v2_schools.csv
+Rscript R/02b_school_context.R    # attendance, governance and other map measures for every school
 Rscript R/04_place_and_absence.R  # absence against intake, district test, trusts, scenarios on v2 (~15 min)
 Rscript R/05_provisional_2526.R   # provisional 2025/26, predicted from the fitted model
 Rscript R/06_bh_effect.R          # geographical effects: why Brighton and Hove's authority effect is large (~5 min)
@@ -87,6 +88,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/snapshot_area.R`, `data/area/` | the original project's Sussex area analyses, snapshotted |
 | `data/lookups/` | fixed lookups: v1 as published, URN families, combined authorities, DfE region codes |
 | `R/02_fit_va.R` | the v2.1 models and value added |
+| `R/02b_school_context.R` | attendance, suspensions and governance for every school, for the explorer |
 | `R/03_area_pages.R` | area pages from `templates/area.qmd` (format: `AREA_REPORTS.md`) |
 | `R/04_place_and_absence.R` | the original area analyses refitted on v2.1 |
 | `R/05_provisional_2526.R` | provisional 2025/26 value added |

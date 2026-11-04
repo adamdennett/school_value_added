@@ -24,10 +24,25 @@ la_ca <- bind_rows(la_ca, new_ma |> transmute(LANAME, ca = paste0(authority, " (
   distinct(LANAME, .keep_all = TRUE)
 w <- w |> left_join(la_ca, by = "LANAME")
 
+# The measures the Sussex maps offer, for every school in England: value
+# added in its forms, attendance, results, intake and the school itself
+# (R/02b_school_context.R builds the national attendance and governance
+# measures the Sussex pages take from the original project's area files)
+CTX <- readRDS(here::here("data", "school_context.rds"))
+w <- w |>
+  left_join(CTX |> select(URN, persistent, illness, unauth, reduced, susp_rate, gov_nat), by = "URN") |>
+  left_join(P$va_m2 |> filter(group == "all") |> select(URN, va_m2), by = "URN") |>
+  mutate(religion = case_when(religion %in% c("Does not apply", "None") | is.na(religion) ~ "None",
+                              religion %in% c("Church of England", "Roman Catholic", "Christian") ~ religion,
+                              TRUE ~ "Other faith"))
+
 dat <- w |>
   transmute(URN, SCHNAME, LANAME, region = gor_name, ca, la = LANAME, lat, lon, pupils,
             va_shrunk_all, va_lo_all, va_hi_all, va_shrunk_disadvantaged, va_shrunk_non_disadvantaged,
-            va_shrunk_girls, va_shrunk_boys, abs_excess, ofsted_latest,
+            va_shrunk_girls, va_shrunk_boys, va_kind_all, va_kind_disadvantaged, va_m2, va_2526_all, v1_all,
+            abs_excess, absence, persistent, illness, unauth, reduced, susp_rate,
+            att8, att8_dis, att8_non, fsm, ks2_c, eal, sen_support, sen_ehcp, mobile, l4,
+            gov_nat, ofsted_combined, ofsted_rc, ofsted = ofsted_model, religion, ofsted_latest,
             up = va_lo_all > 0, down = va_hi_all < 0) |>   # flags before rounding
   mutate(across(where(is.double) & !c(lat, lon), ~round(.x, 2)))
 
@@ -55,14 +70,44 @@ caps_ma <- lapply(setNames(names(GROUPS), names(GROUPS)), function(g) {
 pv <- load_prov()
 prov_year <- if (is.null(pv)) "" else pv$year
 
+gy <- yl(max(V$spec$years))
 measures <- tibble::tribble(
-  ~var, ~label, ~good, ~unit, ~group,
-  "va_shrunk_all", "Value added, all pupils", "high", " pts", "all",
-  "va_shrunk_disadvantaged", "Value added, disadvantaged", "high", " pts", "disadvantaged",
-  "va_shrunk_non_disadvantaged", "Value added, non-disadvantaged", "high", " pts", "non_disadvantaged",
-  "va_shrunk_girls", "Value added, girls", "high", " pts", "girls",
-  "va_shrunk_boys", "Value added, boys", "high", " pts", "boys",
-  "abs_excess", "Absence against intake", "low", " pp", NA)
+  ~var, ~label, ~short, ~grp, ~scale, ~good, ~dp, ~unit, ~group,
+  "va_shrunk_all", "Value added v2.1, all pupils", NA, "Value added", "div", "high", 1, " pts", "all",
+  "va_shrunk_disadvantaged", "Value added v2.1, disadvantaged", NA, "Value added", "div", "high", 1, " pts", "disadvantaged",
+  "va_shrunk_non_disadvantaged", "Value added v2.1, non-disadvantaged", NA, "Value added", "div", "high", 1, " pts", "non_disadvantaged",
+  "va_shrunk_girls", "Value added v2.1, girls", NA, "Value added", "div", "high", 1, " pts", "girls",
+  "va_shrunk_boys", "Value added v2.1, boys", NA, "Value added", "div", "high", 1, " pts", "boys",
+  "va_kind_all", "Value added allowing for the kind of absence, all pupils", "Kind of absence", "Value added", "div", "high", 1, " pts", NA,
+  "va_kind_disadvantaged", "Value added allowing for the kind of absence, disadvantaged", "Kind of absence, disadv.", "Value added", "div", "high", 1, " pts", NA,
+  "va_m2", "Value added with no allowance for absence, all pupils", "No allowance for absence", "Value added", "div", "high", 1, " pts", NA,
+  "va_2526_all", "Value added 2025/26 PROVISIONAL, all pupils", "2025/26 (prov.)", "Value added", "div", "high", 1, " pts", NA,
+  "v1_all", "Value added v1 (published, within the LA), all pupils", "v1", "Value added", "div", "high", 1, " pts", NA,
+  "abs_excess", "Absence against intake, 2021/22 to 2024/25", NA, "Attendance", "div", "low", 1, " pp", NA,
+  "absence", paste0("Overall absence, ", gy), "Absence", "Attendance", "seq", "low", 1, "%", NA,
+  "persistent", paste0("Persistent absence, ", gy), "Persistent absence", "Attendance", "seq", "low", 1, "%", NA,
+  "illness", paste0("Illness absence, ", gy, ", full year"), "Illness absence", "Attendance", "seq", "low", 1, "%", NA,
+  "unauth", paste0("Unauthorised absence, ", gy, ", full year"), "Unauthorised", "Attendance", "seq", "low", 1, "%", NA,
+  "reduced", paste0("Reduced timetables, ", gy, ", full year"), "Reduced timetables", "Attendance", "seq", "low", 2, "%", NA,
+  "susp_rate", paste0("Suspensions per 100 pupils, ", gy), "Suspensions /100", "Attendance", "seq", "low", 1, "", NA,
+  "att8", paste0("Attainment 8, all pupils, ", gy), "Attainment 8", "Results", "seq", "high", 1, "", NA,
+  "att8_dis", paste0("Attainment 8, disadvantaged pupils, ", gy), "Attainment 8, disadv.", "Results", "seq", "high", 1, "", NA,
+  "att8_non", paste0("Attainment 8, other pupils, ", gy), "Attainment 8, other", "Results", "seq", "high", 1, "", NA,
+  "fsm", "Disadvantaged pupils (FSM6) %", "FSM6 %", "Intake", "seq", "", 1, "%", NA,
+  "ks2_c", "Prior attainment at KS2 (centred)", "KS2 (centred)", "Intake", "seq", "", 1, "", NA,
+  "eal", "English as an additional language %", "EAL %", "Intake", "seq", "", 1, "%", NA,
+  "sen_support", "SEN support %", "SEN support %", "Intake", "seq", "", 1, "%", NA,
+  "sen_ehcp", "Education, health and care plans %", "EHCP %", "Intake", "seq", "", 1, "%", NA,
+  "mobile", "Pupil mobility %", "Mobility %", "Intake", "seq", "", 1, "%", NA,
+  "l4", "Neighbourhood education (% level 4+)", "Neighbourhood L4+ %", "Intake", "seq", "", 1, "%", NA,
+  "pupils", "Pupils on roll", "Pupils", "Intake", "seq", "", 0, "", NA,
+  "gov_nat", paste0("Who runs it (GIAS, ", format(attr(CTX, "gias_date"), "%B %Y"), ")"), "Run by", "The school", "cat", "", 0, "", NA,
+  "ofsted_combined", "Ofsted, report card where there is one, else the latest graded judgements", "Ofsted", "The school", "cat", "", 0, "", NA,
+  "ofsted_rc", "Ofsted report card, achievement (since November 2025)", "Report card", "The school", "cat", "", 0, "", NA,
+  "ofsted", "Ofsted rating, last graded inspection before September 2024", "Ofsted (to Aug 2024)", "The school", "cat", "", 0, "", NA,
+  "religion", "Religious character", "Religious character", "The school", "cat", "", 0, "", NA)
+CATS <- c(MAP_CATS, list(gov_nat = MAP_CATS$gov))
+NONE <- c(as.list(MAP_NONE), list(gov_nat = "not recorded"))
 levels <- tibble::tibble(key = c("region", "ca", "la"),
                          label = c("Region", "Combined or mayoral authority", "Local authority (upper tier)"))
 notes <- setNames(as.list(rep("New mayoral strategic authority, from the Devolution Priority Programme announced in February 2025; not yet in the ONS lookup.",
@@ -77,6 +122,16 @@ level and an area; the map zooms to its schools, a chart shows how each
 school's value added has moved year by year, and the table lists them.
 Click a column heading to sort. "Absence against intake" is percentage
 points above (positive) or below what the school's intake predicts.
+
+**Colour by** offers the same measures as the Sussex pages, for every
+school in England: value added in each of its forms, attendance (absence,
+persistent absence, illness, unauthorised absence, reduced timetables,
+suspensions), results, intake, and the school itself (who runs it, Ofsted,
+religious character). Value added and absence against intake are coloured
+on fixed national scales; the other measures run across the range within
+the chosen area; a measure that is neither better nor worse high or low
+(disadvantage, EAL, SEN) is shaded in greys. Whichever measure is chosen
+gets a column in the table.
 
 **Period** switches between the four-year figure (shrunk, with 95%
 intervals) and a **moving average** of the yearly figures, centred on the
@@ -98,6 +153,9 @@ payload <- list(
   schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 6),
   levels = jsonlite::toJSON(levels, dataframe = "rows"),
   measures = jsonlite::toJSON(measures |> mutate(cap = unname(colour_caps()[var])), dataframe = "rows", na = "null"),
+  cats = jsonlite::toJSON(lapply(CATS, as.list), auto_unbox = TRUE),
+  heads = jsonlite::toJSON(lapply(MAP_CAT_HEADS, as.list), auto_unbox = TRUE),
+  none = jsonlite::toJSON(NONE, auto_unbox = TRUE),
   notes = jsonlite::toJSON(notes, auto_unbox = TRUE),
   default = jsonlite::toJSON(list(level = "ca", area = "Sussex and Brighton (new)"), auto_unbox = TRUE),
   years = jsonlite::toJSON(YEARS),

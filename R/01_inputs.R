@@ -146,7 +146,8 @@ build_inputs <- function() {
   ar <- src("absence_reasons.rds")
   if (file.exists(ar)) d <- d |> left_join(
     readRDS(ar) |> transmute(URN = as.integer(URN), year_label, abs_illness = illness,
-                             abs_auth_other = auth_other, abs_unauth = unauthorised, ill_share),
+                             abs_auth_other = auth_other, abs_unauth = unauthorised,
+                             abs_reduced = reduced, ill_share),
     by = c("URN", "year_label"))
 
   # Location for the maps: the panel's own easting and northing, else GIAS
