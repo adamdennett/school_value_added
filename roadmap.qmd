@@ -58,10 +58,12 @@ subtitle: "What v2.1 does now, and what comes next."
 
 ## Next
 
-- [ ] **Policy simulator v2.0.** Rebuild the
-      [Pull the Right Lever simulator](https://adamdennett.github.io/school_attainment_tool/)
-      on the v2.1 model, with the girls/boys groups and the new intake
-      terms as levers.
+- [x] **[Policy simulator v2.0](simulator.qmd).** The Pull the Right Lever
+      simulator rebuilt on the v2.1 models, in the browser: absence and the
+      intake terms as levers (with admissions and sixth form for one
+      school), all five groups at once with the disadvantage gap, each
+      lever's contribution, and an area mode that applies a change to every
+      school in a district, authority, region or England.
 - [ ] **Adding a new year.** When DfE publishes a new year's KS4 results,
       add it to `YEAR_CONFIG` in `pipeline/helpers.R`, run
       `R/00_fetch_data.R`, then the build steps. The v2.1 model takes its

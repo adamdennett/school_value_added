@@ -12,12 +12,14 @@ project:
     - absence_causes.qmd
     - absence_change.qmd
     - twins.qmd
+    - simulator.qmd
     - areas/*.qmd
     - roadmap.qmd
   resources:
     - fonts/
     - .nojekyll
     - twins.js
+    - simulator.js
     - data/va_v2_schools.csv
     - data/va_2526_provisional.csv
 
@@ -62,6 +64,8 @@ website:
             text: "How absence changes"
       - href: twins.qmd
         text: "Find a twin"
+      - href: simulator.qmd
+        text: "Simulator"
       - href: roadmap.qmd
         text: Roadmap
     right:

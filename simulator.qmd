@@ -1,0 +1,145 @@
+---
+title: "Policy simulator"
+subtitle: "Pull the right lever, on Value Added v2.1: what the model says would happen to a school's results, or a whole area's, if absence or intake were different."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+V <- load_va()
+I <- readRDS(here::here("data", "inputs.rds"))
+# Each school's latest model year: its inputs and its results in that year
+lat <- I |> filter(!excluded) |> arrange(URN, desc(year_label)) |> distinct(URN, .keep_all = TRUE)
+res <- V$school_years |> inner_join(lat |> select(URN, year_label), by = c("URN", "year_label")) |>
+  select(URN, group, obs) |>
+  tidyr::pivot_wider(names_from = group, values_from = obs, names_glue = "a_{group}")
+va <- V$va |> filter(group == "all") |> select(URN, va = va_shrunk)
+sc <- V$schools |> select(URN, n = SCHNAME, la = LANAME, rg = gor_name, lad, pupils)
+d <- lat |>
+  transmute(URN, year = yl(year_label), fsm = PTFSM6CLA1A, abs = PERCTOT, eal = PNUMEAL, ks2 = ks2_c,
+            l4 = z_l4, sen = sen_support, ehcp = sen_ehcp, mob = mobile, adm = as.character(ADMPOL_PT),
+            age16 = as.integer(age16), gs = as.integer(girls_school), bs = as.integer(boys_school)) |>
+  inner_join(sc, by = "URN") |> inner_join(res, by = "URN") |> left_join(va, by = "URN") |>
+  mutate(lad = coalesce(lad, la), pupils = coalesce(pupils, 0)) |>
+  filter(!is.na(a_all), !is.na(abs), abs > 0, !is.na(fsm), fsm > 0) |>
+  mutate(across(where(is.double), ~ round(.x, 3)))
+# The fitted coefficients, by group: one named list per group
+co <- split(V$coefs, V$coefs$group)
+coefs <- lapply(co, function(x) as.list(setNames(round(x$estimate, 6), x$term)))
+areas <- list(region = sort(unique(d$rg)), la = sort(unique(d$la)), district = sort(unique(d$lad)))
+payload <- list(schools = d, coefs = coefs, areas = areas, labels = as.list(V$spec$labels),
+                years = yl(V$spec$years))
+# For the prose
+b <- function(g, t) V$coefs$estimate[V$coefs$group == g & V$coefs$term == t]
+ab_pct <- function(g, rel) 100 * ((1 + rel)^b(g, "log(PERCTOT)") - 1)
+```
+
+::: {.callout-note}
+## How to use it
+
+1. **Choose a school**, or switch to **every school in an area** to apply the
+   same change across a district, authority, region or England.
+2. **Move a lever.** Absence is the lever schools and councils can most
+   affect. The intake levers ask what the model expects if a school's
+   pupils were different, as an admissions change might make them.
+3. **Read the result** for every group of pupils at once, the gap between
+   disadvantaged and other pupils, and how much each lever contributes.
+
+The address bar keeps your choices, so a link takes someone else to the
+same scenario.
+:::
+
+```{r payload}
+#| output: asis
+cat("<script>window.SIM = ", jsonlite::toJSON(payload, dataframe = "rows", na = "null", auto_unbox = TRUE, digits = 6),
+    ";</script>\n", sep = "")
+```
+
+```{=html}
+<style>
+.sm-bar { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 8px 0 10px; }
+.sm-ctl { display: flex; flex-direction: column; font-size: 12px; color: #6b6680; font-weight: 600; }
+.sm-ctl select { font-size: 14px; padding: 3px 6px; border: 1px solid #d3cde0; border-radius: 4px; max-width: 290px; color: #1a1a2e; }
+.sm-grid { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; }
+.sm-grid > .sm-levers { flex: 1 1 300px; max-width: 400px; }
+.sm-grid > .sm-out { flex: 999 1 440px; min-width: 0; }
+.sm-levers { background: #f8f5fc; border: 1px solid #e3dcef; border-radius: 8px; padding: 10px 14px; }
+.sm-levers h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: #6b6680; margin: 10px 0 4px; }
+.sm-lever { margin: 6px 0 12px; }
+.sm-lever label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #1a1a2e; gap: 8px; }
+.sm-lever label span.sm-val { font-weight: 700; color: #361a54; white-space: nowrap; }
+.sm-lever input[type=range] { width: 100%; accent-color: #993bff; }
+.sm-lever .sm-now { font-size: 11.5px; color: #6b6680; }
+.sm-lever select { font-size: 13px; width: 100%; }
+.sm-reset { margin-top: 6px; }
+.sm-summary { background: #eedeff; border-radius: 6px; padding: 10px 14px; margin: 0 0 12px; }
+.sm-summary p { margin: 0 0 4px; }
+.sm-note { font-size: 12px; color: #6b6680; margin: 4px 0; }
+.sm-h { font-size: 15px; font-weight: 700; color: #361a54; margin: 14px 0 4px; }
+.sm-t td.r, .sm-t th.r { text-align: right; }
+.sm-t td.up { color: #1b7837; font-weight: 600; } .sm-t td.dn { color: #762a83; font-weight: 600; }
+.sm-table { max-height: 420px; overflow: auto; }
+</style>
+<div id="sim-app" class="column-page-right"></div>
+<script src="simulator.js"></script>
+```
+
+## How it works {#sec-how}
+
+The simulator uses the fitted [Value Added v2.1](method.qmd) models, one for
+each group of pupils. Each model explains the log of a school's Attainment 8
+by its intake and setting, so every lever changes a school's expected
+result by a *percentage*:
+
+$$\text{Attainment 8}_\text{new} = \text{Attainment 8}_\text{latest} \times
+\exp\Big(\sum_j \beta_j \, \Delta x_j\Big)$$
+
+where $\Delta x_j$ is the change in each lever (in logs for absence,
+disadvantage and EAL, which enter the model as logs) and $\beta_j$ is its
+coefficient for that group. Everything else about the school stays as it
+was, including what the model cannot explain: its value added. A school
+starts from its latest published result (`r tail(payload$years, 1)` for
+most), not from its prediction.
+
+For all pupils, cutting a school's absence by a tenth (say from 9% to
+8.1%) goes with Attainment 8 `r pts(ab_pct("all", -0.1), 1)`% higher, about
+`r pts(ab_pct("all", -0.1) * mean(d$a_all) / 100, 1)` points at the average
+school. For disadvantaged pupils it is `r pts(ab_pct("disadvantaged", -0.1), 1)`%.
+**The same cut in absence helps disadvantaged pupils more**, so it narrows
+the gap.
+
+In area mode, every school in the area gets the same change, and the area's
+result is the average of its schools' results weighted by their number of
+pupils.
+
+### What it can and cannot tell you
+
+- **It is the model's arithmetic, not a forecast.** The coefficients
+  describe how results differ between schools with different absence and
+  intake, all else equal. They are not experiments. A school that cut its
+  absence would not necessarily gain exactly this, and how it cut it would
+  matter.
+- **Absence is not a dial.** The absence lever says what better attendance
+  would be worth, not how to get it. See [How school absence
+  changes](absence_change.qmd) for what moves it.
+- **The intake levers are not policies.** They show how much of a school's
+  result is its pupils. Moving them is a way of seeing that, or of thinking
+  through an admissions change, not something a school can do.
+- **The groups are modelled separately.** Each group has its own
+  coefficients, so the same change can do more for one group than another.
+  The all-pupils result is its own model, not an average of the others.
+
+### What changed from the original simulator
+
+The [original Pull the Right Lever simulator](https://adam-dennett.shinyapps.io/School_Attainment_Policy_Simulator/)
+ran on the first model. This version follows [the review's](review.qmd)
+recommendations:
+
+- **No Ofsted grade or workforce levers.** They are no longer in the
+  expectation.
+- **New levers:** SEN support, EHC plans, pupil mobility and neighbourhood
+  education.
+- **Girls and boys** are modelled as groups alongside disadvantaged and
+  other pupils.
+- **Area mode:** the same change across every school in an area.
+- **It runs in the browser**, with no server.
