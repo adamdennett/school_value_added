@@ -113,9 +113,13 @@ subtitle: "What v2.1 does now, and what comes next."
       (recommended for v2.2). Pupils' ethnicity (school White British share,
       each January) matters almost only for disadvantaged pupils, where it
       is large; recommended beside the headline, not in it.
-- [ ] **v2.2.** Refit with neighbourhood deprivation in the expectation,
-      publish value added allowing for pupils' ethnicity beside it, and
-      test detailed ethnic groups.
+- [ ] **Value Added v2.2 (agreed, for a future release).** The approach
+      from the [v2.2 candidates](v22.qmd) is agreed but not yet built:
+      refit every group with neighbourhood household deprivation in the
+      expectation beside neighbourhood education; publish value added
+      allowing for pupils' ethnicity beside the headline, labelled, not in
+      it; and before release, test detailed ethnic groups rather than the
+      White British share alone. Until then the site publishes v2.1.
 - [ ] **Parents, not adults.** Try a parents' qualification measure from
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.

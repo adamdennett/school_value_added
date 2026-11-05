@@ -187,6 +187,11 @@ with its particular disadvantaged pupils?" can see the answer next to it.
 
 ## What we would recommend for v2.2 {#sec-recommend}
 
+::: {.callout-tip}
+This approach is agreed and on the [roadmap](roadmap.qmd) for a future
+release. Until then, everything on this site is Value Added v2.1.
+:::
+
 1. **Add neighbourhood deprivation to the expectation**, beside
    neighbourhood education. It is a neighbourhood measure, like the term
    it sits next to. It helps every group in every year. It makes the
