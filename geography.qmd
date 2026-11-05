@@ -137,14 +137,14 @@ mk_map("non_disadvantaged")
 #| fig-cap: "Average value added against England by region (schools' average log residual, weighted by years, as %): all, disadvantaged and non-disadvantaged pupils. This includes the region's and its authorities' effects."
 #| fig-height: 4.6
 rgd <- G$reg |> filter(group %in% c("all", "disadvantaged", "non_disadvantaged")) |>
-  mutate(grp = factor(GROUP_LABELS[group], rev(GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")])))
+  mutate(grp = factor(unname(GROUP_LABELS[group]), rev(unname(GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")]))))
 rord <- rgd |> filter(group == "disadvantaged") |> arrange(pct) |> pull(gor_name)
 ggplot(rgd |> mutate(gor_name = factor(gor_name, rord)), aes(pct, gor_name, fill = grp)) +
   geom_vline(xintercept = 0, colour = GREY) +
   geom_col(position = position_dodge(width = 0.8), width = 0.75) +
-  scale_fill_manual(values = GROUP_COL[GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")]], name = NULL,
-                    breaks = GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")]) +
-  scale_x_continuous(labels = function(x) paste0(sprintf("%+.0f", x), "%")) +
+  scale_fill_manual(values = GROUP_COL, name = NULL,
+                    breaks = unname(GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")])) +
+  scale_x_continuous(breaks = seq(-6, 6, 2), labels = function(x) ifelse(x == 0, "0%", paste0(sprintf("%+.0f", x), "%"))) +
   labs(x = "Value added against England, % of Attainment 8", y = NULL) + theme_note() +
   theme(panel.grid.major.y = element_blank())
 ```
@@ -153,6 +153,8 @@ The regional pattern is different for disadvantaged pupils. For all
 pupils, the North East and South West do best, the North West worst.
 For disadvantaged pupils, London leads at `r sprintf("%+.1f", rg("disadvantaged", "London"))`%,
 and the South East is last at `r sprintf("%+.1f", rg("disadvantaged", "South East"))`%.
+London's lead belongs to its disadvantaged pupils alone: its non-disadvantaged
+pupils are at `r sprintf("%+.1f", rg("non_disadvantaged", "London"))`%.
 Brighton and Hove's effect, at `r sprintf("%+.1f", bh("all", "pct"))`% for
 all pupils (`r ord(bh("all", "rank"))` of `r bh("all", "n_la")`), is one of
 the largest in England. Its own page examines it.
