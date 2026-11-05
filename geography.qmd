@@ -80,22 +80,33 @@ school with similar schools nearby.
 
 ## The map {#sec-map}
 
+Each authority is coloured by its effect in Value Added v2.1: how far its
+schools' results sit from what their intake predicts, as a percentage of
+Attainment 8, net of its region.
+**[Green]{style="color:#1b7837"} is above what intake predicts (a positive
+effect); [purple]{style="color:#762a83"} is below (a negative effect).**
+Pale areas are close to zero. These are the same colours as the
+[explorer](explore.qmd). Hover over an authority for its figure, interval
+and rank.
+
 ```{r}
-#| label: fig-map
-#| fig-cap: "Local authority effects in Value Added v2.1, % of Attainment 8 (the authority's random effect, net of its region): all pupils and disadvantaged pupils. Purple, above what intake predicts; green, below. Hover for the authority and its interval."
+#| include: false
+MAP_COL <- c("#762a83", "#af8dc3", "#f7f7f7", "#7fbf7b", "#1b7837")   # below ... above, as the explorer
 mk_map <- function(g) {
   d <- G$bounds |> left_join(la_g(g) |> select(LANAME, pct, lo_pct, hi_pct, rank, n_la), by = "LANAME")
-  pal <- leaflet::colorNumeric(c("#1b7837", "#7fbf7b", "#f7f7f7", "#af8dc3", "#762a83"), domain = c(-8, 8), na.color = "#e8e6ee")
-  lab <- sprintf("<b>%s</b><br>%s%%  (95%%: %s to %s)<br>rank %s of %s", d$LANAME,
-                 ifelse(is.na(d$pct), "–", sprintf("%+.1f", d$pct)), sprintf("%+.1f", d$lo_pct), sprintf("%+.1f", d$hi_pct),
-                 d$rank, d$n_la)
+  pal <- leaflet::colorNumeric(MAP_COL, domain = c(-8, 8), na.color = "#e8e6ee")
+  lab <- sprintf("<b>%s</b><br>%s%% %s<br>95%% interval %s to %s<br>rank %s of %s", d$LANAME,
+                 ifelse(is.na(d$pct), "–", sprintf("%+.1f", d$pct)),
+                 ifelse(is.na(d$pct), "", ifelse(d$pct >= 0, "above what intake predicts", "below what intake predicts")),
+                 sprintf("%+.1f", d$lo_pct), sprintf("%+.1f", d$hi_pct), d$rank, d$n_la)
   leaflet::leaflet(d, height = 560, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
     leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
     leaflet::addPolygons(fillColor = ~ pal(pmax(pmin(pct, 8), -8)), fillOpacity = 0.85, color = "#ffffff", weight = 0.6,
                          label = lapply(lab, htmltools::HTML),
                          highlightOptions = leaflet::highlightOptions(weight = 2, color = INK, bringToFront = TRUE)) |>
-    leaflet::addLegend("topright", pal = pal, values = c(-8, 8), title = "% of Attainment 8",
-                       labFormat = leaflet::labelFormat(prefix = "", transform = function(x) x), opacity = 0.9)
+    leaflet::addLegend("topright", colors = rev(MAP_COL),
+                       labels = c("+8% or more: above", "+4%", "0: as intake predicts", "−4%", "−8% or less: below"),
+                       title = "Against what intake predicts", opacity = 0.9)
 }
 ```
 
@@ -113,19 +124,26 @@ mk_map("all")
 mk_map("disadvantaged")
 ```
 
+### Non-disadvantaged pupils
+
+```{r}
+mk_map("non_disadvantaged")
+```
+
 :::
 
 ```{r}
 #| label: fig-regions
-#| fig-cap: "Average value added against England by region (schools' average log residual, weighted by years, as %): all pupils and disadvantaged pupils. This includes the region's and its authorities' effects."
-#| fig-height: 3.8
-rgd <- G$reg |> filter(group %in% c("all", "disadvantaged")) |>
-  mutate(grp = ifelse(group == "all", "All pupils", "Disadvantaged pupils"))
+#| fig-cap: "Average value added against England by region (schools' average log residual, weighted by years, as %): all, disadvantaged and non-disadvantaged pupils. This includes the region's and its authorities' effects."
+#| fig-height: 4.6
+rgd <- G$reg |> filter(group %in% c("all", "disadvantaged", "non_disadvantaged")) |>
+  mutate(grp = factor(GROUP_LABELS[group], rev(GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")])))
 rord <- rgd |> filter(group == "disadvantaged") |> arrange(pct) |> pull(gor_name)
 ggplot(rgd |> mutate(gor_name = factor(gor_name, rord)), aes(pct, gor_name, fill = grp)) +
   geom_vline(xintercept = 0, colour = GREY) +
-  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
-  scale_fill_manual(values = c("All pupils" = LPURPLE, "Disadvantaged pupils" = DPURPLE), name = NULL) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+  scale_fill_manual(values = GROUP_COL[GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")]], name = NULL,
+                    breaks = GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")]) +
   scale_x_continuous(labels = function(x) paste0(sprintf("%+.0f", x), "%")) +
   labs(x = "Value added against England, % of Attainment 8", y = NULL) + theme_note() +
   theme(panel.grid.major.y = element_blank())

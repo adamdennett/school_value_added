@@ -72,11 +72,11 @@ left out.
 
 ```{r}
 #| label: fig-map
-#| fig-cap: "Mainstream independent schools teaching secondary ages (GIAS, June 2026), coloured by A level value added 2024/25 (DfE, grades per entry; purple above zero, green below; grey, none published). Circle size by number of pupils."
+#| fig-cap: "Mainstream independent schools teaching secondary ages (GIAS, June 2026), coloured by A level value added 2024/25 (DfE, grades per entry; green above zero, purple below, as the explorer; grey, none published). Circle size by number of pupils."
 al_va <- X$alev |> filter(sector5 == "Independent") |> select(URN, va_alev, alev_n, va_alev_3)
 mp <- X$sector |> filter(!is.na(lat)) |> left_join(al_va, by = "URN") |>
   left_join(X$ks4 |> filter(sector == "Independent") |> select(URN, att8, tpup), by = "URN")
-pal <- leaflet::colorNumeric(c("#1b7837", "#a6dba0", "#f7f7f7", "#c2a5cf", "#762a83"), domain = c(-1, 1), na.color = "#bdbac8")
+pal <- leaflet::colorNumeric(c("#762a83", "#c2a5cf", "#f7f7f7", "#a6dba0", "#1b7837"), domain = c(-1, 1), na.color = "#bdbac8")
 mp$col <- ifelse(is.na(mp$va_alev), "#bdbac8", pal(pmax(pmin(mp$va_alev, 1), -1)))
 mp$tip <- paste0("<b>", htmltools::htmlEscape(mp$name), "</b><br>", htmltools::htmlEscape(mp$la),
   "<br>", ifelse(is.na(mp$pupils_gias), "", paste0(mp$pupils_gias, " pupils · ")), mp$sex, " · ", mp$inspectorate,
@@ -88,7 +88,7 @@ leaflet::leaflet(height = 520, options = leaflet::leafletOptions(scrollWheelZoom
   leaflet::setView(-1.6, 52.8, 6) |>
   leaflet::addCircleMarkers(lng = mp$lon, lat = mp$lat, radius = 2.5 + sqrt(pmax(coalesce(mp$pupils_gias, 100), 0)) / 9,
     fillColor = mp$col, fillOpacity = 0.9, color = "#4a4560", weight = 0.6, label = lapply(mp$tip, htmltools::HTML)) |>
-  leaflet::addLegend("bottomright", colors = c("#762a83", "#c2a5cf", "#f7f7f7", "#a6dba0", "#1b7837", "#bdbac8"),
+  leaflet::addLegend("bottomright", colors = c("#1b7837", "#a6dba0", "#f7f7f7", "#c2a5cf", "#762a83", "#bdbac8"),
     labels = c("+1 grade or more", "+0.5", "0", "−0.5", "−1 or less", "None published"),
     title = "A level value added", opacity = 0.9)
 ```
