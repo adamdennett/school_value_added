@@ -116,12 +116,16 @@ subtitle: "What v2.1 does now, and what comes next."
       (intervening opportunities), than in rural areas, where long journeys
       are the norm and often by school transport. Needs a measure of how
       far each school's pupils travel built from published sources.
-- [ ] **Independent schools.** A value added of sorts for independent
-      schools. Their published data are thinner (KS4 results where they
-      enter pupils for qualifications that count, but no prior attainment,
-      FSM or absence in the same form), so this would need a reduced
-      specification, clearly labelled, and a look at what can and cannot be
-      compared with state-funded schools.
+- [x] **[Independent schools](independent.qmd).** What is published for
+      them, term by term against v2.1; why their Attainment 8 cannot be
+      compared (IGCSEs score nothing, and KS4 and A level results are
+      unrelated); a test showing a reduced specification gets value added
+      badly wrong even in the state sector; and the comparison that does
+      exist, DfE's A level value added. Verdict: no value added at 16 is
+      possible from published data.
+- [ ] **Independent schools, next.** Check how IGCSEs enter the 16-18
+      prior-attainment baseline; A level value added over three years and
+      by subject; and the two sectors' sixth forms side by side by area.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [x] **Monthly Ofsted refresh.** A GitHub Actions workflow picks up

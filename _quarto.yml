@@ -13,6 +13,7 @@ project:
     - absence_change.qmd
     - twins.qmd
     - simulator.qmd
+    - independent.qmd
     - areas/*.qmd
     - roadmap.qmd
   resources:
@@ -66,6 +67,8 @@ website:
         text: "Find a twin"
       - href: simulator.qmd
         text: "Simulator"
+      - href: independent.qmd
+        text: "Independent schools"
       - href: roadmap.qmd
         text: Roadmap
     right:

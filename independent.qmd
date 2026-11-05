@@ -1,0 +1,328 @@
+---
+title: "Independent schools"
+subtitle: "What the published data say about England's independent schools, and how far a fair comparison with the state sector can go."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+X <- readRDS(here::here("data", "independent.rds"))
+sc <- X$sector_counts
+k <- function(s, col) X$ks4_cov[[col]][X$ks4_cov$sector == s]
+al <- function(s, col) X$alev_sum[[col]][X$alev_sum$sector5 == s]
+rt <- X$reduced_test
+bk <- function(kind, col) X$by_kind[[col]][X$by_kind$kind == kind]
+kc <- function(s) X$k45_cor$r[X$k45_cor$sector == s]
+SEC_COL <- c("Independent" = DPURPLE, "State-funded mainstream" = BLUE, "State school sixth forms" = BLUE, "Colleges" = GREY)
+n0 <- function(x) format(round(x), big.mark = ",")
+tb <- function(t, k) if (k %in% names(t)) unname(t[[k]]) else 0
+```
+
+::: {.callout-important}
+## In short
+
+- **There is no value added at 16 for independent schools, and one cannot
+  fairly be built from published data.** The two things that matter most
+  in Value Added v2.1 are each school's prior attainment and its
+  disadvantage. Neither is published for independent schools, and nor is
+  absence.
+- **Their published GCSE results are not comparable either.** Many
+  independent schools enter IGCSEs that do not count in the performance
+  tables, so their Attainment 8 is often far below what their pupils
+  achieve.
+- **One comparison does exist: value added at A level.** DfE publishes
+  16-18 A level value added, from each student's GCSE results, for
+  `r al("Independent", "schools")` independent schools on the same basis as
+  state sixth forms. It is the fair comparison available now, with caveats
+  of its own.
+:::
+
+## The sector {#sec-sector}
+
+England has `r n0(sc$all_independent)` open independent schools. This page
+is about the `r n0(sc$schools)` mainstream independent schools that teach
+secondary ages, with about `r n0(round(sc$pupils, -3))` pupils of all ages
+between them. The 2024/25 performance tables list
+`r n0(k("Independent", "schools"))` independent schools with pupils at the
+end of key stage 4 (a few have since closed or changed):
+`r n0(k("Independent", "pupils"))` pupils, against
+`r n0(k("State-funded mainstream", "pupils"))` in state-funded mainstream
+schools, about `r round(100 * k("Independent", "pupils") / (k("Independent", "pupils") + k("State-funded mainstream", "pupils")))`%
+of the cohort. Independent special schools are a different sector and are
+left out.
+
+- **Inspection:** `r tb(sc$inspectorate, "ISI")` are inspected by the
+  Independent Schools Inspectorate (members of the associations) and
+  `r tb(sc$inspectorate, "Ofsted")` by Ofsted.
+- **Admissions:** `r tb(sc$admissions, "Selective")` say they are selective,
+  `r tb(sc$admissions, "Non-selective")` non-selective, and
+  `r tb(sc$admissions, "Not applicable")` give no policy.
+- **Single-sex:** `r tb(sc$sex, "Girls")` girls' schools and
+  `r tb(sc$sex, "Boys")` boys' schools.
+- **Boarding:** `r tb(sc$boarding, "Has boarders")` have boarders.
+
+```{r}
+#| label: fig-map
+#| fig-cap: "Mainstream independent schools teaching secondary ages (GIAS, June 2026), coloured by A level value added 2024/25 (DfE, grades per entry; purple above zero, green below; grey, none published). Circle size by number of pupils."
+al_va <- X$alev |> filter(sector5 == "Independent") |> select(URN, va_alev, alev_n, va_alev_3)
+mp <- X$sector |> filter(!is.na(lat)) |> left_join(al_va, by = "URN") |>
+  left_join(X$ks4 |> filter(sector == "Independent") |> select(URN, att8, tpup), by = "URN")
+pal <- leaflet::colorNumeric(c("#1b7837", "#a6dba0", "#f7f7f7", "#c2a5cf", "#762a83"), domain = c(-1, 1), na.color = "#bdbac8")
+mp$col <- ifelse(is.na(mp$va_alev), "#bdbac8", pal(pmax(pmin(mp$va_alev, 1), -1)))
+mp$tip <- paste0("<b>", htmltools::htmlEscape(mp$name), "</b><br>", htmltools::htmlEscape(mp$la),
+  "<br>", ifelse(is.na(mp$pupils_gias), "", paste0(mp$pupils_gias, " pupils · ")), mp$sex, " · ", mp$inspectorate,
+  "<br>Admissions: ", coalesce(mp$admissions, "not given"),
+  "<br>Attainment 8 2024/25: ", ifelse(is.na(mp$att8), "not published", mp$att8),
+  "<br>A level value added 2024/25: ", ifelse(is.na(mp$va_alev), "not published", sprintf("%+.2f", mp$va_alev)))
+leaflet::leaflet(height = 520, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
+  leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
+  leaflet::setView(-1.6, 52.8, 6) |>
+  leaflet::addCircleMarkers(lng = mp$lon, lat = mp$lat, radius = 2.5 + sqrt(pmax(coalesce(mp$pupils_gias, 100), 0)) / 9,
+    fillColor = mp$col, fillOpacity = 0.9, color = "#4a4560", weight = 0.6, label = lapply(mp$tip, htmltools::HTML)) |>
+  leaflet::addLegend("bottomright", colors = c("#762a83", "#c2a5cf", "#f7f7f7", "#a6dba0", "#1b7837", "#bdbac8"),
+    labels = c("+1 grade or more", "+0.5", "0", "−0.5", "−1 or less", "None published"),
+    title = "A level value added", opacity = 0.9)
+```
+
+## What is published {#sec-data}
+
+Value Added v2.1 sets each school's results against what its intake and
+setting would predict. This is what exists for independent schools, term by
+term:
+
+| In the v2.1 model | State-funded schools | Independent schools |
+|---|---|---|
+| **Outcome:** Attainment 8 | Published | Published for `r round(100 * k("Independent", "att8_pub"))`%, but IGCSEs and other unapproved qualifications score nothing (@sec-att8) |
+| Prior attainment (KS2) | Published | **None.** Many pupils never sat KS2 tests, and none is published |
+| Disadvantage (FSM6) | Published | **None.** Fee-paying schools have no free school meals measure |
+| Absence | Published | **None.** Independent schools are not in the absence collection |
+| English as an additional language | Published | **None.** Not collected in the independent schools census |
+| Pupil mobility | Published | **None** |
+| SEN support and EHC plans | Published | **Published** (median SEN support `r pp(X$sen_cov$sen_sup[X$sen_cov$indep])`%, EHC plans `r pp(X$sen_cov$ehcp[X$sen_cov$indep])`%, against `r pp(X$sen_cov$sen_sup[!X$sen_cov$indep])`% and `r pp(X$sen_cov$ehcp[!X$sen_cov$indep])`% in state secondaries) |
+| Neighbourhood education | Built from where pupils live | Only where the school is. Pupils travel further, and some board |
+| Admissions, single-sex, sixth form | Published | Published (GIAS), though many give no admissions policy |
+| Ethnicity, young carers | Published | **None** |
+
+The January 2026 school census publishes headcounts by age and sex, and
+boarders, for every independent school. It publishes none of the
+measures of who the pupils are: free school meals, first language,
+ethnicity and young carers are all blank. The only measures of need are
+SEN support and EHC plans. Independent schools identify more SEN support
+than state schools, mostly specific learning difficulties, and have far
+fewer EHC plans.
+
+## The Attainment 8 problem {#sec-att8}
+
+```{r}
+#| label: fig-att8
+#| fig-cap: "Attainment 8 per pupil, 2024/25 (performance tables, provisional): state-funded mainstream schools and independent mainstream schools with a published figure."
+#| fig-height: 3.6
+a8 <- X$ks4 |> filter(!is.na(att8))
+ggplot(a8, aes(att8, fill = sector, colour = sector)) +
+  geom_density(alpha = 0.25, linewidth = 0.8, adjust = 0.8) +
+  scale_fill_manual(values = SEC_COL, name = NULL) + scale_colour_manual(values = SEC_COL, name = NULL) +
+  labs(x = "Attainment 8 per pupil", y = NULL) + theme_note() +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
+
+Independent schools, nearly all fee-paying and many selective, would be
+expected to have results well above the state average. Their published
+Attainment 8 has a median of `r pp(k("Independent", "att8_med"))`, below
+the state median of `r pp(k("State-funded mainstream", "att8_med"))`, and
+`r round(100 * k("Independent", "under20"))`% of independent schools score
+under 20. That does not reflect what their pupils achieve. Since 2017 the performance
+tables count only approved qualifications, and many independent schools
+enter their pupils for international GCSEs (IGCSEs), which are not on the
+list. A pupil with a string of top IGCSE grades can score next to nothing.
+
+The same schools' A level results show it:
+
+```{r}
+#| label: fig-k45
+#| fig-cap: "Attainment 8 (2024/25) against A level average point score per entry (2024/25), schools with at least ten A level students. Dashed lines: the state-school bottom quarter on Attainment 8 and median on A levels."
+#| fig-height: 4.4
+k45 <- X$k45 |> mutate(sector = factor(sector, c("State-funded mainstream", "Independent")))
+ggplot(k45, aes(att8, alev_aps, colour = sector)) +
+  geom_vline(xintercept = X$st_q1, linetype = "dashed", colour = GREY) +
+  geom_hline(yintercept = X$st_aps_med, linetype = "dashed", colour = GREY) +
+  geom_point(alpha = 0.55, size = 1.4) +
+  facet_wrap(~ sector) +
+  scale_colour_manual(values = SEC_COL, guide = "none") +
+  labs(x = "Attainment 8 per pupil (KS4)", y = "A level points per entry") + theme_note()
+```
+
+In state schools, a school's Attainment 8 and its A level results go
+together (correlation `r pp(kc("State-funded mainstream"), 2)`). In
+independent schools they are unrelated (`r pp(kc("Independent"), 2)`).
+`r X$k45_flag$mismatch` of the `r X$k45_flag$n` independent schools with
+both (`r round(100 * X$k45_flag$share)`%) are in the bottom quarter of state
+schools on Attainment 8 and above the state median at A level. Published
+Attainment 8 cannot be used to compare an independent school with anyone,
+and from the published data we cannot tell which schools' figures are
+complete.
+
+## Could a reduced model stand in? {#sec-reduced}
+
+If the missing terms cannot be had, one could fit a model on only what
+independent schools do report (their neighbourhood, SEN, size, sex,
+selection, sixth form, region and setting) and compare results with that.
+We can test this where the answer is known: on state schools, against the
+full v2.1 model.
+
+```{r}
+#| label: tbl-reduced
+#| tbl-cap: "A reduced model (only what independent schools report) against the full v2.1 specification, state-funded mainstream schools, 2024/25."
+tibble(` ` = c("Variation in results explained (R²)", "Correlation of the reduced model's value added with v2.1's",
+               "Schools put in the same fifth of value added", "Of the reduced model's top fifth, also in v2.1's top fifth"),
+       `Full v2.1` = c(sprintf("%.0f%%", 100 * rt$r2_full), "1", "", ""),
+       `Reduced` = c(sprintf("%.0f%%", 100 * rt$r2_reduced), sprintf("%.2f", rt$r_resid),
+                     sprintf("%.0f%%", 100 * rt$same_fifth), sprintf("%.0f%%", 100 * rt$top_fifth_kept))) |>
+  kt(align = "lrr")
+```
+
+Even among state schools, where the full data exist to check it against,
+the reduced model gets value added badly wrong. It puts only
+`r round(100 * rt$same_fifth)`% of schools in the right fifth. It does not
+fail at random: without a measure of disadvantage it credits schools for
+their intake.
+
+```{r}
+#| label: fig-kind
+#| fig-cap: "Average value added (%) by kind of state school, 2024/25: the full v2.1 model and the reduced model. Grammar schools are left out: selection is in both models as a flag."
+#| fig-height: 3
+bkd <- X$by_kind |> tidyr::pivot_longer(c(full, reduced), names_to = "model", values_to = "pct") |>
+  mutate(model = ifelse(model == "full", "Full v2.1", "Reduced (what independent schools report)"),
+         kind = factor(kind, rev(c("Least disadvantaged fifth (FSM6)", "Single-sex", "Other non-selective", "Most disadvantaged fifth (FSM6)"))))
+ggplot(bkd, aes(pct, kind, fill = model)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.65) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_text(aes(label = sprintf("%+.1f%%", pct), hjust = ifelse(pct >= 0, -0.15, 1.15)),
+            position = position_dodge(width = 0.7), size = 3.2, colour = INK) +
+  scale_fill_manual(values = c("Full v2.1" = DPURPLE, "Reduced (what independent schools report)" = MPURPLE), name = NULL) +
+  scale_x_continuous(expand = expansion(mult = 0.25), labels = function(x) paste0(x, "%")) +
+  labs(x = "Average value added (% of Attainment 8)", y = NULL) + theme_note() +
+  theme(panel.grid.major.y = element_blank())
+```
+
+The least disadvantaged fifth of state schools have value added of
+`r sgn(bk("Least disadvantaged fifth (FSM6)", "full"), 1)`% on the full
+model and `r sgn(bk("Least disadvantaged fifth (FSM6)", "reduced"), 1)`% on
+the reduced one: the reduced model mistakes an advantaged intake for good
+teaching. Independent schools' intakes are more advantaged than any state
+school's, and selected by fees and often by entrance exam. A reduced model
+would credit them with that advantage, by more than it does the most
+advantaged state schools, and there is no published measure to correct it.
+
+```{r}
+#| label: tbl-drop
+#| tbl-cap: "What each missing term costs: the full v2.1 specification fitted on state schools, 2024/25, with one term left out at a time."
+X$drop_one |> transmute(`Left out` = term, `R²` = sprintf("%.0f%%", 100 * r2),
+                        `Correlation of value added with the full model` = sprintf("%.2f", r_va)) |>
+  kt(align = "lrr")
+```
+
+Each of the missing terms costs something on its own; together, as the
+reduced model shows, they cost most of the measure.
+
+## The comparison that exists: A level value added {#sec-alevel}
+
+DfE publishes value added at 16-18 for every school and college with A
+level students, independent schools included. It sets each student's A
+level grades against those of students nationally with the same GCSE
+results, and averages by school, in grades per A level entry. Because it
+starts from each student's own prior results, it allows for the largest
+thing the KS4 comparison cannot.
+
+```{r}
+#| label: fig-alevel
+#| fig-cap: "A level value added, 2024/25 (DfE 16-18 performance tables, grades per entry), by kind of provider."
+#| fig-height: 3.4
+alv <- X$alev |> filter(!is.na(va_alev)) |>
+  mutate(sector5 = factor(sector5, c("Colleges", "State school sixth forms", "Independent")))
+ggplot(alv, aes(va_alev, fill = sector5, colour = sector5)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_density(alpha = 0.25, linewidth = 0.8) +
+  scale_fill_manual(values = SEC_COL, name = NULL) + scale_colour_manual(values = SEC_COL, name = NULL) +
+  coord_cartesian(xlim = c(-1.5, 1.5)) +
+  labs(x = "A level value added (grades per entry)", y = NULL) + theme_note() +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
+
+```{r}
+#| label: tbl-alevel
+#| tbl-cap: "A level value added by kind of provider, 2024/25. 'Above' and 'below': the 95% interval excludes zero (A level qualification value added)."
+X$alev_sum |> mutate(s = factor(sector5, c("Independent", "State school sixth forms", "Colleges"))) |> arrange(s) |>
+  transmute(Provider = sector5, `With a value added` = n0(schools), `A level students` = n0(students),
+            `Median (grades per entry)` = sprintf("%+.2f", va_med),
+            `Middle half` = sprintf("%+.2f to %+.2f", va_q1, va_q3),
+            `A level points per entry (median)` = pp(aps_med, 1),
+            `Clearly above zero` = paste0(round(100 * sig_up), "%"), `Clearly below` = paste0(round(100 * sig_dn), "%")) |>
+  kt(align = "lrrrrrrr")
+```
+
+On this measure the typical independent school adds
+`r sgn(al("Independent", "va_med"), 2)` of a grade per A level
+entry, against `r sgn(al("State school sixth forms", "va_med"), 2)`
+in state school sixth forms. `r round(100 * al("Independent", "sig_up"))`%
+of independent schools are clearly above zero, against
+`r round(100 * al("State school sixth forms", "sig_up"))`% of state sixth
+forms. The spread within each sector is wider than the gap between them:
+many state sixth forms do better than the typical independent school.
+
+What it does and does not allow for:
+
+- **Prior attainment, yes**: each student's GCSE results. How fully
+  independent pupils' IGCSEs count in that baseline is set out in DfE's
+  16-18 technical guidance, and is the first thing to check before leaning
+  on the comparison.
+- **Disadvantage, no.** DfE's 16-18 value added has no adjustment for
+  disadvantage or context. At GCSE the v2.1 model finds disadvantage worth
+  a good deal even after prior attainment, so some of the independent
+  schools' lead is likely to be their intake rather than their teaching.
+- **Who stays on, no.** Sixth forms choose their students and students
+  choose sixth forms. The two sectors' A level cohorts are selected
+  differently.
+- **One year is noisy.** Three-year averages are published alongside, and
+  are steadier.
+
+## Is a comparison possible? {#sec-verdict}
+
+| Comparison | Possible? | Why |
+|---|---|---|
+| Value added at 16 on the v2.1 basis | **No** | No prior attainment, disadvantage or absence for independent schools, and an incomplete outcome |
+| Raw GCSE results (Attainment 8) | **No** | IGCSEs and other unapproved qualifications score nothing, and which schools are affected cannot be told from the data |
+| A reduced contextual model at 16 | **Not credibly** | It can be computed, but in the state sector it gets value added badly wrong and credits advantaged intakes; independent intakes are the most advantaged of all |
+| A level value added (16-18) | **Yes, with caveats** | Published by DfE for `r al("Independent", "schools")` independent schools on the same basis as state sixth forms; allows for prior attainment, not disadvantage or selection into the sixth form |
+| A level results, raw | Descriptive only | Comparable qualifications, but no allowance for intake |
+
+### What would make a fair comparison at 16 possible
+
+All of these are about what is published, not about any individual
+pupil's records:
+
+1. **Count what independent pupils sit.** Publish Attainment 8 with IGCSEs
+   and other GCSE-equivalent certificates included, beside the official
+   figure, so the outcome is complete.
+2. **A starting point.** A prior-attainment measure for independent
+   schools' pupils at entry, whether KS2 or an agreed baseline.
+3. **Who the pupils are.** Some measure of disadvantage: bursary and
+   fee-remission rates are the nearest equivalent to free school meals.
+   First language, at least, as for state schools.
+4. **Attendance.** Absence is the largest school-level term in v2.1, and
+   independent schools are outside the collection.
+
+Until then, the honest comparison is at A level, and it is a comparison
+of what sixth forms add to students who arrive with the same GCSEs, not of
+schools.
+
+## Sources {#sec-sources}
+
+- Get Information about Schools (GIAS), all establishments, June 2026.
+- DfE, [Schools, pupils and their characteristics](https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics),
+  January 2026, school-level data.
+- DfE, [Special educational needs in England](https://explore-education-statistics.service.gov.uk/find-statistics/special-educational-needs-in-england),
+  January 2026, school-level data.
+- DfE, [Compare school and college performance](https://www.compare-school-performance.service.gov.uk/download-data):
+  KS4 (provisional) and 16-18 (A level value added and results) 2024/25.
+
+Built by `R/10_independent.R`.

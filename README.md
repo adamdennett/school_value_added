@@ -35,6 +35,7 @@ Rscript R/06_bh_effect.R          # geographical effects: why Brighton and Hove'
 Rscript R/07_v21_candidates.R     # v2.1 candidates, and what matters most in the model (~10 min)
 Rscript R/08_absence_causes.R     # what goes with school absence, school by school (~3 min)
 Rscript R/09_absence_change.R     # how school absence changes, 2016/17 to 2025/26 (~3 min; needs fixest)
+Rscript R/10_independent.R        # independent schools: the data and how far a comparison can go (~1 min)
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```
@@ -98,6 +99,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/07_v21_candidates.R` | the v2.1 candidates (kind of absence, 11–16) and the importance charts |
 | `R/08_absence_causes.R` | what goes with school-level absence: trend by reason, seven outcomes on intake, needs and place (`absence_causes.qmd`) |
 | `R/09_absence_change.R` | how school absence changes: a 2016/17 to 2025/26 panel joined through URN changes, variance shares, stability, the pre/post-pandemic shift, within- vs between-school intake effects, event studies of academy conversion and trust changes (`absence_change.qmd`); fetches the 2018/19 census file from the performance tables service if it is missing |
+| `R/10_independent.R` | independent schools: GIAS, census and SEN coverage, KS4 Attainment 8 against KS5 A level results, a reduced specification tested on state schools, and DfE's A level value added by sector (`independent.qmd`); fetches the 2024/25 KS5 and vaqual files if missing |
 | `simulator.qmd`, `simulator.js` | Policy simulator v2.0: the v2.1 coefficients applied in the browser to a school's latest result, or every school in an area, with absence and intake as levers |
 | `twins.qmd`, `twins.js` | Find a twin: a school's closest look-alikes in intake and setting (Gower-type distance, in the browser) and the anti-twins that do better on absence, attainment or value added; data from `R/08` |
 | `R/area_helpers.R` | the original area documents' charts, ported |
