@@ -120,12 +120,16 @@ subtitle: "What v2.1 does now, and what comes next."
       allowing for pupils' ethnicity beside the headline, labelled, not in
       it; and before release, test detailed ethnic groups rather than the
       White British share alone. Until then the site publishes v2.1.
-- [ ] **Parents, not adults (now a priority).** Neighbourhood education counts
-      every adult, so young, often childless graduates may inflate it around
-      inner-city and London schools
-      ([the evidence](neighbourhood_covariates.qmd#sec-two)). Try a parents'
-      qualification measure from the 2021 Census (households with dependent
-      children) in its place, before v2.2 adopts neighbourhood deprivation.
+- [x] **[Parents, not adults](neighbourhood_covariates.qmd#sec-parents).**
+      Neighbourhood education rebuilt from custom Census tables as graduates
+      among parents (adults 25-64 with dependent children, MSOA). All-adult
+      graduate shares hide a 12-point gap in parents between deprived and
+      comfortable graduate-rich neighbourhoods, and the young-adult penalty
+      almost disappears. Parents alone is no better a term; parents and other
+      adults together help every group a little. Deprivation survives.
+- [ ] **v2.2 candidate: split neighbourhood education** into parents and
+      other adults, and follow up why disadvantaged pupils do better near
+      graduates without children.
 - [ ] **What causes school-level absence, continued.** The cross-section
       and change over time are under way ([above](#done-absence)). Next:
       each school's own path relative to England on the area pages and in

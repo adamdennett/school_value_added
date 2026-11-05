@@ -231,6 +231,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#sec-one" id="toc-sec-one" class="nav-link" data-scroll-target="#sec-one">One at a time</a></li>
   <li><a href="#sec-composition" id="toc-sec-composition" class="nav-link" data-scroll-target="#sec-composition">Composition or place?</a></li>
   <li><a href="#sec-two" id="toc-sec-two" class="nav-link" data-scroll-target="#sec-two">Two kinds of deprived neighbourhood</a></li>
+  <li><a href="#sec-parents" id="toc-sec-parents" class="nav-link" data-scroll-target="#sec-parents">Parents, not adults</a></li>
   <li><a href="#sec-place" id="toc-sec-place" class="nav-link" data-scroll-target="#sec-place">Do they explain the place effects?</a></li>
   <li><a href="#sec-bh" id="toc-sec-bh" class="nav-link" data-scroll-target="#sec-bh">Brighton and Hove</a></li>
   <li><a href="#sec-means" id="toc-sec-means" class="nav-link" data-scroll-target="#sec-means">What it means for the model</a></li>
@@ -576,7 +577,206 @@ Figure&nbsp;2: Average value added against England (% of Attainment 8, with one 
 </tbody>
 </table>
 <p>So the small deprivation term is not a recent-graduate effect. It appears in both kinds of place, for reasons this page cannot separate.</p>
-<p><strong>But the graduates may matter in a different way.</strong> Two results point the same way. In deprived, graduate-rich neighbourhoods, <em>non-disadvantaged</em> pupils do worse than expected (-1.3%). And at the same share of graduates, more young adults go with slightly lower results for every group (-0.8% for all pupils). A likely reading is that many recent graduates are not the pupils’ parents. Neighbourhood education counts every adult, so young and often childless graduates raise it, and v2.1 then expects more of the local schools than their families warrant. That is a hypothesis, not a result. It is what the roadmap’s “<a href="./roadmap.html">Parents, not adults</a>” test, qualifications of households with dependent children, would settle.</p>
+<p><strong>But the graduates may matter in a different way.</strong> Two results point the same way. In deprived, graduate-rich neighbourhoods, <em>non-disadvantaged</em> pupils do worse than expected (-1.3%). And at the same share of graduates, more young adults go with slightly lower results for every group (-0.8% for all pupils). A likely reading is that many recent graduates are not the pupils’ parents. Neighbourhood education counts every adult, so young and often childless graduates raise it, and v2.1 then expects more of the local schools than their families warrant. The next section tests that directly.</p>
+</section>
+<section id="sec-parents" class="level2">
+<h2 class="anchored" data-anchor-id="sec-parents">Parents, not adults</h2>
+<p>Neighbourhood education counts every adult. Custom Census 2021 tables from ONS allow something closer to the pupils’ families: <strong>level 4+ qualifications among adults aged 25 to 64 in households with dependent children</strong>, published by MSOA, the finest level available. Limiting the age leaves out 16 to 18 year olds who are themselves dependent children. Each measure is averaged over a school’s same 150 nearest Output Areas, and all adults are rebuilt at MSOA level too, so differences are about who is counted, not the coarser map.</p>
+<p><strong>The measure is distorted where the idea says it should be.</strong></p>
+<div class="cell">
+<div id="tbl-gap" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Share with level 4+ qualifications around schools, by kind of neighbourhood: all adults, adults aged 25 to 64 with and without dependent children in the household.
+</figcaption>
+<div aria-describedby="tbl-gap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Neighbourhood</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All adults</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Parents</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adults without dependent children</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Deprived, many graduates</td>
+<td style="text-align: right;">163</td>
+<td style="text-align: right;">44.8%</td>
+<td style="text-align: right;">45.3%</td>
+<td style="text-align: right;">53.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Deprived, few graduates</td>
+<td style="text-align: right;">708</td>
+<td style="text-align: right;">23.3%</td>
+<td style="text-align: right;">29.5%</td>
+<td style="text-align: right;">26.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Not deprived, many graduates</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">44.9%</td>
+<td style="text-align: right;">57.4%</td>
+<td style="text-align: right;">49.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Not deprived, few graduates</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">26.2%</td>
+<td style="text-align: right;">34.6%</td>
+<td style="text-align: right;">29.8%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Deprived, graduate-rich neighbourhoods and comfortable graduate-rich ones look identical on all adults (44.8% and 44.9%). Among parents they are 12 points apart (45.3% and 57.4%). In the first, adults without children are the graduates; in the second, parents are.</p>
+<p><strong>Measuring parents explains two of the three puzzles.</strong></p>
+<div class="cell">
+<div id="tbl-puzzles" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-puzzles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: What changes when neighbourhood education is measured among parents instead of all adults. The effects (% per SD) come from models that also allow for the school’s ethnicity, neighbourhood deprivation and young adults; the last row is value added against England with only the neighbourhood term swapped.
+</figcaption>
+<div aria-describedby="tbl-puzzles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Result</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All adults</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Parents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Young adults' effect, all pupils</td>
+<td style="text-align: right;">-1.0%</td>
+<td style="text-align: right;">-0.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Young adults' effect, non-disadvantaged</td>
+<td style="text-align: right;">-1.1%</td>
+<td style="text-align: right;">-0.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Young adults' effect, boys</td>
+<td style="text-align: right;">-1.0%</td>
+<td style="text-align: right;">-0.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood deprivation's effect, all pupils</td>
+<td style="text-align: right;">+1.2%</td>
+<td style="text-align: right;">+1.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbourhood deprivation's effect, disadvantaged</td>
+<td style="text-align: right;">+1.6%</td>
+<td style="text-align: right;">+1.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-disadvantaged pupils in deprived, graduate-rich places</td>
+<td style="text-align: right;">-1.3%</td>
+<td style="text-align: right;">+0.5%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The penalty for young adults almost disappears, and so does the shortfall for non-disadvantaged pupils in deprived, graduate-rich places. Those were artefacts of counting adults who are not parents. <strong>The deprivation effect does not go.</strong> It is not a by-product of the qualification term, for any group.</p>
+<p><strong>But parents alone are not a better term.</strong> Used in place of all adults, parents improve the model for non-disadvantaged pupils and make it slightly worse for the other four groups. Both together are better for all five.</p>
+<div class="cell">
+<div id="tbl-pfit" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pfit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Against v2.1, by group: the change in AIC and in out-of-sample error (each year predicted from the other three) with parents in place of all adults, and with parents and adults without dependent children both in.
+</figcaption>
+<div aria-describedby="tbl-pfit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Parents: AIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Parents: error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Both: AIC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Both: error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">+14</td>
+<td style="text-align: right;">+0.14%</td>
+<td style="text-align: right;">-20</td>
+<td style="text-align: right;">-0.10%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">+18</td>
+<td style="text-align: right;">+0.14%</td>
+<td style="text-align: right;">-67</td>
+<td style="text-align: right;">-0.35%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">-48</td>
+<td style="text-align: right;">-0.06%</td>
+<td style="text-align: right;">-51</td>
+<td style="text-align: right;">-0.13%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: right;">+17</td>
+<td style="text-align: right;">+0.16%</td>
+<td style="text-align: right;">-13</td>
+<td style="text-align: right;">-0.09%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boys</td>
+<td style="text-align: right;">+10</td>
+<td style="text-align: right;">+0.11%</td>
+<td style="text-align: right;">-20</td>
+<td style="text-align: right;">-0.11%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>With both in, the two groups of pupils respond to different graduates.</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-split" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-split-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="neighbourhood_covariates_files/figure-html/fig-split-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-split-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The effect of graduates among parents and among adults without dependent children, entered together with the school’s ethnicity, % of Attainment 8 per SD with 95% intervals, for England, outside London and London.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Non-disadvantaged pupils’ results follow graduate parents</strong> (+2.2%, t 9.3). Other graduates nearby add nothing clear (+0.3%). This holds inside and outside London. It is what a measure of family background should do.</li>
+<li><strong>Disadvantaged pupils do better near graduates who are not parents</strong> (+1.7%, t 4.0), and a little worse near graduate parents (-1.1%). That appears in London and outside it, so it is not simply a London effect. It is smaller than it first looks: about 60% of the split goes once the school’s ethnicity is allowed for, and outside London the parents’ side is no longer clear.</li>
+</ul>
+<p>The second result fits the idea that young graduates bring something to a neighbourhood that reaches disadvantaged pupils. It fits other stories too. Disadvantaged pupils among graduate parents may be more isolated, or more disadvantaged within their school. The two measures also overlap heavily (correlation 0.88), so the split rests on the places where they differ. It is an association to follow up, not a finding about cause.</p>
+<p><strong>For the model.</strong> Neighbourhood deprivation survives with parents measured properly, so the case for it in v2.2 stands. Splitting neighbourhood education into parents and other adults would help every group a little, and is a further candidate. Parents here means adults aged 25 to 64 in a household with a dependent child, which also takes in some grandparents and older siblings, at MSOA level.</p>
 </section>
 <section id="sec-place" class="level2">
 <h2 class="anchored" data-anchor-id="sec-place">Do they explain the place effects?</h2>
@@ -588,7 +788,7 @@ Figure&nbsp;2: Average value added against England (% of Attainment 8, with one 
 <img src="neighbourhood_covariates_files/figure-html/fig-place-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: How much the local authority and region variances change when each set of terms is added (%). Negative: the terms account for part of what the authority or region effects were picking up.
+Figure&nbsp;4: How much the local authority and region variances change when each set of terms is added (%). Negative: the terms account for part of what the authority or region effects were picking up.
 </figcaption>
 </figure>
 </div>
@@ -603,7 +803,7 @@ Figure&nbsp;3: How much the local authority and region variances change when eac
 <div id="tbl-bh" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3: Brighton and Hove’s local authority effect (% of Attainment 8) in the v2.1 model and with terms added.
+Table&nbsp;6: Brighton and Hove’s local authority effect (% of Attainment 8) in the v2.1 model and with terms added.
 </figcaption>
 <div aria-describedby="tbl-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -670,7 +870,7 @@ Table&nbsp;3: Brighton and Hove’s local authority effect (% of Attainment 8) i
 <div id="tbl-all" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-all-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;4: Every model: the change in AIC against v2.1 (negative is better), and in the local authority and region variances.
+Table&nbsp;7: Every model: the change in AIC against v2.1 (negative is better), and in the local authority and region variances.
 </figcaption>
 <div aria-describedby="tbl-all-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">

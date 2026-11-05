@@ -196,7 +196,8 @@ release. Until then, everything on this site is Value Added v2.1.
    it sits next to. It helps every group in every year. It is not
    specific to graduate-rich places
    ([Two kinds of deprived neighbourhood](neighbourhood_covariates.qmd#sec-two)),
-   so test it against parents' qualifications before adopting it.
+   and it survives with [parents' qualifications](neighbourhood_covariates.qmd#sec-parents)
+   measured properly.
 2. **Publish value added allowing for pupils' ethnicity beside the
    headline**, for every group, labelled, with this page as its
    explanation.
