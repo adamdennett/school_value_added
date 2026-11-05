@@ -14,6 +14,14 @@ ctt <- function(g, m, term) { x <- R$coefs[[which(R$group == g & R$model == m)]]
 SO <- "School's own White British share"
 p1 <- function(x) sprintf("%+.1f%%", x)
 GCOL <- c("All pupils" = LPURPLE, "Disadvantaged pupils" = DPURPLE)
+T2 <- readRDS(here::here("data", "graduate_deprivation.rds"))
+tres <- function(g, s) T2$res[T2$res$group == g & T2$res$spec == s, ]
+tc <- function(g, s, term, col = "pct") { x <- tres(g, s)$coefs[[1]]; x <- x[x$term == term, ]
+  if (col == "t") x$est / x$se else 100 * (exp(x$est) - 1) }
+kv <- function(g, k, m) T2$kind_va$va[T2$kind_va$group == g & T2$kind_va$kind == k & T2$kind_va$model == m]
+kd <- function(k, col) T2$kinds[[col]][T2$kinds$kind == k]
+DG <- "Deprived, many graduates"; DF <- "Deprived, few graduates"
+PL <- "+ deprivation by kind of place"; EC <- "+ deprivation and early-career measures"; PT <- "Deprivation in parts"
 ```
 
 ::: {.callout-note}
@@ -109,7 +117,93 @@ bind_rows(lapply(mods, function(m) bind_rows(lapply(c("disadvantaged", "all"), f
 ```
 
 - **Ethnicity is mostly composition.** With the school's own share in, the neighbourhood's White British share shrinks from `r p1(r1("disadvantaged", "White British (%)", "pct"))` to `r p1(cf("disadvantaged", mods[1], "z_wbri"))` for disadvantaged pupils, and to nothing clear for all pupils (`r p1(cf("all", mods[1], "z_wbri"))`, t `r sprintf("%.1f", ctt("all", mods[1], "z_wbri"))`). The model fits barely better with both than with the school's own share alone (AIC `r sprintf("%.0f", r1("disadvantaged", mods[1], "aic_change"))` against `r sprintf("%.0f", r1("disadvantaged", SO, "aic_change"))`).
-- **Deprivation is place.** Neighbourhood deprivation keeps its effect alongside the school's composition: `r p1(cf("disadvantaged", mods[2], "z_deprived2"))` per SD for disadvantaged pupils (t `r sprintf("%.1f", ctt("disadvantaged", mods[2], "z_deprived2"))`) and `r p1(cf("all", mods[2], "z_deprived2"))` for all. At the same share of graduates and the same pupils, a school in a more multiply deprived neighbourhood does a little better. One reading is that the qualification term overstates how advantaged some graduate-rich but deprived neighbourhoods are: places with many graduates alongside poor housing and health.
+- **Deprivation is place.** Neighbourhood deprivation keeps its effect alongside the school's composition: `r p1(cf("disadvantaged", mods[2], "z_deprived2"))` per SD for disadvantaged pupils (t `r sprintf("%.1f", ctt("disadvantaged", mods[2], "z_deprived2"))`) and `r p1(cf("all", mods[2], "z_deprived2"))` for all. At the same share of graduates and the same pupils, a school in a more multiply deprived neighbourhood does a little better. The next section asks why.
+
+## Two kinds of deprived neighbourhood {#sec-two}
+
+Why would more deprivation, at the same share of graduates, go with better
+results? One idea is that this is the inner city, near universities and
+above all London: neighbourhoods full of recent graduates who are
+culturally and educationally rich but not yet financially so, unlike
+deprived towns without graduate jobs. The geography is right. The schools
+in the top third of England for neighbourhood deprivation split into two
+very different kinds of place:
+
+```{r}
+#| label: tbl-kinds
+#| tbl-cap: "Schools in the top third for neighbourhood deprivation, by whether they are also in the top or bottom third for neighbourhood education, 2024/25. Neighbourhoods are the 150 nearest Output Areas; 'near a university' is within 5 km of a higher education institution's registered address."
+rows <- c(schools = "Schools", london = "In London (%)", near_uni = "Near a university (%)", young = "Aged 25 to 34 (%)",
+          private_rent = "Private renting (%)", overcrowd = "Overcrowded households (%)", bad_health = "Bad or very bad health (%)",
+          lt_sick = "Long-term sick or disabled (%)", l4 = "Adults with degree-level qualifications (%)",
+          fsm = "Disadvantaged pupils (FSM6, %)", wbri = "White British pupils (%)")
+tibble(` ` = unname(rows),
+       `Deprived, many graduates` = sapply(names(rows), function(v) format(round(kd(DG, v), ifelse(v == "schools", 0, 1)), nsmall = ifelse(v == "schools", 0, 1))),
+       `Deprived, few graduates` = sapply(names(rows), function(v) format(round(kd(DF, v), ifelse(v == "schools", 0, 1)), nsmall = ifelse(v == "schools", 0, 1)))) |>
+  kt(align = "lrr")
+```
+
+Deprived neighbourhoods with many graduates are
+`r round(kd(DG, "london"))`% London, and `r round(kd(DG, "near_uni"))`% are
+near a university. They are young, privately rented and overcrowded.
+Deprived neighbourhoods with few graduates are almost none of those; they
+are older and sicker. The authorities with most such schools are
+`r paste(head(T2$top_las$LANAME[T2$top_las$kind == DG], 3), collapse = ", ")`,
+against `r paste(head(T2$top_las$LANAME[T2$top_las$kind == DF], 3), collapse = ", ")`.
+
+**Disadvantaged pupils do far better in the first kind, but most of that is
+who they are.**
+
+```{r}
+#| label: fig-kinds
+#| fig-cap: "Average value added against England (% of Attainment 8, with one standard error) by kind of neighbourhood: under v2.1, with the school's own ethnicity allowed for, and with neighbourhood deprivation too. Top and bottom thirds of schools on neighbourhood deprivation and neighbourhood education."
+#| fig-height: 4.6
+KV <- T2$kind_va |> filter(group != "all") |>
+  mutate(grp = ifelse(group == "disadvantaged", "Disadvantaged pupils", "Non-disadvantaged pupils"),
+         model = factor(model, c("v2.1", "+ school's ethnicity", "+ ethnicity and deprivation")),
+         kind = factor(kind, rev(c(DG, DF, "Not deprived, many graduates", "Not deprived, few graduates"))))
+ggplot(KV, aes(va, kind, colour = model)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = va - se, xmax = va + se), position = position_dodge(width = 0.6), linewidth = 0.8) +
+  geom_point(position = position_dodge(width = 0.6), size = 2.4) +
+  facet_wrap(~ grp) +
+  scale_colour_manual(values = c("v2.1" = MPURPLE, "+ school's ethnicity" = BPURPLE, "+ ethnicity and deprivation" = DPURPLE), name = NULL) +
+  scale_x_continuous(labels = function(x) ifelse(x == 0, "0%", paste0(sprintf("%+.0f", x), "%"))) +
+  labs(x = "Value added against England, % of Attainment 8", y = NULL) + theme_note(11) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+Under v2.1, disadvantaged pupils in deprived, graduate-rich neighbourhoods
+are `r p1(kv("disadvantaged", DG, "v2.1"))` above expectation, and in deprived,
+low-graduate ones `r p1(kv("disadvantaged", DF, "v2.1"))`. The schools in the
+first group have `r round(kd(DG, "wbri"))`% White British pupils, against
+`r round(kd(DF, "wbri"))`% in the second. With that allowed for, the lead falls to
+`r p1(kv("disadvantaged", DG, "+ school's ethnicity"))`: two-thirds of it is
+composition. The rest is real but modest.
+
+Does the graduate idea explain the deprivation effect itself? It makes four
+predictions, and the data support it only in part:
+
+| If it is recent graduates, the deprivation effect should... | What the data show |
+|---|---|
+| grow with neighbourhood education | **No.** The interaction is `r sprintf("%+.2f", tc("disadvantaged", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for disadvantaged pupils and `r sprintf("%+.2f", tc("non_disadvantaged", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for non-disadvantaged (the wrong way) |
+| sit in London and near universities, not in low-graduate places | **In part.** For disadvantaged pupils it is `r p1(tc("disadvantaged", PL, "place4London:z_dep"))` in London and `r p1(tc("disadvantaged", PL, "place4Near a university:z_dep"))` near universities, but also `r p1(tc("disadvantaged", PL, "place4Elsewhere, fewer graduates:z_dep"))` in low-graduate places. For non-disadvantaged pupils it is largest in low-graduate places (`r p1(tc("non_disadvantaged", PL, "place4Elsewhere, fewer graduates:z_dep"))`) |
+| go once early-career measures are in | **No.** It stays at `r p1(tc("disadvantaged", EC, "z_dep"))` for disadvantaged pupils and rises to `r p1(tc("non_disadvantaged", EC, "z_dep"))` for non-disadvantaged |
+| be overcrowding, not ill health | **In part.** Overcrowding is positive for disadvantaged pupils (`r p1(tc("disadvantaged", PT, "z_overcrowd"))`), but so is bad health (`r p1(tc("disadvantaged", PT, "z_bad_health"))`) |
+
+So the small deprivation term is not a recent-graduate effect. It appears in
+both kinds of place, for reasons this page cannot separate.
+
+**But the graduates may matter in a different way.** Two results point the
+same way. In deprived, graduate-rich neighbourhoods, *non-disadvantaged* pupils
+do worse than expected (`r p1(kv("non_disadvantaged", DG, "v2.1"))`). And at the same
+share of graduates, more young adults go with slightly lower results for
+every group (`r p1(tc("all", EC, "z_young"))` for all pupils). A likely reading
+is that many recent graduates are not the pupils' parents. Neighbourhood
+education counts every adult, so young and often childless graduates raise
+it, and v2.1 then expects more of the local schools than their families
+warrant. That is a hypothesis, not a result. It is what the roadmap's
+"[Parents, not adults](roadmap.qmd)" test, qualifications of households with
+dependent children, would settle.
 
 ## Do they explain the place effects? {#sec-place}
 
@@ -185,8 +279,10 @@ third of the effect goes with that; the rest is still unexplained.
   real difference in results out of view. It belongs with the review's
   other recommendations.
 - **A candidate for neighbourhood: deprivation beside education.** Adding
-  household deprivation to neighbourhood education makes the
-  neighbourhood term fairer to graduate-rich but deprived places.
+  household deprivation to neighbourhood education improves the model for
+  every group. It is not specific to graduate-rich places
+  ([above](#sec-two)), and a measure of parents' qualifications may do
+  the job better.
 - **What is left of place.** Even with all of it, most of the local
   authority effects remain, especially for all pupils. What makes some
   authorities' schools do better than their intakes predict is not in the

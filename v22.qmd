@@ -126,9 +126,8 @@ C |> filter(spec != "v2.1") |>
 Neighbourhood deprivation is a light touch. Schools' value added
 correlates at `r sprintf("%.3f", cv("all", "dep", "r_school"))` with v2.1
 for all pupils, and the average school moves by
-`r sprintf("%.2f", cv("all", "dep", "mean_abs_change"))` points. It
-lowers graduate-rich, deprived places' effects: Brighton and Hove goes
-from `r sprintf("%+.1f%%", cv("all", "v2.1", "bh_effect"))` to
+`r sprintf("%.2f", cv("all", "dep", "mean_abs_change"))` points. Brighton
+and Hove goes from `r sprintf("%+.1f%%", cv("all", "v2.1", "bh_effect"))` to
 `r sprintf("%+.1f%%", cv("all", "dep", "bh_effect"))` for all pupils.
 
 Ethnicity is not a light touch for disadvantaged pupils.
@@ -194,9 +193,10 @@ release. Until then, everything on this site is Value Added v2.1.
 
 1. **Add neighbourhood deprivation to the expectation**, beside
    neighbourhood education. It is a neighbourhood measure, like the term
-   it sits next to. It helps every group in every year. It makes the
-   neighbourhood term fairer to places with many graduates and many
-   deprived households.
+   it sits next to. It helps every group in every year. It is not
+   specific to graduate-rich places
+   ([Two kinds of deprived neighbourhood](neighbourhood_covariates.qmd#sec-two)),
+   so test it against parents' qualifications before adopting it.
 2. **Publish value added allowing for pupils' ethnicity beside the
    headline**, for every group, labelled, with this page as its
    explanation.
