@@ -99,9 +99,10 @@ subtitle: "What v2.1 does now, and what comes next."
       record absence differently, the severe tail on its own, whether
       particular trusts' schools move together, and absence against intake
       by kind as a candidate for a future version of the model.
-- [ ] **Twins, further.** Weight the matching by what matters for the
-      measure chosen, add the twins' value added over time to the fact
-      cards, and a printable comparison for a governors' meeting.
+- [x] **Twins, further.** The matching is weighted by what matters for the
+      measure chosen (equal weights still available), the fact cards show
+      value added and absence year by year against the twin and England,
+      and a comparison prints cleanly for a governors' meeting.
 - [ ] **Geographical effects: distance to school.** A page beside Brighton
       and Hove's under Geographical effects, on how far pupils travel to
       school and what it does to attendance, building on

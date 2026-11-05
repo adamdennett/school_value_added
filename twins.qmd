@@ -34,9 +34,57 @@ d <- L |>
             overall, illness, unauth, persistent, severe, r_overall, r_unauth,
             att8, va_all, va_dis, lat = round(lat, 4), lon = round(lon, 4)) |>
   mutate(across(where(is.double) & !c(lat, lon), ~ round(.x, 3)))
+# ---- matching weights: what matters for each measure ------------------------
+# Each characteristic is weighted by how much it moves the measure across
+# schools: the standard deviation of its fitted contribution in a regression
+# of the measure on all the matching characteristics (log for absence).
+# Value added and Attainment 8 take their weights from the Attainment 8
+# model, since value added is itself what is left once intake is allowed for.
+MNUM <- c("fsm", "ks2", "eal", "wbri", "mobile", "girls", "sen", "ehcp", "semh", "l4z", "size")
+MCAT <- c("place", "adm", "sixth", "faith")
+contrib <- function(y) {
+  dd <- d |> mutate(.y = y) |> filter(!is.na(.y), if_all(all_of(c(MNUM, MCAT)), ~ !is.na(.x)))
+  m <- lm(reformulate(c(MNUM, MCAT), ".y"), data = dd)
+  list(sd = apply(predict(m, type = "terms"), 2, sd)[c(MNUM, MCAT)], r2 = summary(m)$r.squared)
+}
+norm_w <- function(s) round(pmax(s / mean(s), 0.05), 3)       # mean 1; nothing quite ignored
+FITS <- c(lapply(c(overall = "overall", illness = "illness", unauth = "unauth", persistent = "persistent",
+                   severe = "severe"), function(o) contrib(log(d[[o]] + 0.1))),
+          list(att8 = contrib(d$att8)))
+W <- lapply(FITS, function(f) as.list(norm_w(f$sd)))
+W$r_unauth <- W$unauth
+W$va_all <- W$va_dis <- W$att8
+W$combo <- as.list(norm_w((unlist(W$overall) + unlist(W$att8)) / 2))
+W_R2 <- sapply(FITS, `[[`, "r2")
+
+# ---- over time: value added by year, absence by year --------------------------
+vy <- va_years(V)
+VA_YEARS <- sort(unique(vy$year_label))
+va_arr <- function(g) {
+  a <- vy |> filter(group == g) |> mutate(year_label = factor(year_label, VA_YEARS), va = round(va, 2)) |>
+    tidyr::complete(URN, year_label) |> arrange(URN, year_label) |>
+    group_by(URN) |> summarise(ys = list(va), .groups = "drop")
+  a$ys[match(d$URN, a$URN)]
+}
+d$va_y <- va_arr("all"); d$vd_y <- va_arr("disadvantaged")
+AB <- readRDS(here::here("data", "absence_change.rds"))
+AB_TP <- sort(unique(AB$series$tp))
+cid_of <- AB$series |> distinct(URN, cid)
+ab_arr <- function(o) {
+  a <- AB$series |> transmute(cid, tp = factor(tp, AB_TP), v = round(.data[[o]], 2)) |>
+    tidyr::complete(cid, tp) |> arrange(cid, tp) |> group_by(cid) |> summarise(ys = list(v), .groups = "drop")
+  a$ys[match(cid_of$cid[match(d$URN, cid_of$URN)], a$cid)]
+}
+d$ab_o <- ab_arr("overall"); d$ab_u <- ab_arr("unauth")
+eng_ab <- list(overall = round(AB$trend$overall[match(AB_TP, AB$trend$tp)], 2),
+               unauth = round((AB$trend$`Unauthorised holiday` + AB$trend$`Other unauthorised`)[match(AB_TP, AB$trend$tp)], 2))
+prov <- VA_YEARS %in% (vy |> filter(provisional) |> pull(year_label))
+
 # Areas: each school sits in a region, a local authority and a district
 areas <- list(region = sort(unique(d$rg)), la = sort(unique(d$la)), district = sort(unique(d$lad)))
-payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)))
+payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)),
+                weights = W, va_years = yl(VA_YEARS), va_prov = prov,
+                ab_years = yr(AB_TP), eng_ab = eng_ab, built = format(Sys.Date(), "%d %B %Y"))
 ```
 
 ::: {.callout-note}
@@ -45,7 +93,8 @@ payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)))
 1. **Choose a school.** Pick a region, local authority or district, then a
    school within it.
 2. **Choose what to match on.** Matching uses intake and setting only, never
-   results or attendance.
+   results or attendance. By default it weights what matters most for the
+   measure you choose.
 3. **Closest twins** are the schools most like yours anywhere in England.
 4. **Anti-twins** are the look-alikes, from the 50 (or 25, or 100) most
    similar, that do furthest *better* than yours on the measure you choose:
@@ -54,7 +103,8 @@ payload <- list(schools = d, areas = areas, gy = yl(max(V$spec$years)))
    - or absence and value added together.
 
 Click a twin, in the chart, on the map or in the table, to compare its fact
-card with your school's. The address bar
+card with your school's, including value added and absence year by year.
+**Print for governors** gives a clean copy of the comparison for a meeting. The address bar
 keeps your choice, so a link takes someone else to the same comparison.
 :::
 
@@ -95,7 +145,41 @@ cat("<script>window.TWINS = ", jsonlite::toJSON(payload, dataframe = "rows", na 
 .tw-home { background: #361a54; border: 2px solid #fff; box-shadow: 0 0 0 1px #361a54; transform: rotate(45deg); }
 .tw-home.sel { box-shadow: 0 0 0 2.5px #1a1a2e; }
 .tw-table, .tw-cards { overflow-x: auto; }
-@media (max-width: 600px) { .tw-ctl select { max-width: 100%; } .tw-bar { flex-direction: column; } }
+.tw-wts { font-size: 13px; margin: 0 0 10px; }
+.tw-wts summary { cursor: pointer; color: #361a54; }
+.tw-wbars { margin: 6px 0 2px; max-width: 520px; }
+.tw-wrow { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+.tw-wl { flex: 0 0 230px; font-size: 12px; }
+.tw-wb { flex: 1; height: 9px; background: #f3eff8; border-radius: 3px; }
+.tw-wb span { display: block; height: 9px; background: #993bff; border-radius: 3px; }
+.tw-wv { flex: 0 0 34px; text-align: right; font-size: 12px; color: #6b6680; }
+.tw-tools { margin: 4px 0 10px; }
+.tw-print-btn { background: #361a54; color: #fff; border: none; }
+.tw-print-btn:hover { background: #993bff; color: #fff; }
+.tw-ts td { vertical-align: top; }
+.tw-key { margin-left: 12px; font-weight: 400; white-space: nowrap; }
+.tw-key i { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 4px; }
+.tw-key i.tw-dash { background: repeating-linear-gradient(90deg, #8a8aa3 0 4px, transparent 4px 7px); }
+.tw-printhead { display: none; }
+@media (max-width: 600px) { .tw-ctl select { max-width: 100%; } .tw-bar { flex-direction: column; } .tw-wl { flex-basis: 140px; } }
+@media print {
+  .tw-noprint, .tw-bar, .tw-groups, .tw-wts, .tw-tools, .tw-mapwrap, #quarto-header, footer, .quarto-title-block { display: none !important; }
+  .tw-print-path { display: block !important; width: 100% !important; max-width: none !important; margin: 0 !important;
+                   padding: 0 !important; grid-template-columns: none !important; }
+  .tw-printhead { display: block; margin-bottom: 8px; }
+  .tw-printhead h2 { font-size: 18pt; color: #361a54; margin: 2px 0 6px; border: none; }
+  .tw-ph-site { font-size: 9pt; color: #6b6680; text-transform: uppercase; letter-spacing: .05em; }
+  .tw-ph-meta { font-size: 8.5pt; color: #6b6680; }
+  .tw-ph-care { font-size: 9pt; border-left: 3px solid #993bff; padding-left: 8px; }
+  .tw-summary { background: none !important; border: 1px solid #ddbdff; }
+  body { font-size: 10.5pt; background: #fff !important; }
+  .tw-screen { display: none; }
+  .tw-spark { max-width: 4.8in; }
+  .tw-cards { break-before: page; }
+  .tw-t tr, .tw-card tr { break-inside: avoid; }
+  .tw-better, .tw-worse, .tw-t tr.tw-focal td, .tw-t tr.tw-sel td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: inherit !important; text-decoration: none !important; }
+}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -119,9 +203,37 @@ For each measured characteristic, the difference between two schools is
 taken in standard deviations, capped at three. For each category, it is 0
 if they match and 1 if not. The average across the characteristics is the
 distance, and *similarity* is one minus it, as a percentage. This is a form
-of Gower's distance, as in the original project's twin finder. Every
-characteristic counts equally; none is weighted by how much it matters to
-absence or results.
+of Gower's distance, as in the original project's twin finder.
+
+**Weighting.** By default each characteristic is weighted by how much it
+matters for the measure you chose. A school that matches yours on what
+drives that measure counts as more alike than one that matches on what
+does not. The weight is how much the characteristic moves the measure
+across schools: the standard deviation of its part in a regression of the
+measure on all the characteristics (log absence for absence). The weights
+are scaled to average one. Value added and Attainment 8 both take the
+Attainment 8 weights. Value added is already what is left once intake is
+allowed for, so the twins should match on what drives results. The
+combined measure takes the average of the overall absence and Attainment 8
+weights. You can switch to equal weights.
+
+```{r}
+#| label: tbl-weights
+#| tbl-cap: "Matching weights by measure (average 1), and how much of each measure the characteristics explain between schools (R²)."
+WL <- c(fsm = "Free school meals", ks2 = "KS2 prior attainment", eal = "EAL", wbri = "White British",
+        mobile = "Joined mid-phase", girls = "Girls", sen = "SEN support", ehcp = "EHC plans",
+        semh = "Social, emotional and mental health need", l4z = "Neighbourhood education", size = "Size",
+        place = "Rural or urban", adm = "Admissions", sixth = "Sixth form", faith = "Religious character")
+ML <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent",
+        severe = "Severe", att8 = "Results (Attainment 8, value added)")
+wt <- sapply(names(ML), function(o) unlist(W[[o]])[names(WL)])
+tb <- rbind(as.data.frame(wt) |> mutate(across(everything(), ~ sprintf("%.2f", .x))),
+            sprintf("%.0f%%", 100 * W_R2[names(ML)]))
+rownames(tb) <- c(unname(WL), "R² of the model")
+colnames(tb) <- unname(ML)
+kt(tb, align = "rrrrrr") |>
+  kableExtra::row_spec(nrow(tb), italic = TRUE)
+```
 
 Similar intake is not the same as identical circumstances. A twin can
 differ in what the data does not see: its pupils' health, its community,
@@ -136,5 +248,9 @@ to ask what it does differently, not proof that copying it would work.
   2021/22 to 2024/25, shrunk.
 - **Absence against similar schools:** within the school's own authority,
   as on the [absence page](absence_causes.qmd#sec-school).
+- **Over time:** each year's value added against England (unshrunk; the
+  latest year provisional), and absence in the autumn and spring terms from
+  2016/17, followed through academy conversion and changes of trust as on
+  [How school absence changes](absence_change.qmd).
 
 All of it is published school-level data.

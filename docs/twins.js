@@ -59,6 +59,8 @@
     var s = (+v).toFixed(dp); if (sign && v > 0) s = "+" + s; return s + (u || ""); }
   function el(tag, attrs, html) { var e = document.createElement(tag);
     for (var a in attrs || {}) e.setAttribute(a, attrs[a]); if (html != null) e.innerHTML = html; return e; }
+  // lower-case a label's first letter, unless it starts an abbreviation (KS2, EAL)
+  function lc(s) { return /^[A-Z][A-Z0-9]/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1); }
   function where(s) { return s.lad === s.la ? esc(s.la) : esc(s.lad) + ", " + esc(s.la); }
   function score(s, o) {
     if (!o.combo) return s[o.k];
@@ -80,6 +82,9 @@
   var sScope = ctl("Look in", select([["eng", "All of England"], ["notla", "England, outside its own authority"], ["rg", "Its own region"]], q.get("scope") || "eng"));
   var sPool = ctl("From the", select([["25", "25 most similar"], ["50", "50 most similar"], ["100", "100 most similar"]], q.get("pool") || "50"));
   var sN = ctl("Show", select([["5", "5 schools"], ["10", "10 schools"]], q.get("n") || "5"));
+  var sWt = ctl("Weighting", select([["m", "By what matters for the measure"], ["eq", "Equal"]], q.get("wt") || "m"));
+  // the header only a printed comparison carries
+  var printHead = el("div", {"class": "tw-printhead"}); root.appendChild(printHead);
   root.appendChild(bar);
 
   var groupsOn = {}; var gq = q.get("match");
@@ -91,10 +96,17 @@
     lab.appendChild(cb); lab.appendChild(document.createTextNode(" " + g)); gbar.appendChild(lab);
   });
   root.appendChild(gbar);
+  var wbox = el("details", {"class": "tw-wts"}); root.appendChild(wbox);
+
+  var tools = el("div", {"class": "tw-tools"});
+  var printBtn = el("button", {type: "button", "class": "btn btn-sm tw-print-btn"}, "Print for governors");
+  tools.appendChild(printBtn);
+  tools.appendChild(el("span", {"class": "tw-note"}, " A clean copy of this comparison, with the fact cards, for a meeting or a report."));
+  root.appendChild(tools);
 
   var summary = el("div", {"class": "tw-summary"}); root.appendChild(summary);
   var chart = el("div", {"class": "tw-chart"}); root.appendChild(chart);
-  var mapWrap = el("div"); root.appendChild(mapWrap);
+  var mapWrap = el("div", {"class": "tw-mapwrap"}); root.appendChild(mapWrap);
   var mapNote = el("div", {"class": "tw-note"}); mapWrap.appendChild(mapNote);
   var mapDiv = el("div", {"class": "tw-map", role: "region", "aria-label": "Map of the chosen school and its twins"}); mapWrap.appendChild(mapDiv);
   var table = el("div", {"class": "tw-table"}); root.appendChild(table);
@@ -115,13 +127,36 @@
   }
 
   // ---- matching ------------------------------------------------------------
-  function distance(a, b, vars) {
+  // weighted Gower-type distance: each characteristic's gap (in SDs, capped
+  // at three; 0 or 1 for a category) times its weight, over the weights used
+  function weightsFor(o) {
+    var w = {}, src = sWt.value === "eq" ? null : (D.weights || {})[o.k];
+    VARS.forEach(function (v) { w[v.k] = src && src[v.k] != null ? src[v.k] : 1; });
+    return w;
+  }
+  function distance(a, b, vars, wts) {
     var t = 0, n = 0;
     vars.forEach(function (v) {
       var x = a[v.k], y = b[v.k]; if (x == null || y == null) return;
-      t += v.t === "num" ? Math.min(Math.abs(x - y) / SD[v.k] / 3, 1) : (x === y ? 0 : 1); n++;
+      var w = wts[v.k];
+      t += w * (v.t === "num" ? Math.min(Math.abs(x - y) / SD[v.k] / 3, 1) : (x === y ? 0 : 1)); n += w;
     });
     return n ? t / n : null;
+  }
+  function drawWeights(vars, wts, o) {
+    var on = vars.slice().sort(function (a, b) { return wts[b.k] - wts[a.k]; });
+    var mx = Math.max.apply(null, on.map(function (v) { return wts[v.k]; }));
+    var top = on.slice(0, 3).map(function (v) { return lc(v.l); });
+    var h = "<summary>" + (sWt.value === "eq" ? "Every characteristic counts equally" :
+      "Weighted most on " + top.slice(0, -1).join(", ") + (top.length > 1 ? " and " : "") + top[top.length - 1] +
+      ", for " + (o.combo ? "absence and value added" : lc(o.l))) +
+      " <span class='tw-sub'>(show the weights)</span></summary><div class='tw-wbars'>";
+    on.forEach(function (v) {
+      h += "<div class='tw-wrow'><span class='tw-wl'>" + esc(v.l) + "</span><span class='tw-wb'><span style='width:" +
+        (100 * wts[v.k] / mx).toFixed(0) + "%'></span></span><span class='tw-wv'>" + wts[v.k].toFixed(2) + "</span></div>";
+    });
+    wbox.innerHTML = h + "</div><p class='tw-note'>Weights average one across all fifteen characteristics. " +
+      "See <a href='#sec-how'>how the matching works</a>.</p>";
   }
 
   var current = null, picked = null;
@@ -130,13 +165,14 @@
     if (!focal) return;
     var vars = VARS.filter(function (v) { return groupsOn[v.g]; });
     if (!vars.length) { summary.innerHTML = "<p>Choose at least one group to match on.</p>"; chart.innerHTML = table.innerHTML = cards.innerHTML = ""; return; }
-    var o = OUT[sOut.value], scope = sScope.value;
+    var o = OUT[sOut.value], scope = sScope.value, wts = weightsFor(o);
+    drawWeights(vars, wts, o);
     var cand = S.filter(function (s) {
       if (s.URN === focal.URN) return false;
       if (scope === "notla" && s.la === focal.la) return false;
       if (scope === "rg" && s.rg !== focal.rg) return false;
       return true;
-    }).map(function (s) { var d = distance(focal, s, vars); return {s: s, sim: d == null ? null : 100 * (1 - d)}; })
+    }).map(function (s) { var d = distance(focal, s, vars, wts); return {s: s, sim: d == null ? null : 100 * (1 - d)}; })
       .filter(function (c) { return c.sim != null; })
       .sort(function (a, b) { return b.sim - a.sim; });
     var pool = cand.slice(0, +sPool.value), fv = score(focal, o), list;
@@ -149,7 +185,7 @@
     picked = list.length ? list[0].s : null;
     // keep the choice in the address bar
     var p = new URLSearchParams({level: sLevel.value, area: sArea.value, urn: focal.URN, mode: sMode.value,
-      on: o.k, scope: scope, pool: sPool.value, n: sN.value,
+      on: o.k, scope: scope, pool: sPool.value, n: sN.value, wt: sWt.value,
       match: GROUPS.filter(function (g) { return groupsOn[g]; }).join("|")});
     try { history.replaceState(null, "", "?" + p.toString() + location.hash); } catch (e) {}
     draw(); drawMap(true);
@@ -166,8 +202,9 @@
     var fv = score(f, o), better = c.pool.filter(function (x) { return x.gap != null && x.gap > 0; }).length;
     var simRange = c.pool.length ? Math.round(c.pool[c.pool.length - 1].sim) + "% to " + Math.round(c.pool[0].sim) + "%" : "";
     summary.innerHTML = "<p><strong>" + esc(f.n) + "</strong> (" + where(f) + "). Of the " +
-      c.pool.length + " schools most like it (similarity " + simRange + "), <strong>" + better + "</strong> do better on " +
-      o.l.charAt(0).toLowerCase() + o.l.slice(1) + (o.combo ? "" : " (it has " + fmt(fv, o.dp, o.u, o.sign) + ")") + ". " +
+      c.pool.length + " schools most like it" + (sWt.value === "eq" ? "" : " on what matters for this measure") +
+      " (similarity " + simRange + "), <strong>" + better + "</strong> do better on " +
+      lc(o.l) + (o.combo ? "" : " (it has " + fmt(fv, o.dp, o.u, o.sign) + ")") + ". " +
       (sMode.value === "anti" ? (c.list.length ? "The " + c.list.length + " furthest ahead are below." : "None does better.")
                               : "The " + c.list.length + " closest are below.") + "</p>";
     drawChart(); drawTable(); drawCards();
@@ -202,7 +239,7 @@
       "<text x='" + (W - R) + "' y='" + (H - 20) + "' text-anchor='end' font-size='10' fill='#6b6680'>" + x1.toFixed(0) + "%</text>";
     chart.innerHTML = "<div class='tw-note'><strong>" + esc(o.l) + "</strong>: " + (o.b === "low" ? "lower is better" : "higher is better") +
       (o.combo ? " (overall absence, lower, and value added, higher, in national standard deviations)" : "") +
-      ". Purple, the schools listed below; click any point for its card.</div>" +
+      ". Purple, the schools listed below<span class='tw-screen'>; click any point for its card</span>.</div>" +
       "<svg viewBox='0 0 " + W + " " + H + "' width='100%' role='img' aria-label='Similar schools by similarity and " + esc(o.l) + "'>" + s + "</svg>";
     chart.querySelectorAll("circle").forEach(function (n) { n.addEventListener("click", function () { pick(n.getAttribute("data-urn")); }); });
   }
@@ -306,6 +343,38 @@
     {k: "va_all", l: "Value added v2.1, all pupils", dp: 1, sign: true, b: "high"},
     {k: "va_dis", l: "Value added v2.1, disadvantaged", dp: 1, sign: true, b: "high"}
   ];
+  // a small chart of one measure over time: the chosen school (dark), the
+  // twin (purple) and England (grey, dashed); hollow points are provisional
+  function spark(ya, yb, ye, labs, opt) {
+    var arr = function (x) { return Array.isArray(x) ? x : []; };
+    ya = arr(ya); yb = arr(yb); ye = arr(ye);
+    var all = ya.concat(yb, ye).filter(function (v) { return v != null; });
+    if (!ya.concat(yb).some(function (v) { return v != null; })) return "<span class='tw-sub'>Not available</span>";
+    if (opt.zero) all.push(0);
+    var W = 460, H = 118, L = 44, R = 10, T = 8, B = 22, iw = W - L - R, ih = H - T - B;
+    var y0 = Math.min.apply(null, all), y1 = Math.max.apply(null, all), pad = (y1 - y0) * 0.1 || 1; y0 -= pad; y1 += pad;
+    var n = labs.length, X = function (i) { return L + (n === 1 ? iw / 2 : i / (n - 1) * iw); },
+        Y = function (v) { return T + (1 - (v - y0) / (y1 - y0)) * ih; };
+    var s = "";
+    [y0 + pad, (y0 + y1) / 2, y1 - pad].forEach(function (v) {
+      s += "<line x1='" + L + "' x2='" + (W - R) + "' y1='" + Y(v).toFixed(1) + "' y2='" + Y(v).toFixed(1) + "' stroke='#ece8f3'/>" +
+        "<text x='" + (L - 5) + "' y='" + (Y(v) + 3.5).toFixed(1) + "' text-anchor='end' font-size='9.5' fill='#6b6680'>" + fmt(v, opt.dp, opt.u, opt.sign) + "</text>"; });
+    if (opt.zero) s += "<line x1='" + L + "' x2='" + (W - R) + "' y1='" + Y(0).toFixed(1) + "' y2='" + Y(0).toFixed(1) + "' stroke='#8a8aa3' stroke-dasharray='4 3'/>";
+    var line = function (ys, col, w, dash) { var d = "", pen = false;
+      ys.forEach(function (v, i) { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1) + " "; pen = true; });
+      return d ? "<path d='" + d + "' fill='none' stroke='" + col + "' stroke-width='" + w + "'" + (dash ? " stroke-dasharray='" + dash + "'" : "") + "/>" : ""; };
+    var dots = function (ys, col, who) { var o = "";
+      ys.forEach(function (v, i) { if (v == null) return; var pv = opt.prov && opt.prov[i];
+        o += "<circle cx='" + X(i).toFixed(1) + "' cy='" + Y(v).toFixed(1) + "' r='3' fill='" + (pv ? "#fff" : col) + "' stroke='" + col +
+          "' stroke-width='1.5'><title>" + esc(who) + ", " + labs[i] + ": " + fmt(v, opt.dp, opt.u, opt.sign) + (pv ? " (provisional)" : "") + "</title></circle>"; });
+      return o; };
+    if (ye.length) s += line(ye, "#8a8aa3", 1.5, "4 3");
+    s += line(yb, "#993bff", 2) + line(ya, "#361a54", 2) + dots(yb, "#993bff", opt.nb || "Twin") + dots(ya, "#361a54", opt.na || "Chosen");
+    labs.forEach(function (lb, i) { if (n > 6 && i % 2 && i !== n - 1) return;
+      s += "<text x='" + (i === 0 ? X(i) - 8 : i === n - 1 ? X(i) + 8 : X(i)).toFixed(1) + "' y='" + (H - 6) + "' text-anchor='" + (i === 0 ? "start" : i === n - 1 ? "end" : "middle") + "' font-size='9.5' fill='#6b6680'>" + esc(lb) + "</text>"; });
+    return "<svg class='tw-spark' viewBox='0 0 " + W + " " + H + "' width='100%' role='img' aria-label='" + esc(opt.title) + "'>" + s + "</svg>";
+  }
+
   function drawCards() {
     var f = current.focal, t = picked;
     var h = "<table class='tw-card'><thead><tr><th></th><th>" + esc(f.n) + "<div class='tw-sub'>" + where(f) + "</div></th>" +
@@ -317,12 +386,67 @@
       var show = function (v) { return r.t === "txt" ? esc(v == null ? "–" : v) : fmt(v, r.dp, r.u, r.sign); };
       h += "<tr><td>" + r.l + "</td><td>" + show(a) + "</td>" + (t ? "<td class='" + cls + "'>" + show(b) + "</td>" : "") + "</tr>";
     });
-    cards.innerHTML = "<h3 class='tw-h3'>Fact cards</h3>" + (t ? "<p class='tw-note'>Green, the twin does better; purple, worse. Click another twin to compare.</p>" : "") + h + "</tbody></table>";
+    // over time
+    var key = "<span class='tw-key'><i style='background:#361a54'></i>" + esc(f.n) + "</span>" +
+      (t ? "<span class='tw-key'><i style='background:#993bff'></i>" + esc(t.n) + "</span>" : "") +
+      "<span class='tw-key'><i class='tw-dash'></i>England</span>";
+    h += "<tr class='tw-h'><td colspan='3'>Over time <span class='tw-sub'>" + key + "</span></td></tr>";
+    var TS = [
+      {a: "va_y", l: "Value added v2.1, all pupils, by year", labs: D.va_years, zero: true, dp: 1, sign: true, prov: D.va_prov,
+       note: "Against England (0), Attainment 8 points; unshrunk. Hollow: provisional."},
+      {a: "vd_y", l: "Value added v2.1, disadvantaged pupils, by year", labs: D.va_years, zero: true, dp: 1, sign: true, prov: D.va_prov},
+      {a: "ab_o", l: "Overall absence, autumn and spring terms", labs: D.ab_years, eng: D.eng_ab.overall, dp: 1, u: "%",
+       note: "No data for 2019/20; 2020/21 was a year of lockdowns."},
+      {a: "ab_u", l: "Unauthorised absence, autumn and spring terms", labs: D.ab_years, eng: D.eng_ab.unauth, dp: 1, u: "%"}
+    ];
+    TS.forEach(function (r) {
+      h += "<tr class='tw-ts'><td>" + r.l + (r.note ? "<div class='tw-sub'>" + r.note + "</div>" : "") + "</td><td colspan='2'>" +
+        spark(f[r.a], t ? t[r.a] : null, r.eng, r.labs, {zero: r.zero, dp: r.dp, u: r.u, sign: r.sign, prov: r.prov,
+          na: f.n, nb: t ? t.n : "", title: r.l}) + "</td></tr>";
+    });
+    cards.innerHTML = "<h3 class='tw-h3'>Fact cards</h3>" + (t ? "<p class='tw-note'>Green, the twin does better; purple, worse.<span class='tw-screen'> Click another twin to compare.</span></p>" : "") + h + "</tbody></table>";
   }
+
+  // ---- printing ------------------------------------------------------------
+  // Hide everything on the page but this app (and the site's chrome), and
+  // put a header on it that says what was compared, when and where from.
+  var GROUP_LOW = function (g) { return g === "The school" ? "the school itself" : g.toLowerCase(); };
+  var marked = [];
+  function preparePrint() {
+    if (!current) return;
+    var c = current, f = c.focal, o = c.o;
+    var groups = GROUPS.filter(function (g) { return groupsOn[g]; }).map(GROUP_LOW);
+    var scopeTxt = {eng: "all of England", notla: "England outside " + f.la, rg: f.rg}[sScope.value];
+    printHead.innerHTML = "<div class='tw-ph-site'>School Value Added · Find a twin</div>" +
+      "<h2>" + esc(f.n) + " and the schools most like it</h2>" +
+      "<p>" + where(f) + ". " + (sMode.value === "anti" ? "Look-alike schools that do better on " : "The closest look-alikes, compared on ") +
+      esc(lc(o.l)) + ", from the " + sPool.value + " schools most like it in " + esc(scopeTxt) +
+      ". Matched on " + groups.slice(0, -1).join(", ") + (groups.length > 1 ? " and " : "") + groups[groups.length - 1] +
+      (sWt.value === "eq" ? ", every characteristic counting equally" : ", weighted by what matters for that measure") + ".</p>" +
+      "<p class='tw-ph-meta'>Printed " + new Date().toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric"}) +
+      " from " + esc(location.href.split("#")[0]) + " (data built " + esc(D.built) + ").</p>" +
+      "<p class='tw-ph-care'><strong>Reading this.</strong> Similarity is measured on published intake and setting only. " +
+      "A twin can differ in what the data do not see: its pupils' health, its community, its buildings, its staff. " +
+      "A twin that does better is a reason to ask what it does differently, not proof that copying it would work. " +
+      "All figures are published school-level data from DfE and Ofsted.</p>";
+    marked = [];
+    for (var n = root; n && n !== document.body; n = n.parentElement) {
+      n.classList.add("tw-print-path"); marked.push(n);
+      Array.prototype.forEach.call(n.parentElement ? n.parentElement.children : [], function (sib) {
+        if (sib !== n && !sib.classList.contains("tw-print-path")) { sib.classList.add("tw-noprint"); marked.push(sib); }
+      });
+    }
+  }
+  function endPrint() {
+    marked.forEach(function (m) { m.classList.remove("tw-noprint", "tw-print-path"); }); marked = [];
+  }
+  printBtn.addEventListener("click", function () { preparePrint(); window.print(); });
+  window.addEventListener("beforeprint", preparePrint);
+  window.addEventListener("afterprint", endPrint);
 
   // ---- wiring ------------------------------------------------------------
   sLevel.addEventListener("change", function () { fillAreas(); fillSchools(); run(); });
   sArea.addEventListener("change", function () { fillSchools(); run(); });
-  [sSchool, sMode, sOut, sScope, sPool, sN].forEach(function (n) { n.addEventListener("change", run); });
+  [sSchool, sMode, sOut, sScope, sPool, sN, sWt].forEach(function (n) { n.addEventListener("change", run); });
   fillAreas(q.get("area")); fillSchools(q.get("urn")); run();
 })();
