@@ -108,10 +108,14 @@ subtitle: "What v2.1 does now, and what comes next."
       qualifications is place. Together they take about a fifth off the
       authority effects and over a third off the regional ones for
       disadvantaged pupils; about a third of Brighton and Hove's effect.
-- [ ] **v2.2 candidates from the experiment.** Pupils' ethnicity (as in
-      DfE's contextual value added until 2011), and household deprivation
-      beside neighbourhood education, each tested across every group and
-      year, with the case for and against.
+- [x] **[v2.2 candidates](v22.qmd) tested across every group and year.**
+      Neighbourhood household deprivation helps every group in every year
+      (recommended for v2.2). Pupils' ethnicity (school White British share,
+      each January) matters almost only for disadvantaged pupils, where it
+      is large; recommended beside the headline, not in it.
+- [ ] **v2.2.** Refit with neighbourhood deprivation in the expectation,
+      publish value added allowing for pupils' ethnicity beside it, and
+      test detailed ethnic groups.
 - [ ] **Parents, not adults.** Try a parents' qualification measure from
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.

@@ -12,6 +12,7 @@ project:
     - geography.qmd
     - neighbourhood_types.qmd
     - neighbourhood_covariates.qmd
+    - v22.qmd
     - absence_causes.qmd
     - absence_change.qmd
     - twins.qmd
@@ -40,8 +41,12 @@ website:
         text: Home
       - href: review.qmd
         text: "The review"
-      - href: method.qmd
-        text: "Methodology"
+      - text: "Methodology"
+        menu:
+          - href: method.qmd
+            text: "Value Added v2.1"
+          - href: v22.qmd
+            text: "v2.2 candidates"
       - href: explore.qmd
         text: "Explore by area"
       - text: Sussex

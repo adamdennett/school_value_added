@@ -1,0 +1,202 @@
+---
+title: "Value Added v2.2 candidates"
+subtitle: "Pupils' ethnicity and neighbourhood deprivation, tested for every group of pupils and every year: what they add, what they change, and the case for and against."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+X <- readRDS(here::here("data", "v22_candidates.rds"))
+C <- X$comparison |> group_by(group) |>
+  mutate(daic = aic - aic[spec == "v2.1"], drmse = 100 * (rmse_oos / rmse_oos[spec == "v2.1"] - 1)) |> ungroup()
+cv <- function(g, s, col) C[[col]][C$group == g & C$spec == s]
+pe <- function(b) 100 * (exp(b) - 1)
+gs <- function(g, q, col) X$gain_summary[[col]][X$gain_summary$group == g & X$gain_summary$eth_q == q]
+gr <- function(g, r) X$gain_region$change[X$gain_region$group == g & X$gain_region$gor_name == r]
+GL <- GROUP_LABELS
+SPEC_COL <- c(eth = DPURPLE, dep = BLUE, both = MPURPLE)
+```
+
+::: {.callout-note}
+## Candidates, not changes
+
+Value Added v2.1 is what this site publishes. This page tests two
+candidate terms for a v2.2, the way the [v2.1 candidates](method.qmd#sec-v21)
+were tested: on identical school-years, for every group, with each year
+held out in turn. Where the terms came from is set out in the
+[neighbourhood covariates experiment](neighbourhood_covariates.qmd).
+:::
+
+::: {.callout-important}
+## In short
+
+- **Neighbourhood deprivation** helps every group, in every year. It
+  improves predictions out of sample for all five groups and takes about
+  `r sprintf("%.0f", min(-C$la_var_change[C$spec == "dep" & C$group != "disadvantaged"]))` to
+  `r sprintf("%.0f", max(-C$la_var_change[C$spec == "dep" & C$group != "disadvantaged"]))`% off
+  the local authority variance (`r sprintf("%.0f", -cv("disadvantaged", "dep", "la_var_change"))`%
+  for disadvantaged pupils). It changes little else. **Recommended for v2.2.**
+- **Pupils' ethnicity** matters almost only for disadvantaged pupils.
+  There it is a large gain
+  (AIC `r sprintf("%.0f", cv("disadvantaged", "eth", "daic"))`). For
+  non-disadvantaged pupils it is zero. A third of schools would change
+  fifth on disadvantaged value added, with London losing most. Whether
+  to adjust for it is a question of what value added is for. **Recommended
+  beside v2.2, not in it**, as v2.1 publishes the kind of absence.
+:::
+
+## The candidates {#sec-terms}
+
+| Term | What it is | Source | One standard deviation |
+|---|---|---|---|
+| Pupils' ethnicity | The school's share of White British pupils, each January | School census, 2022 to 2025 | `r sprintf("%.0f", X$term_sd[["z_eth"]])` percentage points |
+| Neighbourhood deprivation | Share of households deprived in two or more of four dimensions (employment, education, health, housing), over the 150 Output Areas nearest the school | Census 2021, TS011 | `r sprintf("%.1f", X$term_sd[["z_dep"]])` percentage points |
+
+v2.1 has neither. It has English as an additional language for pupils.
+For the neighbourhood it has adult qualifications only. Ethnicity is
+matched to `r sprintf("%.1f", 100 * X$eth_coverage)`% of school-years, by
+year.
+
+## Fit and prediction {#sec-fit}
+
+```{r}
+#| label: tbl-fit
+#| tbl-cap: "Each candidate against v2.1, by group: the effect of one standard deviation (% of Attainment 8), the change in AIC (negative is better), and the change in out-of-sample error (each year predicted from the other three, averaged)."
+C |> filter(spec != "v2.1") |>
+  mutate(g = factor(group, names(GL)), s = factor(spec, c("eth", "dep", "both"))) |> arrange(g, s) |>
+  transmute(Group = GL[group], Candidate = X$labels[spec],
+            Ethnicity = ifelse(is.na(b_eth), "", sprintf("%+.1f%%", pe(b_eth))),
+            Deprivation = ifelse(is.na(b_dep), "", sprintf("%+.1f%%", pe(b_dep))),
+            `AIC change` = sprintf("%.0f", daic), `Out-of-sample error` = sprintf("%+.2f%%", drmse)) |>
+  kt(align = "llrrrr") |> kableExtra::collapse_rows(columns = 1, valign = "top")
+```
+
+Both terms improve fit and prediction for every group, with one
+exception: ethnicity does nothing for non-disadvantaged pupils
+(`r sprintf("%+.1f%%", pe(cv("non_disadvantaged", "eth", "b_eth")))`, AIC
+`r sprintf("%.0f", cv("non_disadvantaged", "eth", "daic"))`). For
+disadvantaged pupils, a school with one standard deviation more White
+British pupils gets `r sprintf("%.1f%%", -pe(cv("disadvantaged", "eth", "b_eth")))`
+lower Attainment 8 for its disadvantaged pupils, all else in v2.1 equal.
+That matches what is well known at pupil level: disadvantaged White
+British pupils do less well at GCSE than disadvantaged pupils of most
+other ethnic groups. Neighbourhood deprivation goes the other way, about
+`r sprintf("%+.0f%%", pe(cv("all", "dep", "b_dep")))` per standard deviation for most groups. At the same share
+of graduates, a school among more deprived households does a little
+better than v2.1 expects.
+
+## Year by year {#sec-years}
+
+```{r}
+#| label: fig-years
+#| fig-cap: "Each term's effect fitted on each year alone (both terms together, with v2.1's terms and region/local authority effects), % of Attainment 8 per standard deviation, with 95% intervals."
+#| fig-height: 5.2
+yd <- X$yearly |> mutate(term = ifelse(term == "z_eth", "Pupils' ethnicity (White British share)", "Neighbourhood deprivation"),
+                          grp = factor(GL[group], GL))
+ggplot(yd, aes(year, pct, colour = grp, group = grp)) +
+  geom_hline(yintercept = 0, colour = GREY) +
+  geom_linerange(aes(ymin = lo, ymax = hi), position = position_dodge(width = 0.5), linewidth = 0.7) +
+  geom_line(position = position_dodge(width = 0.5), linewidth = 0.6, alpha = 0.6) +
+  geom_point(position = position_dodge(width = 0.5), size = 2) +
+  facet_wrap(~ term) +
+  scale_colour_manual(values = GROUP_COL, name = NULL) +
+  labs(x = NULL, y = "% of Attainment 8 per SD") + theme_note(11)
+```
+
+Both are steady. Ethnicity is between −4% and −6.5% for disadvantaged
+pupils every year and near zero for non-disadvantaged pupils every year.
+Deprivation is positive in every year for every group, largest in
+2024/25.
+
+## What would move {#sec-moves}
+
+```{r}
+#| label: tbl-moves
+#| tbl-cap: "What each candidate changes against v2.1: the correlation of schools' value added, the share that change fifth, the average change in a school's value added (Attainment 8 points), the correlation of local authority effects, the change in local authority variance, and Brighton and Hove."
+C |> filter(spec != "v2.1") |>
+  mutate(g = factor(group, names(GL)), s = factor(spec, c("eth", "dep", "both"))) |> arrange(g, s) |>
+  transmute(Group = GL[group], Candidate = X$labels[spec],
+            `Schools: r` = sprintf("%.3f", r_school), `Change fifth` = sprintf("%.0f%%", 100 * moved_quintile),
+            `Average change` = sprintf("%.2f", mean_abs_change), `Authorities: r` = sprintf("%.3f", r_la),
+            `Authority variance` = sprintf("%+.0f%%", la_var_change),
+            `Brighton and Hove` = sprintf("%+.1f%% (%s)", bh_effect, ord(bh_rank))) |>
+  kt(align = "llrrrrrr") |> kableExtra::collapse_rows(columns = 1, valign = "top")
+```
+
+Neighbourhood deprivation is a light touch. Schools' value added
+correlates at `r sprintf("%.3f", cv("all", "dep", "r_school"))` with v2.1
+for all pupils, and the average school moves by
+`r sprintf("%.2f", cv("all", "dep", "mean_abs_change"))` points. It
+lowers graduate-rich, deprived places' effects: Brighton and Hove goes
+from `r sprintf("%+.1f%%", cv("all", "v2.1", "bh_effect"))` to
+`r sprintf("%+.1f%%", cv("all", "dep", "bh_effect"))` for all pupils.
+
+Ethnicity is not a light touch for disadvantaged pupils.
+`r sprintf("%.0f%%", 100 * cv("disadvantaged", "eth", "moved_quintile"))` of
+schools change fifth, and the average school's disadvantaged value added
+moves by `r sprintf("%.1f", cv("disadvantaged", "eth", "mean_abs_change"))`
+points.
+
+## Who would gain and who would lose {#sec-who}
+
+```{r}
+#| label: fig-who
+#| fig-cap: "The average change in schools' value added (Attainment 8 points) with both terms added, by fifth of schools on their share of White British pupils, for each group."
+#| fig-height: 3.8
+wd <- X$gain_summary |> group_by(eth_q) |> mutate(lab = sprintf("Fifth %d\n(%.0f%% WB)", eth_q, mean(wbri))) |> ungroup() |>
+  mutate(grp = factor(GL[group], GL))
+ggplot(wd, aes(lab, change, fill = grp)) +
+  geom_hline(yintercept = 0, colour = GREY) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+  scale_fill_manual(values = GROUP_COL, name = NULL) +
+  labs(x = "Schools by share of White British pupils (fifths)", y = "Change in value added (points)") + theme_note(11)
+```
+
+With both terms, disadvantaged value added falls by
+`r sprintf("%.1f", -gs("disadvantaged", 1, "change"))` points on average in
+the fifth of schools with the fewest White British pupils (about
+`r sprintf("%.0f", gs("disadvantaged", 1, "wbri"))`%), and rises by up to
+`r sprintf("%.1f", max(X$gain_summary$change[X$gain_summary$group == "disadvantaged"]))` in
+the middle and upper fifths. By region, London's schools lose
+`r sprintf("%.1f", -gr("disadvantaged", "London"))` points of disadvantaged
+value added on average; every other region gains a little, except the
+West Midlands (`r sprintf("%+.1f", gr("disadvantaged", "West Midlands"))`).
+
+## The case for and against ethnicity {#sec-case}
+
+**For.** Value added is meant to compare schools fairly, on what they do
+rather than whom they teach. Disadvantaged White British pupils do less
+well wherever they are taught. A school that serves many of them is
+judged against schools whose disadvantaged pupils were always more
+likely to do well. Adjusting for it is what DfE's contextual value added
+did until 2011. It is also what the evidence here supports, for this
+group, in every year.
+
+**Against.** An expectation that varies by ethnicity builds a lower
+expectation into the measure for some pupils. That was the main
+criticism of contextual value added and part of why it was dropped. It
+would also take out of view a real gap that policy should see: the
+low attainment of disadvantaged White British pupils. And the term is a
+school share, not each pupil's own ethnicity, so it adjusts schools, not
+pupils.
+
+**What we would do.** Publish it beside v2.2 rather than in it, as v2.1
+publishes value added allowing for the kind of absence. The headline
+measure stays free of ethnicity. Anyone asking "how does this school do
+with its particular disadvantaged pupils?" can see the answer next to it.
+
+## What we would recommend for v2.2 {#sec-recommend}
+
+1. **Add neighbourhood deprivation to the expectation**, beside
+   neighbourhood education. It is a neighbourhood measure, like the term
+   it sits next to. It helps every group in every year. It makes the
+   neighbourhood term fairer to places with many graduates and many
+   deprived households.
+2. **Publish value added allowing for pupils' ethnicity beside the
+   headline**, for every group, labelled, with this page as its
+   explanation.
+3. **Keep testing**: whether the ethnicity effect is a White British
+   effect or varies by group (Gypsy, Roma and Traveller, Black Caribbean
+   and others), using the census's detailed shares.
+
+Built by `R/14_v22_candidates.R`.

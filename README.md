@@ -39,6 +39,7 @@ Rscript R/10_independent.R        # independent schools: the data and how far a 
 Rscript R/11_oac_neighbourhoods.R # neighbourhood types (OAC) against results and value added (~2 min)
 Rscript R/12_geography.R          # geographical effects across England (~1 min)
 Rscript R/13_neighbourhood_covariates.R  # the neighbourhood covariates experiment (~6 min)
+Rscript R/14_v22_candidates.R     # v2.2 candidates across every group and year (~25 min)
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```
@@ -102,6 +103,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/07_v21_candidates.R` | the v2.1 candidates (kind of absence, 11–16) and the importance charts |
 | `R/08_absence_causes.R` | what goes with school-level absence: trend by reason, seven outcomes on intake, needs and place (`absence_causes.qmd`) |
 | `R/09_absence_change.R` | how school absence changes: a 2016/17 to 2025/26 panel joined through URN changes, variance shares, stability, the pre/post-pandemic shift, within- vs between-school intake effects, event studies of academy conversion and trust changes (`absence_change.qmd`); fetches the 2018/19 census file from the performance tables service if it is missing |
+| `R/14_v22_candidates.R` | v2.2 candidates: pupils' ethnicity (school White British share each January, from the SPC releases downloaded into `data-raw/ees/spc_all/`) and neighbourhood household deprivation (Census 2021 TS011), against v2.1 for every group, with leave-one-year-out prediction, year-by-year fits and who gains (`v22.qmd`) |
 | `R/12_geography.R` | geographical effects across England: variance components by group, every local authority's effect, region averages, authority absence effects, and simplified county/unitary boundaries (`geography.qmd`) |
 | `R/13_neighbourhood_covariates.R` | the neighbourhood covariates experiment: ten Census 2021 measures over each school's 150 nearest OAs (nomis bulk tables) and the school's own White British share, added to v2.1 one at a time and in sets; effects, AIC, and the change in authority and region variance (`neighbourhood_covariates.qmd`) |
 | `R/11_oac_neighbourhoods.R` | neighbourhood types: the 2021/2 Output Area Classification (download from data.geods.ac.uk into `data-raw/oac2021/`) profiled over each school's 150 nearest OAs at three tiers, tested against results and value added out of sample, and against local authority effects (`neighbourhood_types.qmd`) |

@@ -97,10 +97,21 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./review.html"> 
 <span class="menu-text">The review</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./method.html"> 
-<span class="menu-text">Methodology</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="./method.html">
+ <span class="dropdown-text">Value Added v2.1</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./v22.html">
+ <span class="dropdown-text">v2.2 candidates</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./explore.html"> 
 <span class="menu-text">Explore by area</span></a>
@@ -282,7 +293,8 @@ ul.task-list li input[type="checkbox"] {
 <li><label><input type="checkbox" checked=""><strong><a href="./neighbourhood_types.html">Neighbourhood types (OAC)</a>.</strong> The 2021/2 Output Area Classification profiled over each school’s 150 nearest Output Areas at all three tiers. It reproduces neighbourhood education, adds nothing to results or to value added within authorities, and describes the places behind the authority effects for disadvantaged pupils (multicultural urban areas above, small-town, coastal and former industrial areas below). Groups are enough; subgroups add little.</label></li>
 <li><label><input type="checkbox" checked=""><strong><a href="./geography.html">Geographical effects across England</a>.</strong> How much of value added is region and local authority, for every group; a map of the authority effects; region averages; and what goes with them.</label></li>
 <li><label><input type="checkbox" checked=""><strong><a href="./neighbourhood_covariates.html">Neighbourhood covariates</a> (experiment).</strong> Ten Census 2021 measures and each school’s own White British share added to v2.1. For disadvantaged pupils, the ethnic pattern is mostly composition (pupils, not place); neighbourhood deprivation beyond qualifications is place. Together they take about a fifth off the authority effects and over a third off the regional ones for disadvantaged pupils; about a third of Brighton and Hove’s effect.</label></li>
-<li><label><input type="checkbox"><strong>v2.2 candidates from the experiment.</strong> Pupils’ ethnicity (as in DfE’s contextual value added until 2011), and household deprivation beside neighbourhood education, each tested across every group and year, with the case for and against.</label></li>
+<li><label><input type="checkbox" checked=""><strong><a href="./v22.html">v2.2 candidates</a> tested across every group and year.</strong> Neighbourhood household deprivation helps every group in every year (recommended for v2.2). Pupils’ ethnicity (school White British share, each January) matters almost only for disadvantaged pupils, where it is large; recommended beside the headline, not in it.</label></li>
+<li><label><input type="checkbox"><strong>v2.2.</strong> Refit with neighbourhood deprivation in the expectation, publish value added allowing for pupils’ ethnicity beside it, and test detailed ethnic groups.</label></li>
 <li><label><input type="checkbox"><strong>Parents, not adults.</strong> Try a parents’ qualification measure from the 2021 Census (households with dependent children) in place of neighbourhood education for all adults.</label></li>
 <li><label><input type="checkbox"><strong>What causes school-level absence, continued.</strong> The cross-section and change over time are under way (<a href="#done-absence">above</a>). Next: each school’s own path relative to England on the area pages and in Find a twin, whether high-illness places such as Brighton and Hove record absence differently, the severe tail on its own, whether particular trusts’ schools move together, and absence against intake by kind as a candidate for a future version of the model.</label></li>
 <li><label><input type="checkbox" checked=""><strong>Twins, further.</strong> The matching is weighted by what matters for the measure chosen (equal weights still available), the fact cards show value added and absence year by year against the twin and England, and a comparison prints cleanly for a governors’ meeting.</label></li>
