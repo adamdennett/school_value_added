@@ -91,6 +91,17 @@ subtitle: "What v2.1 does now, and what comes next."
       structure, like its admissions policy). Value added allowing for the
       kind of absence is published beside it, not in it, because what is
       authorised as illness is partly a school's own coding.
+- [x] **[Neighbourhood types (OAC)](neighbourhood_types.qmd).** The 2021/2
+      Output Area Classification profiled over each school's 150 nearest
+      Output Areas at all three tiers. It reproduces neighbourhood education,
+      adds nothing to results or to value added within authorities, and
+      describes the places behind the authority effects for disadvantaged
+      pupils (multicultural urban areas above, small-town, coastal and
+      former industrial areas below). Groups are enough; subgroups add little.
+- [ ] **Census variables on diversity and place.** Following the OAC
+      result: ethnic diversity, recent migration and coastal or small-town
+      character, at neighbourhood and authority level, against the
+      authority effects for disadvantaged pupils.
 - [ ] **Parents, not adults.** Try a parents' qualification measure from
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.

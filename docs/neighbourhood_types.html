@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Neighbourhood types – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./method.html"> 
+<span class="menu-text">Methodology</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_types.html">
+ <span class="dropdown-text">Neighbourhood types (OAC)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-absence" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Absence</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-absence">    
+        <li>
+    <a class="dropdown-item" href="./absence_causes.html">
+ <span class="dropdown-text">What goes with absence</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./absence_change.html">
+ <span class="dropdown-text">How absence changes</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./twins.html"> 
+<span class="menu-text">Find a twin</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./simulator.html"> 
+<span class="menu-text">Simulator</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./independent.html"> 
+<span class="menu-text">Independent schools</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sec-data" id="toc-sec-data" class="nav-link active" data-scroll-target="#sec-data">The classification and the neighbourhoods</a></li>
+  <li><a href="#sec-results" id="toc-sec-results" class="nav-link" data-scroll-target="#sec-results">Does it explain results better than neighbourhood education?</a></li>
+  <li><a href="#sec-va" id="toc-sec-va" class="nav-link" data-scroll-target="#sec-va">Does it explain value added?</a></li>
+  <li><a href="#sec-place" id="toc-sec-place" class="nav-link" data-scroll-target="#sec-place">What kinds of place</a></li>
+  <li><a href="#sec-mix" id="toc-sec-mix" class="nav-link" data-scroll-target="#sec-mix">Mixed neighbourhoods</a></li>
+  <li><a href="#sec-tier" id="toc-sec-tier" class="nav-link" data-scroll-target="#sec-tier">Which tier?</a></li>
+  <li><a href="#sec-means" id="toc-sec-means" class="nav-link" data-scroll-target="#sec-means">What it means for v2.1</a></li>
+  <li><a href="#sec-limits" id="toc-sec-limits" class="nav-link" data-scroll-target="#sec-limits">What this cannot tell us</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Neighbourhood types</h1>
+<p class="subtitle lead">Is there more to a school’s neighbourhood than its adults’ qualifications? The 2021 Output Area Classification, at all three of its tiers, tested against value added.</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>In short
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>For results, the classification is another way of measuring the same thing.</strong> A school’s mix of neighbourhood types reproduces the neighbourhood education term almost exactly. Used instead of it, it explains results as well. Used as well as it, it adds next to nothing.</li>
+<li><strong>Within a local authority it explains nothing more about value added</strong>, at any of the three tiers. Schools that do better than similar schools in their own authority do not sit in different kinds of neighbourhood.</li>
+<li><strong>Between places there is something, and mostly for disadvantaged pupils.</strong> Disadvantaged pupils do better where schools sit among multicultural, urban neighbourhoods. They do worse among the classification’s “Baseline UK”, legacy industrial and coastal, and small-town neighbourhoods. This describes the kinds of place behind the local authority effects. It does not add a new term to the model.</li>
+<li><strong>The finest tier is not needed.</strong> Groups (21 classes) find what subgroups (52) find; supergroups (8) find less.</li>
+</ul>
+</div>
+</div>
+<section id="sec-data" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data">The classification and the neighbourhoods</h2>
+<p>The <a href="https://data.geods.ac.uk/dataset/output-area-classification-2021">2021/2 Output Area Classification</a> sorts every Output Area in the UK into one of 8 supergroups, 21 groups and 52 subgroups. It clusters dozens of Census variables on population, households, housing, ethnicity, migration, education, work and health. Neighbourhood education in <a href="./method.html">Value Added v2.1</a> is one Census variable: the share of adults with degree-level qualifications.</p>
+<p>To compare like with like, each school’s neighbourhood here is the same as for neighbourhood education: the 150 Output Areas whose centres are nearest the school. A category has no median, so each school’s neighbourhood is described by its <em>profile</em>: the share of those 150 areas in each class, at each tier. It is also described by how mixed they are (the entropy of the subgroup shares). 3,262 schools have both value added and a profile.</p>
+</section>
+<section id="sec-results" class="level2">
+<h2 class="anchored" data-anchor-id="sec-results">Does it explain results better than neighbourhood education?</h2>
+<div class="cell">
+<div id="tbl-att" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-att-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Log Attainment 8, 2024/25, on the other v2.1 terms with region, with and without neighbourhood education and the classification’s profile: share of the variation explained out of sample (10-fold cross-validation, repeated five times).
+</figcaption>
+<div aria-describedby="tbl-att-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Explained (out of sample)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gain over no neighbourhood term</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Other v2.1 terms and region, no neighbourhood</td>
+<td style="text-align: right;">81.9%</td>
+<td style="text-align: right;">+0.0 points</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">+ neighbourhood education</td>
+<td style="text-align: right;">83.6%</td>
+<td style="text-align: right;">+1.7 points</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">+ OAC supergroup</td>
+<td style="text-align: right;">82.6%</td>
+<td style="text-align: right;">+0.7 points</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">+ neighbourhood education + OAC supergroup</td>
+<td style="text-align: right;">83.7%</td>
+<td style="text-align: right;">+1.8 points</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">+ OAC group</td>
+<td style="text-align: right;">83.3%</td>
+<td style="text-align: right;">+1.4 points</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">+ neighbourhood education + OAC group</td>
+<td style="text-align: right;">83.7%</td>
+<td style="text-align: right;">+1.8 points</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">+ OAC subgroup</td>
+<td style="text-align: right;">83.4%</td>
+<td style="text-align: right;">+1.5 points</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">+ neighbourhood education + OAC subgroup</td>
+<td style="text-align: right;">83.8%</td>
+<td style="text-align: right;">+1.9 points</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The other v2.1 terms explain 81.9% of the variation in results. Neighbourhood education takes that to 83.6%. The classification’s subgroups on their own reach 83.4%, about the same. Adding them to neighbourhood education gives 83.8%, a gain of under a quarter of a point. The reason is that the profile <em>is</em>, very largely, neighbourhood education: the subgroup shares predict a school’s neighbourhood education with R² 0.90 out of sample (groups 0.85, supergroups 0.65).</p>
+</section>
+<section id="sec-va" class="level2">
+<h2 class="anchored" data-anchor-id="sec-va">Does it explain value added?</h2>
+<p>Value added is what the v2.1 model cannot explain. If the classification picked up a neighbourhood effect the model misses, it would explain some of it. The test is in two forms:</p>
+<ul>
+<li><strong>Against England</strong>, which includes each school’s region and local authority effects.</li>
+<li><strong>Within the local authority</strong>, the school’s own part only.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-va" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="neighbourhood_types_files/figure-html/fig-va-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Share of the variation in value added explained out of sample by region, by the classification’s profile at each tier, and by both (10-fold cross-validation, repeated). Value added is each school’s average over its years, v2.1.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Within the authority, nothing.</strong> At every tier, the classification explains about none of a school’s value added relative to its own authority, for all pupils and for disadvantaged pupils. Schools that do better than similar schools nearby do not sit in different kinds of neighbourhood.</li>
+<li><strong>Against England, something</strong>, because value added against England includes the place a school is in. For all pupils, region explains 4.8% and region with the subgroups 7.9%. For disadvantaged pupils the step is larger: 8.4% with region alone, and 15.1% with region and groups.</li>
+</ul>
+<p>So the classification describes <em>places</em>, not schools within them. Local authorities, entered directly, explain 15.9% of disadvantaged pupils’ value added. The classification’s groups alone explain 11.5%, most of that. For all pupils, the authorities explain 10.8% and the groups only 2.6%.</p>
+</section>
+<section id="sec-place" class="level2">
+<h2 class="anchored" data-anchor-id="sec-place">What kinds of place</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-la" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="neighbourhood_types_files/figure-html/fig-la-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Correlation of each local authority’s effect in value added (v2.1) with the share of its schools’ neighbourhoods in each supergroup and in selected groups, weighted by the number of schools. Disadvantaged pupils (dark) and all pupils (pale).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For disadvantaged pupils, authorities do better the more their schools sit among multicultural neighbourhoods:</p>
+<ul>
+<li><strong>Challenged Multicultural Communities and Students</strong> (group 4c, +0.34);</li>
+<li><strong>Low-Skilled Migrant and Student Communities</strong> (supergroup 4, +0.29).</li>
+</ul>
+<p>They do worse the more their schools sit among the classification’s <strong>Baseline UK</strong> neighbourhoods (supergroup 6, -0.28), <strong>Inner Suburbs and Small Town Living</strong> (2a, -0.23) and <strong>Legacy Industrial and Coastal Communities</strong> (6b, -0.20).</p>
+<p>This matches what is known about where disadvantaged pupils do well: in London and other diverse cities, much less so in coastal and former industrial towns. Neighbourhood education does not capture it, because the two kinds of place can have similar qualification levels. These are correlations with authority effects. They describe the places; they do not say what about them matters.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-types" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="neighbourhood_types_files/figure-html/fig-types-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Disadvantaged pupils’ value added (against England, %) of a school whose 150 nearest Output Areas were all of one group: shares of each group with no intercept, with 95% intervals. Pale: fewer than 50 schools have a fifth or more of their neighbourhood in the group, so the estimate leans on extrapolation.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>School by school, the pure-type estimates mostly tell the same story. Multicultural groups (4c, 3b, 3c, 4b) sit above zero. Small-town, coastal, rural-amenity and challenged groups (2a, 2b, 6b, 1b, 6a) sit below. Two groups do not fit: Established but Challenged (7a) and Spacious Rural Living (1a) carry large positive estimates here, but show no relationship at all with authority effects. They are probably particular places rather than a pattern, and are best left aside until they can be looked at area by area.</p>
+</section>
+<section id="sec-mix" class="level2">
+<h2 class="anchored" data-anchor-id="sec-mix">Mixed neighbourhoods</h2>
+<p>Is it the mix rather than the type? Schools whose 150 Output Areas are more varied have slightly lower value added against England, region for region. One standard deviation more mixing goes with -0.7% Attainment 8. That is small, and is not pursued here.</p>
+</section>
+<section id="sec-tier" class="level2">
+<h2 class="anchored" data-anchor-id="sec-tier">Which tier?</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>Classes</th>
+<th>What it adds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Supergroup</td>
+<td>8</td>
+<td>Reproduces neighbourhood education less well (R² 0.65), and picks up the least of the place pattern</td>
+</tr>
+<tr class="even">
+<td>Group</td>
+<td>21</td>
+<td>Reproduces neighbourhood education well (R² 0.85); with region, captures the place pattern for disadvantaged pupils as well as subgroups or better</td>
+</tr>
+<tr class="odd">
+<td>Subgroup</td>
+<td>52</td>
+<td>Reproduces neighbourhood education best (R² 0.90), and a little more of all pupils’ place pattern; no better for disadvantaged pupils, and noisier</td>
+</tr>
+</tbody>
+</table>
+<p>Going down to subgroups adds little. The signal is in the broad kinds of place: diverse urban areas on one side, small-town, coastal and former industrial areas on the other. Those differ at the group level.</p>
+</section>
+<section id="sec-means" class="level2">
+<h2 class="anchored" data-anchor-id="sec-means">What it means for v2.1</h2>
+<ul>
+<li><strong>No change to the expectation.</strong> The classification adds nothing to results beyond neighbourhood education, and nothing to value added within authorities. There is no case for putting it in the model.</li>
+<li><strong>It helps read the local authority effects.</strong> Part of why disadvantaged pupils do better in some authorities than others goes with the kind of neighbourhoods their schools serve. That is a description of place, and it is where the <a href="./bh_effect.html">Brighton and Hove effect</a> and its causes belong.</li>
+<li><strong>For the next Census variables.</strong> The classification is mostly education and deprivation, which the model already has. The part it adds is ethnic diversity and the urban/coastal character of a place. Census variables on those, rather than more on qualifications, are the ones worth trying.</li>
+</ul>
+</section>
+<section id="sec-limits" class="level2">
+<h2 class="anchored" data-anchor-id="sec-limits">What this cannot tell us</h2>
+<ul>
+<li><strong>A school’s neighbourhood is not its pupils’ homes.</strong> The 150 nearest Output Areas stand for the area a school serves; pupils at selective, faith and popular schools come from further away.</li>
+<li><strong>The classes are bundles.</strong> Each is a cluster of many variables, so a class effect cannot say which variable matters.</li>
+<li><strong>Pure-type estimates extrapolate.</strong> Few schools sit in one class alone; the shares model reads off what a school surrounded by one type would get.</li>
+<li><strong>One cross-section.</strong> Profiles are from the 2021 Census and value added is averaged over 2021/22 to 2024/25.</li>
+</ul>
+<p>Built by <code>R/11_oac_neighbourhoods.R</code> from the <a href="https://data.geods.ac.uk/dataset/output-area-classification-2021">2021/2 Output Area Classification</a> (Wyszomierski, Longley, Singleton, Gale and O’Brien, <a href="https://doi.org/10.1111/geoj.12550"><em>The Geographical Journal</em></a>).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

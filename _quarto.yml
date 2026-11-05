@@ -9,6 +9,7 @@ project:
     - sussex.qmd
     - districts.qmd
     - bh_effect.qmd
+    - neighbourhood_types.qmd
     - absence_causes.qmd
     - absence_change.qmd
     - twins.qmd
@@ -57,6 +58,8 @@ website:
         menu:
           - href: bh_effect.qmd
             text: "Brighton and Hove"
+          - href: neighbourhood_types.qmd
+            text: "Neighbourhood types (OAC)"
       - text: "Absence"
         menu:
           - href: absence_causes.qmd

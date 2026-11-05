@@ -1,0 +1,245 @@
+---
+title: "Neighbourhood types"
+subtitle: "Is there more to a school's neighbourhood than its adults' qualifications? The 2021 Output Area Classification, at all three of its tiers, tested against value added."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+O <- readRDS(here::here("data", "oac_neighbourhoods.rds"))
+vf <- function(o, m) O$va_fit$cv_r2[O$va_fit$outcome == o & O$va_fit$model == m]
+af <- function(m) O$att_fit$cv_r2[O$att_fit$model == m]
+lf <- function(o, m) O$la_fit$cv_r2[O$la_fit$outcome == o & O$la_fit$model == m]
+lc <- function(g, code) O$la_cor$r_w[O$la_cor$group == g & O$la_cor$code == code]
+p1 <- function(x) sprintf("%.1f%%", 100 * x)
+ent_pct <- 100 * (exp(O$mix_test[["Estimate"]] * sd(O$profiles$ent_sub, na.rm = TRUE)) - 1)
+TIER_COL <- c("Region" = GREY, "Supergroup" = LPURPLE, "Group" = MPURPLE, "Subgroup" = DPURPLE)
+```
+
+::: {.callout-important}
+## In short
+
+- **For results, the classification is another way of measuring the same
+  thing.** A school's mix of neighbourhood types reproduces the
+  neighbourhood education term almost exactly. Used instead of it, it
+  explains results as well. Used as well as it, it adds next to nothing.
+- **Within a local authority it explains nothing more about value added**,
+  at any of the three tiers. Schools that do better than similar schools
+  in their own authority do not sit in different kinds of neighbourhood.
+- **Between places there is something, and mostly for disadvantaged
+  pupils.** Disadvantaged pupils do better where schools sit among
+  multicultural, urban neighbourhoods. They do worse among the
+  classification's "Baseline UK", legacy industrial and coastal, and
+  small-town neighbourhoods. This describes the kinds of place behind the
+  local authority effects. It does not add a new term to the model.
+- **The finest tier is not needed.** Groups (21 classes) find what
+  subgroups (52) find; supergroups (8) find less.
+:::
+
+## The classification and the neighbourhoods {#sec-data}
+
+The [2021/2 Output Area Classification](https://data.geods.ac.uk/dataset/output-area-classification-2021)
+sorts every Output Area in the UK into one of 8 supergroups, 21 groups and
+52 subgroups. It clusters dozens of Census variables on population,
+households, housing, ethnicity, migration, education, work and health.
+Neighbourhood education in [Value Added v2.1](method.qmd) is one Census
+variable: the share of adults with degree-level qualifications.
+
+To compare like with like, each school's neighbourhood here is the same
+as for neighbourhood education: the `r O$k` Output Areas whose centres
+are nearest the school. A category has no median, so each school's
+neighbourhood is described by its *profile*: the share of those
+`r O$k` areas in each class, at each tier. It is also described by how
+mixed they are (the entropy of the subgroup shares).
+`r format(O$schools, big.mark = ",")` schools
+have both value added and a profile.
+
+## Does it explain results better than neighbourhood education? {#sec-results}
+
+```{r}
+#| label: tbl-att
+#| tbl-cap: "Log Attainment 8, 2024/25, on the other v2.1 terms with region, with and without neighbourhood education and the classification's profile: share of the variation explained out of sample (10-fold cross-validation, repeated five times)."
+O$att_fit |> transmute(Model = model, `Explained (out of sample)` = p1(cv_r2),
+                       `Gain over no neighbourhood term` = sprintf("%+.1f points", 100 * (cv_r2 - cv_r2[1]))) |>
+  kt(align = "lrr")
+```
+
+The other v2.1 terms explain `r p1(af("Other v2.1 terms and region, no neighbourhood"))`
+of the variation in results. Neighbourhood education takes that to
+`r p1(af("+ neighbourhood education"))`. The classification's subgroups
+on their own reach `r p1(af("+ OAC subgroup"))`, about the same. Adding
+them to neighbourhood education gives
+`r p1(af("+ neighbourhood education + OAC subgroup"))`, a gain of under a
+quarter of a point. The reason is that the profile *is*, very largely,
+neighbourhood education: the subgroup shares predict a school's
+neighbourhood education with R² `r sprintf("%.2f", O$l4_by_oac[["Subgroup"]])`
+out of sample (groups `r sprintf("%.2f", O$l4_by_oac[["Group"]])`,
+supergroups `r sprintf("%.2f", O$l4_by_oac[["Supergroup"]])`).
+
+## Does it explain value added? {#sec-va}
+
+Value added is what the v2.1 model cannot explain. If the classification
+picked up a neighbourhood effect the model misses, it would explain some
+of it. The test is in two forms:
+
+- **Against England**, which includes each school's region and local
+  authority effects.
+- **Within the local authority**, the school's own part only.
+
+```{r}
+#| label: fig-va
+#| fig-cap: "Share of the variation in value added explained out of sample by region, by the classification's profile at each tier, and by both (10-fold cross-validation, repeated). Value added is each school's average over its years, v2.1."
+#| fig-height: 4.6
+vd <- O$va_fit |> filter(!grepl("education", model)) |>
+  mutate(region = grepl("^Region", model),
+         tier = ifelse(model == "Region", "Region", sub("Region \\+ ", "", model)),
+         tier = factor(tier, names(TIER_COL)),
+         x = ifelse(model == "Region", "Region", ifelse(region, "Region + classification", "Classification alone")),
+         x = factor(x, c("Region", "Classification alone", "Region + classification")),
+         outcome = factor(outcome, unique(O$va_fit$outcome)))
+ggplot(vd, aes(x, 100 * pmax(cv_r2, 0), colour = tier)) +
+  geom_point(size = 3, position = position_dodge(width = 0.5)) +
+  facet_wrap(~ outcome, ncol = 2) +
+  scale_colour_manual(values = TIER_COL, name = NULL) +
+  labs(x = NULL, y = "% of value added explained (out of sample)") + theme_note(11) +
+  theme(axis.text.x = element_text(size = 9))
+```
+
+- **Within the authority, nothing.** At every tier, the classification
+  explains about none of a school's value added relative to its own
+  authority, for all pupils and for disadvantaged pupils. Schools that do
+  better than similar schools nearby do not sit in different kinds of
+  neighbourhood.
+- **Against England, something**, because value added against England
+  includes the place a school is in. For all pupils, region explains
+  `r p1(vf("All pupils", "Region"))` and region with the subgroups
+  `r p1(vf("All pupils", "Region + Subgroup"))`. For disadvantaged pupils
+  the step is larger: `r p1(vf("Disadvantaged", "Region"))` with region
+  alone, and `r p1(vf("Disadvantaged", "Region + Group"))` with region and
+  groups.
+
+So the classification describes *places*, not schools within them.
+Local authorities, entered directly, explain
+`r p1(lf("Disadvantaged", "Local authority"))` of disadvantaged pupils' value
+added. The classification's groups alone explain
+`r p1(lf("Disadvantaged", "OAC group"))`, most of that. For all pupils, the
+authorities explain `r p1(lf("All pupils", "Local authority"))` and the groups
+only `r p1(lf("All pupils", "OAC group"))`.
+
+## What kinds of place {#sec-place}
+
+```{r}
+#| label: fig-la
+#| fig-cap: "Correlation of each local authority's effect in value added (v2.1) with the share of its schools' neighbourhoods in each supergroup and in selected groups, weighted by the number of schools. Disadvantaged pupils (dark) and all pupils (pale)."
+#| fig-height: 5.4
+lc_d <- O$la_cor |> mutate(label = paste0(ifelse(tier == "Supergroup", "", "  "), name, " (", code, ")"),
+                           grp = ifelse(group == "all", "All pupils", "Disadvantaged pupils"))
+ord <- lc_d |> filter(group == "disadvantaged") |> arrange(r_w) |> pull(label)
+ggplot(lc_d |> mutate(label = factor(label, ord)), aes(r_w, label, fill = grp)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
+  scale_fill_manual(values = c("All pupils" = LPURPLE, "Disadvantaged pupils" = DPURPLE), name = NULL) +
+  labs(x = "Correlation with the local authority effect", y = NULL) + theme_note(11) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+For disadvantaged pupils, authorities do better the more their schools sit
+among multicultural neighbourhoods:
+
+- **Challenged Multicultural Communities and Students** (group 4c,
+  `r sprintf("%+.2f", lc("disadvantaged", "4c"))`);
+- **Low-Skilled Migrant and Student Communities** (supergroup 4,
+  `r sprintf("%+.2f", lc("disadvantaged", "4"))`).
+
+They do worse the more their schools sit among the classification's
+**Baseline UK** neighbourhoods (supergroup 6,
+`r sprintf("%+.2f", lc("disadvantaged", "6"))`), **Inner Suburbs and Small
+Town Living** (2a, `r sprintf("%+.2f", lc("disadvantaged", "2a"))`) and
+**Legacy Industrial and Coastal Communities** (6b,
+`r sprintf("%+.2f", lc("disadvantaged", "6b"))`).
+
+This matches what is known about where disadvantaged pupils do well: in
+London and other diverse cities, much less so in coastal and former
+industrial towns. Neighbourhood education does not capture it, because the
+two kinds of place can have similar qualification levels. These are
+correlations with authority effects. They describe the places; they do not
+say what about them matters.
+
+```{r}
+#| label: fig-types
+#| fig-cap: "Disadvantaged pupils' value added (against England, %) of a school whose 150 nearest Output Areas were all of one group: shares of each group with no intercept, with 95% intervals. Pale: fewer than 50 schools have a fifth or more of their neighbourhood in the group, so the estimate leans on extrapolation."
+#| fig-height: 6
+ty <- O$types |> filter(tier == "Group", outcome == "Disadvantaged") |>
+  mutate(label = paste0(name, " (", code, ")"), solid = schools_20 >= 50) |> arrange(pct) |>
+  mutate(label = factor(label, label))
+ggplot(ty, aes(pct, label)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_errorbarh(aes(xmin = lo, xmax = hi, alpha = solid), height = 0, colour = DPURPLE, linewidth = 0.8) +
+  geom_point(aes(alpha = solid), colour = DPURPLE, size = 2.4) +
+  scale_alpha_manual(values = c(`TRUE` = 1, `FALSE` = 0.3), guide = "none") +
+  coord_cartesian(xlim = c(-30, 40)) +
+  labs(x = "Value added, disadvantaged pupils (% of Attainment 8)", y = NULL) + theme_note(11) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+School by school, the pure-type estimates mostly tell the same story.
+Multicultural groups (4c, 3b, 3c, 4b) sit above zero. Small-town,
+coastal, rural-amenity and challenged groups (2a, 2b, 6b, 1b, 6a) sit
+below. Two groups do not fit: Established but Challenged (7a) and Spacious
+Rural Living (1a) carry large positive estimates here, but show no
+relationship at all with authority effects. They are probably particular
+places rather than a pattern, and are best left aside until they can be
+looked at area by area.
+
+## Mixed neighbourhoods {#sec-mix}
+
+Is it the mix rather than the type? Schools whose `r O$k` Output Areas are
+more varied have slightly lower value added against England, region for
+region. One standard deviation more mixing goes with
+`r sprintf("%+.1f", ent_pct)`% Attainment 8. That is small, and is not
+pursued here.
+
+## Which tier? {#sec-tier}
+
+| Tier | Classes | What it adds |
+|---|---|---|
+| Supergroup | 8 | Reproduces neighbourhood education less well (R² `r sprintf("%.2f", O$l4_by_oac[["Supergroup"]])`), and picks up the least of the place pattern |
+| Group | 21 | Reproduces neighbourhood education well (R² `r sprintf("%.2f", O$l4_by_oac[["Group"]])`); with region, captures the place pattern for disadvantaged pupils as well as subgroups or better |
+| Subgroup | 52 | Reproduces neighbourhood education best (R² `r sprintf("%.2f", O$l4_by_oac[["Subgroup"]])`), and a little more of all pupils' place pattern; no better for disadvantaged pupils, and noisier |
+
+Going down to subgroups adds little. The signal is in the broad kinds of
+place: diverse urban areas on one side, small-town, coastal and former
+industrial areas on the other. Those differ at the group level.
+
+## What it means for v2.1 {#sec-means}
+
+- **No change to the expectation.** The classification adds nothing to
+  results beyond neighbourhood education, and nothing to value added
+  within authorities. There is no case for putting it in the model.
+- **It helps read the local authority effects.** Part of why disadvantaged
+  pupils do better in some authorities than others goes with the kind of
+  neighbourhoods their schools serve. That is a description of place, and
+  it is where the [Brighton and Hove effect](bh_effect.qmd) and its
+  causes belong.
+- **For the next Census variables.** The classification is mostly
+  education and deprivation, which the model already has. The part it
+  adds is ethnic diversity and the urban/coastal character of a place.
+  Census variables on those, rather than more on qualifications, are the
+  ones worth trying.
+
+## What this cannot tell us {#sec-limits}
+
+- **A school's neighbourhood is not its pupils' homes.** The `r O$k`
+  nearest Output Areas stand for the area a school serves; pupils at
+  selective, faith and popular schools come from further away.
+- **The classes are bundles.** Each is a cluster of many variables, so
+  a class effect cannot say which variable matters.
+- **Pure-type estimates extrapolate.** Few schools sit in one class
+  alone; the shares model reads off what a school surrounded by one type
+  would get.
+- **One cross-section.** Profiles are from the 2021 Census and value added
+  is averaged over 2021/22 to 2024/25.
+
+Built by `R/11_oac_neighbourhoods.R` from the
+[2021/2 Output Area Classification](https://data.geods.ac.uk/dataset/output-area-classification-2021)
+(Wyszomierski, Longley, Singleton, Gale and O'Brien, [*The Geographical Journal*](https://doi.org/10.1111/geoj.12550)).
