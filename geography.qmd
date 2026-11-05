@@ -1,0 +1,193 @@
+---
+title: "Geographical effects across England"
+subtitle: "How much of a school's results depends on where it is, once Value Added v2.1 has allowed for its intake; which places stand out; and what we know about why."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+G <- readRDS(here::here("data", "geography.rds"))
+O <- readRDS(here::here("data", "oac_neighbourhoods.rds"))
+B <- readRDS(here::here("data", "bh_effect.rds"))
+NC <- tryCatch(readRDS(here::here("data", "neighbourhood_covariates.rds")), error = function(e) NULL)
+lv <- function(g, l) G$levels$pct[G$levels$group == g & G$levels$level == l]
+rg <- function(g, r) G$reg$pct[G$reg$group == g & G$reg$gor_name == r]
+lcor <- function(g, code) O$la_cor$r_w[O$la_cor$group == g & O$la_cor$code == code]
+la_g <- function(g) G$la |> filter(group == g)
+bh <- function(g, col) G$la[[col]][G$la$group == g & G$la$LANAME == "Brighton and Hove"]
+p1 <- function(x) sprintf("%.1f%%", x)
+spread <- function(g) { x <- la_g(g)$pct; diff(quantile(x, c(0.1, 0.9))) }
+```
+
+::: {.callout-important}
+## In short
+
+- **Place matters, but less than the school.** Once v2.1 has allowed for
+  intake, a local authority one standard deviation above average adds about
+  `r p1(lv("all", "Local authority"))` to its schools' Attainment 8, and a
+  region about `r p1(lv("all", "Region"))`. A school's own lasting effect is
+  about `r p1(lv("all", "School (lasting)"))`.
+- **Place matters most for disadvantaged pupils.** For them the authority
+  effect is `r p1(lv("disadvantaged", "Local authority"))` and the region
+  effect `r p1(lv("disadvantaged", "Region"))`. Disadvantaged pupils in London do
+  `r p1(rg("disadvantaged", "London"))` better than similar pupils
+  across England; in the South East, `r p1(abs(rg("disadvantaged", "South East")))`
+  worse.
+- **What goes with it is partly the kind of place, partly the pupils.**
+  Disadvantaged pupils do better where schools serve multicultural, urban
+  neighbourhoods. They do worse in small-town, coastal and former
+  industrial areas ([Neighbourhood types](neighbourhood_types.qmd)).
+  Much of that is who the pupils are, since v2.1 has no pupil ethnicity.
+  Some is deprivation that the qualification term misses
+  ([Neighbourhood covariates](neighbourhood_covariates.qmd)). Most of the
+  authority effects remain unexplained.
+:::
+
+## How much is place? {#sec-size}
+
+Value Added v2.1 fits each school's results with random effects for its
+region and its local authority. These pick up what places have in common
+once intake is allowed for. Their size, against each school's own lasting
+effect:
+
+```{r}
+#| label: fig-levels
+#| fig-cap: "How much Attainment 8 varies, once v2.1 has allowed for intake: one standard deviation of the region, local authority and school (lasting) effects, as % of Attainment 8, by group of pupils."
+#| fig-height: 3.4
+LV_COL <- c("Region" = GREY, "Local authority" = BLUE, "School (lasting)" = DPURPLE)
+lvd <- G$levels |> mutate(level = factor(level, names(LV_COL)),
+                          grp = factor(GROUP_LABELS[group], rev(GROUP_LABELS)))
+ggplot(lvd, aes(pct, grp, fill = level)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
+  geom_text(aes(label = sprintf("%.1f", pct)), position = position_dodge(width = 0.75), hjust = -0.2, size = 3.1, colour = INK) +
+  scale_fill_manual(values = LV_COL, name = NULL, breaks = names(LV_COL)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.12)), labels = function(x) paste0(x, "%")) +
+  labs(x = "One standard deviation, % of Attainment 8", y = NULL) + theme_note() +
+  theme(panel.grid.major.y = element_blank())
+```
+
+Between the authorities a tenth of the way from the top and a tenth of
+the way from the bottom, the gap is about `r p1(spread("all"))` of
+Attainment 8 for all pupils (about `r round(spread("all") * 0.475, 1)`
+points at the national average) and `r p1(spread("disadvantaged"))` for
+disadvantaged pupils. That is the difference a place makes to otherwise
+similar schools.
+
+This is why Value Added v2.1 is published two ways. **Against England**
+keeps the place in: a school in an authority where similar schools do
+well looks better. **Within the authority** takes it out, and compares a
+school with similar schools nearby.
+
+## The map {#sec-map}
+
+```{r}
+#| label: fig-map
+#| fig-cap: "Local authority effects in Value Added v2.1, % of Attainment 8 (the authority's random effect, net of its region): all pupils and disadvantaged pupils. Purple, above what intake predicts; green, below. Hover for the authority and its interval."
+mk_map <- function(g) {
+  d <- G$bounds |> left_join(la_g(g) |> select(LANAME, pct, lo_pct, hi_pct, rank, n_la), by = "LANAME")
+  pal <- leaflet::colorNumeric(c("#1b7837", "#7fbf7b", "#f7f7f7", "#af8dc3", "#762a83"), domain = c(-8, 8), na.color = "#e8e6ee")
+  lab <- sprintf("<b>%s</b><br>%s%%  (95%%: %s to %s)<br>rank %s of %s", d$LANAME,
+                 ifelse(is.na(d$pct), "–", sprintf("%+.1f", d$pct)), sprintf("%+.1f", d$lo_pct), sprintf("%+.1f", d$hi_pct),
+                 d$rank, d$n_la)
+  leaflet::leaflet(d, height = 560, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
+    leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
+    leaflet::addPolygons(fillColor = ~ pal(pmax(pmin(pct, 8), -8)), fillOpacity = 0.85, color = "#ffffff", weight = 0.6,
+                         label = lapply(lab, htmltools::HTML),
+                         highlightOptions = leaflet::highlightOptions(weight = 2, color = INK, bringToFront = TRUE)) |>
+    leaflet::addLegend("topright", pal = pal, values = c(-8, 8), title = "% of Attainment 8",
+                       labFormat = leaflet::labelFormat(prefix = "", transform = function(x) x), opacity = 0.9)
+}
+```
+
+::: {.panel-tabset}
+
+### All pupils
+
+```{r}
+mk_map("all")
+```
+
+### Disadvantaged pupils
+
+```{r}
+mk_map("disadvantaged")
+```
+
+:::
+
+```{r}
+#| label: fig-regions
+#| fig-cap: "Average value added against England by region (schools' average log residual, weighted by years, as %): all pupils and disadvantaged pupils. This includes the region's and its authorities' effects."
+#| fig-height: 3.8
+rgd <- G$reg |> filter(group %in% c("all", "disadvantaged")) |>
+  mutate(grp = ifelse(group == "all", "All pupils", "Disadvantaged pupils"))
+rord <- rgd |> filter(group == "disadvantaged") |> arrange(pct) |> pull(gor_name)
+ggplot(rgd |> mutate(gor_name = factor(gor_name, rord)), aes(pct, gor_name, fill = grp)) +
+  geom_vline(xintercept = 0, colour = GREY) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
+  scale_fill_manual(values = c("All pupils" = LPURPLE, "Disadvantaged pupils" = DPURPLE), name = NULL) +
+  scale_x_continuous(labels = function(x) paste0(sprintf("%+.0f", x), "%")) +
+  labs(x = "Value added against England, % of Attainment 8", y = NULL) + theme_note() +
+  theme(panel.grid.major.y = element_blank())
+```
+
+The regional pattern is different for disadvantaged pupils. For all
+pupils, the North East and South West do best, the North West worst.
+For disadvantaged pupils, London leads at `r sprintf("%+.1f", rg("disadvantaged", "London"))`%,
+and the South East is last at `r sprintf("%+.1f", rg("disadvantaged", "South East"))`%.
+Brighton and Hove's effect, at `r sprintf("%+.1f", bh("all", "pct"))`% for
+all pupils (`r ord(bh("all", "rank"))` of `r bh("all", "n_la")`), is one of
+the largest in England. Its own page examines it.
+
+## What goes with place {#sec-why}
+
+What the evidence on this site says about why places differ:
+
+- **The kind of neighbourhood.** The [Output Area
+  Classification](neighbourhood_types.qmd) adds nothing to results within
+  an authority. Between authorities it describes the pattern for
+  disadvantaged pupils. They do better where schools serve multicultural
+  neighbourhoods: group 4c, Challenged Multicultural Communities, has a
+  correlation of `r sprintf("%+.2f", lcor("disadvantaged", "4c"))` with
+  the authority effect. They do worse among the classification's
+  "Baseline UK" neighbourhoods (`r sprintf("%+.2f", lcor("disadvantaged", "6"))`)
+  and among small-town (`r sprintf("%+.2f", lcor("disadvantaged", "2a"))`)
+  and coastal and former industrial ones (`r sprintf("%+.2f", lcor("disadvantaged", "6b"))`).
+  This is the pattern behind London's lead and the South East's position
+  for disadvantaged pupils.
+- **Not adult qualifications.** v2.1 already allows for neighbourhood
+  education, and the place pattern survives it. Two places with the same
+  share of graduates can differ in diversity, migration and the character
+  of their towns.
+- **Not absence, much.** Absence is in the model, and authorities' absence
+  effects barely track their value added effects. The largest link is
+  with illness absence, `r sprintf("%+.2f", G$abs_cor$r[G$abs_cor$group == "all" & G$abs_cor$outcome == "illness"])`:
+  where pupils are recorded ill more often than intake predicts, value
+  added is slightly higher. Brighton and Hove is the clearest case (see
+  [What goes with school absence](absence_causes.qmd#sec-place)).
+- **A worked example.** [Brighton and Hove](bh_effect.qmd) tests the
+  explanations one at a time for one authority.
+- **Who the pupils are, and deprivation the qualification term misses.**
+  The [neighbourhood covariates experiment](neighbourhood_covariates.qmd)
+  added ten Census measures, and each school's own share of White British
+  pupils, to the model. For disadvantaged pupils, the school's composition
+  and neighbourhood deprivation together take about a fifth off the
+  authority effects and over a third off the regional ones. The ethnic
+  pattern is mostly the pupils themselves, not the place. For all pupils,
+  authority effects barely move.
+
+## What it means {#sec-means}
+
+- **Read value added against England with the place in mind.** Part of a
+  school's figure is where it is: up to a few per cent for all pupils, more
+  for disadvantaged pupils. The within-authority figure takes that out.
+- **Place effects are largest for the pupils policy most wants to help.**
+  A disadvantaged pupil's results depend more on the authority and region
+  than an advantaged pupil's do, even with the same intake.
+- **Part of the place effect is the pupils.** v2.1 has no measure of
+  pupils' ethnicity. The experiment suggests that is much of what makes
+  disadvantaged pupils' results look like a place effect. The rest of
+  the authority effects are not in the Census at all.
+
+Built by `R/12_geography.R` from the v2.1 model (`R/02_fit_va.R`), with
+boundaries from ONS (counties and unitary authorities, December 2023).

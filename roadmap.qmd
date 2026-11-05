@@ -98,10 +98,20 @@ subtitle: "What v2.1 does now, and what comes next."
       describes the places behind the authority effects for disadvantaged
       pupils (multicultural urban areas above, small-town, coastal and
       former industrial areas below). Groups are enough; subgroups add little.
-- [ ] **Census variables on diversity and place.** Following the OAC
-      result: ethnic diversity, recent migration and coastal or small-town
-      character, at neighbourhood and authority level, against the
-      authority effects for disadvantaged pupils.
+- [x] **[Geographical effects across England](geography.qmd).** How much of
+      value added is region and local authority, for every group; a map of
+      the authority effects; region averages; and what goes with them.
+- [x] **[Neighbourhood covariates](neighbourhood_covariates.qmd) (experiment).**
+      Ten Census 2021 measures and each school's own White British share
+      added to v2.1. For disadvantaged pupils, the ethnic pattern is mostly
+      composition (pupils, not place); neighbourhood deprivation beyond
+      qualifications is place. Together they take about a fifth off the
+      authority effects and over a third off the regional ones for
+      disadvantaged pupils; about a third of Brighton and Hove's effect.
+- [ ] **v2.2 candidates from the experiment.** Pupils' ethnicity (as in
+      DfE's contextual value added until 2011), and household deprivation
+      beside neighbourhood education, each tested across every group and
+      year, with the case for and against.
 - [ ] **Parents, not adults.** Try a parents' qualification measure from
       the 2021 Census (households with dependent children) in place of
       neighbourhood education for all adults.

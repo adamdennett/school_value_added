@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://adamdennett.github.io/school_value_added/roadmap.html</loc>
-    <lastmod>2026-11-05T14:34:11.265Z</lastmod>
+    <lastmod>2026-11-05T14:47:31.356Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/west_sussex.html</loc>
@@ -45,6 +45,10 @@
     <lastmod>2026-11-04T17:00:45.012Z</lastmod>
   </url>
   <url>
+    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_types.html</loc>
+    <lastmod>2026-11-05T14:34:06.286Z</lastmod>
+  </url>
+  <url>
     <loc>https://adamdennett.github.io/school_value_added/bh_effect.html</loc>
     <lastmod>2026-11-04T09:46:11.366Z</lastmod>
   </url>
@@ -73,8 +77,12 @@
     <lastmod>2026-11-04T08:54:50.688Z</lastmod>
   </url>
   <url>
-    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_types.html</loc>
-    <lastmod>2026-11-05T14:34:06.286Z</lastmod>
+    <loc>https://adamdennett.github.io/school_value_added/geography.html</loc>
+    <lastmod>2026-11-05T14:46:37.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_covariates.html</loc>
+    <lastmod>2026-11-05T14:47:30.652Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/absence_change.html</loc>

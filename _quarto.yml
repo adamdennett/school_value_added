@@ -9,7 +9,9 @@ project:
     - sussex.qmd
     - districts.qmd
     - bh_effect.qmd
+    - geography.qmd
     - neighbourhood_types.qmd
+    - neighbourhood_covariates.qmd
     - absence_causes.qmd
     - absence_change.qmd
     - twins.qmd
@@ -56,10 +58,14 @@ website:
             text: "All twelve districts"
       - text: "Geographical effects"
         menu:
+          - href: geography.qmd
+            text: "Across England"
           - href: bh_effect.qmd
             text: "Brighton and Hove"
           - href: neighbourhood_types.qmd
             text: "Neighbourhood types (OAC)"
+          - href: neighbourhood_covariates.qmd
+            text: "Neighbourhood covariates (experiment)"
       - text: "Absence"
         menu:
           - href: absence_causes.qmd
