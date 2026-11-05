@@ -13,7 +13,10 @@ cf <- function(g, m, term) { x <- R$coefs[[which(R$group == g & R$model == m)]];
 ctt <- function(g, m, term) { x <- R$coefs[[which(R$group == g & R$model == m)]]; x$est[x$term == term] / x$se[x$term == term] }
 SO <- "School's own White British share"
 p1 <- function(x) sprintf("%+.1f%%", x)
-GCOL <- c("All pupils" = LPURPLE, "Disadvantaged pupils" = DPURPLE)
+GL3 <- c(all = "All pupils", disadvantaged = "Disadvantaged pupils", non_disadvantaged = "Non-disadvantaged pupils")
+GCOL <- setNames(unname(GROUP_COL[c("All pupils", "Disadvantaged", "Non-disadvantaged")]), unname(GL3))
+gl3 <- function(g) factor(unname(GL3[g]), unname(GL3))
+SD2 <- "School's own + neighbourhood deprivation"; SDW <- "School's own + deprivation and work"
 T2 <- readRDS(here::here("data", "graduate_deprivation.rds"))
 tres <- function(g, s) T2$res[T2$res$group == g & T2$res$spec == s, ]
 tc <- function(g, s, term, col = "pct") { x <- tres(g, s)$coefs[[1]]; x <- x[x$term == term, ]
@@ -42,10 +45,10 @@ the January 2026 school census.
 ::: {.callout-important}
 ## In short
 
-- **The largest gain is not a place measure.** It is the school's own share of White British pupils, which v2.1 does not have. For disadvantaged pupils, one standard deviation more goes with `r p1(r1("disadvantaged", SO, "pct"))` Attainment 8, all else equal. Once it is in, the neighbourhood's ethnic make-up adds little: what looked like a neighbourhood effect was mostly who the pupils are.
-- **Neighbourhood deprivation, beyond qualifications, does matter.** At the same share of graduates, more multiply deprived households around a school go with *higher* results for disadvantaged pupils. This survives the school's own composition.
-- **Together they take a fifth off the local authority effects for disadvantaged pupils, and over a third off the regional ones.** For all pupils, authority effects barely change.
-- **About a third of Brighton and Hove's effect goes with these measures.** Its neighbourhoods are more deprived than their graduate share suggests.
+- **The largest gain is not a place measure.** It is the school's own share of White British pupils, which v2.1 does not have. For disadvantaged pupils, one standard deviation more goes with `r p1(r1("disadvantaged", SO, "pct"))` Attainment 8, all else equal. For non-disadvantaged pupils it is close to nothing (`r p1(r1("non_disadvantaged", SO, "pct"))`). Once it is in, the neighbourhood's ethnic make-up adds little: what looked like a neighbourhood effect was mostly who the pupils are.
+- **Neighbourhood deprivation, beyond qualifications, does matter.** At the same share of graduates, more multiply deprived households around a school go with *higher* results for every group. This survives the school's own composition: `r p1(cf("disadvantaged", SD2, "z_deprived2"))` per standard deviation for disadvantaged pupils, `r p1(cf("non_disadvantaged", SD2, "z_deprived2"))` for non-disadvantaged pupils and `r p1(cf("all", SD2, "z_deprived2"))` for all pupils.
+- **Together they take a fifth off the local authority effects for disadvantaged pupils, and over a third off the regional ones.** They take less off authority effects for non-disadvantaged pupils (`r sprintf("%.0f", -r1("non_disadvantaged", SD2, "la_var_change"))`%) and all pupils (`r sprintf("%.0f", -r1("all", SD2, "la_var_change"))`%), and regional effects grow for both.
+- **A third or more of Brighton and Hove's effect goes with these measures, for all three groups.** Its neighbourhoods are more deprived than their graduate share suggests.
 :::
 
 ## The measures {#sec-measures}
@@ -78,29 +81,37 @@ English as an additional language.
 
 ```{r}
 #| label: fig-one
-#| fig-cap: "Each measure added on its own to the v2.1 model: the difference in Attainment 8 with one standard deviation more (%), with 95% intervals, for all pupils and disadvantaged pupils. Maximum likelihood, the same school-years throughout."
+#| fig-cap: "Each measure added on its own to the v2.1 model: the difference in Attainment 8 with one standard deviation more (%), with 95% intervals, for all, disadvantaged and non-disadvantaged pupils. Maximum likelihood, the same school-years throughout."
 #| fig-height: 5.6
 one <- R |> filter(n_terms == 1) |>
-  mutate(grp = ifelse(group == "all", "All pupils", "Disadvantaged pupils"),
-         lo = 100 * (exp(est - 1.96 * se) - 1), hi = 100 * (exp(est + 1.96 * se) - 1))
+  mutate(grp = gl3(group), lo = 100 * (exp(est - 1.96 * se) - 1), hi = 100 * (exp(est + 1.96 * se) - 1))
 lev <- one |> filter(group == "disadvantaged") |> arrange(pct) |> pull(model)
 ggplot(one |> mutate(model = factor(model, lev)), aes(pct, model, colour = grp)) +
   geom_vline(xintercept = 0, colour = GREY) +
-  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge(width = 0.6), linewidth = 0.9) +
-  geom_point(position = position_dodge(width = 0.6), size = 2.4) +
+  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge(width = 0.7), linewidth = 0.9) +
+  geom_point(position = position_dodge(width = 0.7), size = 2.2) +
   scale_colour_manual(values = GCOL, name = NULL) +
   labs(x = "% difference in Attainment 8 per standard deviation", y = NULL) + theme_note(11) +
   theme(panel.grid.major.y = element_blank())
 ```
 
-For all pupils every effect is small: about one per cent per standard
-deviation at most. For disadvantaged pupils they are three to five times
-larger. Disadvantaged pupils do better around schools in diverse,
+For all pupils the effects are small: about one per cent per standard
+deviation, or a little more. For disadvantaged pupils they are three to
+five times larger. Disadvantaged pupils do better around schools in diverse,
 migrant, less English-speaking and more deprived neighbourhoods, and
 worse in White British and professional ones. The school's own White
 British share is the strongest single term:
 `r p1(r1("disadvantaged", SO, "pct"))` for disadvantaged pupils and
 `r p1(r1("all", SO, "pct"))` for all.
+
+For non-disadvantaged pupils the ethnic and migration measures are close to
+zero: `r p1(r1("non_disadvantaged", SO, "pct"))` for the school's own White
+British share and `r p1(r1("non_disadvantaged", "White British (%)", "pct"))`
+for the neighbourhood's. So what shows up on those measures for all pupils
+comes mostly from the disadvantaged pupils among them. Deprivation is
+different. It is as strong for non-disadvantaged pupils
+(`r p1(r1("non_disadvantaged", "Households deprived in 2+ dimensions (%)", "pct"))`)
+as for all pupils (`r p1(r1("all", "Households deprived in 2+ dimensions (%)", "pct"))`).
 
 ## Composition or place? {#sec-composition}
 
@@ -110,20 +121,20 @@ are. With the school's own White British share in the model:
 
 ```{r}
 #| label: tbl-comp
-#| tbl-cap: "The school's own White British share with neighbourhood measures alongside: each term's effect (% per SD, with its t value), for disadvantaged pupils and all pupils."
+#| tbl-cap: "The school's own White British share with neighbourhood measures alongside: each term's effect (% per SD, with its t value), for all, disadvantaged and non-disadvantaged pupils."
 mods <- c("School's own + neighbourhood White British", "School's own + neighbourhood deprivation")
 terms <- c(z_sch_wbri = "School's own White British share", z_wbri = "Neighbourhood White British",
            z_deprived2 = "Neighbourhood deprivation (2+ dimensions)")
-bind_rows(lapply(mods, function(m) bind_rows(lapply(c("disadvantaged", "all"), function(g) {
+bind_rows(lapply(mods, function(m) bind_rows(lapply(names(GL3), function(g) {
   x <- R$coefs[[which(R$group == g & R$model == m)]]
-  tibble(Model = m, Group = ifelse(g == "all", "All pupils", "Disadvantaged"), Term = terms[x$term],
+  tibble(Model = m, Group = unname(GL3[g]), Term = terms[x$term],
          `% per SD` = sprintf("%+.1f", 100 * (exp(x$est) - 1)), t = sprintf("%.1f", x$est / x$se))
 })))) |>
   kt(align = "lllrr") |> kableExtra::collapse_rows(columns = 1:2, valign = "top")
 ```
 
-- **Ethnicity is mostly composition.** With the school's own share in, the neighbourhood's White British share shrinks from `r p1(r1("disadvantaged", "White British (%)", "pct"))` to `r p1(cf("disadvantaged", mods[1], "z_wbri"))` for disadvantaged pupils, and to nothing clear for all pupils (`r p1(cf("all", mods[1], "z_wbri"))`, t `r sprintf("%.1f", ctt("all", mods[1], "z_wbri"))`). The model fits barely better with both than with the school's own share alone (AIC `r sprintf("%.0f", r1("disadvantaged", mods[1], "aic_change"))` against `r sprintf("%.0f", r1("disadvantaged", SO, "aic_change"))`).
-- **Deprivation is place.** Neighbourhood deprivation keeps its effect alongside the school's composition: `r p1(cf("disadvantaged", mods[2], "z_deprived2"))` per SD for disadvantaged pupils (t `r sprintf("%.1f", ctt("disadvantaged", mods[2], "z_deprived2"))`) and `r p1(cf("all", mods[2], "z_deprived2"))` for all. At the same share of graduates and the same pupils, a school in a more multiply deprived neighbourhood does a little better. The next section asks why.
+- **Ethnicity is mostly composition.** With the school's own share in, the neighbourhood's White British share shrinks from `r p1(r1("disadvantaged", "White British (%)", "pct"))` to `r p1(cf("disadvantaged", mods[1], "z_wbri"))` for disadvantaged pupils, and to nothing clear for all pupils (`r p1(cf("all", mods[1], "z_wbri"))`, t `r sprintf("%.1f", ctt("all", mods[1], "z_wbri"))`). For non-disadvantaged pupils both terms are small and pull opposite ways: `r p1(cf("non_disadvantaged", mods[1], "z_sch_wbri"))` for the school and `r p1(cf("non_disadvantaged", mods[1], "z_wbri"))` for the neighbourhood. For disadvantaged pupils, the model fits barely better with both than with the school's own share alone (AIC `r sprintf("%.0f", r1("disadvantaged", mods[1], "aic_change"))` against `r sprintf("%.0f", r1("disadvantaged", SO, "aic_change"))`).
+- **Deprivation is place.** Neighbourhood deprivation keeps its effect alongside the school's composition: `r p1(cf("disadvantaged", mods[2], "z_deprived2"))` per SD for disadvantaged pupils (t `r sprintf("%.1f", ctt("disadvantaged", mods[2], "z_deprived2"))`), `r p1(cf("non_disadvantaged", mods[2], "z_deprived2"))` for non-disadvantaged pupils (t `r sprintf("%.1f", ctt("non_disadvantaged", mods[2], "z_deprived2"))`) and `r p1(cf("all", mods[2], "z_deprived2"))` for all. At the same share of graduates and the same pupils, a school in a more multiply deprived neighbourhood does a little better. The next section asks why.
 
 ## Two kinds of deprived neighbourhood {#sec-two}
 
@@ -162,20 +173,20 @@ who they are.**
 ```{r}
 #| label: fig-kinds
 #| fig-cap: "Average value added against England (% of Attainment 8, with one standard error) by kind of neighbourhood: under v2.1, with the school's own ethnicity allowed for, and with neighbourhood deprivation too. Top and bottom thirds of schools on neighbourhood deprivation and neighbourhood education."
-#| fig-height: 4.6
-KV <- T2$kind_va |> filter(group != "all") |>
-  mutate(grp = ifelse(group == "disadvantaged", "Disadvantaged pupils", "Non-disadvantaged pupils"),
+#| fig-height: 4.8
+KV <- T2$kind_va |>
+  mutate(grp = gl3(group),
          model = factor(model, c("v2.1", "+ school's ethnicity", "+ ethnicity and deprivation")),
          kind = factor(kind, rev(c(DG, DF, "Not deprived, many graduates", "Not deprived, few graduates"))))
 ggplot(KV, aes(va, kind, colour = model)) +
   geom_vline(xintercept = 0, colour = GREY) +
   geom_linerange(aes(xmin = va - se, xmax = va + se), position = position_dodge(width = 0.6), linewidth = 0.8) +
   geom_point(position = position_dodge(width = 0.6), size = 2.4) +
-  facet_wrap(~ grp) +
+  facet_wrap(~ grp, ncol = 3) +
   scale_colour_manual(values = c("v2.1" = MPURPLE, "+ school's ethnicity" = BPURPLE, "+ ethnicity and deprivation" = DPURPLE), name = NULL) +
   scale_x_continuous(labels = function(x) ifelse(x == 0, "0%", paste0(sprintf("%+.0f", x), "%"))) +
   labs(x = "Value added against England, % of Attainment 8", y = NULL) + theme_note(11) +
-  theme(panel.grid.major.y = element_blank())
+  theme(panel.grid.major.y = element_blank(), panel.spacing.x = unit(1.4, "lines"))
 ```
 
 Under v2.1, disadvantaged pupils in deprived, graduate-rich neighbourhoods
@@ -186,15 +197,20 @@ first group have `r round(kd(DG, "wbri"))`% White British pupils, against
 `r p1(kv("disadvantaged", DG, "+ school's ethnicity"))`: two-thirds of it is
 composition. The rest is real but modest.
 
+Non-disadvantaged pupils in the same deprived, graduate-rich neighbourhoods
+are at `r p1(kv("non_disadvantaged", DG, "v2.1"))`. All pupils, at
+`r p1(kv("all", DG, "v2.1"))`, mix the two, so the figure for all pupils hides how
+differently the two groups do in these places.
+
 Does the graduate idea explain the deprivation effect itself? It makes four
 predictions, and the data support it only in part:
 
 | If it is recent graduates, the deprivation effect should... | What the data show |
 |---|---|
-| grow with neighbourhood education | **No.** The interaction is `r sprintf("%+.2f", tc("disadvantaged", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for disadvantaged pupils and `r sprintf("%+.2f", tc("non_disadvantaged", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for non-disadvantaged (the wrong way) |
-| sit in London and near universities, not in low-graduate places | **In part.** For disadvantaged pupils it is `r p1(tc("disadvantaged", PL, "place4London:z_dep"))` in London and `r p1(tc("disadvantaged", PL, "place4Near a university:z_dep"))` near universities, but also `r p1(tc("disadvantaged", PL, "place4Elsewhere, fewer graduates:z_dep"))` in low-graduate places. For non-disadvantaged pupils it is largest in low-graduate places (`r p1(tc("non_disadvantaged", PL, "place4Elsewhere, fewer graduates:z_dep"))`) |
-| go once early-career measures are in | **No.** It stays at `r p1(tc("disadvantaged", EC, "z_dep"))` for disadvantaged pupils and rises to `r p1(tc("non_disadvantaged", EC, "z_dep"))` for non-disadvantaged |
-| be overcrowding, not ill health | **In part.** Overcrowding is positive for disadvantaged pupils (`r p1(tc("disadvantaged", PT, "z_overcrowd"))`), but so is bad health (`r p1(tc("disadvantaged", PT, "z_bad_health"))`) |
+| grow with neighbourhood education | **No.** The interaction is `r sprintf("%+.2f", tc("disadvantaged", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for disadvantaged pupils, `r sprintf("%+.2f", tc("non_disadvantaged", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for non-disadvantaged (the wrong way) and `r sprintf("%+.2f", tc("all", "+ deprivation x neighbourhood education", "z_l4:z_dep"))`% for all pupils |
+| sit in London and near universities, not in low-graduate places | **In part.** For disadvantaged pupils it is `r p1(tc("disadvantaged", PL, "place4London:z_dep"))` in London and `r p1(tc("disadvantaged", PL, "place4Near a university:z_dep"))` near universities, but also `r p1(tc("disadvantaged", PL, "place4Elsewhere, fewer graduates:z_dep"))` in low-graduate places. For non-disadvantaged pupils it is largest in low-graduate places (`r p1(tc("non_disadvantaged", PL, "place4Elsewhere, fewer graduates:z_dep"))`). For all pupils it is much the same in all three (`r p1(tc("all", PL, "place4London:z_dep"))`, `r p1(tc("all", PL, "place4Near a university:z_dep"))`, `r p1(tc("all", PL, "place4Elsewhere, fewer graduates:z_dep"))`) |
+| go once early-career measures are in | **No.** It stays at `r p1(tc("disadvantaged", EC, "z_dep"))` for disadvantaged pupils, rises to `r p1(tc("non_disadvantaged", EC, "z_dep"))` for non-disadvantaged and is `r p1(tc("all", EC, "z_dep"))` for all pupils |
+| be overcrowding, not ill health | **In part.** Overcrowding is positive for disadvantaged pupils (`r p1(tc("disadvantaged", PT, "z_overcrowd"))`), but so is bad health (`r p1(tc("disadvantaged", PT, "z_bad_health"))`). For non-disadvantaged pupils overcrowding adds little (`r p1(tc("non_disadvantaged", PT, "z_overcrowd"))`) and bad health more (`r p1(tc("non_disadvantaged", PT, "z_bad_health"))`). For all pupils they are `r p1(tc("all", PT, "z_overcrowd"))` and `r p1(tc("all", PT, "z_bad_health"))` |
 
 So the small deprivation term is not a recent-graduate effect. It appears in
 both kinds of place, for reasons this page cannot separate.
@@ -242,16 +258,18 @@ adults without children are the graduates; in the second, parents are.
 
 ```{r}
 #| label: tbl-puzzles
-#| tbl-cap: "What changes when neighbourhood education is measured among parents instead of all adults. The effects (% per SD) come from models that also allow for the school's ethnicity, neighbourhood deprivation and young adults; the last row is value added against England with only the neighbourhood term swapped."
+#| tbl-cap: "What changes when neighbourhood education is measured among parents instead of all adults. The effects (% per SD) come from models that also allow for the school's ethnicity, neighbourhood deprivation and young adults; the last three rows are value added against England with only the neighbourhood term swapped."
 A1 <- "All adults + ethnicity, deprivation, young adults"; P1 <- "Parents + ethnicity, deprivation, young adults"
 GR <- c("all", "disadvantaged", "non_disadvantaged", "girls", "boys")
-tibble(Result = c("Young adults' effect, all pupils", "Young adults' effect, non-disadvantaged", "Young adults' effect, boys",
-                  "Neighbourhood deprivation's effect, all pupils", "Neighbourhood deprivation's effect, disadvantaged",
-                  "Non-disadvantaged pupils in deprived, graduate-rich places"),
-       `All adults` = c(p1(pcf("all", A1, "z_young")), p1(pcf("non_disadvantaged", A1, "z_young")), p1(pcf("boys", A1, "z_young")),
-                        p1(pcf("all", A1, "z_dep")), p1(pcf("disadvantaged", A1, "z_dep")), p1(pkv("non_disadvantaged", DG, "All adults"))),
-       Parents = c(p1(pcf("all", P1, "z_young")), p1(pcf("non_disadvantaged", P1, "z_young")), p1(pcf("boys", P1, "z_young")),
-                   p1(pcf("all", P1, "z_dep")), p1(pcf("disadvantaged", P1, "z_dep")), p1(pkv("non_disadvantaged", DG, "Parents")))) |>
+G3 <- c("all", "disadvantaged", "non_disadvantaged"); lab3 <- c("all pupils", "disadvantaged", "non-disadvantaged")
+over3 <- function(f) unname(sapply(G3, f))
+tibble(Result = c(paste0("Young adults' effect, ", lab3), "Young adults' effect, boys",
+                  paste0("Neighbourhood deprivation's effect, ", lab3),
+                  paste0("Value added in deprived, graduate-rich places, ", lab3)),
+       `All adults` = c(over3(function(g) p1(pcf(g, A1, "z_young"))), p1(pcf("boys", A1, "z_young")),
+                        over3(function(g) p1(pcf(g, A1, "z_dep"))), over3(function(g) p1(pkv(g, DG, "All adults")))),
+       Parents = c(over3(function(g) p1(pcf(g, P1, "z_young"))), p1(pcf("boys", P1, "z_young")),
+                   over3(function(g) p1(pcf(g, P1, "z_dep"))), over3(function(g) p1(pkv(g, DG, "Parents"))))) |>
   kt(align = "lrr")
 ```
 
@@ -281,9 +299,9 @@ tibble(Group = unname(GROUP_LABELS[GR]),
 ```{r}
 #| label: fig-split
 #| fig-cap: "The effect of graduates among parents and among adults without dependent children, entered together with the school's ethnicity, % of Attainment 8 per SD with 95% intervals, for England, outside London and London."
-#| fig-height: 3.8
-sp <- tibble::as_tibble(PN$split_test) |> filter(sample %in% c("England", "Outside London", "London"), term != "z_eth", group != "all") |>
-  mutate(grp = ifelse(group == "disadvantaged", "Disadvantaged pupils", "Non-disadvantaged pupils"),
+#| fig-height: 4
+sp <- tibble::as_tibble(PN$split_test) |> filter(sample %in% c("England", "Outside London", "London"), term != "z_eth") |>
+  mutate(grp = gl3(group),
          who = ifelse(term == "z_parents", "Graduates among parents", "Graduates among adults without dependent children"),
          sample = factor(sample, rev(c("England", "Outside London", "London"))),
          lo = 100 * (exp(est - 1.96 * se) - 1), hi = 100 * (exp(est + 1.96 * se) - 1))
@@ -291,7 +309,7 @@ ggplot(sp, aes(pct, sample, colour = who)) +
   geom_vline(xintercept = 0, colour = GREY) +
   geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge(width = 0.5), linewidth = 0.9) +
   geom_point(position = position_dodge(width = 0.5), size = 2.6) +
-  facet_wrap(~ grp) +
+  facet_wrap(~ grp, ncol = 3) +
   scale_colour_manual(values = c("Graduates among parents" = DPURPLE, "Graduates among adults without dependent children" = BLUE), name = NULL) +
   labs(x = "% of Attainment 8 per SD", y = NULL) + theme_note(11) + theme(panel.grid.major.y = element_blank())
 ```
@@ -308,6 +326,10 @@ ggplot(sp, aes(pct, sample, colour = who)) +
   It is smaller than it first looks: about 60% of the split goes once the
   school's ethnicity is allowed for, and outside London the parents' side is
   no longer clear.
+- **All pupils sit between the two**
+  (`r p1(st("all", "England", "z_parents"))` for graduate parents, t `r sprintf("%.1f", st("all", "England", "z_parents", "t"))`;
+  `r p1(st("all", "England", "z_nonpar"))` for other graduates, t `r sprintf("%.1f", st("all", "England", "z_nonpar", "t"))`).
+  They mix two groups that respond in opposite ways to graduate parents.
 
 The second result fits the idea that young graduates bring something to a
 neighbourhood that reaches disadvantaged pupils. It fits other stories too.
@@ -335,7 +357,7 @@ SETS_SHOW <- c("Diversity and migration", "Deprivation and work", "All ten", SO,
 pl <- R |> filter(model %in% SETS_SHOW) |>
   select(group, model, `Local authority` = la_var_change, Region = reg_var_change) |>
   tidyr::pivot_longer(c(`Local authority`, Region), names_to = "level", values_to = "chg") |>
-  mutate(grp = ifelse(group == "all", "All pupils", "Disadvantaged pupils"), model = factor(model, rev(SETS_SHOW)))
+  mutate(grp = gl3(group), model = factor(model, rev(SETS_SHOW)))
 ggplot(pl, aes(chg, model, fill = grp)) +
   geom_vline(xintercept = 0, colour = GREY) +
   geom_col(position = position_dodge(width = 0.75), width = 0.7) +
@@ -356,9 +378,13 @@ pupils are and what their neighbourhoods are like, at the same intake
 otherwise.
 
 For **all pupils**, authority effects barely change and regional ones
-grow. The measures account for differences *within* regions, which leaves
-the differences between them larger. For most pupils, what makes an
-authority's schools do better is not in these measures.
+grow. **Non-disadvantaged pupils** are much the same: the authority variance
+falls by `r sprintf("%.0f", -r1("non_disadvantaged", SD2, "la_var_change"))`%
+and the regional variance rises by
+`r sprintf("%.0f", r1("non_disadvantaged", SD2, "reg_var_change"))`%. The
+measures account for differences *within* regions, which leaves the
+differences between them larger. For most pupils, what makes an authority's
+schools do better is not in these measures.
 
 ## Brighton and Hove {#sec-bh}
 
@@ -370,8 +396,9 @@ bm <- c("Baseline (v2.1)", SO, "Households deprived in 2+ dimensions (%)", "Scho
 R |> filter(model %in% bm) |> select(group, model, bh) |>
   tidyr::pivot_wider(names_from = group, values_from = bh) |>
   mutate(m = factor(model, bm)) |> arrange(m) |>
-  transmute(Model = model, `All pupils` = sprintf("%+.1f%%", all), Disadvantaged = sprintf("%+.1f%%", disadvantaged)) |>
-  kt(align = "lrr")
+  transmute(Model = model, `All pupils` = sprintf("%+.1f%%", all), Disadvantaged = sprintf("%+.1f%%", disadvantaged),
+            `Non-disadvantaged` = sprintf("%+.1f%%", non_disadvantaged)) |>
+  kt(align = "lrrr")
 ```
 
 Brighton and Hove's effect is one of the largest in England
@@ -379,20 +406,23 @@ Brighton and Hove's effect is one of the largest in England
 British, so adding the school's composition, if anything, *raises* the
 effect. Neighbourhood deprivation and work lower it, from
 `r p1(r1("all", "Baseline (v2.1)", "bh"))` to
-`r p1(r1("all", "School's own + deprivation and work", "bh"))` for all
-pupils, and from `r p1(r1("disadvantaged", "Baseline (v2.1)", "bh"))` to
-`r p1(r1("disadvantaged", "School's own + deprivation and work", "bh"))` for
-disadvantaged pupils. The city's neighbourhoods have many graduates, but
+`r p1(r1("all", SDW, "bh"))` for all
+pupils, from `r p1(r1("disadvantaged", "Baseline (v2.1)", "bh"))` to
+`r p1(r1("disadvantaged", SDW, "bh"))` for
+disadvantaged pupils, and from `r p1(r1("non_disadvantaged", "Baseline (v2.1)", "bh"))` to
+`r p1(r1("non_disadvantaged", SDW, "bh"))` for non-disadvantaged pupils.
+The city's neighbourhoods have many graduates, but
 also more households deprived on the Census measures than that suggests. Neighbourhood
-education alone makes them look more advantaged than they are. About a
-third of the effect goes with that; the rest is still unexplained.
+education alone makes them look more advantaged than they are. Between a
+third and a half of the effect goes with that, depending on the group; the
+rest is still unexplained.
 
 ## What it means for the model {#sec-means}
 
 - **A candidate for v2.2: pupils' ethnicity.** DfE's contextual value
   added, in the performance tables until 2011, included pupils' ethnicity. Progress 8 does not,
   and nor does v2.1. The evidence here is that leaving it out matters most
-  for disadvantaged pupils. Whether to put it in is a question of what the
+  for disadvantaged pupils, and hardly at all for non-disadvantaged pupils. Whether to put it in is a question of what the
   measure is for. Adjusting for it would stop schools with many White
   British disadvantaged pupils looking worse for it. It would also take a
   real difference in results out of view. It belongs with the review's
@@ -403,7 +433,7 @@ third of the effect goes with that; the rest is still unexplained.
   ([above](#sec-two)), and a measure of parents' qualifications may do
   the job better.
 - **What is left of place.** Even with all of it, most of the local
-  authority effects remain, especially for all pupils. What makes some
+  authority effects remain, especially for all and non-disadvantaged pupils. What makes some
   authorities' schools do better than their intakes predict is not in the
   Census.
 
@@ -412,8 +442,9 @@ third of the effect goes with that; the rest is still unexplained.
 Each model is the full v2.1 specification for its group, with the same
 random effects for year and region/local authority, fitted by maximum
 likelihood so that AIC can be compared. Every fit uses the same
-`r format(r1("all", "Baseline (v2.1)", "rows"), big.mark = ",")` school-years for all pupils and
-`r format(r1("disadvantaged", "Baseline (v2.1)", "rows"), big.mark = ",")` for disadvantaged pupils
+`r format(r1("all", "Baseline (v2.1)", "rows"), big.mark = ",")` school-years for all pupils,
+`r format(r1("disadvantaged", "Baseline (v2.1)", "rows"), big.mark = ",")` for disadvantaged pupils and
+`r format(r1("non_disadvantaged", "Baseline (v2.1)", "rows"), big.mark = ",")` for non-disadvantaged pupils
 (those with every measure). The school's own White British share is from
 January 2026 and is used for every year, since earlier school census files
 in the performance tables do not include ethnicity. Neighbourhoods are
@@ -423,7 +454,7 @@ the `r N$k` nearest Output Areas to the school, not pupils' homes.
 #| label: tbl-all
 #| tbl-cap: "Every model: the change in AIC against v2.1 (negative is better), and in the local authority and region variances."
 R |> filter(model != "Baseline (v2.1)") |>
-  transmute(Group = ifelse(group == "all", "All pupils", "Disadvantaged"), Model = model,
+  transmute(Group = unname(GL3[group]), Model = model,
             `% per SD` = ifelse(is.na(pct), "", sprintf("%+.2f", pct)), `AIC change` = sprintf("%.0f", aic_change),
             `Authority variance` = sprintf("%+.0f%%", la_var_change), `Region variance` = sprintf("%+.0f%%", reg_var_change)) |>
   kt(align = "llrrrr") |> kableExtra::collapse_rows(columns = 1, valign = "top") |>

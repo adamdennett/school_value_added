@@ -152,13 +152,15 @@ sl <- d |> filter(year_label == "2024-25", !excluded) |> distinct(URN, .keep_all
   inner_join(kind_of, by = "URN") |>
   filter(!is.na(kind)) |>
   left_join(V$va |> filter(group == "all") |> select(URN, va_all = rbar_nat), by = "URN") |>
-  left_join(V$va |> filter(group == "disadvantaged") |> select(URN, va_dis = rbar_nat), by = "URN")
+  left_join(V$va |> filter(group == "disadvantaged") |> select(URN, va_dis = rbar_nat), by = "URN") |>
+  left_join(V$va |> filter(group == "non_disadvantaged") |> select(URN, va_non = rbar_nat), by = "URN")
 kinds <- sl |> group_by(kind) |>
   summarise(schools = n(), london = 100 * mean(as.character(gor_name) == "London"), near_uni = 100 * mean(uni_km <= UNI_KM),
             uni_km = median(uni_km), young = mean(young), private_rent = mean(private_rent), overcrowd = mean(overcrowd),
             bad_health = mean(bad_health), lt_sick = mean(lt_sick), unemployed = mean(unemployed), l4 = mean(l4, na.rm = TRUE),
             dep = mean(dep), fsm = mean(PTFSM6CLA1A, na.rm = TRUE), wbri = mean(wbri_sch, na.rm = TRUE),
-            va_all = 100 * (exp(mean(va_all, na.rm = TRUE)) - 1), va_dis = 100 * (exp(mean(va_dis, na.rm = TRUE)) - 1), .groups = "drop")
+            va_all = 100 * (exp(mean(va_all, na.rm = TRUE)) - 1), va_dis = 100 * (exp(mean(va_dis, na.rm = TRUE)) - 1),
+            va_non = 100 * (exp(mean(va_non, na.rm = TRUE)) - 1), .groups = "drop")
 top_las <- sl |> filter(kind %in% c("Deprived, many graduates", "Deprived, few graduates")) |>
   count(kind, LANAME, sort = TRUE) |> group_by(kind) |> slice_head(n = 12) |> ungroup()
 place_n <- d |> distinct(URN, .keep_all = TRUE) |> filter(!is.na(place4)) |> count(place4) |> mutate(share = 100 * n / sum(n))

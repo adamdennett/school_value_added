@@ -62,7 +62,7 @@ prof <- sch |> select(URN) |>
          radius_km = nn$nn.dists[, K] / 1000)
 
 # ---- 2. the outcomes ---------------------------------------------------------
-va <- V$va |> filter(group %in% c("all", "disadvantaged"), years >= 2) |>
+va <- V$va |> filter(group %in% c("all", "disadvantaged", "non_disadvantaged"), years >= 2) |>
   select(URN, group, rbar_nat, rbar_la) |>
   tidyr::pivot_wider(names_from = group, values_from = c(rbar_nat, rbar_la))
 lat <- I |> filter(!excluded, year_label == "2024-25") |> distinct(URN, .keep_all = TRUE)
@@ -90,8 +90,9 @@ cv_r2 <- function(y, X, folds = 10, reps = 5) {
 }
 reg_mm <- model.matrix(~ gor_name, D)[, -1]
 drop_ref <- function(m) m[, -which.max(colMeans(m)), drop = FALSE]   # shares sum to one: drop the largest
-va_fit <- bind_rows(lapply(c(`All pupils` = "rbar_nat_all", `Disadvantaged` = "rbar_nat_disadvantaged",
-                             `All pupils, within authority` = "rbar_la_all", `Disadvantaged, within authority` = "rbar_la_disadvantaged"),
+va_fit <- bind_rows(lapply(c(`All pupils` = "rbar_nat_all", `Disadvantaged` = "rbar_nat_disadvantaged", `Non-disadvantaged` = "rbar_nat_non_disadvantaged",
+                             `All pupils, within authority` = "rbar_la_all", `Disadvantaged, within authority` = "rbar_la_disadvantaged",
+                             `Non-disadvantaged, within authority` = "rbar_la_non_disadvantaged"),
   function(y) {
     yy <- D[[y]]
     out <- tibble(model = c("Region", paste(names(TIERS)), paste("Region +", names(TIERS)),
@@ -107,7 +108,7 @@ va_fit <- bind_rows(lapply(c(`All pupils` = "rbar_nat_all", `Disadvantaged` = "r
 # does it account for? Against LA fixed effects at school level, and at LA
 # level: each LA's v2.1 random effect on its schools' average OAC profile.
 la_mm <- model.matrix(~ LANAME, D)[, -1]
-la_fit <- bind_rows(lapply(c(`All pupils` = "rbar_nat_all", `Disadvantaged` = "rbar_nat_disadvantaged"), function(y) {
+la_fit <- bind_rows(lapply(c(`All pupils` = "rbar_nat_all", `Disadvantaged` = "rbar_nat_disadvantaged", `Non-disadvantaged` = "rbar_nat_non_disadvantaged"), function(y) {
   yy <- D[[y]]
   tibble(model = c("Local authority", "OAC group", "Local authority + OAC group"),
          cv_r2 = c(cv_r2(yy, la_mm), cv_r2(yy, drop_ref(X_of("Group", D$row))),
@@ -116,8 +117,8 @@ la_fit <- bind_rows(lapply(c(`All pupils` = "rbar_nat_all", `Disadvantaged` = "r
 la_prof <- lapply(names(TIERS), function(t) {
   m <- X_of(t, D$row); agg <- rowsum(m, D$LANAME) / as.vector(table(D$LANAME)[rownames(rowsum(m, D$LANAME))]); agg })
 names(la_prof) <- names(TIERS)
-la_eff <- V$la |> filter(group %in% c("all", "disadvantaged")) |> select(LANAME, group, effect)
-la_level <- bind_rows(lapply(c("all", "disadvantaged"), function(gp) {
+la_eff <- V$la |> filter(group %in% c("all", "disadvantaged", "non_disadvantaged")) |> select(LANAME, group, effect)
+la_level <- bind_rows(lapply(c("all", "disadvantaged", "non_disadvantaged"), function(gp) {
   e <- la_eff |> filter(group == gp)
   bind_rows(lapply(c("Supergroup", "Group"), function(t) {
     X <- la_prof[[t]][match(e$LANAME, rownames(la_prof[[t]])), , drop = FALSE]; ok <- complete.cases(X)
@@ -133,7 +134,7 @@ la_avg <- function(m) { a <- rowsum(m, D$LANAME); a / as.vector(table(D$LANAME)[
 la_dims <- cbind(la_avg(X_of("Supergroup", D$row)),
                  la_avg(X_of("Group", D$row))[, c("2a", "2b", "4c", "6a", "6b", "7a", "1a"), drop = FALSE])
 la_n <- as.vector(table(D$LANAME)[rownames(la_dims)])
-la_cor <- bind_rows(lapply(c("all", "disadvantaged"), function(gp) {
+la_cor <- bind_rows(lapply(c("all", "disadvantaged", "non_disadvantaged"), function(gp) {
   e <- la_eff |> filter(group == gp); i <- match(e$LANAME, rownames(la_dims)); ok <- !is.na(i)
   bind_rows(lapply(colnames(la_dims), function(cc) {
     x <- la_dims[i[ok], cc]; y <- e$effect[ok]; w <- la_n[i[ok]]
@@ -169,7 +170,8 @@ pure <- function(y, tier, Dx = D) {
 types <- bind_rows(lapply(names(TIERS), function(t) bind_rows(
   pure("rbar_nat_all", t) |> mutate(outcome = "All pupils"),
   pure("rbar_la_all", t) |> mutate(outcome = "All pupils, within authority"),
-  pure("rbar_nat_disadvantaged", t) |> mutate(outcome = "Disadvantaged")) |>
+  pure("rbar_nat_disadvantaged", t) |> mutate(outcome = "Disadvantaged"),
+  pure("rbar_nat_non_disadvantaged", t) |> mutate(outcome = "Non-disadvantaged")) |>
   mutate(tier = t, name = lev_name(code, t)))) |>
   mutate(pct = 100 * (exp(est) - 1), lo = 100 * (exp(est - 1.96 * se) - 1), hi = 100 * (exp(est + 1.96 * se) - 1))
 

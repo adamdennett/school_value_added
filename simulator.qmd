@@ -12,7 +12,7 @@ I <- readRDS(here::here("data", "inputs.rds"))
 lat <- I |> filter(!excluded) |> arrange(URN, desc(year_label)) |> distinct(URN, .keep_all = TRUE)
 res <- V$school_years |> inner_join(lat |> select(URN, year_label), by = c("URN", "year_label")) |>
   select(URN, group, obs) |>
-  tidyr::pivot_wider(names_from = group, values_from = obs, names_glue = "a_{group}")
+  tidyr::pivot_wider(names_from = group, values_from = obs, names_glue = "a_{group}", values_fn = mean)
 va <- V$va |> filter(group == "all") |> select(URN, va = va_shrunk)
 sc <- V$schools |> select(URN, n = SCHNAME, la = LANAME, rg = gor_name, lad, pupils)
 d <- lat |>
@@ -104,7 +104,8 @@ most), not from its prediction.
 For all pupils, cutting a school's absence by a tenth (say from 9% to
 8.1%) goes with Attainment 8 `r pts(ab_pct("all", -0.1), 1)`% higher, about
 `r pts(ab_pct("all", -0.1) * mean(d$a_all) / 100, 1)` points at the average
-school. For disadvantaged pupils it is `r pts(ab_pct("disadvantaged", -0.1), 1)`%.
+school. For disadvantaged pupils it is `r pts(ab_pct("disadvantaged", -0.1), 1)`%, and for
+non-disadvantaged pupils `r pts(ab_pct("non_disadvantaged", -0.1), 1)`%.
 **The same cut in absence helps disadvantaged pupils more**, so it narrows
 the gap.
 

@@ -29,13 +29,14 @@ rs <- bind_rows(lapply(D$lad, function(d) XD[[d]]$reasons |> filter(area == d)),
 r_at <- function(a, r) sapply(a, function(x) rs$pp[rs$area == x & rs$reason == r])
 dec <- bind_rows(lapply(D$lad, function(d) decompose(V, W$URN[W$lad %in% d], d)))
 TAB <- D |>
-  left_join(prof |> select(lad, schools, att8, att8_dis, gap, fsm), by = "lad") |>
+  left_join(prof |> select(lad, schools, att8, att8_dis, att8_non, gap, fsm), by = "lad") |>
   left_join(W |> filter(!is.na(lad)) |> group_by(lad) |>
               summarise(va = mean(va_shrunk_all, na.rm = TRUE), va_dis = mean(va_shrunk_disadvantaged, na.rm = TRUE),
+                        va_non = mean(va_shrunk_non_disadvantaged, na.rm = TRUE),
                         va_girls = mean(va_shrunk_girls, na.rm = TRUE), va_boys = mean(va_shrunk_boys, na.rm = TRUE),
                         abs_ex = mean(abs_excess, na.rm = TRUE), above = sum(va_lo_all > 0, na.rm = TRUE),
                         below = sum(va_hi_all < 0, na.rm = TRUE), .groups = "drop"), by = "lad") |>
-  mutate(r_att8 = rk(lad, "att8"), r_dis = rk(lad, "att8_dis"), r_gap = rk(lad, "gap"),
+  mutate(r_att8 = rk(lad, "att8"), r_dis = rk(lad, "att8_dis"), r_non = rk(lad, "att8_non"), r_gap = rk(lad, "gap"),
          susp = ex_at(lad), pupils_susp = ex_at(lad, "pupil_rate"), reduced = r_at(lad, "Reduced timetable"),
          link = sprintf('<a href="areas/%s.html">%s</a>', slug(lad), lad))
 deff <- P$district$effects |> filter(lad %in% D$lad)
@@ -70,11 +71,12 @@ cat(paste0("- ", c(
 TAB |> arrange(desc(va)) |>
   transmute(District = link, County = la, Schools = schools, `FSM %` = sprintf("%.1f", fsm),
             `Att 8` = sprintf("%.1f (%s)", att8, ord(r_att8)), `Att 8 disadv.` = sprintf("%.1f (%s)", att8_dis, ord(r_dis)),
+            `Att 8 non-disadv.` = sprintf("%.1f (%s)", att8_non, ord(r_non)),
             Gap = sprintf("%.1f (%s)", gap, ord(r_gap)),
-            `VA v2.1` = sprintf("%+.1f", va), `VA disadv.` = sprintf("%+.1f", va_dis),
+            `VA v2.1` = sprintf("%+.1f", va), `VA disadv.` = sprintf("%+.1f", va_dis), `VA non-disadv.` = sprintf("%+.1f", va_non),
             `VA girls / boys` = sprintf("%+.1f / %+.1f", va_girls, va_boys),
             `Absence vs intake` = sprintf("%+.1f", abs_ex), `Above / below` = paste(above, "/", below)) |>
-  kt(align = "llrrrrrrrrrl", escape = FALSE)
+  kt(align = "llrrrrrrrrrrrl", escape = FALSE)
 ```
 
 # What explains each district's results
@@ -86,7 +88,7 @@ grp <- c("Absence" = "Absence", "Prior attainment (KS2)" = "Prior attainment", "
          "English as an additional language" = "Other intake", "Special educational needs" = "Other intake",
          "Pupil mobility" = "Other intake", "Single-sex school" = "Other intake",
          "Neighbourhood education" = "Neighbourhood", "Admissions (selection)" = "Other",
-         "Region" = "Place", "Local authority" = "Place", "Year" = "Other", "Unexplained (school)" = "Schools")
+         "School stops at 16" = "Other", "Region" = "Place", "Local authority" = "Place", "Year" = "Other", "Unexplained (school)" = "Schools")
 hd <- dec |> mutate(piece = factor(grp[component], c("Absence", "Prior attainment", "Disadvantage", "Other intake",
                                                      "Neighbourhood", "Place", "Other", "Schools"))) |>
   group_by(area, group, piece) |> summarise(points = sum(points), .groups = "drop")
@@ -107,7 +109,7 @@ bind_rows(hd, hd |> group_by(area, group) |> summarise(points = sum(points), .gr
 ```{r fig-effects}
 #| fig-cap: "District effects over and above each county's on the v2.1 model, with 95% intervals, without and with a school term."
 #| fig-height: 7
-fig_effects(deff |> filter(outcome != "Non-disadvantaged"), "Most district effects vanish once schools are counted")
+fig_effects(deff, "Most district effects vanish once schools are counted")
 ```
 
 ```{r effects-list}

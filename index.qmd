@@ -51,6 +51,8 @@ bA  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "all"]
 bD  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "disadvantaged"]
 m8  <- S$mean_att8[S$group == "all"]
 m8d <- S$mean_att8[S$group == "disadvantaged"]   # disadvantaged pupils' own mean
+bN  <- V$coefs$estimate[V$coefs$term == "log(PERCTOT)" & V$coefs$group == "non_disadvantaged"]
+m8n <- S$mean_att8[S$group == "non_disadvantaged"]
 ab  <- quantile(wv$absence[!is.na(wv$absence)], c(.5, .95), names = FALSE)
 abs_yr <- yl(max(wv$latest_year))   # each school's latest full year of absence
 vaa <- wv$va_shrunk_all[!is.na(wv$va_shrunk_all)]
@@ -58,6 +60,7 @@ qv  <- quantile(vaa, c(.5, .90), names = FALSE)
 prop_for <- function(beta) exp(beta * log(ab[2] / ab[1])) - 1
 drop  <- m8 * prop_for(bA)    # absence: a typical school -> the highest 5%
 dropD <- m8d * prop_for(bD)   # the same move, for disadvantaged pupils, on their own mean
+dropN <- m8n * prop_for(bN)   # and for non-disadvantaged pupils
 climb <- qv[2] - qv[1]        # value added: median -> top decile
 short <- -(drop + climb)      # what is still missing at the end
 ```
@@ -126,11 +129,11 @@ costs.
 
 It also falls hardest on the pupils with the least room to absorb it.
 The same change in absence is worth `r sprintf("%.1f", -dropD)` points
-of disadvantaged pupils' Attainment 8, against `r sprintf("%.1f", -drop)`
-for pupils as a whole, and from a lower base: it takes
-`r sprintf("%.1f%%", -100 * prop_for(bD))` of what they would otherwise
-score rather than `r sprintf("%.1f%%", -100 * prop_for(bA))`, a gradient
-`r sprintf("%.0f%%", 100 * (bD / bA - 1))` steeper. Absence is not only the largest lever,
+of disadvantaged pupils' Attainment 8, against `r sprintf("%.1f", -dropN)`
+for non-disadvantaged pupils (`r sprintf("%.1f", -drop)` for pupils as a whole),
+and from a lower base: it takes `r sprintf("%.1f%%", -100 * prop_for(bD))` of what
+they would otherwise score rather than `r sprintf("%.1f%%", -100 * prop_for(bN))`,
+a gradient `r sprintf("%.0f%%", 100 * (bD / bN - 1))` steeper than for non-disadvantaged pupils. Absence is not only the largest lever,
 it is a regressive one.
 
 One caveat, stated plainly because the scale of this invites

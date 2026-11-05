@@ -39,7 +39,7 @@ reg <- V$va |> inner_join(V$schools |> select(URN, gor_name), by = "URN") |>
 
 # absence: each authority's effect on each kind of absence, beside value added
 abs_la <- AC$la_effects |> select(outcome, LANAME = la, abs_pct = la_pct)
-la_abs <- la |> filter(group %in% c("all", "disadvantaged")) |> select(LANAME, group, pct) |>
+la_abs <- la |> filter(group %in% c("all", "disadvantaged", "non_disadvantaged")) |> select(LANAME, group, pct) |>
   inner_join(abs_la, by = "LANAME", relationship = "many-to-many")
 abs_cor <- la_abs |> group_by(group, outcome) |>
   summarise(las = n(), r = cor(pct, abs_pct), .groups = "drop")
@@ -54,6 +54,6 @@ saveRDS(list(built = Sys.Date(), levels = levels, la = la, reg = reg, abs_cor = 
              bounds = b), here::here("data", "geography.rds"))
 message("Saved data/geography.rds (", format(object.size(b), units = "MB"), " of boundaries)")
 print(levels |> select(group, level, pct) |> tidyr::pivot_wider(names_from = level, values_from = pct))
-print(reg |> filter(group %in% c("all", "disadvantaged")) |> select(group, gor_name, pct) |>
+print(reg |> filter(group %in% c("all", "disadvantaged", "non_disadvantaged")) |> select(group, gor_name, pct) |>
         tidyr::pivot_wider(names_from = group, values_from = pct) |> arrange(desc(disadvantaged)))
 print(abs_cor)

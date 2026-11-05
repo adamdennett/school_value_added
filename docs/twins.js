@@ -35,7 +35,10 @@
     {k: "r_unauth", l: "Unauthorised absence against similar schools in its authority", b: "low", u: "%", dp: 0, sign: true},
     {k: "va_all", l: "Value added v2.1, all pupils", b: "high", u: "", dp: 1, sign: true},
     {k: "va_dis", l: "Value added v2.1, disadvantaged pupils", b: "high", u: "", dp: 1, sign: true},
+    {k: "va_non", l: "Value added v2.1, non-disadvantaged pupils", b: "high", u: "", dp: 1, sign: true},
     {k: "att8", l: "Attainment 8, all pupils (" + D.gy + ")", b: "high", u: "", dp: 1},
+    {k: "att8_dis", l: "Attainment 8, disadvantaged pupils (" + D.gy + ")", b: "high", u: "", dp: 1},
+    {k: "att8_non", l: "Attainment 8, non-disadvantaged pupils (" + D.gy + ")", b: "high", u: "", dp: 1},
     {k: "combo", l: "Absence and value added together", b: "high", u: "", dp: 2, combo: true}
   ];
   var OUT = {}; OUTS.forEach(function (o) { OUT[o.k] = o; });
@@ -339,9 +342,12 @@
     {k: "severe", l: "Severe (50%+)", dp: 1, u: "%", b: "low"},
     {k: "r_unauth", l: "Unauthorised, against similar schools in its authority", dp: 0, u: "%", sign: true, b: "low"},
     {h: "Results"},
-    {k: "att8", l: "Attainment 8 (" + D.gy + ")", dp: 1, b: "high"},
+    {k: "att8", l: "Attainment 8, all pupils (" + D.gy + ")", dp: 1, b: "high"},
+    {k: "att8_dis", l: "Attainment 8, disadvantaged (" + D.gy + ")", dp: 1, b: "high"},
+    {k: "att8_non", l: "Attainment 8, non-disadvantaged (" + D.gy + ")", dp: 1, b: "high"},
     {k: "va_all", l: "Value added v2.1, all pupils", dp: 1, sign: true, b: "high"},
-    {k: "va_dis", l: "Value added v2.1, disadvantaged", dp: 1, sign: true, b: "high"}
+    {k: "va_dis", l: "Value added v2.1, disadvantaged", dp: 1, sign: true, b: "high"},
+    {k: "va_non", l: "Value added v2.1, non-disadvantaged", dp: 1, sign: true, b: "high"}
   ];
   // a small chart of one measure over time: the chosen school (dark), the
   // twin (purple) and England (grey, dashed); hollow points are provisional
@@ -395,6 +401,7 @@
       {a: "va_y", l: "Value added v2.1, all pupils, by year", labs: D.va_years, zero: true, dp: 1, sign: true, prov: D.va_prov,
        note: "Against England (0), Attainment 8 points; unshrunk. Hollow: provisional."},
       {a: "vd_y", l: "Value added v2.1, disadvantaged pupils, by year", labs: D.va_years, zero: true, dp: 1, sign: true, prov: D.va_prov},
+      {a: "vn_y", l: "Value added v2.1, non-disadvantaged pupils, by year", labs: D.va_years, zero: true, dp: 1, sign: true, prov: D.va_prov},
       {a: "ab_o", l: "Overall absence, autumn and spring terms", labs: D.ab_years, eng: D.eng_ab.overall, dp: 1, u: "%",
        note: "No data for 2019/20; 2020/21 was a year of lockdowns."},
       {a: "ab_u", l: "Unauthorised absence, autumn and spring terms", labs: D.ab_years, eng: D.eng_ab.unauth, dp: 1, u: "%"}

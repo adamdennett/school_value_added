@@ -345,7 +345,7 @@ function(el, x, data) {
         fillColor: none ? "#ffffff" : sc.colour(v), fillOpacity: none ? 0.6 : 0.92,
         color: none ? "#8a8aa3" : "rgba(40,40,50,0.55)", weight: none ? 1 : 0.8})
         .bindTooltip("<b>" + esc(d.SCHNAME) + "</b> (" + esc(d.LANAME) + ")<br>Four years: all pupils " + fmt(d.va_shrunk_all) +
-          ", disadvantaged " + fmt(d.va_shrunk_disadvantaged) + ", girls " + fmt(d.va_shrunk_girls) + ", boys " + fmt(d.va_shrunk_boys) +
+          ", disadvantaged " + fmt(d.va_shrunk_disadvantaged) + ", non-disadvantaged " + fmt(d.va_shrunk_non_disadvantaged) + ", girls " + fmt(d.va_shrunk_girls) + ", boys " + fmt(d.va_shrunk_boys) +
           "<br>Absence vs intake " + fmt(d.abs_excess) + " pp<br>Ofsted: " + esc(d.ofsted_latest || "not known") +
           "<br><b>" + m.label + (isVA ? " (" + periodText() + ")" : "") + ": " + esc(fmtM(v, m)) + "</b>")
         .addTo(markers);

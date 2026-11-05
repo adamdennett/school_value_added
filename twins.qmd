@@ -18,7 +18,8 @@ rs <- AC$resid |> filter(outcome %in% c("overall", "unauth")) |>
 ADM <- c("SEL" = "Selective", "OTHER NON SEL" = "Non-selective",
          "NON SEL IN HIGHLY SEL AREA" = "Non-selective, selective area")
 d <- L |>
-  left_join(w |> select(URN, lad, gor_name, att8, va_all = va_shrunk_all, va_dis = va_shrunk_disadvantaged,
+  left_join(w |> select(URN, lad, gor_name, att8, att8_dis, att8_non, va_all = va_shrunk_all, va_dis = va_shrunk_disadvantaged,
+                        va_non = va_shrunk_non_disadvantaged,
                         l4, run_by, ofsted_latest, lat, lon), by = "URN") |>
   left_join(rs, by = "URN") |>
   left_join(readRDS(here::here("data", "school_context.rds")) |> select(URN, run_by_nat), by = "URN") |>
@@ -32,7 +33,7 @@ d <- L |>
             place = as.character(place), faith = ifelse(faith, "Religious character", "None"),
             gov = as.character(mat), run_by, ofsted = ofsted_latest,
             overall, illness, unauth, persistent, severe, r_overall, r_unauth,
-            att8, va_all, va_dis, lat = round(lat, 4), lon = round(lon, 4)) |>
+            att8, att8_dis, att8_non, va_all, va_dis, va_non, lat = round(lat, 4), lon = round(lon, 4)) |>
   mutate(across(where(is.double) & !c(lat, lon), ~ round(.x, 3)))
 # ---- matching weights: what matters for each measure ------------------------
 # Each characteristic is weighted by how much it moves the measure across
@@ -53,7 +54,7 @@ FITS <- c(lapply(c(overall = "overall", illness = "illness", unauth = "unauth", 
           list(att8 = contrib(d$att8)))
 W <- lapply(FITS, function(f) as.list(norm_w(f$sd)))
 W$r_unauth <- W$unauth
-W$va_all <- W$va_dis <- W$att8
+W$va_all <- W$va_dis <- W$va_non <- W$att8_dis <- W$att8_non <- W$att8
 W$combo <- as.list(norm_w((unlist(W$overall) + unlist(W$att8)) / 2))
 W_R2 <- sapply(FITS, `[[`, "r2")
 
@@ -66,7 +67,7 @@ va_arr <- function(g) {
     group_by(URN) |> summarise(ys = list(va), .groups = "drop")
   a$ys[match(d$URN, a$URN)]
 }
-d$va_y <- va_arr("all"); d$vd_y <- va_arr("disadvantaged")
+d$va_y <- va_arr("all"); d$vd_y <- va_arr("disadvantaged"); d$vn_y <- va_arr("non_disadvantaged")
 AB <- readRDS(here::here("data", "absence_change.rds"))
 AB_TP <- sort(unique(AB$series$tp))
 cid_of <- AB$series |> distinct(URN, cid)
@@ -244,8 +245,9 @@ to ask what it does differently, not proof that copying it would work.
 
 - **Absence:** autumn and spring 2025/26.
 - **Characteristics:** the January 2026 school census and SEN data.
-- **Results:** Attainment 8 for `r payload$gy`; Value Added v2.1 over
-  2021/22 to 2024/25, shrunk.
+- **Results:** Attainment 8 for `r payload$gy` and Value Added v2.1 over
+  2021/22 to 2024/25, shrunk, each for all, disadvantaged and
+  non-disadvantaged pupils.
 - **Absence against similar schools:** within the school's own authority,
   as on the [absence page](absence_causes.qmd#sec-school).
 - **Over time:** each year's value added against England (unshrunk; the

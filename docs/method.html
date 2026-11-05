@@ -617,7 +617,7 @@ Table&nbsp;2: Each group’s model: data, fit, and how much of the unexplained v
 </figure>
 </div>
 </div>
-<p>Every term is intake or context. The largest are prior attainment and absence, as in v1. The new terms all matter: each percentage point of mobile pupils costs 0.5% of Attainment 8, a standard deviation of neighbourhood education is worth +2.4% for all pupils but only +0.8% for disadvantaged pupils, and a girls’ school +4.9%. Four years of value added are reliable for every group, from 0.76 for disadvantaged pupils to 0.88 for all pupils.</p>
+<p>Every term is intake or context. The largest are prior attainment and absence, as in v1. The new terms all matter: each percentage point of mobile pupils costs 0.5% of Attainment 8, a standard deviation of neighbourhood education is worth +2.4% for all pupils and +2.6% for non-disadvantaged pupils but only +0.8% for disadvantaged pupils, and a girls’ school +4.9%. Four years of value added are reliable for every group, from 0.76 for disadvantaged pupils to 0.88 for all pupils.</p>
 <section id="sec-importance" class="level2">
 <h2 class="anchored" data-anchor-id="sec-importance">What matters most</h2>
 <p>Two ways of asking which terms matter most, side by side. <strong>Strength and direction</strong> is each term’s effect on expected Attainment 8: for a measure, a move of one standard deviation across England’s schools; for a yes-or-no, the difference between yes and no. Green raises attainment, purple lowers it, and the bars are 95% intervals. <strong>Importance</strong> splits the variation in Attainment 8 the intake terms explain between them by a Shapley decomposition: each term’s average gain in explained variance over every order in which the terms could be added, so variation two terms share (prior attainment, absence and disadvantage share a great deal) is credited fairly between them rather than to whichever comes first. It is computed by ordinary least squares with the year in every model; the intake terms explain 82% of the variation in log Attainment 8 beyond the year.</p>
@@ -3448,7 +3448,7 @@ Figure&nbsp;13: Each mixed school’s value added for its girls and for its boys
 <img src="method_files/figure-html/fig-la-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: Local authority effects in v2.1, all pupils and disadvantaged pupils, with 95% intervals. Sussex’s three authorities highlighted.
+Figure&nbsp;14: Local authority effects in v2.1, all, disadvantaged and non-disadvantaged pupils, with 95% intervals. Sussex’s three authorities highlighted.
 </figcaption>
 </figure>
 </div>
@@ -3596,7 +3596,7 @@ Table&nbsp;6: How one provisional year sits against each school’s four-year va
 </figure>
 </div>
 </div>
-<p>3,210 schools have a provisional 2025/26 figure. A single year agrees with the four-year measure at 0.68 for all pupils and less for the smaller groups (0.55 for disadvantaged pupils), which is why it is reported as a separate, provisional column. The figures are in <a href="data/va_2526_provisional.csv">va_2526_provisional.csv</a>.</p>
+<p>3,210 schools have a provisional 2025/26 figure. A single year agrees with the four-year measure at 0.68 for all pupils and less for the smaller groups (0.55 for disadvantaged pupils and 0.69 for non-disadvantaged pupils), which is why it is reported as a separate, provisional column. The figures are in <a href="data/va_2526_provisional.csv">va_2526_provisional.csv</a>.</p>
 </section>
 <section id="sec-over-time" class="level1">
 <h1>Value added over time</h1>
@@ -3651,7 +3651,7 @@ Table&nbsp;7: How far a school’s yearly value added carries from one year to t
 </figure>
 </div>
 </div>
-<p>For all pupils, adjacent years correlate at 0.67 and 2021/22 with 2025/26 at 0.46; for disadvantaged pupils, where cohorts are smaller, at 0.48 and 0.32. Value added changes gradually, and part of any one year’s movement is noise.</p>
+<p>For all pupils, adjacent years correlate at 0.67 and 2021/22 with 2025/26 at 0.46; for non-disadvantaged pupils at 0.64 and 0.47; and for disadvantaged pupils, where cohorts are smaller, at 0.48 and 0.32. Value added changes gradually, and part of any one year’s movement is noise.</p>
 <p>That is why the <a href="./explore.html">explorer</a> and the area pages offer a <strong>centred moving average</strong>: the mean of the yearly figures over a window of one, three or five years centred on a chosen year. A three-year average centred on 2023/24 is the mean of 2022/23, 2023/24 and 2024/25. A window that runs past the first or last year uses the years there are, so a three-year average centred on 2021/22 covers two years. A school missing a year is averaged over the years it has. A window that includes 2025/26 includes a provisional figure and is flagged. Moving averages are not shrunk, and the four-year figure remains the headline measure.</p>
 </section>
 <section id="sec-add-take" class="level1">
@@ -3731,7 +3731,7 @@ Table&nbsp;8: How the home page’s three steps are computed. Absence is each sc
 </div>
 </div>
 <p><strong>Each area’s bars.</strong> The same arithmetic, with the area in place of the high-absence school. <em>r</em> is the area’s absence over England’s: the mean of its schools’ full-year absence in 2024/25 over the mean of every school’s in England (8.6%). The national β is used throughout, because a dozen schools cannot supply a gradient of their own. The purple bar is the mean of the area’s schools’ four-year shrunk value added, which is already in points against England and needs no conversion. The diamond is the sum. For Brighton and Hove: <em>r</em> = 11.3 ÷ 8.6 = 1.31, so absence is worth 47.5 × -6.0% = <strong>-2.8</strong> points; its schools add <strong>+1.4</strong>; together <strong>-1.4</strong>.</p>
-<p><strong>For disadvantaged pupils</strong> the disadvantaged model’s coefficient is used, β = -0.325, 41% steeper than for all pupils. The same move from typical to high absence then takes -13.2% off expected Attainment 8 rather than -9.6%. That proportion is converted to points on disadvantaged pupils’ own mean Attainment 8, 38.4, giving -5.1 points against -4.6 for pupils as a whole. The gap in points is smaller than the gap in gradient because the base is lower; the area pages convert the same way.</p>
+<p><strong>For disadvantaged pupils</strong> the disadvantaged model’s coefficient is used, β = -0.325, 41% steeper than for all pupils. The same move from typical to high absence then takes -13.2% off expected Attainment 8 rather than -9.6%. That proportion is converted to points on disadvantaged pupils’ own mean Attainment 8, 38.4, giving -5.1 points against -4.6 for pupils as a whole and -3.9 for non-disadvantaged pupils (β = -0.183, on their mean of 50.3). The gap in points is smaller than the gap in gradient because the base is lower; the area pages convert the same way.</p>
 <p><strong>What the figures are not.</strong></p>
 <ul>
 <li><strong>Not causal.</strong> β describes how attainment differs between schools whose absence differs, once intake is accounted for. It is not what one school would gain by cutting its absence. Absence also stands in for things the model does not measure (see <a href="./bh_effect.html">Geographical effects: Brighton and Hove</a>).</li>
@@ -3935,7 +3935,7 @@ Table&nbsp;9: The two terms tested against v2.0, by group. AIC is the change in 
 </div>
 </div>
 <p><strong>v2.1 adds the 11–16 flag.</strong> It improves the fit for every group, by about 1% of expected Attainment 8 (AIC -40 for all pupils). Stopping at 16 is a school’s structure, like its admissions policy, which the model already treats as context: an 11–16 school is now compared with schools like it, and its small structural advantage is no longer counted as value it adds.</p>
-<p><strong>The kind of absence is published beside the headline, not in it.</strong> The illness share improves the fit for every group but one: a standard deviation more illness in the mix goes with +0.6% for all pupils and +0.8% for disadvantaged pupils, and it predicts the year it was not fitted on better (-1.5% error for all pupils). For non-disadvantaged pupils it does nothing (t = -0.2). But every term in the headline is intake or context, and the illness share is not cleanly either: illness absence is reported by families, but whether an absence is <em>authorised</em> as illness is the school’s decision, and practice differs. In the headline it would credit a school for how it codes absence. So <strong>value added allowing for the kind of absence</strong> is fitted as v2.1 plus the illness share and published alongside it, on every map. Across England’s schools the two agree at 0.998; 6% of schools change quintile and 20 move by half a point or more.</p>
+<p><strong>The kind of absence is published beside the headline, not in it.</strong> The illness share improves the fit for every group but one: a standard deviation more illness in the mix goes with +0.6% for all pupils, +0.8% for disadvantaged pupils and -0.0% for non-disadvantaged pupils, and it predicts the year it was not fitted on better (-1.5% error for all pupils). For non-disadvantaged pupils it does nothing (t = -0.2). But every term in the headline is intake or context, and the illness share is not cleanly either: illness absence is reported by families, but whether an absence is <em>authorised</em> as illness is the school’s decision, and practice differs. In the headline it would credit a school for how it codes absence. So <strong>value added allowing for the kind of absence</strong> is fitted as v2.1 plus the illness share and published alongside it, on every map. Across England’s schools the two agree at 0.998; 6% of schools change quintile and 20 move by half a point or more.</p>
 <p><strong>What the illness share is.</strong> It is mostly a fixed feature of a school: 79% of its variation lies between schools rather than from year to year. It falls as disadvantage rises (correlation -0.63) and as absence rises (-0.49): where absence is high, more of it is unauthorised. That is why the Shapley decomposition credits it with a sizeable share of what the intake explains even though its own effect is small: much of what it carries, disadvantage and absence carry too.</p>
 <div class="cell">
 <div class="cell-output-display">

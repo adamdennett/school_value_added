@@ -96,8 +96,9 @@ Every term is intake or context. The largest are prior attainment and
 absence, as in v1. The new terms all matter: each percentage point of
 mobile pupils costs `r sprintf("%.1f%%", abs(pct(cf("all", "mobile")$estimate)))`
 of Attainment 8, a standard deviation of neighbourhood education is worth
-`r sprintf("%+.1f%%", pct(cf("all", "z_l4")$estimate))` for all pupils but
-only `r sprintf("%+.1f%%", pct(cf("disadvantaged", "z_l4")$estimate))` for
+`r sprintf("%+.1f%%", pct(cf("all", "z_l4")$estimate))` for all pupils and
+`r sprintf("%+.1f%%", pct(cf("non_disadvantaged", "z_l4")$estimate))` for
+non-disadvantaged pupils but only `r sprintf("%+.1f%%", pct(cf("disadvantaged", "z_l4")$estimate))` for
 disadvantaged pupils, and a girls' school
 `r sprintf("%+.1f%%", pct(cf("all", "girls_schoolTRUE")$estimate))`. Four
 years of value added are reliable for every group, from
@@ -527,11 +528,11 @@ assumed alike.
 # Local authorities
 
 ```{r fig-la}
-#| fig-cap: "Local authority effects in v2.1, all pupils and disadvantaged pupils, with 95% intervals. Sussex's three authorities highlighted."
+#| fig-cap: "Local authority effects in v2.1, all, disadvantaged and non-disadvantaged pupils, with 95% intervals. Sussex's three authorities highlighted."
 #| fig-height: 6
 V$la |>
-  filter(group %in% c("all", "disadvantaged")) |>
-  mutate(group = GROUP_LABELS[group], hl = ifelse(LANAME %in% SUSSEX_LAS, LANAME, "Other")) |>
+  filter(group %in% c("all", "disadvantaged", "non_disadvantaged")) |>
+  mutate(group = factor(unname(GROUP_LABELS[group]), unname(GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")])), hl = ifelse(LANAME %in% SUSSEX_LAS, LANAME, "Other")) |>
   group_by(group) |> mutate(o = rank(effect)) |> ungroup() |>
   ggplot(aes(o, pct(effect))) +
   geom_hline(yintercept = 0, colour = GREY) +
@@ -628,8 +629,8 @@ PV$agree |> transmute(Group = GROUP_LABELS[group], Schools = format(n, big.mark 
 `r format(PV$schools, big.mark = ",")` schools have a provisional 2025/26
 figure. A single year agrees with the four-year measure at
 `r sprintf("%.2f", ag("all"))` for all pupils and less for the smaller
-groups (`r sprintf("%.2f", ag("disadvantaged"))` for disadvantaged
-pupils), which is why it is reported as a separate, provisional column.
+groups (`r sprintf("%.2f", ag("disadvantaged"))` for disadvantaged pupils and
+`r sprintf("%.2f", ag("non_disadvantaged"))` for non-disadvantaged pupils), which is why it is reported as a separate, provisional column.
 The figures are in [va_2526_provisional.csv](data/va_2526_provisional.csv).
 
 # Value added over time {#sec-over-time}
@@ -669,8 +670,10 @@ yr_cor |> transmute(Group = GROUP_LABELS[group],
 
 For all pupils, adjacent years correlate at `r yc("all", "adjacent")` and
 `r yl(first(ALLY))` with `r yl(last(ALLY))` at `r yc("all", "apart")`; for
-disadvantaged pupils, where cohorts are smaller, at
-`r yc("disadvantaged", "adjacent")` and `r yc("disadvantaged", "apart")`.
+non-disadvantaged pupils at `r yc("non_disadvantaged", "adjacent")` and
+`r yc("non_disadvantaged", "apart")`; and for disadvantaged pupils, where
+cohorts are smaller, at `r yc("disadvantaged", "adjacent")` and
+`r yc("disadvantaged", "apart")`.
 Value added changes gradually, and part of any one year's movement is noise.
 
 That is why the [explorer](explore.qmd) and the area pages offer a
@@ -692,12 +695,13 @@ wv <- va_wide(V)
 abs_yr <- yl(max(wv$latest_year))
 bA <- cf("all", "log(PERCTOT)")$estimate
 bD <- cf("disadvantaged", "log(PERCTOT)")$estimate
-m8 <- s_at("all", "mean_att8"); m8d <- s_at("disadvantaged", "mean_att8")
+bN <- cf("non_disadvantaged", "log(PERCTOT)")$estimate
+m8 <- s_at("all", "mean_att8"); m8d <- s_at("disadvantaged", "mean_att8"); m8n <- s_at("non_disadvantaged", "mean_att8")
 ab <- quantile(wv$absence, c(.5, .95), na.rm = TRUE, names = FALSE)
 qv <- quantile(wv$va_shrunk_all, c(.5, .90), na.rm = TRUE, names = FALSE)
 r_hi <- ab[2] / ab[1]
 prop <- function(b, r) r^b - 1                 # proportional change in expected Attainment 8
-drop <- m8 * prop(bA, r_hi); dropD_own <- m8d * prop(bD, r_hi)
+drop <- m8 * prop(bA, r_hi); dropD_own <- m8d * prop(bD, r_hi); dropN_own <- m8n * prop(bN, r_hi)
 climb <- qv[2] - qv[1]
 # The area figure, worked for one authority
 ex <- "Brighton and Hove"
@@ -767,8 +771,10 @@ then takes `r pp(prop(bD, r_hi))` off expected Attainment 8 rather than
 `r pp(prop(bA, r_hi))`. That proportion is converted to points on
 disadvantaged pupils' own mean Attainment 8, `r sprintf("%.1f", m8d)`,
 giving `r p1(dropD_own)` points against `r p1(drop)` for pupils as a
-whole. The gap in points is smaller than the gap in gradient because
-the base is lower; the area pages convert the same way.
+whole and `r p1(dropN_own)` for non-disadvantaged pupils
+(β = `r sprintf("%.3f", bN)`, on their mean of `r sprintf("%.1f", m8n)`). The gap
+in points is smaller than the gap in gradient because the base is lower;
+the area pages convert the same way.
 
 **What the figures are not.**
 
@@ -882,8 +888,9 @@ advantage is no longer counted as value it adds.
 **The kind of absence is published beside the headline, not in it.** The
 illness share improves the fit for every group but one: a standard
 deviation more illness in the mix goes with
-`r sprintf("%+.1f%%", ill_sd("all"))` for all pupils and
-`r sprintf("%+.1f%%", ill_sd("disadvantaged"))` for disadvantaged pupils,
+`r sprintf("%+.1f%%", ill_sd("all"))` for all pupils,
+`r sprintf("%+.1f%%", ill_sd("disadvantaged"))` for disadvantaged pupils and
+`r sprintf("%+.1f%%", ill_sd("non_disadvantaged"))` for non-disadvantaged pupils,
 and it predicts the year it was not fitted on better
 (`r sprintf("%+.1f%%", c_at("all", "ill_share", "oos"))` error for all
 pupils). For non-disadvantaged pupils it does nothing

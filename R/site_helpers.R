@@ -169,7 +169,7 @@ COMP_ORDER <- c("Absence", "Prior attainment (KS2)", "Disadvantage", "English as
 #' Each component's mean contribution in the area minus England's, in
 #' approximate Attainment 8 points. Exact on the log scale; the pieces sum
 #' to the gap in mean log Attainment 8.
-decompose <- function(V, urns, area, groups = c("all", "disadvantaged")) {
+decompose <- function(V, urns, area, groups = c("all", "disadvantaged", "non_disadvantaged")) {
   bind_rows(lapply(groups, function(g) {
     cg <- V$contrib |> filter(group == g)
     in_a <- cg$URN %in% urns
@@ -212,6 +212,7 @@ MAP_VARS <- tribble(
   "va_shrunk_boys",  "Value added v2.1, boys",                                     "Value added",    "div",  "high", 1,   " pts",
   "va_kind_all",     "Value added allowing for the kind of absence, all pupils", "Value added",  "div",  "high", 1,   " pts",
   "va_kind_disadvantaged", "Value added allowing for the kind of absence, disadvantaged pupils", "Value added", "div", "high", 1, " pts",
+  "va_kind_non_disadvantaged", "Value added allowing for the kind of absence, non-disadvantaged pupils", "Value added", "div", "high", 1, " pts",
   "va_m2",           "Value added with no allowance for absence, all pupils",    "Value added",    "div",  "high", 1,   " pts",
   "va_2526_all",     "Value added 2025/26 PROVISIONAL, all pupils",              "Value added",    "div",  "high", 1,   " pts",
   "v1_all",          "Value added v1 (published, within the LA), all pupils",    "Value added",    "div",  "high", 1,   " pts",

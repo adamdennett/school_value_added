@@ -290,10 +290,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><strong>The largest gain is not a place measure.</strong> It is the school’s own share of White British pupils, which v2.1 does not have. For disadvantaged pupils, one standard deviation more goes with -5.4% Attainment 8, all else equal. Once it is in, the neighbourhood’s ethnic make-up adds little: what looked like a neighbourhood effect was mostly who the pupils are.</li>
-<li><strong>Neighbourhood deprivation, beyond qualifications, does matter.</strong> At the same share of graduates, more multiply deprived households around a school go with <em>higher</em> results for disadvantaged pupils. This survives the school’s own composition.</li>
-<li><strong>Together they take a fifth off the local authority effects for disadvantaged pupils, and over a third off the regional ones.</strong> For all pupils, authority effects barely change.</li>
-<li><strong>About a third of Brighton and Hove’s effect goes with these measures.</strong> Its neighbourhoods are more deprived than their graduate share suggests.</li>
+<li><strong>The largest gain is not a place measure.</strong> It is the school’s own share of White British pupils, which v2.1 does not have. For disadvantaged pupils, one standard deviation more goes with -5.4% Attainment 8, all else equal. For non-disadvantaged pupils it is close to nothing (-0.3%). Once it is in, the neighbourhood’s ethnic make-up adds little: what looked like a neighbourhood effect was mostly who the pupils are.</li>
+<li><strong>Neighbourhood deprivation, beyond qualifications, does matter.</strong> At the same share of graduates, more multiply deprived households around a school go with <em>higher</em> results for every group. This survives the school’s own composition: +1.5% per standard deviation for disadvantaged pupils, +1.1% for non-disadvantaged pupils and +0.7% for all pupils.</li>
+<li><strong>Together they take a fifth off the local authority effects for disadvantaged pupils, and over a third off the regional ones.</strong> They take less off authority effects for non-disadvantaged pupils (9%) and all pupils (6%), and regional effects grow for both.</li>
+<li><strong>A third or more of Brighton and Hove’s effect goes with these measures, for all three groups.</strong> Its neighbourhoods are more deprived than their graduate share suggests.</li>
 </ul>
 </div>
 </div>
@@ -358,13 +358,14 @@ ul.task-list li input[type="checkbox"] {
 <img src="neighbourhood_covariates_files/figure-html/fig-one-1.png" class="img-fluid figure-img" width="972">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-one-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Each measure added on its own to the v2.1 model: the difference in Attainment 8 with one standard deviation more (%), with 95% intervals, for all pupils and disadvantaged pupils. Maximum likelihood, the same school-years throughout.
+Figure&nbsp;1: Each measure added on its own to the v2.1 model: the difference in Attainment 8 with one standard deviation more (%), with 95% intervals, for all, disadvantaged and non-disadvantaged pupils. Maximum likelihood, the same school-years throughout.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>For all pupils every effect is small: about one per cent per standard deviation at most. For disadvantaged pupils they are three to five times larger. Disadvantaged pupils do better around schools in diverse, migrant, less English-speaking and more deprived neighbourhoods, and worse in White British and professional ones. The school’s own White British share is the strongest single term: -5.4% for disadvantaged pupils and -1.5% for all.</p>
+<p>For all pupils the effects are small: about one per cent per standard deviation, or a little more. For disadvantaged pupils they are three to five times larger. Disadvantaged pupils do better around schools in diverse, migrant, less English-speaking and more deprived neighbourhoods, and worse in White British and professional ones. The school’s own White British share is the strongest single term: -5.4% for disadvantaged pupils and -1.5% for all.</p>
+<p>For non-disadvantaged pupils the ethnic and migration measures are close to zero: -0.3% for the school’s own White British share and +0.2% for the neighbourhood’s. So what shows up on those measures for all pupils comes mostly from the disadvantaged pupils among them. Deprivation is different. It is as strong for non-disadvantaged pupils (+1.0%) as for all pupils (+1.0%).</p>
 </section>
 <section id="sec-composition" class="level2">
 <h2 class="anchored" data-anchor-id="sec-composition">Composition or place?</h2>
@@ -373,7 +374,7 @@ Figure&nbsp;1: Each measure added on its own to the v2.1 model: the difference i
 <div id="tbl-comp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: The school’s own White British share with neighbourhood measures alongside: each term’s effect (% per SD, with its t value), for disadvantaged pupils and all pupils.
+Table&nbsp;1: The school’s own White British share with neighbourhood measures alongside: each term’s effect (% per SD, with its t value), for all, disadvantaged and non-disadvantaged pupils.
 </figcaption>
 <div aria-describedby="tbl-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -389,18 +390,7 @@ Table&nbsp;1: The school’s own White British share with neighbourhood measures
 </thead>
 <tbody>
 <tr class="odd">
-<td rowspan="4" style="text-align: left; vertical-align: top !important;">School's own + neighbourhood White British</td>
-<td rowspan="2" style="text-align: left; vertical-align: top !important;">Disadvantaged</td>
-<td style="text-align: left;">School's own White British share</td>
-<td style="text-align: right;">-4.6</td>
-<td style="text-align: right;">-13.0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Neighbourhood White British</td>
-<td style="text-align: right;">-1.2</td>
-<td style="text-align: right;">-3.8</td>
-</tr>
-<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">School's own + neighbourhood White British</td>
 <td rowspan="2" style="text-align: left; vertical-align: top !important;">All pupils</td>
 <td style="text-align: left;">School's own White British share</td>
 <td style="text-align: right;">-1.4</td>
@@ -412,18 +402,29 @@ Table&nbsp;1: The school’s own White British share with neighbourhood measures
 <td style="text-align: right;">-1.4</td>
 </tr>
 <tr class="odd">
-<td rowspan="4" style="text-align: left; vertical-align: top !important;">School's own + neighbourhood deprivation</td>
-<td rowspan="2" style="text-align: left; vertical-align: top !important;">Disadvantaged</td>
+<td rowspan="2" style="text-align: left; vertical-align: top !important;">Disadvantaged pupils</td>
 <td style="text-align: left;">School's own White British share</td>
-<td style="text-align: right;">-4.8</td>
-<td style="text-align: right;">-16.2</td>
+<td style="text-align: right;">-4.6</td>
+<td style="text-align: right;">-13.0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Neighbourhood deprivation (2+ dimensions)</td>
-<td style="text-align: right;">+1.5</td>
-<td style="text-align: right;">5.9</td>
+<td style="text-align: left;">Neighbourhood White British</td>
+<td style="text-align: right;">-1.2</td>
+<td style="text-align: right;">-3.8</td>
 </tr>
 <tr class="odd">
+<td rowspan="2" style="text-align: left; vertical-align: top !important;">Non-disadvantaged pupils</td>
+<td style="text-align: left;">School's own White British share</td>
+<td style="text-align: right;">-0.7</td>
+<td style="text-align: right;">-3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood White British</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">2.6</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" style="text-align: left; vertical-align: top !important;">School's own + neighbourhood deprivation</td>
 <td rowspan="2" style="text-align: left; vertical-align: top !important;">All pupils</td>
 <td style="text-align: left;">School's own White British share</td>
 <td style="text-align: right;">-1.3</td>
@@ -434,6 +435,28 @@ Table&nbsp;1: The school’s own White British share with neighbourhood measures
 <td style="text-align: right;">+0.7</td>
 <td style="text-align: right;">4.5</td>
 </tr>
+<tr class="odd">
+<td rowspan="2" style="text-align: left; vertical-align: top !important;">Disadvantaged pupils</td>
+<td style="text-align: left;">School's own White British share</td>
+<td style="text-align: right;">-4.8</td>
+<td style="text-align: right;">-16.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood deprivation (2+ dimensions)</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">5.9</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" style="text-align: left; vertical-align: top !important;">Non-disadvantaged pupils</td>
+<td style="text-align: left;">School's own White British share</td>
+<td style="text-align: right;">+0.0</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood deprivation (2+ dimensions)</td>
+<td style="text-align: right;">+1.1</td>
+<td style="text-align: right;">6.7</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -442,8 +465,8 @@ Table&nbsp;1: The school’s own White British share with neighbourhood measures
 </div>
 </div>
 <ul>
-<li><strong>Ethnicity is mostly composition.</strong> With the school’s own share in, the neighbourhood’s White British share shrinks from -3.6% to -1.2% for disadvantaged pupils, and to nothing clear for all pupils (-0.3%, t -1.4). The model fits barely better with both than with the school’s own share alone (AIC -360 against -348).</li>
-<li><strong>Deprivation is place.</strong> Neighbourhood deprivation keeps its effect alongside the school’s composition: +1.5% per SD for disadvantaged pupils (t 5.9) and +0.7% for all. At the same share of graduates and the same pupils, a school in a more multiply deprived neighbourhood does a little better. The next section asks why.</li>
+<li><strong>Ethnicity is mostly composition.</strong> With the school’s own share in, the neighbourhood’s White British share shrinks from -3.6% to -1.2% for disadvantaged pupils, and to nothing clear for all pupils (-0.3%, t -1.4). For non-disadvantaged pupils both terms are small and pull opposite ways: -0.7% for the school and +0.5% for the neighbourhood. For disadvantaged pupils, the model fits barely better with both than with the school’s own share alone (AIC -360 against -348).</li>
+<li><strong>Deprivation is place.</strong> Neighbourhood deprivation keeps its effect alongside the school’s composition: +1.5% per SD for disadvantaged pupils (t 5.9), +1.1% for non-disadvantaged pupils (t 6.7) and +0.7% for all. At the same share of graduates and the same pupils, a school in a more multiply deprived neighbourhood does a little better. The next section asks why.</li>
 </ul>
 </section>
 <section id="sec-two" class="level2">
@@ -545,6 +568,7 @@ Figure&nbsp;2: Average value added against England (% of Attainment 8, with one 
 </div>
 </div>
 <p>Under v2.1, disadvantaged pupils in deprived, graduate-rich neighbourhoods are +7.5% above expectation, and in deprived, low-graduate ones +0.2%. The schools in the first group have 13% White British pupils, against 63% in the second. With that allowed for, the lead falls to +2.4%: two-thirds of it is composition. The rest is real but modest.</p>
+<p>Non-disadvantaged pupils in the same deprived, graduate-rich neighbourhoods are at -1.3%. All pupils, at +0.2%, mix the two, so the figure for all pupils hides how differently the two groups do in these places.</p>
 <p>Does the graduate idea explain the deprivation effect itself? It makes four predictions, and the data support it only in part:</p>
 <table class="caption-top table">
 <colgroup>
@@ -560,19 +584,19 @@ Figure&nbsp;2: Average value added against England (% of Attainment 8, with one 
 <tbody>
 <tr class="odd">
 <td>grow with neighbourhood education</td>
-<td><strong>No.</strong> The interaction is +0.01% for disadvantaged pupils and -0.30% for non-disadvantaged (the wrong way)</td>
+<td><strong>No.</strong> The interaction is +0.01% for disadvantaged pupils, -0.30% for non-disadvantaged (the wrong way) and -0.10% for all pupils</td>
 </tr>
 <tr class="even">
 <td>sit in London and near universities, not in low-graduate places</td>
-<td><strong>In part.</strong> For disadvantaged pupils it is +1.6% in London and +1.6% near universities, but also +1.1% in low-graduate places. For non-disadvantaged pupils it is largest in low-graduate places (+1.5%)</td>
+<td><strong>In part.</strong> For disadvantaged pupils it is +1.6% in London and +1.6% near universities, but also +1.1% in low-graduate places. For non-disadvantaged pupils it is largest in low-graduate places (+1.5%). For all pupils it is much the same in all three (+0.9%, +0.6%, +0.6%)</td>
 </tr>
 <tr class="odd">
 <td>go once early-career measures are in</td>
-<td><strong>No.</strong> It stays at +1.3% for disadvantaged pupils and rises to +1.7% for non-disadvantaged</td>
+<td><strong>No.</strong> It stays at +1.3% for disadvantaged pupils, rises to +1.7% for non-disadvantaged and is +1.0% for all pupils</td>
 </tr>
 <tr class="even">
 <td>be overcrowding, not ill health</td>
-<td><strong>In part.</strong> Overcrowding is positive for disadvantaged pupils (+1.5%), but so is bad health (+2.3%)</td>
+<td><strong>In part.</strong> Overcrowding is positive for disadvantaged pupils (+1.5%), but so is bad health (+2.3%). For non-disadvantaged pupils overcrowding adds little (+0.3%) and bad health more (+0.9%). For all pupils they are +1.0% and +1.4%</td>
 </tr>
 </tbody>
 </table>
@@ -643,7 +667,7 @@ Table&nbsp;3: Share with level 4+ qualifications around schools, by kind of neig
 <div id="tbl-puzzles" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-puzzles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;4: What changes when neighbourhood education is measured among parents instead of all adults. The effects (% per SD) come from models that also allow for the school’s ethnicity, neighbourhood deprivation and young adults; the last row is value added against England with only the neighbourhood term swapped.
+Table&nbsp;4: What changes when neighbourhood education is measured among parents instead of all adults. The effects (% per SD) come from models that also allow for the school’s ethnicity, neighbourhood deprivation and young adults; the last three rows are value added against England with only the neighbourhood term swapped.
 </figcaption>
 <div aria-describedby="tbl-puzzles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -662,27 +686,47 @@ Table&nbsp;4: What changes when neighbourhood education is measured among parent
 <td style="text-align: right;">-0.2%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Young adults' effect, disadvantaged</td>
+<td style="text-align: right;">-0.5%</td>
+<td style="text-align: right;">-0.1%</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Young adults' effect, non-disadvantaged</td>
 <td style="text-align: right;">-1.1%</td>
 <td style="text-align: right;">-0.2%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Young adults' effect, boys</td>
 <td style="text-align: right;">-1.0%</td>
 <td style="text-align: right;">-0.1%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Neighbourhood deprivation's effect, all pupils</td>
 <td style="text-align: right;">+1.2%</td>
 <td style="text-align: right;">+1.1%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Neighbourhood deprivation's effect, disadvantaged</td>
 <td style="text-align: right;">+1.6%</td>
 <td style="text-align: right;">+1.2%</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbourhood deprivation's effect, non-disadvantaged</td>
+<td style="text-align: right;">+1.6%</td>
+<td style="text-align: right;">+1.8%</td>
+</tr>
 <tr class="even">
-<td style="text-align: left;">Non-disadvantaged pupils in deprived, graduate-rich places</td>
+<td style="text-align: left;">Value added in deprived, graduate-rich places, all pupils</td>
+<td style="text-align: right;">+0.2%</td>
+<td style="text-align: right;">+2.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Value added in deprived, graduate-rich places, disadvantaged</td>
+<td style="text-align: right;">+7.5%</td>
+<td style="text-align: right;">+8.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Value added in deprived, graduate-rich places, non-disadvantaged</td>
 <td style="text-align: right;">-1.3%</td>
 <td style="text-align: right;">+0.5%</td>
 </tr>
@@ -774,6 +818,7 @@ Figure&nbsp;3: The effect of graduates among parents and among adults without de
 <ul>
 <li><strong>Non-disadvantaged pupils’ results follow graduate parents</strong> (+2.2%, t 9.3). Other graduates nearby add nothing clear (+0.3%). This holds inside and outside London. It is what a measure of family background should do.</li>
 <li><strong>Disadvantaged pupils do better near graduates who are not parents</strong> (+1.7%, t 4.0), and a little worse near graduate parents (-1.1%). That appears in London and outside it, so it is not simply a London effect. It is smaller than it first looks: about 60% of the split goes once the school’s ethnicity is allowed for, and outside London the parents’ side is no longer clear.</li>
+<li><strong>All pupils sit between the two</strong> (+1.5% for graduate parents, t 6.6; +0.8% for other graduates, t 3.0). They mix two groups that respond in opposite ways to graduate parents.</li>
 </ul>
 <p>The second result fits the idea that young graduates bring something to a neighbourhood that reaches disadvantaged pupils. It fits other stories too. Disadvantaged pupils among graduate parents may be more isolated, or more disadvantaged within their school. The two measures also overlap heavily (correlation 0.88), so the split rests on the places where they differ. It is an association to follow up, not a finding about cause.</p>
 <p><strong>For the model.</strong> Neighbourhood deprivation survives with parents measured properly, so the case for it in v2.2 stands. Splitting neighbourhood education into parents and other adults would help every group a little, and is a further candidate. Parents here means adults aged 25 to 64 in a household with a dependent child, which also takes in some grandparents and older siblings, at MSOA level.</p>
@@ -795,7 +840,7 @@ Figure&nbsp;4: How much the local authority and region variances change when eac
 </div>
 </div>
 <p>For <strong>disadvantaged pupils</strong>, the school’s composition with neighbourhood deprivation takes 23% off the local authority variance and 38% off the regional variance. Part of why disadvantaged pupils do better in London and some cities than in the South East or coastal towns is who the pupils are and what their neighbourhoods are like, at the same intake otherwise.</p>
-<p>For <strong>all pupils</strong>, authority effects barely change and regional ones grow. The measures account for differences <em>within</em> regions, which leaves the differences between them larger. For most pupils, what makes an authority’s schools do better is not in these measures.</p>
+<p>For <strong>all pupils</strong>, authority effects barely change and regional ones grow. <strong>Non-disadvantaged pupils</strong> are much the same: the authority variance falls by 9% and the regional variance rises by 15%. The measures account for differences <em>within</em> regions, which leaves the differences between them larger. For most pupils, what makes an authority’s schools do better is not in these measures.</p>
 </section>
 <section id="sec-bh" class="level2">
 <h2 class="anchored" data-anchor-id="sec-bh">Brighton and Hove</h2>
@@ -813,6 +858,7 @@ Table&nbsp;6: Brighton and Hove’s local authority effect (% of Attainment 8) i
 <th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadvantaged</th>
 </tr>
 </thead>
 <tbody>
@@ -820,31 +866,37 @@ Table&nbsp;6: Brighton and Hove’s local authority effect (% of Attainment 8) i
 <td style="text-align: left;">Baseline (v2.1)</td>
 <td style="text-align: right;">+3.6%</td>
 <td style="text-align: right;">+3.9%</td>
+<td style="text-align: right;">+3.6%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">School's own White British share</td>
 <td style="text-align: right;">+3.9%</td>
 <td style="text-align: right;">+4.6%</td>
+<td style="text-align: right;">+3.6%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Households deprived in 2+ dimensions (%)</td>
 <td style="text-align: right;">+2.9%</td>
 <td style="text-align: right;">+1.9%</td>
+<td style="text-align: right;">+2.9%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">School's own + neighbourhood deprivation</td>
 <td style="text-align: right;">+3.4%</td>
 <td style="text-align: right;">+3.5%</td>
+<td style="text-align: right;">+2.8%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">School's own + deprivation and work</td>
 <td style="text-align: right;">+2.4%</td>
 <td style="text-align: right;">+2.4%</td>
+<td style="text-align: right;">+2.0%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">School's own + all ten</td>
 <td style="text-align: right;">+2.5%</td>
 <td style="text-align: right;">+2.9%</td>
+<td style="text-align: right;">+1.9%</td>
 </tr>
 </tbody>
 </table>
@@ -853,19 +905,19 @@ Table&nbsp;6: Brighton and Hove’s local authority effect (% of Attainment 8) i
 </figure>
 </div>
 </div>
-<p>Brighton and Hove’s effect is one of the largest in England (<a href="./bh_effect.html">its own page</a>). Its schools’ pupils are mostly White British, so adding the school’s composition, if anything, <em>raises</em> the effect. Neighbourhood deprivation and work lower it, from +3.6% to +2.4% for all pupils, and from +3.9% to +2.4% for disadvantaged pupils. The city’s neighbourhoods have many graduates, but also more households deprived on the Census measures than that suggests. Neighbourhood education alone makes them look more advantaged than they are. About a third of the effect goes with that; the rest is still unexplained.</p>
+<p>Brighton and Hove’s effect is one of the largest in England (<a href="./bh_effect.html">its own page</a>). Its schools’ pupils are mostly White British, so adding the school’s composition, if anything, <em>raises</em> the effect. Neighbourhood deprivation and work lower it, from +3.6% to +2.4% for all pupils, from +3.9% to +2.4% for disadvantaged pupils, and from +3.6% to +2.0% for non-disadvantaged pupils. The city’s neighbourhoods have many graduates, but also more households deprived on the Census measures than that suggests. Neighbourhood education alone makes them look more advantaged than they are. Between a third and a half of the effect goes with that, depending on the group; the rest is still unexplained.</p>
 </section>
 <section id="sec-means" class="level2">
 <h2 class="anchored" data-anchor-id="sec-means">What it means for the model</h2>
 <ul>
-<li><strong>A candidate for v2.2: pupils’ ethnicity.</strong> DfE’s contextual value added, in the performance tables until 2011, included pupils’ ethnicity. Progress 8 does not, and nor does v2.1. The evidence here is that leaving it out matters most for disadvantaged pupils. Whether to put it in is a question of what the measure is for. Adjusting for it would stop schools with many White British disadvantaged pupils looking worse for it. It would also take a real difference in results out of view. It belongs with the review’s other recommendations.</li>
+<li><strong>A candidate for v2.2: pupils’ ethnicity.</strong> DfE’s contextual value added, in the performance tables until 2011, included pupils’ ethnicity. Progress 8 does not, and nor does v2.1. The evidence here is that leaving it out matters most for disadvantaged pupils, and hardly at all for non-disadvantaged pupils. Whether to put it in is a question of what the measure is for. Adjusting for it would stop schools with many White British disadvantaged pupils looking worse for it. It would also take a real difference in results out of view. It belongs with the review’s other recommendations.</li>
 <li><strong>A candidate for neighbourhood: deprivation beside education.</strong> Adding household deprivation to neighbourhood education improves the model for every group. It is not specific to graduate-rich places (<a href="#sec-two">above</a>), and a measure of parents’ qualifications may do the job better.</li>
-<li><strong>What is left of place.</strong> Even with all of it, most of the local authority effects remain, especially for all pupils. What makes some authorities’ schools do better than their intakes predict is not in the Census.</li>
+<li><strong>What is left of place.</strong> Even with all of it, most of the local authority effects remain, especially for all and non-disadvantaged pupils. What makes some authorities’ schools do better than their intakes predict is not in the Census.</li>
 </ul>
 </section>
 <section id="sec-how" class="level2">
 <h2 class="anchored" data-anchor-id="sec-how">How it was done</h2>
-<p>Each model is the full v2.1 specification for its group, with the same random effects for year and region/local authority, fitted by maximum likelihood so that AIC can be compared. Every fit uses the same 12,620 school-years for all pupils and 12,483 for disadvantaged pupils (those with every measure). The school’s own White British share is from January 2026 and is used for every year, since earlier school census files in the performance tables do not include ethnicity. Neighbourhoods are the 150 nearest Output Areas to the school, not pupils’ homes.</p>
+<p>Each model is the full v2.1 specification for its group, with the same random effects for year and region/local authority, fitted by maximum likelihood so that AIC can be compared. Every fit uses the same 12,620 school-years for all pupils, 12,483 for disadvantaged pupils and 12,483 for non-disadvantaged pupils (those with every measure). The school’s own White British share is from January 2026 and is used for every year, since earlier school census files in the performance tables do not include ethnicity. Neighbourhoods are the 150 nearest Output Areas to the school, not pupils’ homes.</p>
 <div class="cell">
 <div id="tbl-all" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1022,7 +1074,7 @@ Table&nbsp;7: Every model: the change in AIC against v2.1 (negative is better), 
 <td style="text-align: right;">+55%</td>
 </tr>
 <tr class="even">
-<td rowspan="19" style="text-align: left; vertical-align: top !important;">Disadvantaged</td>
+<td rowspan="19" style="text-align: left; vertical-align: top !important;">Disadvantaged pupils</td>
 <td style="text-align: left;">White British (%)</td>
 <td style="text-align: right;">-3.56</td>
 <td style="text-align: right;">-196</td>
@@ -1154,6 +1206,140 @@ Table&nbsp;7: Every model: the change in AIC against v2.1 (negative is better), 
 <td style="text-align: right;">-440</td>
 <td style="text-align: right;">-27%</td>
 <td style="text-align: right;">-23%</td>
+</tr>
+<tr class="odd">
+<td rowspan="19" style="text-align: left; vertical-align: top !important;">Non-disadvantaged pupils</td>
+<td style="text-align: left;">White British (%)</td>
+<td style="text-align: right;">+0.16</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+1%</td>
+<td style="text-align: right;">-5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ethnic diversity (index)</td>
+<td style="text-align: right;">-0.18</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+1%</td>
+<td style="text-align: right;">-6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Born outside the UK (%)</td>
+<td style="text-align: right;">-0.38</td>
+<td style="text-align: right;">-4</td>
+<td style="text-align: right;">+2%</td>
+<td style="text-align: right;">-11%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cannot speak English well (%)</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">-6</td>
+<td style="text-align: right;">+1%</td>
+<td style="text-align: right;">-6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Arrived from abroad in the last year (%)</td>
+<td style="text-align: right;">-0.13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+1%</td>
+<td style="text-align: right;">+0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Households deprived in 2+ dimensions (%)</td>
+<td style="text-align: right;">+1.05</td>
+<td style="text-align: right;">-46</td>
+<td style="text-align: right;">-9%</td>
+<td style="text-align: right;">+15%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Social renting (%)</td>
+<td style="text-align: right;">+0.30</td>
+<td style="text-align: right;">-7</td>
+<td style="text-align: right;">-2%</td>
+<td style="text-align: right;">+3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Routine, semi-routine or never worked (%)</td>
+<td style="text-align: right;">+0.34</td>
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">-1%</td>
+<td style="text-align: right;">-4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Higher professional (%)</td>
+<td style="text-align: right;">-0.12</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-0%</td>
+<td style="text-align: right;">-1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lone parents with dependent children (%)</td>
+<td style="text-align: right;">+0.50</td>
+<td style="text-align: right;">-18</td>
+<td style="text-align: right;">+0%</td>
+<td style="text-align: right;">+10%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Diversity and migration</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">+2%</td>
+<td style="text-align: right;">-4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Deprivation and work</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-103</td>
+<td style="text-align: right;">-7%</td>
+<td style="text-align: right;">+93%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">All ten</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-119</td>
+<td style="text-align: right;">-9%</td>
+<td style="text-align: right;">+52%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">School's own White British share</td>
+<td style="text-align: right;">-0.35</td>
+<td style="text-align: right;">-2</td>
+<td style="text-align: right;">+0%</td>
+<td style="text-align: right;">+7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">School's own + neighbourhood White British</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-6</td>
+<td style="text-align: right;">+2%</td>
+<td style="text-align: right;">-4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">School's own + diversity and migration</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-12</td>
+<td style="text-align: right;">+3%</td>
+<td style="text-align: right;">-3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">School's own + neighbourhood deprivation</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-44</td>
+<td style="text-align: right;">-9%</td>
+<td style="text-align: right;">+15%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">School's own + deprivation and work</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-101</td>
+<td style="text-align: right;">-7%</td>
+<td style="text-align: right;">+96%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">School's own + all ten</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">-123</td>
+<td style="text-align: right;">-9%</td>
+<td style="text-align: right;">+54%</td>
 </tr>
 </tbody>
 </table>

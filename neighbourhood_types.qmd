@@ -13,6 +13,8 @@ lf <- function(o, m) O$la_fit$cv_r2[O$la_fit$outcome == o & O$la_fit$model == m]
 lc <- function(g, code) O$la_cor$r_w[O$la_cor$group == g & O$la_cor$code == code]
 p1 <- function(x) sprintf("%.1f%%", 100 * x)
 ent_pct <- 100 * (exp(O$mix_test[["Estimate"]] * sd(O$profiles$ent_sub, na.rm = TRUE)) - 1)
+tp <- function(o, code) O$types$pct[O$types$tier == "Group" & O$types$outcome == o & O$types$code == code]
+s1 <- function(x) sprintf("%+.1f%%", x)
 TIER_COL <- c("Region" = GREY, "Supergroup" = LPURPLE, "Group" = MPURPLE, "Subgroup" = DPURPLE)
 ```
 
@@ -32,6 +34,15 @@ TIER_COL <- c("Region" = GREY, "Supergroup" = LPURPLE, "Group" = MPURPLE, "Subgr
   classification's "Baseline UK", legacy industrial and coastal, and
   small-town neighbourhoods. This describes the kinds of place behind the
   local authority effects. It does not add a new term to the model.
+  The classification's groups explain
+  `r p1(lf("Disadvantaged", "OAC group"))` of disadvantaged pupils' value
+  added, against `r p1(lf("Non-disadvantaged", "OAC group"))` for
+  non-disadvantaged pupils and `r p1(lf("All pupils", "OAC group"))` for all
+  pupils.
+- **The multicultural lead belongs to disadvantaged pupils alone.**
+  Non-disadvantaged pupils get no such lead. The shortfall in small-town and
+  coastal neighbourhoods looks shared, school by school, but it is weak
+  between authorities.
 - **The finest tier is not needed.** Groups (21 classes) find what
   subgroups (52) find; supergroups (8) find less.
 :::
@@ -89,7 +100,7 @@ of it. The test is in two forms:
 ```{r}
 #| label: fig-va
 #| fig-cap: "Share of the variation in value added explained out of sample by region, by the classification's profile at each tier, and by both (10-fold cross-validation, repeated). Value added is each school's average over its years, v2.1."
-#| fig-height: 4.6
+#| fig-height: 6
 vd <- O$va_fit |> filter(!grepl("education", model)) |>
   mutate(region = grepl("^Region", model),
          tier = ifelse(model == "Region", "Region", sub("Region \\+ ", "", model)),
@@ -99,21 +110,24 @@ vd <- O$va_fit |> filter(!grepl("education", model)) |>
          outcome = factor(outcome, unique(O$va_fit$outcome)))
 ggplot(vd, aes(x, 100 * pmax(cv_r2, 0), colour = tier)) +
   geom_point(size = 3, position = position_dodge(width = 0.5)) +
-  facet_wrap(~ outcome, ncol = 2) +
+  facet_wrap(~ outcome, ncol = 3) +
   scale_colour_manual(values = TIER_COL, name = NULL) +
+  scale_x_discrete(labels = c("Region", "Classification\nalone", "Region +\nclassification")) +
   labs(x = NULL, y = "% of value added explained (out of sample)") + theme_note(11) +
   theme(axis.text.x = element_text(size = 9))
 ```
 
 - **Within the authority, nothing.** At every tier, the classification
   explains about none of a school's value added relative to its own
-  authority, for all pupils and for disadvantaged pupils. Schools that do
+  authority, for all, disadvantaged and non-disadvantaged pupils. Schools that do
   better than similar schools nearby do not sit in different kinds of
   neighbourhood.
 - **Against England, something**, because value added against England
   includes the place a school is in. For all pupils, region explains
   `r p1(vf("All pupils", "Region"))` and region with the subgroups
-  `r p1(vf("All pupils", "Region + Subgroup"))`. For disadvantaged pupils
+  `r p1(vf("All pupils", "Region + Subgroup"))`. Non-disadvantaged pupils
+  are about the same, at `r p1(vf("Non-disadvantaged", "Region"))` and
+  `r p1(vf("Non-disadvantaged", "Region + Subgroup"))`. For disadvantaged pupils
   the step is larger: `r p1(vf("Disadvantaged", "Region"))` with region
   alone, and `r p1(vf("Disadvantaged", "Region + Group"))` with region and
   groups.
@@ -124,21 +138,23 @@ Local authorities, entered directly, explain
 added. The classification's groups alone explain
 `r p1(lf("Disadvantaged", "OAC group"))`, most of that. For all pupils, the
 authorities explain `r p1(lf("All pupils", "Local authority"))` and the groups
-only `r p1(lf("All pupils", "OAC group"))`.
+only `r p1(lf("All pupils", "OAC group"))`. For non-disadvantaged pupils, they
+explain `r p1(lf("Non-disadvantaged", "Local authority"))` and
+`r p1(lf("Non-disadvantaged", "OAC group"))`.
 
 ## What kinds of place {#sec-place}
 
 ```{r}
 #| label: fig-la
-#| fig-cap: "Correlation of each local authority's effect in value added (v2.1) with the share of its schools' neighbourhoods in each supergroup and in selected groups, weighted by the number of schools. Disadvantaged pupils (dark) and all pupils (pale)."
-#| fig-height: 5.4
+#| fig-cap: "Correlation of each local authority's effect in value added (v2.1) with the share of its schools' neighbourhoods in each supergroup and in selected groups, weighted by the number of schools, for all, disadvantaged and non-disadvantaged pupils."
+#| fig-height: 6.6
 lc_d <- O$la_cor |> mutate(label = paste0(ifelse(tier == "Supergroup", "", "  "), name, " (", code, ")"),
-                           grp = ifelse(group == "all", "All pupils", "Disadvantaged pupils"))
+                           grp = factor(unname(GROUP_LABELS[group]), unname(GROUP_LABELS[c("all", "disadvantaged", "non_disadvantaged")])))
 ord <- lc_d |> filter(group == "disadvantaged") |> arrange(r_w) |> pull(label)
 ggplot(lc_d |> mutate(label = factor(label, ord)), aes(r_w, label, fill = grp)) +
   geom_vline(xintercept = 0, colour = GREY) +
   geom_col(position = position_dodge(width = 0.75), width = 0.7) +
-  scale_fill_manual(values = c("All pupils" = LPURPLE, "Disadvantaged pupils" = DPURPLE), name = NULL) +
+  scale_fill_manual(values = GROUP_COL, name = NULL, breaks = levels(lc_d$grp)) +
   labs(x = "Correlation with the local authority effect", y = NULL) + theme_note(11) +
   theme(panel.grid.major.y = element_blank())
 ```
@@ -158,6 +174,13 @@ Town Living** (2a, `r sprintf("%+.2f", lc("disadvantaged", "2a"))`) and
 **Legacy Industrial and Coastal Communities** (6b,
 `r sprintf("%+.2f", lc("disadvantaged", "6b"))`).
 
+For non-disadvantaged pupils the same correlations are much weaker. None
+goes beyond `r sprintf("%.2f", max(abs(O$la_cor$r_w[O$la_cor$group == "non_disadvantaged"])))`
+either way (4c `r sprintf("%+.2f", lc("non_disadvantaged", "4c"))`, 6
+`r sprintf("%+.2f", lc("non_disadvantaged", "6"))`, 6b
+`r sprintf("%+.2f", lc("non_disadvantaged", "6b"))`). The pattern between
+authorities is a pattern for disadvantaged pupils.
+
 This matches what is known about where disadvantaged pupils do well: in
 London and other diverse cities, much less so in coastal and former
 industrial towns. Neighbourhood education does not capture it, because the
@@ -167,29 +190,42 @@ say what about them matters.
 
 ```{r}
 #| label: fig-types
-#| fig-cap: "Disadvantaged pupils' value added (against England, %) of a school whose 150 nearest Output Areas were all of one group: shares of each group with no intercept, with 95% intervals. Pale: fewer than 50 schools have a fifth or more of their neighbourhood in the group, so the estimate leans on extrapolation."
-#| fig-height: 6
-ty <- O$types |> filter(tier == "Group", outcome == "Disadvantaged") |>
-  mutate(label = paste0(name, " (", code, ")"), solid = schools_20 >= 50) |> arrange(pct) |>
-  mutate(label = factor(label, label))
-ggplot(ty, aes(pct, label)) +
+#| fig-cap: "Value added (against England, %) of a school whose 150 nearest Output Areas were all of one group, for all, disadvantaged and non-disadvantaged pupils: shares of each group with no intercept, with 95% intervals, ordered by disadvantaged pupils' estimate. Pale: fewer than 50 schools have a fifth or more of their neighbourhood in the group, so the estimate leans on extrapolation."
+#| fig-height: 6.4
+ty <- O$types |> filter(tier == "Group", outcome %in% c("All pupils", "Disadvantaged", "Non-disadvantaged")) |>
+  mutate(label = paste0(name, " (", code, ")"), solid = schools_20 >= 50,
+         outcome = factor(outcome, c("All pupils", "Disadvantaged", "Non-disadvantaged")))
+ty_lev <- ty |> filter(outcome == "Disadvantaged") |> arrange(pct) |> pull(label)
+ggplot(ty |> mutate(label = factor(label, ty_lev)), aes(pct, label)) +
   geom_vline(xintercept = 0, colour = GREY) +
   geom_errorbarh(aes(xmin = lo, xmax = hi, alpha = solid), height = 0, colour = DPURPLE, linewidth = 0.8) +
   geom_point(aes(alpha = solid), colour = DPURPLE, size = 2.4) +
   scale_alpha_manual(values = c(`TRUE` = 1, `FALSE` = 0.3), guide = "none") +
-  coord_cartesian(xlim = c(-30, 40)) +
-  labs(x = "Value added, disadvantaged pupils (% of Attainment 8)", y = NULL) + theme_note(11) +
-  theme(panel.grid.major.y = element_blank())
+  coord_cartesian(xlim = c(-30, 40)) + facet_wrap(~ outcome) +
+  labs(x = "Value added (% of Attainment 8)", y = NULL) + theme_note(11) +
+  theme(panel.grid.major.y = element_blank(), axis.text.y = element_text(size = 8.5))
 ```
 
-School by school, the pure-type estimates mostly tell the same story.
-Multicultural groups (4c, 3b, 3c, 4b) sit above zero. Small-town,
+School by school, the pure-type estimates mostly tell the same story for
+disadvantaged pupils. Multicultural groups (4c, 3b, 3c, 4b) sit above zero. Small-town,
 coastal, rural-amenity and challenged groups (2a, 2b, 6b, 1b, 6a) sit
 below. Two groups do not fit: Established but Challenged (7a) and Spacious
 Rural Living (1a) carry large positive estimates here, but show no
 relationship at all with authority effects. They are probably particular
 places rather than a pattern, and are best left aside until they can be
 looked at area by area.
+
+Non-disadvantaged pupils share only one side of this. The multicultural
+lead is not theirs: Challenged Multicultural Communities (4c) is at
+`r s1(tp("Non-disadvantaged", "4c"))` against
+`r s1(tp("Disadvantaged", "4c"))` for disadvantaged pupils, and 3b at
+`r s1(tp("Non-disadvantaged", "3b"))` against
+`r s1(tp("Disadvantaged", "3b"))`. The small-town and coastal shortfall does
+appear: 6b at `r s1(tp("Non-disadvantaged", "6b"))`, 1b at
+`r s1(tp("Non-disadvantaged", "1b"))` and 2a at
+`r s1(tp("Non-disadvantaged", "2a"))`. Because the correlations between
+authorities are weak for these pupils, treat that as a school-level
+estimate, with the limits [below](#sec-limits), not as a place effect.
 
 ## Mixed neighbourhoods {#sec-mix}
 
@@ -205,7 +241,7 @@ pursued here.
 |---|---|---|
 | Supergroup | 8 | Reproduces neighbourhood education less well (R² `r sprintf("%.2f", O$l4_by_oac[["Supergroup"]])`), and picks up the least of the place pattern |
 | Group | 21 | Reproduces neighbourhood education well (R² `r sprintf("%.2f", O$l4_by_oac[["Group"]])`); with region, captures the place pattern for disadvantaged pupils as well as subgroups or better |
-| Subgroup | 52 | Reproduces neighbourhood education best (R² `r sprintf("%.2f", O$l4_by_oac[["Subgroup"]])`), and a little more of all pupils' place pattern; no better for disadvantaged pupils, and noisier |
+| Subgroup | 52 | Reproduces neighbourhood education best (R² `r sprintf("%.2f", O$l4_by_oac[["Subgroup"]])`), and a little more of all and non-disadvantaged pupils' place pattern; no better for disadvantaged pupils, and noisier |
 
 Going down to subgroups adds little. The signal is in the broad kinds of
 place: diverse urban areas on one side, small-town, coastal and former
@@ -218,7 +254,8 @@ industrial areas on the other. Those differ at the group level.
   within authorities. There is no case for putting it in the model.
 - **It helps read the local authority effects.** Part of why disadvantaged
   pupils do better in some authorities than others goes with the kind of
-  neighbourhoods their schools serve. That is a description of place, and
+  neighbourhoods their schools serve. Far less of it does for
+  non-disadvantaged pupils. That is a description of place, and
   it is where the [Brighton and Hove effect](bh_effect.qmd) and its
   causes belong.
 - **For the next Census variables.** The classification is mostly

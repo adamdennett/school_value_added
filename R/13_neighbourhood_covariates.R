@@ -7,7 +7,7 @@
 # Census 2021 measures, each built exactly as neighbourhood education is:
 # the mean over the 150 Output Areas nearest each school.
 #
-# For all pupils and disadvantaged pupils, the full v2.1 model (R/02) is
+# For all, disadvantaged and non-disadvantaged pupils, the full v2.1 model (R/02) is
 # refitted by maximum likelihood on one fixed set of school-years:
 #   * as published (baseline);
 #   * with each measure added (standardised), one at a time;
@@ -137,7 +137,7 @@ run_group <- function(group) {
     bind_rows(lapply(names(SETS), function(s) { message("  + set ", s); one(s, SETS[[s]]) })))
   out |> mutate(rows = nrow(dg), la_sd0 = sqrt(v0[["LANAME:gor_name"]]), reg_sd0 = sqrt(v0[["gor_name"]]))
 }
-res <- bind_rows(lapply(c("all", "disadvantaged"), run_group)) |>
+res <- bind_rows(lapply(c("all", "disadvantaged", "non_disadvantaged"), run_group)) |>
   mutate(pct = 100 * (exp(est) - 1), lo = 100 * (exp(est - 1.96 * se) - 1), hi = 100 * (exp(est + 1.96 * se) - 1))
 
 saveRDS(list(built = Sys.Date(), k = K, cov = COV, res = res, cors = cors,

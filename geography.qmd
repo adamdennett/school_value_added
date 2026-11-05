@@ -17,6 +17,7 @@ la_g <- function(g) G$la |> filter(group == g)
 bh <- function(g, col) G$la[[col]][G$la$group == g & G$la$LANAME == "Brighton and Hove"]
 p1 <- function(x) sprintf("%.1f%%", x)
 spread <- function(g) { x <- la_g(g)$pct; diff(quantile(x, c(0.1, 0.9))) }
+ac <- function(g, o) G$abs_cor$r[G$abs_cor$group == g & G$abs_cor$outcome == o]
 ```
 
 ::: {.callout-important}
@@ -29,10 +30,14 @@ spread <- function(g) { x <- la_g(g)$pct; diff(quantile(x, c(0.1, 0.9))) }
   about `r p1(lv("all", "School (lasting)"))`.
 - **Place matters most for disadvantaged pupils.** For them the authority
   effect is `r p1(lv("disadvantaged", "Local authority"))` and the region
-  effect `r p1(lv("disadvantaged", "Region"))`. Disadvantaged pupils in London do
+  effect `r p1(lv("disadvantaged", "Region"))`, against
+  `r p1(lv("non_disadvantaged", "Local authority"))` and
+  `r p1(lv("non_disadvantaged", "Region"))` for non-disadvantaged pupils.
+  Disadvantaged pupils in London do
   `r p1(rg("disadvantaged", "London"))` better than similar pupils
   across England; in the South East, `r p1(abs(rg("disadvantaged", "South East")))`
-  worse.
+  worse. London's non-disadvantaged pupils do
+  `r p1(abs(rg("non_disadvantaged", "London")))` worse.
 - **What goes with it is partly the kind of place, partly the pupils.**
   Disadvantaged pupils do better where schools serve multicultural, urban
   neighbourhoods. They do worse in small-town, coastal and former
@@ -69,8 +74,9 @@ ggplot(lvd, aes(pct, grp, fill = level)) +
 Between the authorities a tenth of the way from the top and a tenth of
 the way from the bottom, the gap is about `r p1(spread("all"))` of
 Attainment 8 for all pupils (about `r round(spread("all") * 0.475, 1)`
-points at the national average) and `r p1(spread("disadvantaged"))` for
-disadvantaged pupils. That is the difference a place makes to otherwise
+points at the national average), `r p1(spread("disadvantaged"))` for
+disadvantaged pupils and `r p1(spread("non_disadvantaged"))` for
+non-disadvantaged pupils. That is the difference a place makes to otherwise
 similar schools.
 
 This is why Value Added v2.1 is published two ways. **Against England**
@@ -150,14 +156,20 @@ ggplot(rgd |> mutate(gor_name = factor(gor_name, rord)), aes(pct, gor_name, fill
 ```
 
 The regional pattern is different for disadvantaged pupils. For all
-pupils, the North East and South West do best, the North West worst.
+pupils, the South West and North East do best, the North West worst.
+Non-disadvantaged pupils are similar, with the North East first.
 For disadvantaged pupils, London leads at `r sprintf("%+.1f", rg("disadvantaged", "London"))`%,
 and the South East is last at `r sprintf("%+.1f", rg("disadvantaged", "South East"))`%.
 London's lead belongs to its disadvantaged pupils alone: its non-disadvantaged
 pupils are at `r sprintf("%+.1f", rg("non_disadvantaged", "London"))`%.
-Brighton and Hove's effect, at `r sprintf("%+.1f", bh("all", "pct"))`% for
-all pupils (`r ord(bh("all", "rank"))` of `r bh("all", "n_la")`), is one of
-the largest in England. Its own page examines it.
+Brighton and Hove's effect is among the largest in England:
+`r sprintf("%+.1f", bh("all", "pct"))`% for all pupils
+(`r ord(bh("all", "rank"))` of `r bh("all", "n_la")`),
+`r sprintf("%+.1f", bh("disadvantaged", "pct"))`% for disadvantaged pupils
+(`r ord(bh("disadvantaged", "rank"))` of `r bh("disadvantaged", "n_la")`) and
+`r sprintf("%+.1f", bh("non_disadvantaged", "pct"))`% for non-disadvantaged pupils
+(`r ord(bh("non_disadvantaged", "rank"))` of `r bh("non_disadvantaged", "n_la")`).
+Its own page examines it.
 
 ## What goes with place {#sec-why}
 
@@ -174,16 +186,22 @@ What the evidence on this site says about why places differ:
   and among small-town (`r sprintf("%+.2f", lcor("disadvantaged", "2a"))`)
   and coastal and former industrial ones (`r sprintf("%+.2f", lcor("disadvantaged", "6b"))`).
   This is the pattern behind London's lead and the South East's position
-  for disadvantaged pupils.
+  for disadvantaged pupils. For non-disadvantaged pupils the same
+  correlations are much weaker (4c `r sprintf("%+.2f", lcor("non_disadvantaged", "4c"))`,
+  6b `r sprintf("%+.2f", lcor("non_disadvantaged", "6b"))`).
 - **Not adult qualifications.** v2.1 already allows for neighbourhood
   education, and the place pattern survives it. Two places with the same
   share of graduates can differ in diversity, migration and the character
   of their towns.
 - **Not absence, much.** Absence is in the model, and authorities' absence
-  effects barely track their value added effects. The largest link is
-  with illness absence, `r sprintf("%+.2f", G$abs_cor$r[G$abs_cor$group == "all" & G$abs_cor$outcome == "illness"])`:
-  where pupils are recorded ill more often than intake predicts, value
-  added is slightly higher. Brighton and Hove is the clearest case (see
+  effects barely track their value added effects: no correlation reaches
+  0.2 for any of the three groups. For all pupils the largest link is with
+  illness absence, `r sprintf("%+.2f", ac("all", "illness"))`: where pupils
+  are recorded ill more often than intake predicts, value added is slightly
+  higher. It is the same for disadvantaged pupils
+  (`r sprintf("%+.2f", ac("disadvantaged", "illness"))`) but not for
+  non-disadvantaged pupils (`r sprintf("%+.2f", ac("non_disadvantaged", "illness"))`).
+  Brighton and Hove is the clearest case (see
   [What goes with school absence](absence_causes.qmd#sec-place)).
 - **A worked example.** [Brighton and Hove](bh_effect.qmd) tests the
   explanations one at a time for one authority.
@@ -193,17 +211,17 @@ What the evidence on this site says about why places differ:
   pupils, to the model. For disadvantaged pupils, the school's composition
   and neighbourhood deprivation together take about a fifth off the
   authority effects and over a third off the regional ones. The ethnic
-  pattern is mostly the pupils themselves, not the place. For all pupils,
-  authority effects barely move.
+  pattern is mostly the pupils themselves, not the place. For all and
+  non-disadvantaged pupils, authority effects move much less.
 
 ## What it means {#sec-means}
 
 - **Read value added against England with the place in mind.** Part of a
-  school's figure is where it is: up to a few per cent for all pupils, more
-  for disadvantaged pupils. The within-authority figure takes that out.
+  school's figure is where it is: up to a few per cent for all and
+  non-disadvantaged pupils, more for disadvantaged pupils. The within-authority figure takes that out.
 - **Place effects are largest for the pupils policy most wants to help.**
   A disadvantaged pupil's results depend more on the authority and region
-  than an advantaged pupil's do, even with the same intake.
+  than a non-disadvantaged pupil's do, even with the same intake.
 - **Part of the place effect is the pupils.** v2.1 has no measure of
   pupils' ethnicity. The experiment suggests that is much of what makes
   disadvantaged pupils' results look like a place effect. The rest of
