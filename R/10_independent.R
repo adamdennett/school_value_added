@@ -71,6 +71,8 @@ k4 <- ex("2024-2025", "england_ks4provisional.csv") |>
   transmute(URN = as.integer(URN), nftype = NFTYPE, rectype = RECTYPE, school = SCHNAME,
             tpup = num(TPUP), att8_raw = ATT8SCR, att8 = num(ATT8SCR), basics = num(PTL2BASICS_94),
             ebacc_entry = num(PTEBACC_E_PTQ_EE), p8 = num(P8MEA), fsm6 = num(PTFSM6CLA1A), prior_lo = num(PTPRIORLO),
+            eng = num(ATT8SCRENG), mat = num(ATT8SCRMAT), eb = num(ATT8SCREBAC), op = num(ATT8SCROPEN),
+            ebf = num(AVGEBACFILL), opf = num(AVGOPENFILL), adm = ADMPOL,
             gender = EGENDER) |>
   mutate(sector = case_when(nftype == "IND" ~ "Independent",
                             nftype %in% c("INDSS", "SS", "NMSS", "ACS", "ACCS", "CYS", "FDS", "FS") ~ "Special",
@@ -111,6 +113,46 @@ st_q1 <- quantile(k4$att8[k4$sector == "State-funded mainstream"], 0.25, na.rm =
 st_aps_med <- median(k45$alev_aps[k45$sector == "State-funded mainstream"])
 k45_flag <- k45 |> filter(sector == "Independent") |>
   summarise(n = n(), mismatch = sum(att8 < st_q1 & alev_aps > st_aps_med), share = mean(att8 < st_q1 & alev_aps > st_aps_med))
+
+# ---- 3b. completing Attainment 8 -------------------------------------------------
+# Attainment 8 = English (double) + maths (double) + three EBacc slots + three
+# open slots. The tables publish each element, and how many EBacc and open
+# slots pupils fill on average. An IGCSE fills nothing. A school's average
+# grade per filled slot, g = (EBacc + open points) / slots filled, is
+# measured the same way in both sectors and does not fall when slots are
+# empty. English and maths are then predicted from g with the relationship
+# in state schools, where every slot can be filled, giving a completed
+# Attainment 8 = 2 x English + 2 x maths + 6 x g.
+k4 <- k4 |> mutate(fill = ebf + opf, g = ifelse(fill > 0.5, (eb + op) / fill, NA_real_))
+st4 <- k4 |> filter(sector == "State-funded mainstream", !is.na(g), !is.na(eng), !is.na(mat))
+m_eng <- lm(I(eng / 2) ~ g, data = st4); m_mat <- lm(I(mat / 2) ~ g, data = st4)
+k4 <- k4 |> mutate(att8c = 2 * predict(m_eng, newdata = k4) + 2 * predict(m_mat, newdata = k4) + 6 * g,
+                   kind = case_when(sector == "Independent" ~ "Independent",
+                                    sector == "State-funded mainstream" & adm == "SEL" ~ "State grammar",
+                                    sector == "State-funded mainstream" ~ "State non-selective"))
+complete_fit <- tibble(
+  eng_r2 = summary(m_eng)$r.squared, eng_sigma = sigma(m_eng), mat_r2 = summary(m_mat)$r.squared, mat_sigma = sigma(m_mat),
+  state_r = with(k4 |> filter(sector == "State-funded mainstream"), cor(att8, att8c, use = "complete.obs")))
+gaps <- k4 |> filter(sector %in% c("Independent", "State-funded mainstream"), !is.na(att8)) |> group_by(sector) |>
+  summarise(schools = n(), eng0 = mean(eng == 0, na.rm = TRUE), mat0 = mean(mat == 0, na.rm = TRUE),
+            fill = median(fill, na.rm = TRUE), no_g = mean(is.na(g)), .groups = "drop")
+k45 <- k45 |> left_join(k4 |> select(URN, g, att8c), by = "URN")
+k45_cor2 <- k45 |> group_by(sector) |>
+  summarise(schools = sum(!is.na(g)), r_att8 = cor(att8, alev_aps), r_g = cor(g, alev_aps, use = "complete.obs"), .groups = "drop")
+by_kind4 <- k4 |> filter(!is.na(kind), !is.na(g)) |> group_by(kind) |>
+  summarise(schools = n(), att8 = median(att8, na.rm = TRUE), g_q1 = quantile(g, 0.25), g_q3 = quantile(g, 0.75), g_med = median(g),
+            att8c = median(att8c), .groups = "drop")
+
+# ---- 3c. who A level value added covers ------------------------------------------
+# DfE's 16-19 guidance: A level value added counts approved GCSEs only, taken
+# at KS4, so an all-IGCSE student has no prior attainment and is left out.
+# If many were, independent schools would have fewer value-added entries per
+# A level student than state schools.
+va_cov <- k5 |> filter(sector5 %in% c("Independent", "State school sixth forms"), alev_n >= 10) |>
+  left_join(ex("2024-2025", "england_ks5final.csv") |> transmute(URN = as.integer(URN), va_ent = num(ENTRIES_ALEV)), by = "URN") |>
+  mutate(per = va_ent / alev_n) |> group_by(sector5) |>
+  summarise(schools = sum(!is.na(per)), per_med = median(per, na.rm = TRUE), per_q1 = quantile(per, 0.25, na.rm = TRUE),
+            per_q3 = quantile(per, 0.75, na.rm = TRUE), .groups = "drop")
 
 # ---- 4. a reduced model, tested on state schools ---------------------------------
 # What could be put into an expectation for an independent school: the
@@ -175,7 +217,9 @@ out <- list(
   ks4_cov = ks4_cov,
   alev = alev |> select(URN, sector5, alev_n, alev_aps, alev_grade, va_alev, va_alev_3, va_q, lo_q, hi_q, entries),
   alev_sum = alev_sum,
-  k45 = k45 |> select(URN, sector, school, att8, alev_aps, alev_n), k45_cor = k45_cor, k45_flag = k45_flag,
+  k45 = k45 |> select(URN, sector, school, att8, alev_aps, alev_n, g, att8c), k45_cor = k45_cor, k45_flag = k45_flag,
+  complete_fit = complete_fit, gaps = gaps, k45_cor2 = k45_cor2, by_kind4 = by_kind4, va_cov = va_cov,
+  ks4_g = k4 |> filter(!is.na(kind), !is.na(g)) |> select(URN, kind, att8, g, att8c),
   st_q1 = st_q1, st_aps_med = st_aps_med,
   reduced_test = reduced_test, drop_one = drop_one, by_kind = by_kind,
   reduced_coefs = data.frame(term = names(coef(m_red)), est = unname(coef(m_red)))
@@ -184,3 +228,4 @@ saveRDS(out, here::here("data", "independent.rds"))
 message("Saved data/independent.rds")
 print(ks4_cov); print(alev_sum); print(k45_cor); print(k45_flag); print(reduced_test); print(drop_one); print(by_kind)
 print(census_cov); print(sen_cov)
+print(complete_fit); print(gaps); print(k45_cor2); print(by_kind4); print(va_cov)

@@ -16,6 +16,12 @@ kc <- function(s) X$k45_cor$r[X$k45_cor$sector == s]
 SEC_COL <- c("Independent" = DPURPLE, "State-funded mainstream" = BLUE, "State school sixth forms" = BLUE, "Colleges" = GREY)
 n0 <- function(x) format(round(x), big.mark = ",")
 tb <- function(t, k) if (k %in% names(t)) unname(t[[k]]) else 0
+cf <- X$complete_fit
+gp <- function(s, col) X$gaps[[col]][X$gaps$sector == s]
+k2 <- function(s, col) X$k45_cor2[[col]][X$k45_cor2$sector == s]
+b4 <- function(kd, col) X$by_kind4[[col]][X$by_kind4$kind == kd]
+vc <- function(s, col) X$va_cov[[col]][X$va_cov$sector5 == s]
+KIND_COL <- c("Independent" = DPURPLE, "State grammar" = MPURPLE, "State non-selective" = BLUE)
 ```
 
 ::: {.callout-important}
@@ -26,10 +32,13 @@ tb <- function(t, k) if (k %in% names(t)) unname(t[[k]]) else 0
   in Value Added v2.1 are each school's prior attainment and its
   disadvantage. Neither is published for independent schools, and nor is
   absence.
-- **Their published GCSE results are not comparable either.** Many
-  independent schools enter IGCSEs that do not count in the performance
-  tables, so their Attainment 8 is often far below what their pupils
-  achieve.
+- **Their published GCSE results are not comparable either, but they can
+  be completed.** Many independent schools enter IGCSEs that do not count
+  in the performance tables, so their Attainment 8 is often far below what
+  their pupils achieve. A school's average grade in the GCSEs that do count
+  stands in well for the rest (@sec-complete). On it, the typical
+  independent school sits between non-selective state schools and grammar
+  schools.
 - **One comparison does exist: value added at A level.** DfE publishes
   16-18 A level value added, from each student's GCSE results, for
   `r al("Independent", "schools")` independent schools on the same basis as
@@ -92,7 +101,7 @@ term:
 
 | In the v2.1 model | State-funded schools | Independent schools |
 |---|---|---|
-| **Outcome:** Attainment 8 | Published | Published for `r round(100 * k("Independent", "att8_pub"))`%, but IGCSEs and other unapproved qualifications score nothing (@sec-att8) |
+| **Outcome:** Attainment 8 | Published | Published for `r round(100 * k("Independent", "att8_pub"))`%, but IGCSEs and other unapproved qualifications score nothing (@sec-att8); it can be approximately completed (@sec-complete) |
 | Prior attainment (KS2) | Published | **None.** Many pupils never sat KS2 tests, and none is published |
 | Disadvantage (FSM6) | Published | **None.** Fee-paying schools have no free school meals measure |
 | Absence | Published | **None.** Independent schools are not in the absence collection |
@@ -157,9 +166,107 @@ independent schools they are unrelated (`r pp(kc("Independent"), 2)`).
 `r X$k45_flag$mismatch` of the `r X$k45_flag$n` independent schools with
 both (`r round(100 * X$k45_flag$share)`%) are in the bottom quarter of state
 schools on Attainment 8 and above the state median at A level. Published
-Attainment 8 cannot be used to compare an independent school with anyone,
-and from the published data we cannot tell which schools' figures are
-complete.
+Attainment 8 cannot be used to compare an independent school with anyone
+as it stands.
+
+## Completing Attainment 8 {#sec-complete}
+
+The performance tables do not publish IGCSE results, so no published data
+put IGCSE grades and Attainment 8 side by side. But they do publish
+Attainment 8 in its parts, and that is enough to fill in what is missing.
+
+Attainment 8 is English (counted twice), maths (counted twice), three
+EBacc slots (sciences, languages, humanities) and three open slots. The
+tables publish each school's points in each, and how many of the EBacc
+and open slots its pupils fill on average. An IGCSE fills nothing. In
+independent schools:
+
+- **English and maths:** `r round(100 * gp("Independent", "eng0"))`% score
+  nothing for English and `r round(100 * gp("Independent", "mat0"))`% nothing
+  for maths. Every state school scores something for both.
+- **The other six slots:** pupils fill `r pp(gp("Independent", "fill"))` on
+  average, against `r pp(gp("State-funded mainstream", "fill"))` in state
+  schools.
+
+A school's **average grade per filled slot** (the EBacc and open points
+divided by the slots filled) is measured the same way in both sectors.
+Unlike Attainment 8, it does not fall when slots are empty. It assumes a
+school's pupils do about as well in their IGCSEs as in their GCSEs. To
+complete Attainment 8, English and maths are predicted from that grade,
+using the relationship in state schools, where they can always be
+counted:
+
+$$\text{Attainment 8}_\text{completed} = 2\,\widehat{\text{English}} + 2\,\widehat{\text{maths}} + 6\,g$$
+
+**Does it work?** Two tests:
+
+- **In state schools**, a school's grade in its other subjects predicts
+  its English grade with R² `r pp(cf$eng_r2, 2)` and its maths grade with R²
+  `r pp(cf$mat_r2, 2)`, to within about a third of a grade. The completed
+  measure correlates with the real Attainment 8 at
+  `r pp(cf$state_r, 2)`.
+- **In independent schools**, the average grade in counting GCSEs restores
+  the link with the same schools' A level results. It correlates with them
+  at `r pp(k2("Independent", "r_g"), 2)`, against `r pp(k2("Independent", "r_att8"), 2)`
+  for published Attainment 8, and `r pp(k2("State-funded mainstream", "r_g"), 2)`
+  in state schools.
+
+```{r}
+#| label: fig-complete
+#| fig-cap: "Average grade per counting GCSE slot, 2024/25: state non-selective schools, state grammar schools and independent schools. Schools where pupils fill less than half a slot on average are left out."
+#| fig-height: 3.4
+gk <- X$ks4_g |> mutate(kind = factor(kind, names(KIND_COL)))
+ggplot(gk, aes(g, fill = kind, colour = kind)) +
+  geom_density(alpha = 0.25, linewidth = 0.8, adjust = 0.9) +
+  scale_fill_manual(values = KIND_COL, name = NULL) + scale_colour_manual(values = KIND_COL, name = NULL) +
+  scale_x_continuous(breaks = 1:9) +
+  labs(x = "Average grade per counting GCSE slot (9 to 1)", y = NULL) + theme_note() +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
+
+```{r}
+#| label: fig-complete-check
+#| fig-cap: "Independent schools: published Attainment 8 (left) and average grade in counting GCSEs (right) against the same schools' A level points per entry, 2024/25, schools with at least ten A level students."
+#| fig-height: 3.6
+ck <- X$k45 |> filter(sector == "Independent", !is.na(g)) |>
+  tidyr::pivot_longer(c(att8, g), names_to = "m", values_to = "v") |>
+  mutate(m = factor(ifelse(m == "att8", "Published Attainment 8", "Average grade in counting GCSEs"),
+                    c("Published Attainment 8", "Average grade in counting GCSEs")))
+ggplot(ck, aes(v, alev_aps)) +
+  geom_point(colour = DPURPLE, alpha = 0.5, size = 1.3) +
+  geom_smooth(method = "lm", se = FALSE, colour = BPURPLE, linewidth = 0.8) +
+  facet_wrap(~ m, scales = "free_x") +
+  labs(x = NULL, y = "A level points per entry") + theme_note()
+```
+
+```{r}
+#| label: tbl-complete
+#| tbl-cap: "Published and completed Attainment 8, and the average grade in counting GCSEs, by kind of school, 2024/25 (medians; middle half of the grade in brackets)."
+X$by_kind4 |> mutate(kd = factor(kind, names(KIND_COL))) |> arrange(kd) |>
+  transmute(` ` = kind, Schools = n0(schools), `Published Attainment 8` = pp(att8, 1),
+            `Average grade in counting GCSEs` = sprintf("%.1f (%.1f to %.1f)", g_med, g_q1, g_q3),
+            `Completed Attainment 8` = pp(att8c, 1)) |>
+  kt(align = "lrrrr")
+```
+
+On the completed measure, the typical independent school's pupils average
+about grade `r pp(b4("Independent", "g_med"))`, against
+`r pp(b4("State non-selective", "g_med"))` in non-selective state schools
+and `r pp(b4("State grammar", "g_med"))` in grammar schools: an Attainment 8
+of about `r round(b4("Independent", "att8c"))`, between the two. That is
+attainment, not value added. It says nothing about what the schools add,
+because the intake terms are still missing (@sec-reduced). Three
+cautions:
+
+- **It assumes IGCSE grades match GCSE grades.** If a school's pupils do
+  better or worse in their IGCSEs than in its GCSEs, the completed figure
+  is off by that much. The A level check above suggests it is close on
+  average, not for every school.
+- **Pupils with nothing counted are invisible.** A pupil who sat only
+  IGCSEs adds no grade to the average. `r round(100 * gp("Independent", "no_g"))`%
+  of independent schools fill too few slots to compute it at all.
+- **It is one year, provisional.** The method can be repeated on each
+  year's tables.
 
 ## Could a reduced model stand in? {#sec-reduced}
 
@@ -271,10 +378,21 @@ many state sixth forms do better than the typical independent school.
 
 What it does and does not allow for:
 
-- **Prior attainment, yes**: each student's GCSE results. How fully
-  independent pupils' IGCSEs count in that baseline is set out in DfE's
-  16-18 technical guidance, and is the first thing to check before leaning
-  on the comparison.
+- **Prior attainment, yes, but GCSEs only.** DfE's
+  [technical guidance](https://assets.publishing.service.gov.uk/media/6a8d7938f5b35599aec18d04/16-19_accountability_measures_technical_guidance_September_2026.pdf)
+  is explicit. For A levels, "students' prior attainment is based on their
+  average attainment in GCSEs only", and only qualifications "approved for
+  reporting in key stage 4 performance measures" count. So IGCSEs are left
+  out of the baseline. A student with a mix is measured on their GCSEs
+  alone. A student with only IGCSEs has no prior attainment and is left out
+  of the value added, since a student "must have results at the end of key
+  stage 4". If many independent pupils were left out this way, independent
+  schools would have fewer value-added entries per A level student than
+  state schools. They have slightly more
+  (`r pp(vc("Independent", "per_med"), 2)` against
+  `r pp(vc("State school sixth forms", "per_med"), 2)`), so most of their
+  students are in. For the many who mix, the baseline rests on their GCSE
+  subjects only.
 - **Disadvantage, no.** DfE's 16-18 value added has no adjustment for
   disadvantage or context. At GCSE the v2.1 model finds disadvantage worth
   a good deal even after prior attainment, so some of the independent
@@ -290,7 +408,8 @@ What it does and does not allow for:
 | Comparison | Possible? | Why |
 |---|---|---|
 | Value added at 16 on the v2.1 basis | **No** | No prior attainment, disadvantage or absence for independent schools, and an incomplete outcome |
-| Raw GCSE results (Attainment 8) | **No** | IGCSEs and other unapproved qualifications score nothing, and which schools are affected cannot be told from the data |
+| Published GCSE results (Attainment 8) | **No** | IGCSEs and other unapproved qualifications score nothing, so published figures are far too low for many schools |
+| Completed Attainment 8 (average grade in counting GCSEs) | **Yes, as attainment** | Measured the same way in both sectors, validated against state schools and against independent schools' own A level results; assumes IGCSE grades match GCSE grades; attainment, not value added |
 | A reduced contextual model at 16 | **Not credibly** | It can be computed, but in the state sector it gets value added badly wrong and credits advantaged intakes; independent intakes are the most advantaged of all |
 | A level value added (16-18) | **Yes, with caveats** | Published by DfE for `r al("Independent", "schools")` independent schools on the same basis as state sixth forms; allows for prior attainment, not disadvantage or selection into the sixth form |
 | A level results, raw | Descriptive only | Comparable qualifications, but no allowance for intake |
@@ -324,5 +443,8 @@ schools.
   January 2026, school-level data.
 - DfE, [Compare school and college performance](https://www.compare-school-performance.service.gov.uk/download-data):
   KS4 (provisional) and 16-18 (A level value added and results) 2024/25.
+- DfE, [16 to 19 accountability measures: technical guidance](https://assets.publishing.service.gov.uk/media/6a8d7938f5b35599aec18d04/16-19_accountability_measures_technical_guidance_September_2026.pdf),
+  September 2026: value added methodology, prior attainment, and
+  independent schools.
 
 Built by `R/10_independent.R`.

@@ -123,9 +123,15 @@ subtitle: "What v2.1 does now, and what comes next."
       badly wrong even in the state sector; and the comparison that does
       exist, DfE's A level value added. Verdict: no value added at 16 is
       possible from published data.
-- [ ] **Independent schools, next.** Check how IGCSEs enter the 16-18
-      prior-attainment baseline; A level value added over three years and
-      by subject; and the two sectors' sixth forms side by side by area.
+- [x] **Independent schools: IGCSEs.** DfE's 16-19 guidance checked: A level
+      value added counts approved GCSEs only, so IGCSEs are left out of the
+      baseline (most independent students still have some GCSEs). Attainment
+      8 completed from its published parts: the average grade in counting
+      GCSEs, validated on state schools (R² 0.88-0.90) and against
+      independent schools' own A level results (r 0.84, against 0.03).
+- [ ] **Independent schools, next.** A level value added over three years
+      and by subject; the completed Attainment 8 over several years; and the
+      two sectors' sixth forms side by side by area.
 - [ ] **Areas beyond Sussex.** The area template works for any authority
       and its districts once boundaries are added.
 - [x] **Monthly Ofsted refresh.** A GitHub Actions workflow picks up
