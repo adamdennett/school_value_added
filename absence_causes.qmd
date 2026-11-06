@@ -37,6 +37,32 @@ la_rank <- A$la_effects |> group_by(outcome) |>
   mutate(rank = rank(-la_pct), n = n()) |> ungroup()
 bh <- function(out, col) la_rank[[col]][la_rank$outcome == out & la_rank$la == "Brighton and Hove"]
 n_la <- max(la_rank$n)
+
+# Register codes, recording and the coastal test: R/17_absence_recording.R
+RC <- readRDS(here::here("data", "absence_recording.rds"))
+f2 <- function(x) sprintf("%.2f", x)
+f1 <- function(x) sprintf("%.1f", x)
+pv <- function(x) ifelse(x < 0.001, "<0.001", sprintf("%.3f", x))
+reason_row <- function(code) RC$reasons[RC$reasons$code == code, ]
+gap_row <- function(code) RC$reason_gap[RC$reason_gap$code == code, ]
+rank_of <- function(code) unname(RC$reason_ranks$rank_bh[RC$reason_ranks$code == code])
+n_rank <- RC$reason_ranks$n_la[1]
+ser <- function(yr, col) RC$reason_series[[col]][RC$reason_series$time_period == yr]
+last_abs <- RC$latest_absence
+ic_bh <- RC$illness_ctx[grepl("Brighton and Hove", RC$illness_ctx$la_name), ]
+bh_sch <- RC$bh_schools |> mutate(ill = 100 * sess_auth_illness / poss)
+fe_row <- RC$abs_models[RC$abs_models$spec == "+ school fixed effects", ]
+raw_row <- RC$abs_models[RC$abs_models$spec == "Raw", ]
+att_r2 <- function(m) RC$att_models$r2[RC$att_models$model == m]
+cmod <- function(o, s = "Everything on this page")
+  RC$coast_models[RC$coast_models$outcome == o & RC$coast_models$spec == s, ]
+g3 <- function(g, col) RC$group_compare[[col]][RC$group_compare$group == g]
+grk <- function(g) RC$group_rank$rank[RC$group_rank$group == g]
+cs <- function(m, v) RC$cohort_means$step[RC$cohort_means$measure == m & RC$cohort_means$coast == v]
+chm <- function(m, l = "Disadvantage, EAL, SEN and region")
+  RC$cohort_models[RC$cohort_models$measure == m & RC$cohort_models$label == l, ]
+cbh <- function(m) RC$cohort_bh$step[RC$cohort_bh$measure == m]
+gyr <- paste0(substr(RC$group_year, 1, 4), "/", substr(RC$group_year, 5, 6))
 ```
 
 ::: {.callout-note}
@@ -156,6 +182,37 @@ The reasons have not moved together:
 
 Persistent absence is falling, but the tail is still growing. That matches
 the research: the average can improve while the worst cases get worse.
+
+## What absence is made of {#sec-codes}
+
+Every missed session carries a register code, and DfE publishes them for
+each school. In the autumn and spring terms of `r yr(last_abs)`, illness
+and unauthorised absence together were most of it.
+
+```{r}
+#| label: tbl-codes
+#| tbl-cap: !expr paste0("Reasons for absence in England's state-funded secondary schools, ", yr(last_abs), " autumn and spring terms. Reasons under 1% of absence are left out.")
+RC$reasons |> filter(pct_of_absence >= 1) |> arrange(desc(pct_of_absence)) |>
+  transmute(Reason = reason, `Share of all absence` = sprintf("%.1f%%", pct_of_absence),
+            `% of possible sessions` = f2(pp_of_possible)) |>
+  kt(align = "lrr")
+```
+
+**Suspension is a small part of it.** Code E, a pupil suspended with no
+alternative provision, is `r f1(reason_row("sess_auth_excluded")$pct_of_absence)`%
+of absence, or `r f2(reason_row("sess_auth_excluded")$pp_of_possible)` points.
+This is counted from the register, not estimated.
+
+Schools that suspend more do have more absence of other kinds, but most of
+that is who their pupils are. Each extra suspension per 100 pupils goes with
+`r sprintf("%.3f", raw_row$beta)` points more non-suspension absence between
+schools, and `r sprintf("%.3f", fe_row$beta)` points when a school is compared
+with itself across years. It adds little to value added either. Absence adds
+`r f2(att_r2("Absence added on top of suspension"))` to the R² of Attainment 8
+on top of suspension; suspension adds
+`r sprintf("%.3f", att_r2("Suspension added on top of absence"))` on top of
+absence. So the model has no need of a suspension term. The full analysis is
+in [Exclusions and Attendance](https://adamdennett.github.io/school_attainment_tool/exclusions_and_absence.html).
 
 ## What goes with absence, school by school {#sec-effects}
 
@@ -391,7 +448,8 @@ A$school_spread |> mutate(o = factor(outcome, names(OUT))) |> arrange(o) |>
    differently.
 4. **Look at the kind of absence.** Unauthorised, persistent and severe
    absence are where similar schools differ most. Illness differs mostly by
-   place, and partly by how readily it is authorised.
+   place, and partly by how readily it is authorised. Comparing schools on
+   unauthorised absence alone falls hardest on those with poorer pupils.
 5. **The research points to where to look.** It is consistent on:
    - early identification;
    - relationships and belonging;
@@ -459,11 +517,227 @@ unauthorised absence is `r sg(bh("unauth", "la_pct"))` against intake
 (`r ord(bh("unauth", "rank"))`). The city's high absence, which the
 [Geographical effects](bh_effect.qmd) page finds costs its pupils so little
 attainment, is illness absence, and its intake does not explain it. That
-fits both readings above: an unusual amount of illness, or a habit of
+leaves two readings: an unusual amount of illness, or a habit of
 authorising absence as illness that elsewhere would go unauthorised. Which
 it is matters for value added. If it is recording, the city's absence is
 not the kind that costs attainment, and the model's absence term
-over-forgives it.
+over-forgives it. The next two sections take that further.
+
+## Illness or recording? {#sec-recording}
+
+Authorities differ in how the same absence gets recorded, and the pattern
+follows disadvantage.
+
+```{r}
+#| label: tbl-gradient
+#| tbl-cap: !expr paste0("Absence by reason across local authorities, grouped by disadvantage, % of possible sessions, ", yr(last_abs), " autumn and spring terms. Authorities with more than a million possible sessions.")
+RC$quartiles |>
+  transmute(`Local authorities` = q, Illness = f2(illness),
+            `Unauthorised, other` = f2(unauth), `All absence` = f2(total)) |>
+  kt(align = "lrrr")
+```
+
+- **More disadvantaged authorities record less illness and more
+  unauthorised absence.** Total absence barely moves. Across authorities,
+  illness and unauthorised absence correlate `r f2(RC$between_r)`.
+- **There is some real trade-off within authorities too.** Following each
+  authority over time, after allowing for national trends, one point more
+  illness goes with `r f2(abs(RC$within_fit$est))` points less unauthorised
+  absence (p = `r pv(RC$within_fit$p)`). If absence were simply being
+  re-labelled, the figure would be close to one. It suggests that recording
+  explains part of the difference between places, not all of it.
+
+The same holds between pupils. In `r gyr`, full year, illness was
+`r round(g3("Disadvantaged", "illness_share_England"))`% of disadvantaged
+pupils' absence in England and
+`r round(g3("Non-disadvantaged", "illness_share_England"))`% of
+non-disadvantaged pupils'. Disadvantaged pupils still have more illness-coded
+absence, but their unauthorised absence is about four times as high.
+
+Judging a school on unauthorised absence therefore falls hardest on schools
+with poorer pupils, whether or not those pupils miss more school.
+
+## Brighton and Hove, code by code {#sec-bh-codes}
+
+Brighton and Hove's secondary absence was `r f2(gap_row("sess_auth_illness")$abs_bh)`%
+in `r yr(last_abs)`, autumn and spring, against
+`r f2(gap_row("sess_auth_illness")$abs_eng)`% for England. Illness is
+`r f2(gap_row("sess_auth_illness")$gap_pp)` points of that
+`r f2(gap_row("sess_auth_illness")$total_gap)`-point gap, or
+`r round(gap_row("sess_auth_illness")$pct_of_gap)`%.
+
+```{r}
+#| label: fig-bh-illness
+#| fig-cap: "Illness absence, Brighton and Hove and England, % of possible sessions, autumn and spring terms. 2019/20 is not in the published series."
+#| fig-height: 3.4
+bi <- RC$reason_series |>
+  transmute(x = as.integer(substr(time_period, 1, 4)),
+            `Brighton and Hove` = illness_bh, England = illness_eng) |>
+  tidyr::pivot_longer(-x, names_to = "area", values_to = "rate")
+ggplot(bi, aes(x, rate, colour = area)) +
+  geom_line(linewidth = 0.9) + geom_point(size = 1.8) +
+  geom_text(data = bi |> filter(x == max(x)), aes(label = area), hjust = 0, nudge_x = 0.15, size = 3.3) +
+  scale_colour_manual(values = c(`Brighton and Hove` = BPURPLE, England = GREY), guide = "none") +
+  scale_x_continuous(breaks = 2016:2025, labels = function(x) paste0(x, "/", substr(x + 1, 3, 4)),
+                     expand = expansion(mult = c(0.02, 0.2))) +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(x = NULL, y = "% of possible sessions") + theme_note()
+```
+
+```{r}
+#| label: tbl-bh-codes
+#| tbl-cap: !expr paste0("Brighton and Hove's rank among ", n_rank, " local authorities on each kind of absence, ", yr(last_abs), " autumn and spring (1 is the highest).")
+RC$reason_ranks |>
+  filter(reason %in% c("Authorised, other", "Illness", "All absence", "Unauthorised, other",
+                       "Medical appointments", "Unauthorised holiday", "Suspended (code E)")) |>
+  arrange(rank_bh) |>
+  transmute(Reason = reason, `% of possible sessions` = f2(rate_bh), Rank = rank_bh) |>
+  kt(align = "lrr")
+```
+
+- **It is the whole city.** All ten schools are above England's
+  `r f2(gap_row("sess_auth_illness")$pp_eng)` on illness; the lowest is at
+  `r f2(min(bh_sch$ill))`.
+- **The gap grew after the pandemic.** It was
+  `r f2(ser("201819", "illness_bh") - ser("201819", "illness_eng"))` points in
+  2018/19 and is `r f2(ser(last_abs, "illness_bh") - ser(last_abs, "illness_eng"))`
+  now.
+- **It is high for pupils of every kind.** Disadvantaged pupils' illness
+  absence was `r f2(g3("Disadvantaged", "illness_Brighton and Hove"))`% in
+  `r gyr`, full year, against `r f2(g3("Disadvantaged", "illness_England"))`% in
+  England. For non-disadvantaged pupils it was
+  `r f2(g3("Non-disadvantaged", "illness_Brighton and Hove"))`% against
+  `r f2(g3("Non-disadvantaged", "illness_England"))`%, and for all pupils
+  `r f2(g3("All pupils", "illness_Brighton and Hove"))`% against
+  `r f2(g3("All pupils", "illness_England"))`%. Those rank
+  `r ord(grk("Disadvantaged"))`, `r ord(grk("Non-disadvantaged"))` and
+  `r ord(grk("All pupils"))` of `r RC$group_rank$n[1]`.
+- **Re-labelling cannot be the whole story.** Unauthorised absence is mid-table
+  (`r ord(rank_of("sess_unauth_other"))` of `r n_rank`) and only slightly
+  below what the city's intake predicts, while illness is far above it. If
+  schools here were turning truancy into illness, unauthorised absence would
+  be low. For disadvantaged pupils it is high:
+  `r f2(g3("Disadvantaged", "unauth_Brighton and Hove"))`% against
+  `r f2(g3("Disadvantaged", "unauth_England"))`%.
+
+Code I means the school accepted the explanation given. It covers a chronic
+condition, a heavy cold, anxiety that makes the school gate impossible, and a
+parent saying "not well today". The published data cannot separate them. The
+research's emphasis on anxiety and the shape of the city's pattern both point
+towards emotionally based school avoidance, but that is a hypothesis. Only the
+council's and schools' own records could test it.
+
+## Is it a coastal problem? {#sec-coastal}
+
+The authorities with the largest illness excess look coastal: the Isle of
+Wight, South Tyneside, Brighton and Hove, Torbay. [Census data from The
+Engagement Platform](https://www.tep.uk/news-updates/what-engagement-data-reveals-about-coastal-schools)
+also reports weaker belonging and enjoyment among coastal secondary pupils,
+and a steeper fall in engagement between Year 7 and Year 8. That comes from a
+commercial provider, gives no sample sizes and has no attendance data, but
+belonging is exactly what this page cannot measure.
+
+A school counts as coastal here if it is within 10 km of the sea, and an
+authority if at least half its sessions are in such schools. That makes
+`r sum(RC$coast_la$coast, na.rm = TRUE)` of `r nrow(RC$coast_la)` authorities
+coastal.
+
+```{r}
+#| label: tbl-coastal
+#| tbl-cap: "How much more of each kind of absence coastal schools have than others, with 95% intervals: the multilevel models above with a coastal term added, 2025/26 autumn and spring."
+SPECS <- c("Free school meals only", "Without ethnicity and language", "Everything on this page")
+RC$coast_models |>
+  mutate(cell = sprintf("%+.1f%% (%+.1f to %+.1f)", pct, lo, hi),
+         spec = factor(spec, SPECS), Outcome = unname(OUT[outcome])) |>
+  select(Outcome, spec, cell) |>
+  tidyr::pivot_wider(names_from = spec, values_from = cell, names_sort = TRUE) |>
+  kt(align = "lrrr")
+```
+
+```{r}
+#| label: fig-coastal
+#| fig-cap: "Illness absence above or below what disadvantage predicts, against the share of each authority's secondary sessions in schools within 10 km of the sea. Authorities with more than a million possible sessions, 2025/26 autumn and spring."
+#| fig-height: 4.6
+named <- RC$coast_la |>
+  filter(la_name %in% c("Brighton and Hove", "Isle of Wight", "South Tyneside",
+                        "Torbay", "Camden", "Blackpool"))
+ggplot(RC$coast_la, aes(share, resid)) +
+  geom_hline(yintercept = 0, colour = LIGHT) +
+  geom_vline(xintercept = 0.5, colour = LIGHT, linetype = "31") +
+  geom_point(colour = GREY, alpha = 0.55, size = 2.2) +
+  geom_point(data = filter(RC$coast_la, bh), colour = BPURPLE, size = 3.4) +
+  geom_text(data = named, aes(label = la_name),
+            hjust = ifelse(named$share > 0.9, 1.1, -0.1), vjust = -0.5, size = 3.2, colour = INK) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(title = "A few coastal authorities stand out; most do not",
+       x = "Share of sessions in schools within 10 km of the sea",
+       y = "Illness against expectation (points)") +
+  theme_note()
+```
+
+- **Illness is the one kind of absence clearly left.** With everything on
+  this page in the model, coastal schools have `r sg(cmod("illness")$pct, 1)`
+  illness absence (`r sg(cmod("illness")$lo, 1)` to
+  `r sg(cmod("illness")$hi, 1)`), and persistent absence is
+  `r sg(cmod("persistent")$pct, 1)`. Overall and unauthorised absence are
+  indistinguishable from other schools. That is real, but small: about a sixth
+  of a point of illness.
+- **The wider gap is mostly who and where.** Comparing whole authorities on
+  disadvantage alone, coastal ones have
+  `r f2(RC$group_coast$est[RC$group_coast$outcome == "overall" & RC$group_coast$label == "All pupils"])`
+  points more absence of all kinds. The table is stricter. Its models compare
+  schools within regions and authorities, so a difference between whole
+  authorities counts for less. That may go too far, and so may allowing for
+  language, because few pupils with English as an additional language is
+  partly what a coastal intake is. Taking language out, in the middle column,
+  raises every figure a little.
+- **It differs by pupil group.** In `r gyr`, allowing for each authority's
+  disadvantage, the coastal gap in all absence is
+  `r f2(RC$group_coast$est[RC$group_coast$outcome == "overall" & RC$group_coast$label == "Disadvantaged"])`
+  points for disadvantaged pupils,
+  `r f2(RC$group_coast$est[RC$group_coast$outcome == "overall" & RC$group_coast$label == "Non-disadvantaged"])`
+  for non-disadvantaged pupils and
+  `r f2(RC$group_coast$est[RC$group_coast$outcome == "overall" & RC$group_coast$label == "All pupils"])`
+  for all pupils. For disadvantaged pupils most of it is unauthorised
+  (`r f2(RC$group_coast$est[RC$group_coast$outcome == "unauth" & RC$group_coast$label == "Disadvantaged"])`
+  points).
+- **It does not explain Brighton and Hove.** Adding a coastal term only takes
+  the city's excess from `r f2(ic_bh$resid)` points to
+  `r f2(RC$coast_la$resid_coast[RC$coast_la$bh])`, still
+  `r ord(rank(-RC$coast_la$resid_coast)[RC$coast_la$bh])` highest. Coastal
+  authorities also vary hugely: illness is
+  `r f2(RC$coast_la$illness[RC$coast_la$la_name == "Isle of Wight"])`% on the
+  Isle of Wight and `r f2(RC$coast_la$illness[RC$coast_la$la_name == "Blackpool"])`%
+  in Blackpool. Camden, with no coast, is among the highest.
+
+**The Year 7 to 8 pattern shows up in unauthorised absence, not illness.**
+DfE publishes absence by year group for each authority, so the same pupils can
+be followed for a year, in the two cohorts up to 2024/25.
+
+```{r}
+#| label: tbl-y78
+#| tbl-cap: "Rise in absence from Year 7 to Year 8 among the same pupils, percentage points, mean across authorities, and the coastal difference allowing for disadvantage, EAL, SEN and region. Standard errors clustered on authority."
+tibble(m = c("overall", "illness", "unauth"),
+       Absence = c("All absence", "Illness", "Unauthorised, other")) |>
+  rowwise() |>
+  mutate(Coastal = f2(cs(m, TRUE)), Other = f2(cs(m, FALSE)),
+         `Brighton and Hove, two cohorts` = paste(f2(cbh(m)), collapse = ", "),
+         `Coastal difference` = sprintf("%+.2f", chm(m)$est), p = pv(chm(m)$p)) |>
+  ungroup() |> select(-m) |> kt(align = "lrrrrr")
+```
+
+That echoes TEP's finding in a different measure. Absence rises faster after
+Year 7 in coastal authorities, but the rise is in unauthorised absence
+(`r sprintf("%+.2f", chm("unauth")$est)`, p = `r pv(chm("unauth")$p)`), and
+illness shows no difference (`r sprintf("%+.2f", chm("illness")$est)`). So
+whatever is weakening engagement on the coast does not look like the source of
+the coastal illness excess. Brighton and Hove differs here too: its rise in
+illness is well above both groups, and its rise in unauthorised absence is near
+the coastal figure. It also starts high, with Year 6 absence already
+`r ord(RC$y6_bh$rank6)` highest. These figures have no split by disadvantage.
+
+Being on the coast accounts for only a small part of the city's illness excess.
+The rest needs another explanation.
 
 ## The full models {#sec-full}
 
@@ -584,6 +858,13 @@ A$cat_desc |> transmute(Characteristic = unname(CAT_LAB[var]),
 - **School climate is unmeasured.** Belonging, bullying, relationships and
   fit come out of the research as important, and nothing here measures
   them.
+- **Reasons are published by place, not by pupil group within a school.** The
+  disadvantaged and non-disadvantaged figures are for whole authorities, for
+  full years up to 2024/25, so they do not line up exactly with the 2025/26
+  school figures.
+- **Coastal is a judgement.** The 10 km line treats estuaries narrower than
+  10 km as land, which leaves Southampton inland. Large counties such as Devon
+  have many coastal schools but fall below the half-way mark.
 
 ## Next steps {#sec-next}
 
@@ -591,9 +872,10 @@ A$cat_desc |> transmute(Characteristic = unname(CAT_LAB[var]),
    changes](absence_change.qmd) follows every school from 2016/17 to
    2025/26, tests whether absence moves when intake does, and looks at
    academy conversion and changes of trust.
-2. **Illness or recording?** Look at how illness and unauthorised absence
-   trade off within authorities, to see whether high-illness places are
-   recording differently.
+2. **Illness or recording?** Started: [Illness or recording?](#sec-recording)
+   finds a partial trade-off. Separating the two for good needs records that
+   say what lies behind code I, such as anxiety against infection, and whether
+   a few pupils or many are behind it.
 3. **Distance to school**, from the roadmap. The rural appointments result
    gives a first reason to expect it to matter.
 4. **The severe tail.** Severe absence is rising while the average falls.
@@ -620,6 +902,15 @@ The research summary draws on a
 - Troncoso et al. (2026), [disadvantage, attendance and exclusions in Scotland](https://doi.org/10.23889/ijpds.v11i5.3529), *International Journal of Population Data Science*.
 - Strelitz et al. (2026), [interventions to improve school attendance](https://doi.org/10.1136/jech-2025-225671), *Journal of Epidemiology and Community Health*.
 
+The coastal section also cites Fitzpatrick (2026), [*What engagement data
+reveals about coastal schools*](https://www.tep.uk/news-updates/what-engagement-data-reveals-about-coastal-schools),
+The Engagement Platform, which is not peer reviewed.
+
 Data: DfE school-level absence (2016/17 to 2024/25, full years; 2025/26,
-autumn and spring), the January 2026 school census and SEN school-level
-data, GIAS, and the Value Added v2.1 inputs. Code: `R/08_absence_causes.R`.
+autumn and spring), DfE absence by pupil characteristic (authorities, full
+years to 2024/25), DfE suspensions and permanent exclusions, the January 2026
+school census and SEN school-level data, GIAS, ONS county and unitary authority
+boundaries, and the Value Added v2.1 inputs. Code: `R/08_absence_causes.R` and
+`R/17_absence_recording.R`, with `R/15_exclusions.R` and
+`R/15b_coastal_absence.R` in
+[school_attainment_tool](https://github.com/adamdennett/school_attainment_tool).

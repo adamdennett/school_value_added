@@ -298,6 +298,9 @@ local <- list(schools = dat |> select(URN, SCHNAME, la, region, all_of(names(OUT
 desc <- dat |> summarise(n = n(), across(all_of(names(OUTCOMES)), list(mean = mean, sd = sd)))
 cors <- cor(dat[, names(OUTCOMES)])
 
+# The schools and characteristics behind the models, for R/17_absence_recording.R.
+saveRDS(dat, here::here("data", "absence_school_frame.rds"))
+
 saveRDS(list(trend = trend, effects = effects, la_effects = la_effects, partition = partition, shapley = shap,
              outcomes = OUTCOMES, cont = CONT, fact = FACT, groups = GROUPS_X, desc = desc, cors = cors,
              n_schools = nrow(dat), n_absence = nrow(ab), sds = sapply(dat[, names(CONT)], sd),

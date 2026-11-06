@@ -452,8 +452,9 @@ attendance. What a new trust does might be.
 
 1. **Each school's own path**, relative to England, on the area pages and
    in [Find a twin](twins.qmd)'s fact cards.
-2. **Illness or recording?** Whether high-illness places, such as
-   Brighton and Hove, record absence differently.
+2. **Illness or recording?** Started on [What goes with school
+   absence](absence_causes.qmd#sec-recording), which finds a partial
+   trade-off between illness and unauthorised absence.
 3. **The severe tail**, which has tripled and is not falling, on its own.
 4. **Trusts.** Whether particular trusts' schools move together after
    joining, which would point to what the trust does.
