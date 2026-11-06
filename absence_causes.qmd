@@ -176,7 +176,7 @@ cells are differences that could be zero.
 ```{r}
 #| label: fig-effects
 #| fig-cap: "Difference in each kind of absence (%) with one standard deviation more of each characteristic (yes vs no for the categories), all else equal: multilevel models with region and local authority effects, 2025/26 autumn and spring terms. Purple, more absence; green, less. Blank, the 95% interval includes zero."
-#| fig-height: 8.5
+#| fig-height: 9.6
 #| fig-width: 9
 ef <- A$effects |>
   mutate(label = unname(TERM_LAB[term]), grp = unname(TERM_GROUP[term]),
@@ -193,12 +193,16 @@ ggplot(ef, aes(out, label)) +
                        limits = c(-30, 30), na.value = "white", name = "% difference",
                        labels = function(x) ifelse(abs(x) == 30, paste0(ifelse(x > 0, "≥ +", "≤ "), x), sprintf("%+d", x))) +
   scale_colour_manual(values = c(sig = INK, dark = "white", ns = "#a8a3b8"), guide = "none") +
-  facet_grid(grp ~ ., scales = "free_y", space = "free_y", switch = "y") +
-  scale_x_discrete(position = "top") +
+  facet_grid(grp ~ ., scales = "free_y", space = "free_y", switch = "y",
+             labeller = labeller(grp = label_wrap_gen(17))) +
+  scale_x_discrete(position = "top", labels = function(x) gsub("\n", " ", x)) +
+  guides(fill = guide_colourbar(title.position = "top", title.hjust = 0.5)) +
   labs(x = NULL, y = NULL) + theme_note(12) +
   theme(panel.grid = element_blank(), strip.placement = "outside",
         strip.text.y.left = element_text(angle = 0, hjust = 1, size = 9),
-        legend.key.width = unit(1.6, "cm"))
+        axis.text.x.top = element_text(size = 10, angle = 45, hjust = 0, vjust = 0),
+        plot.margin = margin(5, 50, 5, 5),
+        legend.key.width = unit(1.1, "cm"))
 ```
 
 What stands out:
