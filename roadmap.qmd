@@ -152,6 +152,21 @@ subtitle: "What v2.1 does now, and what comes next."
       (intervening opportunities), than in rural areas, where long journeys
       are the norm and often by school transport. Needs a measure of how
       far each school's pupils travel built from published sources.
+- [ ] **Distance to school by deprivation, city by city, on the real
+      networks.** Do children in deprived neighbourhoods live further from a
+      secondary school than their neighbours, and is Brighton and Hove
+      unusual? A first straight-line check (Census 2021 neighbourhood
+      centroids, household deprivation and 10-14 year olds; the nearest
+      state secondary) says it may be. Children in the most deprived third
+      of its neighbourhoods live about a third further from their nearest
+      school than the rest (1.57 km against 1.18), 5th widest of 306
+      districts. In Portsmouth, Southampton, Bristol, Plymouth, Newham and
+      Tower Hamlets the deprived live as close or closer; Blackpool and
+      Hastings look like Brighton and Hove. Straight lines ignore hills,
+      bus routes and catchments, so the next step is walk and public
+      transport journey times with r5r for each comparator city, as the
+      [Brighton and Hove model](https://adamdennett.github.io/bh-school-system/)
+      already does for its own schools.
 - [x] **[Independent schools](independent.qmd).** What is published for
       them, term by term against v2.1; why their Attainment 8 cannot be
       compared (IGCSEs score nothing, and KS4 and A level results are
