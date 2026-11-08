@@ -159,12 +159,24 @@ subtitle: "What v2.1 does now, and what comes next."
       remains in towns and cities, within authorities and between schools.
       Every source and calculation is in
       [the methodology](method.qmd#sec-distance-method).
-- [ ] **Distance to school, on the real networks.** Walk and public
-      transport journey times with r5r for Brighton and Hove's comparator
-      cities, as the
-      [Brighton and Hove model](https://adamdennett.github.io/bh-school-system/)
-      already does for its own schools. Straight lines ignore hills, bus
-      routes and catchments.
+- [x] **[Journey times on the real networks](distance.qmd#sec-journeys).**
+      Walking and bus times with r5r from every Output Area in Brighton and
+      Hove and eight comparator places, with changes of bus, the penalty for
+      missing a journey, school buses and the climb each way. Brighton and Hove
+      stands out on real journeys as it does in straight lines. None of these
+      shows a clear general link with absence yet; Longhill stands out on
+      missing the bus.
+- [ ] **Journey times for the mostly urban authorities.** Routing enough places
+      to rerun the absence models on time rather than distance, and so test
+      whether time says more than straight lines.
+- [ ] **Points of interest around bus changes and along walking routes.**
+      From OpenStreetMap, within a couple of hundred metres of change points
+      and along routes, to test directly whether a longer urban journey matters
+      because it passes more places to stop. More general than shops, which may
+      not sell to children in school hours. The routes and change points are
+      ready for it.
+- [ ] **School bells.** Published start times for each school, in place of the
+      time inferred from the last school bus, for the penalty for missing one.
 - [ ] **Distance to school: how far each school's pupils travel.** A better
       measure than each school's nearest children, such as a gravity model
       of who goes where, built from published sources.

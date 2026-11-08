@@ -1082,6 +1082,102 @@ where $F$ is the free school meals share, centred, and $Z$ is SEN support, EHC p
 - **Straight lines are not journeys,** and the nearest school is not always attended.
 - **Network changes are not experiments.** Schools open where populations grow, and few authorities' distances changed much.
 
+## Journey times: data and calculations {#sec-journey-method}
+
+The [journey time analysis](distance.qmd#sec-journeys) routes neighbourhoods to schools on real networks. The code is `R/20_journey_times.R` (the routing, which needs Java 21 and about 40 GB of memory), `R/22_journey_structure.R` (buses, changes, missing a journey and climb), `R/23_school_buses.R` and `R/24_school_bus_penalty.R` (school buses), `R/25_climb.R` (climb across England) and `R/21_journey_analysis.R` (the analysis). They write `data/journey_times.rds`, `data/school_buses.rds` and `data/climb.rds`. Children, deprivation, IDACI and the definition of a school are as [above](#sec-distance-measures).
+
+```{r}
+#| include: false
+Jm <- readRDS(here::here("data", "journey_times.rds")); SBm <- readRDS(here::here("data", "school_buses.rds")); CBm <- readRDS(here::here("data", "climb.rds"))
+```
+
+```{r}
+#| label: tbl-journey-sources
+#| tbl-cap: "Additional sources for the journey time analysis. All are published and free to download."
+tibble::tribble(
+  ~Source, ~Publisher, ~`Vintage and unit`, ~`Used for`,
+  "<a href='https://download.geofabrik.de/europe/united-kingdom/england.html'>OpenStreetMap county extracts</a>", "OpenStreetMap contributors, via Geofabrik", "Downloaded 8 November 2026", "The street and path network for walking, and for reaching bus stops",
+  "<a href='https://data.bus-data.dft.gov.uk/downloads/'>Bus Open Data Service GTFS files</a>", "Department for Transport", "Regional files, downloaded 8 November 2026", "Bus routes and timetables; school buses, from all nine English regions",
+  "<a href='https://www.ordnancesurvey.co.uk/products/os-terrain-50'>OS Terrain 50</a>", "Ordnance Survey", "Release of July 2026; a 50 m bare-earth grid", "Slopes, for climb along routes and across England",
+  "<a href='https://ipeagit.github.io/r5r/'>r5r 2.3.0</a> and R5", "Pereira and others; Conveyal", "Software", "The routing"
+) |> kt(align = "llll", escape = FALSE)
+```
+
+**Networks.** Each network holds one OpenStreetMap file, merged with osmosis where an area crosses county extracts, and the bus timetables that serve it, cut to trips that pass within 30 km of the place.
+
+```{r}
+#| label: tbl-journey-networks
+#| tbl-cap: "The networks. Trips are those running on the routing date, from the timetable files for that network."
+Jm$meta |> transmute(Places = places, `OpenStreetMap extracts` = pbfs, `Bus files` = gsub("_", " ", gtfs), `Output Areas` = format(origins, big.mark = ","), Schools = schools, `Bus trips` = format(trips, big.mark = ",")) |> kt(align = "lllrrr")
+```
+
+**Choosing bus files.** The regional files follow operators, not places. Portsmouth and Southampton's buses are largely in the South West file, not the South East one. So stops within 3 km of each place's centre were counted in all four files, and each network was given every file with substantial coverage.
+
+```{r}
+#| label: tbl-journey-audit
+#| tbl-cap: "Bus stops within 3 km of each place's centre, in each regional timetable file."
+Jm$audit |> tidyr::pivot_wider(names_from = feed, values_from = stops) |> dplyr::rename(Place = place, London = london, `North West` = north_west, `South East` = south_east, `South West` = south_west) |> kt(align = "lrrrr")
+```
+
+**Routing date.** `r format(Jm$meta$date[1], "%A %e %B %Y")`, in term time, chosen in advance for every network. Each network's number of trips on that date was checked against nearby Tuesdays to Thursdays, and is close to the highest of them. Early December is low in the current files (127 trips in the Hastings network on 1 December, against 3,398), which is why trips are checked.
+
+**Origins and destinations.** Origins are the `r format(Jm$missing$total, big.mark = ",")` Output Areas in the nine places, at their population-weighted centroids. Destinations are the state secondary schools defined [above](#sec-distance-places), within 15 km of the place's bounding box, so that schools over the boundary count. They include faith and selective schools, as the headline straight-line measure does. `r Jm$missing$total - Jm$missing$routed` Output Area has no route.
+
+**Settings.**
+
+```{r}
+#| label: tbl-journey-settings
+#| tbl-cap: "The routing scenarios. All use a 120 minute limit on the journey. With buses, walking to and from stops is limited to 60 minutes."
+tibble::tribble(
+  ~Scenario, ~Modes, ~Departure, ~`Walking speed`, ~Purpose,
+  "Walking and bus (headline)", "Walk, bus", "07:45 to 08:15, median", "3.6 km/h", "The usual journey, less dependent on just missing one bus",
+  "Walking alone", "Walk", "07:45", "3.6 km/h", "The journey with no bus, and the street network itself",
+  "Walking and bus, faster walking", "Walk, bus", "07:45 to 08:15, median", "4.8 km/h", "A check on walking speed",
+  "City model's settings", "Walk, bus", "08:00, one departure", "3.6 km/h", "To compare with the city's school system model"
+) |> kt(align = "lllll")
+```
+
+**From times to measures.** For each Output Area $o$ and scenario, $t_o$ is the time to its quickest school in the set, which need not be the nearest in a straight line. A place's figure for its most deprived third $T$ is
+
+$$M_T = \frac{\sum_{o \in T} w_o t_o}{\sum_{o \in T} w_o}$$
+
+where $w_o$ is the Output Area's 10 to 14 year olds and $T$ is the Output Areas in the third of the place's LSOAs most deprived on Census household deprivation, [as for distance](#sec-distance-measures). The same is done for the rest, and the gap is the difference. The shares over 30 and 45 minutes are child-weighted. IDACI tenths use each Output Area's LSOA, [as above](#sec-distance-measures).
+
+**Journey structure (`R/22_journey_structure.R`).** Each Output Area's journey to its quickest school is rebuilt with `detailed_itineraries`, leaving at 07:45, 08:00 and 08:15, and averaged over the three. Buses per journey counts boardings; a change is a stop between two boardings, and changes are mapped by children to the nearest stop name in the timetable files. The quickest school comes from the walking and bus scenario, so journeys to other schools, and school buses that leave before 07:45, are not counted here.
+
+**Late if missed.** For each Output Area, `expanded_travel_time_matrix` gives the journey for every departure minute from 07:00 to 08:50. With a bell $B$ of 08:45 (08:30 as a check), $L$ is the latest departure that arrives by $B$, and
+
+$$\text{late} = \min_{d > L} (d + \text{time}_d) - B$$
+
+the arrival by the best journey leaving after $L$, whatever that is, including walking. It is small for walkers and frequent routes, and large where a child depends on one infrequent bus.
+
+**School buses (`R/23_school_buses.R`).** From the unfiltered Bus Open Data Service files for all nine English regions, on the routing date. A route counts if it has at most `r SBm$rules$max_trips` trips that day, all starting between 06:30 and 09:30 or between 14:00 and 17:30, with a morning trip that ends, or an afternoon trip that starts, within `r SBm$rules$near_m` metres of a state secondary school and no nearer a [sixth form or further education college](https://get-information-schools.service.gov.uk/Downloads). The school is the nearest one. A route that ends by two schools is credited to one, and timetables do not say who a bus is for. In Brighton and Hove the method finds the routes visible by eye, with `r sprintf("%.0f%%", 100 * mean(SBm$routes$named))` of routes nationally naming a school or similar in their headsign or last stop. Nothing in the files marks term-time only services, so the routing date needs to be in term.
+
+```{r}
+#| label: tbl-sb-regions
+#| tbl-cap: "School buses found, by Bus Open Data Service regional file, on the routing date. Candidates meet the rule on trips and hours. College routes end nearer a college than a school and are left out."
+as.data.frame(SBm$regions) |> transmute(Region = gsub("_", " ", region), `Trips that day` = format(trips, big.mark = ","), Routes = format(routes, big.mark = ","), Candidates = candidates, `College routes` = college_routes, `School routes` = school_routes, Schools = schools) |> kt(align = "lrrrrrr")
+```
+
+**Missing a school bus (`R/24_school_bus_penalty.R`).** Output Areas within 400 m of a stop on a route's morning trips (before its last stop) are linked to the route's school and routed from 07:00 at each minute with all buses and walking available, so the penalty is by the best real alternative. Bells are not in the data, so $B$ is 15 minutes after the school's last school bus arrives, with a check at 25 minutes. Each school's published start time could replace this: [Longhill's 2023 consultation](https://longhill.org.uk/wp-content/uploads/2023/03/Timings-of-school-day.pdf) gives 08:20, against 08:19 inferred. Newham and Tower Hamlets have no school routes stopping in them.
+
+**Climb.** r5r's `elevation = "TOBLER"` loaded OS Terrain 50 and reported applying costs, but averaged them across directions and left walking times unchanged in our tests (r5r 2.3.0, R5 7.4), so it is not used. Instead, each walking route is sampled every 50 m and heights are read from Terrain 50. Metres up is the sum of rises along the route, in each direction. Walking time uses Tobler's function, scaled to the routing speed on the flat:
+
+$$v(s) = 3.6 \, \frac{e^{-3.5 |s + 0.05|}}{e^{-3.5 \times 0.05}} \text{ km/h}$$
+
+for slope $s$ in the direction of travel, and is applied to each stretch. Routes are not re-chosen to avoid hills. Terrain 50's 50 m grid smooths short steep streets.
+
+**Climb across England (`R/25_climb.R`).** Heights every 50 m along the straight line from each Output Area in England to its nearest school, from all `r format(CBm$n_tiles, big.mark = ",")` Terrain 50 tiles. In the routed places this correlates at `r sprintf("%.2f", CBm$check$r_out)` (to school) and `r sprintf("%.2f", CBm$check$r_back)` (home) with climb along the route, though it is lower (`r sprintf("%.0f", CBm$check$mean_line_back)` metres against `r sprintf("%.0f", CBm$check$mean_route_back)`, home). The models are as [above](#sec-distance-models): schools within authority with intake and ethnic make-up; IDACI tenths within authority with Census character; and authorities for all three groups given each group's ethnic mix, using the most deprived third's climb.
+
+**Absence.** Authority figures are from DfE's absence by characteristic file. Within-authority models use DfE's absence by pupil residence and IDACI tenth, with effects for each authority and tenth by year, weighted by pupils with errors clustered by authority, as [above](#sec-distance-models) but without Census character, given how few authorities there are.
+
+**Checks and problems found.**
+
+- *Stale networks.* R5 reuses `network.dat` even if its inputs have changed, so the script deletes one older than its inputs.
+- *Swapped results.* With walking only and more origins than destinations, r5r searches backwards from destinations and returns the identifiers swapped. That would make a walk go from school to home, which matters with hills. The script routes in batches no larger than the number of schools, and stops if identifiers come back the wrong way round.
+- *One file per network.* R5 reads one OpenStreetMap file per folder, so areas crossing county extracts are merged. Brighton and Hove is in the West Sussex extract.
+- *Agreement with the city's model.* See [the page](distance.qmd#sec-journey-limits).
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

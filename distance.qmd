@@ -1,6 +1,6 @@
 ---
 title: "Distance to school"
-subtitle: "A first check, in straight lines: do children in deprived neighbourhoods live further from a secondary school than their neighbours, where is that unusual, and does absence go with it?"
+subtitle: "In straight lines, and then on real streets and bus timetables: do children in deprived neighbourhoods live further from a secondary school than their neighbours, where is that unusual, and does absence go with it?"
 ---
 
 ```{r setup}
@@ -75,6 +75,22 @@ gp <- function(g, out, s = "Mostly urban, without London", col = "b") { x <- R$g
 gk <- function(g, o, s = "Mostly urban, without London", col = "b") { x <- R$group_mix_kinds; x[[col]][x$group == g & x$outcome == o & x$sample == s] }
 swp <- function(o, col) R$sch_wb_pool[[col]][R$sch_wb_pool$outcome == o]
 pool_r <- gm("dis", "And every control", "Mostly urban, without London"); pool_s <- gm("dis", "And ethnic mix, region and density", "Mostly urban, without London")
+J <- readRDS(here::here("data", "journey_times.rds"))
+jt <- function(p, col, s = "walk_bus") J$places[[col]][J$places$place == p & J$places$scenario == s]
+library(data.table)
+SB <- readRDS(here::here("data", "school_buses.rds")); CB <- readRDS(here::here("data", "climb.rds"))
+hm <- function(x) sprintf("%02d:%02d", as.integer(round(x)) %/% 60, as.integer(round(x)) %% 60)
+js <- function(p, th, col) { x <- as.data.table(J$str_third); x[[col]][x$place == p & x$third %in% th] }
+jsm <- function(tm, y = "overall") { x <- as.data.table(J$school_models); x$b[x$term == tm & x$outcome == y] / x$se[x$term == tm & x$outcome == y] }
+sb_city <- as.data.table(J$sbus$by_school)[net == "bh" & oas >= 20]
+sbv <- function(n, col) sb_city[[col]][sb_city$name == n]
+sb_all <- as.data.table(J$sbus$by_school)[oas >= 20 & !is.na(overall) & !is.na(late)]
+cbs <- function(y, col = "b", s = "All schools", tm = "up_back") { x <- as.data.table(CB$sch_models); x[[col]][x$outcome == y & x$sample == s & x$term == tm] }
+cbc <- function(y, col = "b", tm = "up_back", ph = "sec", bn = "All tenths") { x <- as.data.table(CB$cell_models); x[[col]][x$outcome == y & x$term == tm & x$phase == ph & x$band == bn] }
+cbl <- function(g, ct, col = "b", ph = "sec") { x <- as.data.table(CB$la_models); x[[col]][x$group == g & x$control == ct & x$phase == ph] }
+jbus <- J$places |> filter(scenario == "walk_bus"); jwalk <- J$places |> filter(scenario == "walk")
+jd <- function(p, k, s = "walk_bus") J$tenths$t[J$tenths$place == p & J$tenths$dec == k & J$tenths$scenario == s]
+jc <- function(y, x, s = "All tenths") { z <- J$cell_models; z$b_sd[z$y == y & z$x == x & z$sample == s] }
 bh_u <- bh_near - R$bh$med_urban_nl; bh_w <- R$by_band$b[R$by_band$band == "Most deprived three tenths" & R$by_band$phase == "sec"]
 ```
 
@@ -87,7 +103,9 @@ bh_u <- bh_near - R$bh$med_urban_nl; bh_w <- R$by_band$b[R$by_band$band == "Most
 - **But most of that slope is who lives in those places, not the journey.** Given the ethnic mix of disadvantaged pupils in each authority, the slope falls to `r sprintf("%.1f", gm("dis", "And full ethnic mix of this group"))`, and with every control to `r sprintf("%.1f", gm("dis", "And every control"))`, with an interval that includes zero. Ethnic mix is a confounder here: places with schools close together tend to have disadvantaged pupils from groups who attend more.
 - **A smaller link remains in three separate tests.** In mostly urban authorities outside London, the slope for disadvantaged pupils is still `r sprintf("%.1f", gm("dis", "And ethnic mix and region", "Mostly urban, without London"))` points per kilometre given ethnic mix and region, against `r sprintf("%.1f", gp("dis", "Primary, and region"))` in primary schools. Within one authority, pupils in the most deprived neighbourhoods have `r sprintf("%.2f", bw("Most deprived three tenths", "Within, given Census character"))` points more absence per kilometre. And each doubling of how far a school's nearest children live goes with `r sprintf("%.2f", swp("overall", "b1"))` points more absence in every year, given the school's intake and ethnic make-up, and more where more pupils are on free school meals. For disadvantaged pupils the link is mainly with unauthorised and persistent absence, not illness. These are associations, not proof of cause.
 - **Moving a school would change this.** A school back on CoMArt's old site, or Longhill moved to the top of Elm Grove, would bring the deprived neighbourhoods of Brighton and Hove to about `r kms(wi("A school", "near_dep"))` to `r kms(wi("Longhill", "near_dep"))` km and close most of the gap.
-- **These are straight lines.** They ignore hills, bus routes and catchments, and a child's nearest school need not be the one they attend. Journey times come [next](#sec-next). Every source and calculation is in [the methodology](method.qmd#sec-distance-method).
+- **Real journeys tell the same story for Brighton and Hove.** By walking and bus, children in its most deprived neighbourhoods are `r sprintf("%.1f", jt(BH, "gap"))` minutes further from a school than the rest, and walking alone `r sprintf("%.1f", jt(BH, "gap", "walk"))` minutes. No comparator place is more than `r sprintf("%.1f", max(jbus$gap[jbus$place != BH]))` minutes further by walking and bus, and its deprived neighbourhoods need the most changes of bus. See [journey times](#sec-journeys).
+- **Changes of bus, school buses and hills show little general link with absence so far.** Longhill, where missing the last workable journey means arriving about `r sprintf("%.0f", sbv("Longhill High School", "late"))` minutes late, is a striking case, not a pattern.
+- **Most of this page is in straight lines.** They ignore hills, bus routes and catchments, and a child's nearest school need not be the one they attend. Every source and calculation is in [the methodology](method.qmd#sec-distance-method).
 :::
 
 ## What this measures {#sec-measure}
@@ -647,6 +665,159 @@ Brighton and Hove's disadvantaged pupils are close to the median authority for e
 
 Its deprived neighbourhoods are `r kms(bh_u)` km further from a school than those of the median mostly urban authority outside London. On the urban estimates, from `r sprintf("%.1f", pool_r)` with every control to `r sprintf("%.1f", pool_s)` given ethnic mix, region and density, that would go with about `r sprintf("%.1f", bh_u * pool_r)` to `r sprintf("%.1f", bh_u * pool_s)` points of disadvantaged absence, out of the `r sprintf("%.1f", bh_gap_eng)` by which the city is above England. On the within-authority estimate, for all pupils in deprived neighbourhoods, it would be about `r sprintf("%.1f", (bh_near - med_la) * bh_w)`. So distance is a credible part of the city's problem, and not the main explanation for it. Journey times on the real networks may show more, because Brighton's hills and bus routes are what straight lines miss most.
 
+## Journey times on the real networks {#sec-journeys}
+
+Straight lines miss hills, the sea, street layouts and bus services. So for Brighton and Hove and the eight comparator places, every Output Area was routed to every state secondary school within 15 km with [r5r](https://ipeagit.github.io/r5r/), on OpenStreetMap streets and the Department for Transport's bus timetables for a school-term Tuesday, `r format(J$meta$date[1], "%e %B %Y")`. The method follows [the city's school system model](https://adamdennett.github.io/bh-school-system/), with a window of departures in place of a single time, and every source and setting is in [the methodology](method.qmd#sec-journey-method). This covers the journey to the *quickest* school from each neighbourhood, whichever school a child actually attends, and it is for all children: DfE publishes nothing on journeys by disadvantage.
+
+```{r}
+#| label: fig-journeys
+#| fig-cap: !expr paste0("Minutes to the quickest state secondary school, for children in the most deprived third of each place's neighbourhoods and the rest, walking and by bus, and walking alone, on ", format(J$meta$date[1], "%e %B %Y"), ". Weighted by 10 to 14 year olds. Without allowing for hills.")
+#| fig-height: 4.6
+jl <- J$places |> filter(scenario %in% c("walk_bus", "walk")) |> mutate(scenario = factor(unname(J$scenarios[scenario]), unname(J$scenarios[c("walk_bus", "walk")])))
+jord <- jl |> filter(scenario == J$scenarios[["walk_bus"]]) |> arrange(gap) |> pull(place)
+jl <- jl |> mutate(place = factor(place, jord))
+jp2 <- jl |> select(place, scenario, `Most deprived third` = t_dep, `Other neighbourhoods` = t_rest) |> pivot_longer(c(`Most deprived third`, `Other neighbourhoods`))
+ggplot(jl, aes(y = place)) + geom_segment(aes(x = t_dep, xend = t_rest, yend = place), colour = LIGHT, linewidth = 1) +
+  geom_point(data = jp2, aes(x = value, colour = name), size = 2.8) + scale_colour_manual(values = THIRD_COL, name = NULL) + scale_x_continuous(limits = c(0, NA)) +
+  facet_wrap(~scenario) + labs(x = "Minutes to the quickest school", y = NULL) + theme_note() + theme(axis.text.y = element_text(face = ifelse(jord == BH, "bold", "plain")))
+```
+
+```{r}
+#| label: tbl-journeys
+#| tbl-cap: "Minutes to the quickest state secondary school from the most deprived third of neighbourhoods and the rest, the difference, and the share of children over 30 minutes from a school by walking and bus. Places in order of the difference by walking and bus. Without allowing for hills."
+jw <- J$places |> filter(scenario %in% c("walk_bus", "walk")) |> select(place, scenario, t_dep, t_rest, gap, over30_dep, over30_rest) |> pivot_wider(names_from = scenario, values_from = c(t_dep, t_rest, gap, over30_dep, over30_rest)) |> arrange(desc(gap_walk_bus))
+jw |> transmute(Place = place, `Deprived third` = sprintf("%.1f", t_dep_walk_bus), Other = sprintf("%.1f", t_rest_walk_bus), Gap = sprintf("%+.1f", gap_walk_bus),
+                `Deprived third ` = sprintf("%.1f", t_dep_walk), `Other ` = sprintf("%.1f", t_rest_walk), `Gap ` = sprintf("%+.1f", gap_walk),
+                `Deprived third  ` = sprintf("%.0f%%", over30_dep_walk_bus), `Other  ` = sprintf("%.0f%%", over30_rest_walk_bus)) |> kt(align = "lrrrrrrrr") |>
+  kableExtra::add_header_above(c(" " = 1, "Walking and bus (minutes)" = 3, "Walking alone (minutes)" = 3, "Over 30 minutes" = 2))
+```
+
+**Brighton and Hove stands out on real journeys, as it does in straight lines.** Children in its most deprived third of neighbourhoods are `r sprintf("%.1f", jt(BH, "t_dep"))` minutes from a school by walking and bus, and the rest `r sprintf("%.1f", jt(BH, "t_rest"))`: `r sprintf("%.1f", jt(BH, "gap"))` minutes further. No other place is more than `r sprintf("%.1f", max(jbus$gap[jbus$place != BH]))` minutes further, and in `r sum(jbus$gap[jbus$place != BH] < 0)` of the eight the deprived neighbourhoods are nearer. Walking alone, the difference is `r sprintf("%.1f", jt(BH, "gap", "walk"))` minutes, more than twice the next largest (`r sprintf("%.1f", max(jwalk$gap[jwalk$place != BH]))`). `r sprintf("%.0f%%", jt(BH, "over45_dep"))` of children in the city's deprived neighbourhoods are more than 45 minutes from a school by walking and bus, against `r sprintf("%.0f%%", jt(BH, "over45_rest"))` of the rest.
+
+**Buses narrow the gap but do not close it.** The difference falls by about half when buses are available in Brighton and Hove, from `r sprintf("%.1f", jt(BH, "gap", "walk"))` to `r sprintf("%.1f", jt(BH, "gap"))` minutes. In straight lines, measured here from Output Areas, the deprived neighbourhoods are `r sprintf("%.0f%%", 100 * (jt(BH, "km_ratio") - 1))` further. In time it is `r sprintf("%.0f%%", 100 * (jt(BH, "ratio", "walk") - 1))` further on foot and `r sprintf("%.0f%%", 100 * (jt(BH, "ratio") - 1))` with buses. That assumes every family can use the bus, and the fare is not counted.
+
+**Hastings looks different on this measure.** Journeys there are the longest of the nine for everyone (`r sprintf("%.0f", jt("Hastings", "t_all"))` minutes), but buses almost remove the difference between neighbourhoods (`r sprintf("%+.1f", jt("Hastings", "gap"))` minutes, against `r sprintf("%+.1f", jt("Hastings", "gap", "walk"))` on foot). In Hastings, `r sprintf("%.0f%%", jt("Hastings", "over30_dep"))` of children in deprived neighbourhoods and `r sprintf("%.0f%%", jt("Hastings", "over30_rest"))` of the rest are over 30 minutes from a school, so getting to school is hard across the town, whichever neighbourhood a child lives in.
+
+```{r}
+#| label: fig-journey-tenths
+#| fig-cap: "Minutes to the quickest state secondary school for children in each national IDACI tenth of neighbourhood (1 = most deprived), in Brighton and Hove and the comparator places, where the place has at least 100 children in that tenth. Without allowing for hills."
+#| fig-height: 4.2
+tz <- J$tenths |> filter(children >= 100) |> mutate(scenario = factor(unname(J$scenarios[scenario]), unname(J$scenarios[c("walk_bus", "walk")])), who = ifelse(place == BH, BH, "Comparator places"))
+ggplot(tz, aes(dec, t, group = place, colour = who, linewidth = who)) + geom_line() + geom_point(data = filter(tz, place == BH), size = 2) +
+  scale_colour_manual(values = setNames(c(BPURPLE, LIGHT), c(BH, "Comparator places")), name = NULL) + scale_linewidth_manual(values = setNames(c(1.1, 0.6), c(BH, "Comparator places")), guide = "none") +
+  scale_x_continuous(breaks = c(1, 4, 7, 10)) + scale_y_continuous(limits = c(0, NA)) + facet_wrap(~scenario) +
+  labs(x = "IDACI tenth of home neighbourhood (1 = most deprived)", y = "Minutes to the quickest school") + theme_note()
+```
+
+The children in the city's most deprived tenth of neighbourhoods are `r sprintf("%.0f", jd(BH, 1))` minutes from a school by walking and bus, against `r sprintf("%.0f", jd(BH, 10))` minutes in its least deprived tenth.
+
+### What the journeys are made of {#sec-interchanges}
+
+A long journey is one thing and a journey with a change of bus is another. Getting off one bus to wait for the next is a point where a child can stay off, and one more connection to miss. So the routes were examined for the number of buses, leaving at 07:45, 08:00 and 08:15. These are still journeys to the quickest school, not to the school a child attends, so they understate the changes many children make.
+
+```{r}
+#| label: tbl-structure
+#| tbl-cap: "How children would reach their quickest school, leaving at 07:45, 08:00 or 08:15, by the most deprived third of neighbourhoods and the rest. The share walking, the share needing two or more buses, and the average number of buses. Late if missed is how many minutes after 08:45 a child would arrive if they missed the last journey that gets there in time."
+st3 <- as.data.table(J$str_third)[!is.na(third)][, t3 := ifelse(third, "dep", "rest")]
+sw <- dcast(st3, place ~ t3, value.var = c("walk_only", "two_plus", "boardings", "late"))
+sw[order(-two_plus_dep)][, .(Place = place, `Deprived third` = sprintf("%.0f%%", walk_only_dep), Other = sprintf("%.0f%%", walk_only_rest), `Deprived third ` = sprintf("%.0f%%", two_plus_dep), `Other ` = sprintf("%.0f%%", two_plus_rest), `Deprived third  ` = sprintf("%.2f", boardings_dep), `Other  ` = sprintf("%.2f", boardings_rest), `Deprived third   ` = sprintf("%.1f", late_dep), `Other   ` = sprintf("%.1f", late_rest))] |> kt(align = "lrrrrrrrr") |>
+  kableExtra::add_header_above(c(" " = 1, "Walking" = 2, "Two or more buses" = 2, "Buses per journey" = 2, "Minutes late if missed" = 2))
+```
+
+**Brighton and Hove's deprived neighbourhoods need the most changes.** `r sprintf("%.0f%%", js(BH, TRUE, "two_plus"))` of children in its most deprived third of neighbourhoods would need two or more buses to reach even the quickest school, against `r sprintf("%.0f%%", js(BH, FALSE, "two_plus"))` of the rest. In the other places shown, the highest figure for deprived neighbourhoods is `r sprintf("%.0f%%", max(st3$two_plus[st3$third & st3$place != BH]))`. `r sprintf("%.0f%%", js(BH, TRUE, "walk_only"))` of those children can walk fastest, against `r sprintf("%.0f%%", js(BH, FALSE, "walk_only"))` of the rest.
+
+```{r}
+#| label: tbl-interchanges
+#| tbl-cap: "Where children in Brighton and Hove would change buses on the way to their quickest school: the busiest stops, by the 10 to 14 year olds whose journey changes there, averaged over the three departures. The nearest stop name is shown. Stops facing in different directions are listed separately."
+as.data.table(J$interchanges)[place == BH][order(-children)][1:8, .(Stop = stop, `Children changing here` = round(children), `From the most deprived third` = round(dep_children))] |> kt(align = "lrr")
+```
+
+**This does not show up in absence, so far.** Within authorities and given each school's intake, schools whose nearest children need more buses do not have clearly higher absence (@tbl-journey-signal). That is `r J$n_school_model` schools in `r J$school_models$schools_la[1]` authorities, and uses journeys to the quickest school as a stand-in for real ones, so it is a weak test. Before distance is allowed for, the share needing two or more buses is clearer (t = `r sprintf("%.1f", jsm("Share needing two or more buses"))`), but that largely goes with distance. None of this rules out an effect on the children who do change buses.
+
+```{r}
+#| label: tbl-journey-signal
+#| tbl-cap: "Schools in the routed places: absence for one standard deviation more of each feature of the journeys of the school's nearest children, within authority, given straight-line distance, free school meals, White British share, special needs and prior attainment, with t values. All pupils; DfE publishes no split by school. A guide only, with so few schools and authorities."
+SL <- c(`Share of children needing a bus` = 1, `Share needing two or more buses` = 2, `Buses per journey` = 3, `Minutes late if the last bus is missed` = 4, `Minutes on the journey` = 5, `Metres climbed to school` = 6, `Metres climbed home` = 7)
+as.data.table(J$school_models)[term %in% names(SL) & outcome %in% c("overall", "unauth", "persistent")][, v := sprintf("%+.2f (t = %.1f)", b_km * sd_x, b_km / se_km)] |> dcast(term ~ outcome, value.var = "v") |> (\(x) x[order(SL[term])])() |> (\(x) x[, .(`Feature of the journey` = term, `Overall absence` = overall, Unauthorised = unauth, `Persistent absence (% of pupils)` = persistent)])() |> kt(align = "lrrr")
+```
+
+### School buses and missing them {#sec-school-buses}
+
+Many places run dedicated school buses, with a few trips in the morning and a few back in the afternoon. In Brighton and Hove, for example, the 72 and 72A run from Whitehawk to Longhill's grounds, three trips each morning and three back. Miss one and the alternatives may be poor. These routes can be picked out of the timetables by their pattern, for [all of England](method.qmd#sec-journey-method): at most `r SB$rules$max_trips` trips a day, all within school travel hours, ending or starting by a state secondary school and no nearer a college. That finds `r format(nrow(SB$routes), big.mark = ",")` route and school pairs serving `r format(nrow(SB$by_school), big.mark = ",")` schools. Timetables do not say who a bus is for, so this will include a few commuter journeys and miss school contracts that are not in them.
+
+For each school bus in the routed places, Output Areas within 400 m of a stop on its morning trips were routed to its school at every minute from 07:00, with every bus and walking available. That gives the last time a child can leave and still arrive by the bell, and how late they are if they miss it. Bells are not in the data, so the bell is set 15 minutes after the last school bus arrives.
+
+```{r}
+#| label: tbl-sb-bh
+#| tbl-cap: "Brighton and Hove schools with school buses: children living near a stop on one of them. Bell is inferred, 15 minutes after the last school bus. Uses a school bus is the share whose last workable journey does. Late if missed is by the next best journey, also shown with a bell 10 minutes later. Walking is at 3.6 km/h. Absence is all pupils, autumn and spring 2025/26."
+sbt <- function(n) as.data.table(J$sbus$by_school)[net == n & oas >= 20] |> merge(as.data.table(SB$by_school)[, .(URN, routes, am_trips)], by = "URN", all.x = TRUE)
+fmt_sb <- function(x) x[!is.nan(late)][order(-late)][, .(School = name, `Routes` = routes, `Morning trips` = am_trips, Bell = hm(bell), `Uses a school bus` = sprintf("%.0f%%", uses_sb), `Late if missed (min)` = sprintf("%.1f", late), `Bell 10 min later` = sprintf("%.1f", late25), `Walking (min)` = ifelse(is.na(walk_t), "Over 120", sprintf("%.0f", walk_t)), Absence = ifelse(is.na(overall), "–", sprintf("%.1f%%", overall)))] |> kt(align = "lrrrrrrrr")
+fmt_sb(sbt("bh"))
+```
+
+**Longhill stands apart in the city.** A child living near a stop who misses the last workable journey there arrives about `r sprintf("%.0f", sbv("Longhill High School", "late"))` minutes late, against `r sprintf("%.0f", min(sb_city$late))` to `r sprintf("%.0f", max(sb_city$late[sb_city$name != "Longhill High School"]))` minutes for the other city schools, and walking would take about `r sprintf("%.0f", sbv("Longhill High School", "walk_t"))` minutes. It also has the city's highest absence. The result depends on the bell: at 10 minutes later the penalty is `r sprintf("%.0f", sbv("Longhill High School", "late25"))` minutes. The inferred `r hm(sbv("Longhill High School", "bell"))` is close to the 08:20 in [the school's 2023 consultation](https://longhill.org.uk/wp-content/uploads/2023/03/Timings-of-school-day.pdf), which should be confirmed for today. That document also notes that the school has one of the earliest starts in the area, and that a later start would go ahead only if the authority could provide the school buses, so the school day itself is set around them.
+
+```{r}
+#| label: tbl-sb-ply
+#| tbl-cap: "Plymouth, and nearby schools its children can reach by school bus, on the same basis as the Brighton and Hove table. Inferred bells are less reliable where a route arrives late in the morning, as at Millbay."
+fmt_sb(sbt("plymouth"))
+```
+
+**Longhill is a striking case, not a pattern.** Across the `r nrow(sb_all)` schools in the routed places with school bus figures and published absence, the correlation between the penalty and absence is `r sprintf("%.2f", cor(sb_all$late, sb_all$overall))`, and for unauthorised absence `r sprintf("%.2f", cor(sb_all$late, sb_all$unauth))`. Several schools with larger penalties than Longhill's have low absence, usually with fewer disadvantaged pupils. Nor is having a school bus linked with absence across England (@tbl-sb-models). Having a bus is not the same as depending on one, and it often means the school has made sure that children can get there, so a null here does not mean that missing one is harmless. Still, these tests give no general support.
+
+```{r}
+#| label: tbl-sb-models
+#| tbl-cap: !expr paste0("Secondary schools in England, absence at schools with a school bus against other schools in the same authority, given distance, intake, ethnic make-up and kind of place, with t values. ", format(SB$n_schools, big.mark = ","), " schools, autumn and spring 2025/26, all pupils. High free school meals is the top quarter of schools.")
+SO <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)")
+as.data.table(SB$models)[spec == "Has a school bus"][, v := sprintf("%+.2f (t = %.1f)", b, b / se)] |> dcast(outcome ~ sample, value.var = "v") |> (\(x) x[match(names(SO), outcome)][, .(`Kind of absence` = SO[outcome], `All schools`, Urban, Rural, `High free school meals` = `With high FSM`)])() |> kt(align = "lrrrr")
+```
+
+### The climb {#sec-hills}
+
+Straight lines also miss the hills. r5r's own elevation setting averages each street in both directions and did not change walking times in our tests, so the climb was measured directly, from OS Terrain 50 along each walking route, separately for the way to school and the way home.
+
+```{r}
+#| label: tbl-climb-places
+#| tbl-cap: "Walking to the quickest school: metres climbed on the way there and on the way home, for the most deprived third of neighbourhoods and the rest, and the walking time each way with Tobler's hiking function, scaled to 3.6 km/h on the flat."
+cw <- dcast(st3, place ~ t3, value.var = c("up_out", "up_back", "t_flat", "t_out", "t_back"))
+cw[order(-up_back_dep)][, .(Place = place, `Deprived third` = sprintf("%.0f", up_out_dep), Other = sprintf("%.0f", up_out_rest), `Deprived third ` = sprintf("%.0f", up_back_dep), `Other ` = sprintf("%.0f", up_back_rest), `Deprived third  ` = sprintf("%.1f", t_out_dep), `Other  ` = sprintf("%.1f", t_out_rest), `Flat, deprived third` = sprintf("%.1f", t_flat_dep))] |> kt(align = "lrrrrrrr") |>
+  kableExtra::add_header_above(c(" " = 1, "Metres up, to school" = 2, "Metres up, home" = 2, "Minutes walking, to school" = 3))
+```
+
+In Brighton and Hove, children in the most deprived third of neighbourhoods climb about `r sprintf("%.0f", js(BH, TRUE, "up_back"))` metres on the walk home, against `r sprintf("%.0f", js(BH, FALSE, "up_back"))` for the rest. That is the largest difference of the places here. Those children have both further to go and more to climb, which a straight line cannot show.
+
+**A signal in the routed places did not hold across England.** In the schools of @tbl-journey-signal, more climb went clearly with more absence, more strongly than anything else tested. With so few schools that needed checking. Climb can be measured for all of England without routing, along the straight line from each of `r format(CB$n_oa, big.mark = ",")` Output Areas to its nearest school. In the routed places that matches the climb along the real route closely (r = `r sprintf("%.2f", CB$check$r_back)`).
+
+```{r}
+#| label: tbl-climb
+#| tbl-cap: !expr paste0("Secondary schools in England, absence for each extra 10 metres climbed on the way home by a school's nearest children, along a straight line, in the same authority, given distance, intake, ethnic make-up and kind of place, with t values. ", format(CB$n_sch, big.mark = ","), " schools. All pupils, autumn and spring 2025/26, except the last row.")
+CO <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)", abs_excess = "Above intake, 2021/22 to 2024/25")
+as.data.table(CB$sch_models)[term == "up_back" & sample %in% c("All schools", "Urban", "Rural", "High free school meals", "Without Brighton and Hove")][, v := sprintf("%+.3f (t = %.1f)", 10 * b, b / se)] |> dcast(outcome ~ sample, value.var = "v") |> (\(x) x[match(names(CO), outcome)][, .(`Kind of absence` = CO[outcome], `All schools`, Urban, Rural, `High free school meals`, `Without Brighton and Hove`)])() |> kt(align = "lrrrrr")
+```
+
+Across England the link for overall absence is small and not clear: `r sprintf("%+.3f", 10 * cbs("overall"))` points for each extra 10 metres (t = `r sprintf("%.1f", cbs("overall") / cbs("overall", "se"))`), and within authorities by home neighbourhood `r sprintf("%+.3f", 10 * cbc("overall"))` (t = `r sprintf("%.1f", cbc("overall") / cbc("overall", "se"))`). There is a small link with illness absence (t = `r sprintf("%.1f", cbs("illness") / cbs("illness", "se"))`), clearer for schools near major towns and cities, and none with unauthorised absence. Between authorities the link for disadvantaged pupils is larger, given their ethnic mix (`r sprintf("%+.2f", 10 * cbl("dis", "And ethnic mix of the group"))` per 10 metres, t = `r sprintf("%.1f", cbl("dis", "And ethnic mix of the group") / cbl("dis", "And ethnic mix of the group", "se"))`; non-disadvantaged pupils `r sprintf("%+.2f", 10 * cbl("non", "And ethnic mix of the group"))`, all pupils `r sprintf("%+.2f", 10 * cbl("all", "And ethnic mix of the group"))`), and falls by about half given region. So the first result looks largely local, with at most a small general link. Straight lines do understate climb, so a modest effect could still be there.
+
+### Does time say more than distance about absence? {#sec-time-absence}
+
+This cannot yet be answered. Routing covers only `r sum(!is.na(J$abs_la$abs_dis))` authorities with published absence. @tbl-journey-absence sets them side by side, for all three groups of pupils, without modelling them.
+
+```{r}
+#| label: tbl-journey-absence
+#| tbl-cap: "Authorities routed so far: distance and journey time from the most deprived third of neighbourhoods, and absence in state-funded secondary schools, 2024/25. DfE publishes absence by disadvantage for authorities, so Hastings has none."
+J$abs_la |> arrange(desc(t_dep)) |> transmute(Place = place, `Straight line (km)` = sprintf("%.2f", km_dep), `Walking and bus (min)` = sprintf("%.1f", t_dep), `All pupils` = ifelse(is.na(abs_all), "–", sprintf("%.1f%%", abs_all)), Disadvantaged = ifelse(is.na(abs_dis), "–", sprintf("%.1f%%", abs_dis)), `Non-disadvantaged` = ifelse(is.na(abs_non), "–", sprintf("%.1f%%", abs_non))) |> kt(align = "lrrrrr")
+```
+
+DfE's file by home neighbourhood gives a little more, by comparing tenths within these authorities (`r J$cell_models$n[1]` groups of pupils, all pupils, 2023/24 and 2024/25). Distance and time point the same way and are hard to tell apart: for one standard deviation more, overall absence is `r sprintf("%.2f", jc("overall", "km"))` points higher on straight-line distance, `r sprintf("%.2f", jc("overall", "t_walk"))` on walking time and `r sprintf("%.2f", jc("overall", "t_bus"))` on walking and bus time. Persistent absence is `r sprintf("%.1f", jc("persistent", "km"))`, `r sprintf("%.1f", jc("persistent", "t_walk"))` and `r sprintf("%.1f", jc("persistent", "t_bus"))` points of pupils. With so few authorities these are descriptive. A proper test needs routing for many more: the [109 mostly urban authorities](#sec-urban) would allow the models above to be rerun on time.
+
+### How far to trust these times {#sec-journey-limits}
+
+- **Against the city's model.** On that model's settings, times for `r J$validate$lsoas` Brighton and Hove neighbourhoods correlate at `r sprintf("%.2f", J$validate$r)` with [the city's school system model](https://adamdennett.github.io/bh-school-system/), with a mean of `r sprintf("%.1f", J$validate$mean_new)` minutes against `r sprintf("%.1f", J$validate$mean_old)` and a typical difference of `r sprintf("%.1f", J$validate$mae)` minutes. The difference between deprived neighbourhoods and the rest is `r sprintf("%.1f", J$validate$gap_new)` minutes here and `r sprintf("%.1f", J$validate$gap_old)` there. The model uses an older timetable, a set list of schools and an earlier departure for Longhill, and these have not been separated. Its simulator's 4 minute difference is another measure again: it follows children to the school they are allocated and compares disadvantaged children with others.
+- **Walking speed.** r5r's default is 3.6 km/h, slow for a teenager, and is kept to match the city's model. At 4.8 km/h Brighton and Hove's difference with buses is `r sprintf("%.1f", jt(BH, "gap", "walk_bus_f"))` minutes, so the result does not depend on it.
+- **Buses only.** Rail, the Tube, the DLR and school-only services that are not in the timetable files are missing. That matters most in Newham and Tower Hamlets, where it would shorten journeys, not lengthen them.
+- **One day.** Departures from 07:45 to 08:15 on one Tuesday, taking the median. Real journeys depend on when a school starts.
+- **The quickest school is not always the school attended.** Children go further than this, more so where choice or catchments send them elsewhere. Who can get a place at the quickest school is not considered.
+- **Boundaries.** Each place is a district, with schools up to 15 km beyond it. Hastings, Blackpool and others have few schools nearby, and Plymouth and Bristol's networks include neighbouring counties.
+
 ## What if a school were somewhere else? {#sec-whatif}
 
 Straight lines make this quick to test. These keep every neighbourhood and its children where they are and move only the school.
@@ -668,6 +839,7 @@ Either change would take about `r kms(wi("Today", "near_dep") - wi("Longhill", "
 
 Next on the [roadmap](roadmap.qmd):
 
-1. Walk and public transport journey times with r5r for Brighton and Hove's comparator cities, using the same method as [the city's school system model](https://adamdennett.github.io/bh-school-system/).
+1. Journey times beyond [the comparator places](#sec-journeys): the mostly urban authorities, so that the absence models can be rerun on time rather than distance.
 2. Better school-level measures. A gravity model of who goes where would improve on "nearest children", until a published measure of how far each school's pupils travel exists.
-3. Journey time and absence together, to test whether time predicts absence better than distance, whether the link between authorities and within them comes closer together, and whether the rural and urban difference holds.
+3. Whether time predicts absence better than distance, whether the link between authorities and within them comes closer together, and whether the rural and urban difference holds.
+4. A direct test of intervening opportunities: points of interest from OpenStreetMap within a couple of hundred metres of bus changes and along walking routes. The routes and change points are ready for it.
