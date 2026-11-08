@@ -214,6 +214,10 @@ What the evidence on this site says about why places differ:
   pattern is mostly the pupils themselves, not the place. For all and
   non-disadvantaged pupils, authority effects move much less.
 
+## How far from school? {#sec-distance}
+
+Where schools are is part of geography too. Across England, children in deprived neighbourhoods usually live closer to a secondary school. In Brighton and Hove they live about a third further away than their neighbours, and absence goes with distance, more for disadvantaged pupils. [Distance to school](distance.qmd) sets out a first test in straight lines.
+
 ## What it means {#sec-means}
 
 - **Read value added against England with the place in mind.** Part of a

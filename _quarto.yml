@@ -12,6 +12,7 @@ project:
     - geography.qmd
     - neighbourhood_types.qmd
     - neighbourhood_covariates.qmd
+    - distance.qmd
     - v22.qmd
     - absence_causes.qmd
     - absence_change.qmd
@@ -71,6 +72,8 @@ website:
             text: "Neighbourhood types (OAC)"
           - href: neighbourhood_covariates.qmd
             text: "Neighbourhood covariates (experiment)"
+          - href: distance.qmd
+            text: "Distance to school"
       - text: "Absence"
         menu:
           - href: absence_causes.qmd

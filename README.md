@@ -42,6 +42,7 @@ Rscript R/13_neighbourhood_covariates.R  # the neighbourhood covariates experime
 Rscript R/14_v22_candidates.R     # v2.2 candidates across every group and year (~25 min)
 Rscript R/15_graduate_deprivation.R  # two kinds of deprived neighbourhood (~6 min)
 Rscript R/16_parents_not_adults.R # parents, not adults (first run downloads from ONS; ~30 min)
+Rscript R/18_distance.R           # distance to school, in straight lines (first run fetches ONS lookups; ~3 min)
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```
@@ -105,6 +106,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/07_v21_candidates.R` | the v2.1 candidates (kind of absence, 11–16) and the importance charts |
 | `R/08_absence_causes.R` | what goes with school-level absence: trend by reason, seven outcomes on intake, needs and place (`absence_causes.qmd`) |
 | `R/09_absence_change.R` | how school absence changes: a 2016/17 to 2025/26 panel joined through URN changes, variance shares, stability, the pre/post-pandemic shift, within- vs between-school intake effects, event studies of academy conversion and trust changes (`absence_change.qmd`); fetches the 2018/19 census file from the performance tables service if it is missing |
+| `R/18_distance.R` | distance to school: straight-line distance from every Census 2021 LSOA to the nearest open state secondary in GIAS, most deprived third against the rest in every district and authority (ONS RUC 2021 for rural and urban), against absence by authority for all three groups and by school, what if a school moved in Brighton and Hove (`distance.qmd`) |
 | `R/16_parents_not_adults.R` | parents, not adults: neighbourhood education from ONS custom Census tables (qualification by dependent children and age by MSOA; by age by LSOA), against v2.1 for every group, with held-out years, the split between parents and other adults, and London tested separately (`neighbourhood_covariates.qmd`); caches about 1.5 GB of API responses in `data-raw/census2021/ons_custom/` |
 | `R/15_graduate_deprivation.R` | two kinds of deprived neighbourhood: tests whether the deprivation effect is a recent-graduate effect (interaction, by kind of place, early-career measures, deprivation in parts) and value added by kind of neighbourhood (`neighbourhood_covariates.qmd`) |
 | `R/14_v22_candidates.R` | v2.2 candidates: pupils' ethnicity (school White British share each January, from the SPC releases downloaded into `data-raw/ees/spc_all/`) and neighbourhood household deprivation (Census 2021 TS011), against v2.1 for every group, with leave-one-year-out prediction, year-by-year fits and who gains (`v22.qmd`) |

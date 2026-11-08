@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://adamdennett.github.io/school_value_added/roadmap.html</loc>
-    <lastmod>2026-11-07T11:47:37.105Z</lastmod>
+    <lastmod>2026-11-08T08:59:08.181Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/west_sussex.html</loc>
@@ -45,44 +45,48 @@
     <lastmod>2026-11-06T17:18:25.199Z</lastmod>
   </url>
   <url>
-    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_covariates.html</loc>
-    <lastmod>2026-11-05T22:27:54.400Z</lastmod>
+    <loc>https://adamdennett.github.io/school_value_added/distance.html</loc>
+    <lastmod>2026-11-08T09:01:24.763Z</lastmod>
   </url>
   <url>
-    <loc>https://adamdennett.github.io/school_value_added/geography.html</loc>
-    <lastmod>2026-11-05T22:16:40.814Z</lastmod>
-  </url>
-  <url>
-    <loc>https://adamdennett.github.io/school_value_added/districts.html</loc>
-    <lastmod>2026-11-05T22:37:16.521Z</lastmod>
-  </url>
-  <url>
-    <loc>https://adamdennett.github.io/school_value_added/review.html</loc>
-    <lastmod>2026-11-04T07:44:08.333Z</lastmod>
-  </url>
-  <url>
-    <loc>https://adamdennett.github.io/school_value_added/method.html</loc>
-    <lastmod>2026-11-05T22:10:05.007Z</lastmod>
-  </url>
-  <url>
-    <loc>https://adamdennett.github.io/school_value_added/index.html</loc>
-    <lastmod>2026-11-05T22:09:26.543Z</lastmod>
-  </url>
-  <url>
-    <loc>https://adamdennett.github.io/school_value_added/explore.html</loc>
-    <lastmod>2026-11-05T22:10:05.008Z</lastmod>
-  </url>
-  <url>
-    <loc>https://adamdennett.github.io/school_value_added/sussex.html</loc>
-    <lastmod>2026-11-05T22:28:05.125Z</lastmod>
+    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_types.html</loc>
+    <lastmod>2026-11-05T22:16:40.812Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/bh_effect.html</loc>
     <lastmod>2026-11-04T09:46:11.366Z</lastmod>
   </url>
   <url>
-    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_types.html</loc>
-    <lastmod>2026-11-05T22:16:40.812Z</lastmod>
+    <loc>https://adamdennett.github.io/school_value_added/sussex.html</loc>
+    <lastmod>2026-11-05T22:28:05.125Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/explore.html</loc>
+    <lastmod>2026-11-05T22:10:05.008Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/index.html</loc>
+    <lastmod>2026-11-05T22:09:26.543Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/method.html</loc>
+    <lastmod>2026-11-05T22:10:05.007Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/review.html</loc>
+    <lastmod>2026-11-04T07:44:08.333Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/districts.html</loc>
+    <lastmod>2026-11-05T22:37:16.521Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/geography.html</loc>
+    <lastmod>2026-11-08T09:00:55.964Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/neighbourhood_covariates.html</loc>
+    <lastmod>2026-11-05T22:27:54.400Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/v22.html</loc>

@@ -1,0 +1,292 @@
+---
+title: "Distance to school"
+subtitle: "A first check, in straight lines: do children in deprived neighbourhoods live further from a secondary school than their neighbours, where is that unusual, and does absence go with it?"
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+library(patchwork); library(ggrepel)
+D <- readRDS(here::here("data", "distance.rds"))
+BH <- "Brighton and Hove"
+dd <- D$districts; la <- D$authorities
+km <- function(x) sprintf("%.2f km", x)
+kms <- function(x) sprintf("%.2f", x)
+dv <- function(p, col) dd[[col]][dd$place == p]
+cv <- function(p, col) D$compare[[col]][D$compare$place == p]
+pcf <- function(r) sprintf("%.0f%%", 100 * (r - 1))
+nd <- nrow(dd)
+fsh <- 100 * mean(dd$ratio > 1)
+urb <- dd |> filter(kind == "Mostly urban"); nu <- nrow(urb)
+fshu <- 100 * mean(urb$ratio > 1)
+ula <- la |> filter(urban_share >= 80)
+bh_ula <- rank(-ula$near_dep, ties.method = "min")[ula$place == BH]
+med_la <- median(la$near_dep)
+lm_b <- function(g, s, col = "b") { x <- D$la_models; x[[col]][x$group == g & x$spec == s] }
+S1 <- "Given the share disadvantaged and how urban"; S2 <- "And without London"
+bh_near <- la$near_dep[la$place == BH]
+imp <- function(g, s) (bh_near - med_la) * lm_b(g, s)
+bh_gap_eng <- la$abs_dis[la$place == BH] - D$eng_abs$abs_dis
+kn <- function(o, col = "b") D$kinds[[col]][D$kinds$outcome == o]
+kp <- function(o, p, col = "b") { x <- D$kinds_place; x[[col]][x$outcome == o & x$place == p] }
+ex <- function(p, col = "b") D$sch_excess[[col]][D$sch_excess$place == p]
+rs <- function(g, ab) D$results$b[D$results$group == g & D$results$absence_in_model == ab]
+wi <- function(s, col) D$whatif[[col]][startsWith(D$whatif$scenario, s)]
+ck <- function(s, p, col) D$checks[[col]][D$checks$spec == s & D$checks$lad == p]
+UR <- "Urban, near a major town or city"; UF <- "Urban, further from one"; RU <- "Rural"
+PLACE_COL <- setNames(c(DPURPLE, BPURPLE, BLUE), c(UR, UF, RU))
+THIRD_COL <- c("Most deprived third" = BPURPLE, "Other neighbourhoods" = DPURPLE)
+```
+
+::: {.callout-important}
+## In short
+
+- **Across England, children in deprived neighbourhoods usually live closer to a secondary school.** That holds in cities, towns and the countryside, and in `r sprintf("%.0f%%", 100 - fsh)` of districts.
+- **Brighton and Hove is the other way round.** Children in the most deprived third of its neighbourhoods live `r km(dv(BH, "near_dep"))` from their nearest school, in a straight line, and the rest live `r km(dv(BH, "near_rest"))`. That is `r pcf(dv(BH, "ratio"))` further, the `r ord(dv(BH, "rank_ratio"))` largest difference of `r nd` districts proportionately and the `r ord(dv(BH, "rank_gap"))` largest in kilometres. Among the `r nrow(ula)` mostly urban local authorities, none has its deprived neighbourhoods further from a school.
+- **Absence goes with distance, and more for disadvantaged pupils.** Where deprived neighbourhoods are a kilometre further from a school, disadvantaged pupils' absence is `r sprintf("%.1f", lm_b("Disadvantaged", S2))` to `r sprintf("%.1f", lm_b("Disadvantaged", S1))` points higher. For non-disadvantaged pupils it is `r sprintf("%.1f", lm_b("Non-disadvantaged", S2))` to `r sprintf("%.1f", lm_b("Non-disadvantaged", S1))` points and for all pupils `r sprintf("%.1f", lm_b("All pupils", S2))` to `r sprintf("%.1f", lm_b("All pupils", S1))`. This is association across authorities, not proof of cause.
+- **Moving a school would change this.** A school back on CoMArt's old site, or Longhill moved to the top of Elm Grove, would bring the deprived neighbourhoods of Brighton and Hove to about `r kms(wi("A school", "near_dep"))` to `r kms(wi("Longhill", "near_dep"))` km and close most of the gap.
+- **These are straight lines.** They ignore hills, bus routes and catchments, and a child's nearest school need not be the one they attend. Journey times come [next](#sec-next).
+:::
+
+## What this measures {#sec-measure}
+
+How far each school's own pupils travel is not published, so this page starts from where children live and where schools are.
+
+- **Schools.** Every open state-funded secondary, all-through and middle deemed secondary school in England in the DfE's register, Get Information About Schools (`r D$gias_date`): `r format(D$n_schools, big.mark = ",")` schools taking pupils at 13 or younger and keeping them to at least 16. Special schools, pupil referral units and independent schools are left out.
+- **Neighbourhoods.** England's `r format(D$n_lsoa, big.mark = ",")` Census 2021 Lower Layer Super Output Areas, each placed at the mean of its Output Areas' population-weighted centroids. Averages are weighted by the 10 to 14 year olds living there.
+- **Deprivation.** The share of households deprived in two or more of the Census's four dimensions (employment, education, health, housing), the same measure as [the neighbourhood covariates](neighbourhood_covariates.qmd).
+- **Distance.** The straight line to the nearest school. Each place's neighbourhoods are split into its most deprived third and the rest, so the comparison is always within one place.
+- **Kind of place.** The ONS 2021 rural-urban classification. A district or authority is "mostly urban" if at least 80% of its 10 to 14 year olds live in urban neighbourhoods.
+
+Schools in Wales are not in the register used here, so a few neighbourhoods on the border look further from a school than they are.
+
+## Across England, deprived neighbourhoods are nearer {#sec-england}
+
+Within each kind of place, the most deprived neighbourhoods tend to be among the closest to a school. One likely reason is that they are usually denser and more central.
+
+```{r}
+#| label: fig-national
+#| fig-cap: "Mean straight-line distance from home to the nearest state secondary school, by how deprived the neighbourhood is (England's tenths, 10 = most deprived) and the ONS 2021 rural-urban class of the neighbourhood. Weighted by 10 to 14 year olds."
+#| fig-height: 4.4
+n <- D$national |> mutate(kind3 = factor(kind3, c(RU, UF, UR)))
+ends <- n |> filter(dep_dec == 10)
+ggplot(n, aes(dep_dec, near, colour = kind3)) +
+  geom_line(linewidth = 0.9) + geom_point(size = 2.2) +
+  geom_text(data = ends, aes(label = kms(near)), hjust = -0.35, size = 3.3, show.legend = FALSE) +
+  scale_colour_manual(values = PLACE_COL, name = NULL) +
+  scale_x_continuous(breaks = 1:10, expand = expansion(mult = c(0.03, 0.08))) +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(x = "Neighbourhood deprivation (10 = most deprived tenth of England)", y = "Distance to nearest school (km)") +
+  theme_note()
+```
+
+Taken across England as a whole, children in the most deprived third of neighbourhoods live `r km(D$england$near_dep)` from a school and the rest `r km(D$england$near_rest)`. Much of that is town against country, which is why the rest of this page compares neighbourhoods within one place.
+
+## Where it runs the other way {#sec-districts}
+
+In `r sprintf("%.0f%%", fsh)` of England's `r nd` districts, children in the most deprived third of neighbourhoods live further from a school than the rest. Among the `r nu` mostly urban districts it is `r sprintf("%.0f%%", fshu)`. Brighton and Hove is near the top of both lists.
+
+```{r}
+#| label: fig-districts
+#| fig-cap: !expr paste0("How much further children in the most deprived third of neighbourhoods live from their nearest school than children in the rest of the same district, for all ", nd, " districts, from largest to smallest. Above 1, the deprived neighbourhoods are further away.")
+#| fig-height: 4.6
+sh <- c(BH, "Hastings", "Blackpool", "Southampton", "Portsmouth", "Plymouth", "Bristol", "Newham", "Tower Hamlets")
+dp <- dd |> arrange(desc(ratio)) |> mutate(pos = row_number(), hi = place %in% sh,
+       col = case_when(place == BH ~ "Brighton and Hove", hi ~ "Places on this page", TRUE ~ "Other districts"))
+ggplot(dp, aes(pos, ratio)) +
+  geom_hline(yintercept = 1, colour = GREY, linewidth = 0.4) +
+  geom_point(data = filter(dp, !hi), colour = LIGHT, size = 1.6) +
+  geom_point(data = filter(dp, hi), aes(colour = col), size = 2.8) +
+  geom_text_repel(data = filter(dp, hi), aes(label = place), size = 3.2, colour = INK, min.segment.length = 0, box.padding = 0.4, seed = 4, max.overlaps = 30) +
+  scale_colour_manual(values = c("Brighton and Hove" = BPURPLE, "Places on this page" = DPURPLE), name = NULL) +
+  scale_y_continuous(breaks = seq(0.4, 1.6, 0.2)) +
+  labs(x = paste0("District, from largest difference to smallest (", nd, " districts)"), y = "Most deprived third ÷ other neighbourhoods") +
+  theme_note()
+```
+
+```{r}
+#| label: tbl-top
+#| tbl-cap: "The districts where children in deprived neighbourhoods live furthest from a school, relative to the rest of the district, with the rank in kilometres. Straight-line distance to the nearest school, in kilometres."
+dd |> arrange(rank_ratio) |> slice_head(n = 10) |>
+  transmute(Rank = rank_ratio, District = place, `Most deprived third` = kms(near_dep), `Other neighbourhoods` = kms(near_rest),
+            `Difference (km)` = sprintf("%+.2f", gap), `Rank in km` = rank_gap, `Kind of place` = kind) |>
+  kt(align = "rlrrrrl")
+```
+
+The list mixes outer London boroughs, commuter towns and cities such as Derby. Here is Brighton and Hove against other coastal and urban places, and against the rest of Sussex:
+
+```{r}
+#| label: fig-compare
+#| fig-cap: "Straight-line distance to the nearest school: children in the most deprived third of each place's neighbourhoods against children in the rest."
+#| fig-height: 4.8
+cp <- bind_rows(D$compare, D$sussex |> filter(!place %in% D$compare$place)) |> arrange(ratio) |> mutate(place = factor(place, place))
+cl <- cp |> select(place, near_dep, near_rest) |> pivot_longer(-place) |>
+  mutate(name = recode(name, near_dep = "Most deprived third", near_rest = "Other neighbourhoods"))
+ggplot(cp, aes(y = place)) +
+  geom_segment(aes(x = near_dep, xend = near_rest, yend = place), colour = LIGHT, linewidth = 1) +
+  geom_point(data = cl, aes(x = value, colour = name), size = 2.8) +
+  scale_colour_manual(values = THIRD_COL, name = NULL) +
+  scale_x_continuous(limits = c(0, NA)) +
+  labs(x = "Distance to nearest school (km)", y = NULL) + theme_note() +
+  theme(axis.text.y = element_text(face = ifelse(levels(cp$place) == BH, "bold", "plain")))
+```
+
+```{r}
+#| label: tbl-compare
+#| tbl-cap: "Places compared. Distance as above, with absence in state-funded secondary schools, full year 2024/25, for all three groups of pupils, and the share of secondary pupils who are disadvantaged (DfE, absence by pupil characteristics). DfE publishes these by authority, not by district, so Hastings has none."
+D$compare |> arrange(desc(ratio)) |>
+  transmute(Place = place, `Most deprived third (km)` = kms(near_dep), `Other (km)` = kms(near_rest),
+            `How much further` = sprintf("%+.0f%%", 100 * (ratio - 1)), `Rank of ` = paste0(rank_ratio, " of ", nd),
+            `Pupils disadvantaged` = ifelse(is.na(share), "–", sprintf("%.0f%%", share)),
+            `Absence: disadvantaged` = ifelse(is.na(abs_dis), "–", sprintf("%.1f%%", abs_dis)),
+            `Absence: non-disadvantaged` = ifelse(is.na(abs_non), "–", sprintf("%.1f%%", abs_non)),
+            `Absence: all pupils` = ifelse(is.na(abs_all), "–", sprintf("%.1f%%", abs_all))) |>
+  rename(`Rank` = `Rank of `) |> kt(align = "lrrrrrrrr")
+```
+
+### Brighton and Hove and Hastings on the map {#sec-maps}
+
+```{r}
+#| label: fig-dots
+#| fig-cap: "Each dot is a neighbourhood, sized by its 10 to 14 year olds and shaded by the straight-line distance to its nearest secondary school. A ring marks the most deprived third of the place's neighbourhoods. Diamonds are state secondary schools. Census 2021 and Get Information About Schools."
+#| fig-height: 8.2
+dot_map <- function(p, lab = FALSE) {
+  z <- D$dots |> filter(lad == p)
+  sc <- D$dot_schools |> filter(e > min(z$x) - 1500, e < max(z$x) + 1500, n > min(z$y) - 1500, n < max(z$y) + 1500) |>
+    mutate(short = sub(" Academy Hastings$", " Hastings", name), short = sub(" Academy St Leonards$", " St Leonards", short),
+           short = sub(" (Catholic |Community |High )?(School|College|Academy).*$", "", short),
+           short = recode(short, "Brighton Aldridge" = "BACA", "Portslade Aldridge" = "PACA"))
+  ggplot(z, aes(x, y)) +
+    geom_point(aes(size = kids, colour = near1)) +
+    geom_point(data = filter(z, dep_third), aes(size = kids), shape = 21, colour = INK, fill = NA, stroke = 1, show.legend = FALSE) +
+    geom_point(data = sc, aes(e, n), shape = 23, size = 3, fill = BLUE, colour = "white", inherit.aes = FALSE) +
+    geom_text_repel(data = sc, aes(e, n, label = short), size = 2.8, colour = INK, seed = 7, inherit.aes = FALSE, min.segment.length = 0, max.overlaps = 40) +
+    scale_colour_gradient(low = PPURPLE, high = DPURPLE, name = "km to nearest school", limits = c(0, 3), oob = scales::squish) +
+    scale_size_area(max_size = 4, guide = "none") + coord_equal() +
+    labs(title = p, x = NULL, y = NULL) + theme_note() +
+    theme(axis.text = element_blank(), panel.grid = element_blank())
+}
+(dot_map(BH) / dot_map("Hastings")) + plot_layout(guides = "collect") & theme(legend.position = "bottom")
+```
+
+In Brighton and Hove, the neighbourhoods furthest from a school are in the east of the city, around Whitehawk, between the central schools and Longhill. The [city's school system](https://adamdennett.github.io/bh-school-system/analysis.html) model finds the same in routed walk and bus times: in its [simulator](https://adamdennett-bh-school-system.share.connect.posit.cloud/), disadvantaged children travel about 4 minutes further each way than everyone else.
+
+### Does it depend on how it is measured? {#sec-checks}
+
+```{r}
+#| label: tbl-checks
+#| tbl-cap: !expr paste0("How much further the most deprived third of neighbourhoods is from a school than the rest, on five versions of the measure, with each place's rank of ", nd, " districts.")
+D$checks |> mutate(v = paste0(sprintf("%+.0f%%", 100 * (ratio - 1)), " (", rank, ")")) |>
+  select(Measure = spec, lad, v) |> pivot_wider(names_from = lad, values_from = v) |>
+  select(Measure, all_of(c(BH, "Hastings", "Blackpool"))) |> kt(align = "lrrr")
+```
+
+Brighton and Hove's result holds on every version: its deprived neighbourhoods are `r pcf(min(D$checks$ratio[D$checks$lad == BH]))` to `r pcf(max(D$checks$ratio[D$checks$lad == BH]))` further, in the top `r max(D$checks$rank[D$checks$lad == BH])` of `r nd` districts. Hastings and Blackpool are less certain. Their deprived neighbourhoods are further from their nearest school, but the difference is much smaller on the mean of the three nearest (`r sprintf("%+.0f%%", 100 * (ck("Mean of the three nearest", "Hastings", "ratio") - 1))` and `r sprintf("%+.0f%%", 100 * (ck("Mean of the three nearest", "Blackpool", "ratio") - 1))`). In Hastings it reverses (`r sprintf("%+.0f%%", 100 * (ck("Nearest neither selective nor faith", "Hastings", "ratio") - 1))`) if faith and selective schools are set aside.
+
+## Does absence go with distance? {#sec-absence}
+
+[FFT Education Datalab](https://ffteducationdatalab.org.uk/2023/11/are-pupils-who-live-further-away-from-their-school-absent-more-often/) compared pupils within schools, using straight-line distance from their home postcodes. Those living furthest away were absent slightly more often, and the difference was wider for disadvantaged pupils. FFT calls distance "a relatively minor factor" and suggests that travel times may be instructive. The published data allow two further tests.
+
+### By authority, for all three groups {#sec-la}
+
+DfE publishes absence by disadvantage for each local authority, so the distance from deprived neighbourhoods to a school can be set against absence for each group of pupils.
+
+```{r}
+#| label: fig-absence
+#| fig-cap: !expr paste0("Absence in state-funded secondary schools, 2024/25, against the straight-line distance to a school from the most deprived third of each local authority's neighbourhoods, for ", nrow(la), " authorities. Lines are simple fits.")
+#| fig-height: 4.6
+lp <- la |> select(place, near_dep, london, Disadvantaged = abs_dis, `Non-disadvantaged` = abs_non, `All pupils` = abs_all) |>
+  pivot_longer(c(Disadvantaged, `Non-disadvantaged`, `All pupils`), names_to = "group", values_to = "abs") |>
+  mutate(group = factor(group, c("All pupils", "Disadvantaged", "Non-disadvantaged")),
+         who = case_when(place == BH ~ "Brighton and Hove", london ~ "London", TRUE ~ "Elsewhere"))
+ggplot(lp, aes(near_dep, abs)) +
+  geom_smooth(method = "lm", se = FALSE, colour = GREY, linewidth = 0.7) +
+  geom_point(data = filter(lp, who != "Brighton and Hove"), aes(colour = who), size = 1.7, alpha = 0.8) +
+  geom_point(data = filter(lp, who == "Brighton and Hove"), aes(colour = who), size = 3.4) +
+  scale_colour_manual(values = c("Brighton and Hove" = BPURPLE, "London" = BLUE, "Elsewhere" = LIGHT), name = NULL) +
+  facet_wrap(~group) +
+  labs(x = "Distance to nearest school, most deprived third of neighbourhoods (km)", y = "Absence, % of sessions") + theme_note()
+```
+
+```{r}
+#| label: tbl-la
+#| tbl-cap: "Points of absence for each extra kilometre between an authority's most deprived neighbourhoods and a school, for each group of pupils, with 95% intervals. Second and third rows allow for the share of pupils who are disadvantaged and how urban the authority is."
+D$la_models |> mutate(v = sprintf("%+.1f (%+.1f to %+.1f)", b, b - 1.96 * se, b + 1.96 * se),
+                      spec = paste0(spec, " (", n, " authorities)")) |>
+  select(spec, group, v) |> pivot_wider(names_from = group, values_from = v) |>
+  select(`Specification` = spec, `All pupils`, Disadvantaged, `Non-disadvantaged`) |> kt(align = "lrrr")
+```
+
+The slope is about `r round(lm_b("Disadvantaged", S1) / lm_b("Non-disadvantaged", S1))` times steeper for disadvantaged pupils than for non-disadvantaged pupils once share and urbanity are allowed for, and about `r round(lm_b("Disadvantaged", S2) / lm_b("Non-disadvantaged", S2))` times steeper without London. London pulls the fit up, because its schools are close together and its disadvantaged pupils attend well, so the row without London is the more cautious. There, the slope for non-disadvantaged pupils is no longer clearly above zero.
+
+Brighton and Hove's deprived neighbourhoods are `r kms(bh_near - med_la)` km further from a school than the median authority's. If those slopes applied here, that would go with `r sprintf("%.1f", imp("Disadvantaged", S2))` to `r sprintf("%.1f", imp("Disadvantaged", S1))` points of disadvantaged absence, out of the `r sprintf("%.1f", bh_gap_eng)` by which the city is above England. So distance could be part of the answer, and it is not all of it.
+
+It is the distance that goes with absence, not the gap within the authority. Added to the same model, how much further the deprived neighbourhoods are than the rest has no clear relationship with absence for any group (`r paste(sprintf("%s t = %.1f", tolower(D$la_ratio_models$group), D$la_ratio_models$t), collapse = ", ")`). Fairness in access and the level of access are separate questions.
+
+### By school, for all pupils {#sec-school}
+
+DfE does not publish absence by disadvantage school by school, so this test is for all pupils. For each school, its "nearest children" are those in the Output Areas for which it is the nearest school, and the measure is how far they live from it, typically `r kms(D$school_km$p50)` km (a tenth of schools under `r kms(D$school_km$p10)` km and a tenth over `r kms(D$school_km$p90)` km). It is a stand-in: pupils often go elsewhere. Selective schools, and schools that are nearest for fewer than 100 children, are left out. Models compare schools within the same local authority.
+
+```{r}
+#| label: tbl-kinds
+#| tbl-cap: "How a school's absence, autumn and spring 2025/26, goes with how far its nearest children live: the change for each doubling of the distance, with 95% intervals, given its pupils' disadvantage, English as an additional language, prior attainment, special needs, mobility, sex, neighbourhood education, age range and kind of place, within local authority. The last column is how much more each doubling goes with for each extra 10 points of free school meals at the school."
+D$kinds |> transmute(`Kind of absence` = outcome, `Mean` = sprintf("%.1f", mean),
+    `Each doubling of distance` = sprintf("%+.2f (%+.2f to %+.2f)", b, b - 1.96 * se, b + 1.96 * se),
+    `Extra, per 10 points of FSM` = sprintf("%+.2f (%+.2f to %+.2f)", 10 * b_int, 10 * (b_int - 1.96 * se_int), 10 * (b_int + 1.96 * se_int))) |>
+  kt(align = "lrrr")
+```
+
+Each doubling goes with `r sprintf("%.2f", kn("Overall absence"))` points more absence, against a mean of `r sprintf("%.1f", kn("Overall absence", "mean"))`, which is small, as FFT found. It shows up in illness (`r sprintf("%+.2f", kn("Illness"))`) and in persistent absence (`r sprintf("%+.2f", kn("Persistent absence (% of pupils)"))` points of pupils), more clearly than in unauthorised absence (`r sprintf("%+.2f", kn("Unauthorised"))`). It is also stronger in schools with more disadvantaged pupils, which fits FFT's result and the authority test above.
+
+**Does it matter more in towns and cities?** The [roadmap](roadmap.qmd) asked this: a longer urban journey may pass more places to stop, while long rural journeys are normal and often by school transport.
+
+```{r}
+#| label: tbl-place
+#| tbl-cap: "Absence for each doubling of how far a school's nearest children live, by kind of place, with 95% intervals: overall absence in autumn and spring 2025/26 as in the table above, and absence above what intake predicts, 2021/22 to 2024/25."
+ord_p <- c(UR, UF, RU)
+tibble(`Kind of place` = ord_p,
+       Schools = vapply(ord_p, function(p) format(kp("Overall absence", p, "n"), big.mark = ","), ""),
+       `Overall absence, 2025/26` = vapply(ord_p, function(p) { b <- kp("Overall absence", p); s <- kp("Overall absence", p, "se"); sprintf("%+.2f (%+.2f to %+.2f)", b, b - 1.96 * s, b + 1.96 * s) }, ""),
+       `Above intake, 2021/22 to 2024/25` = vapply(ord_p, function(p) { b <- ex(p); s <- ex(p, "se"); sprintf("%+.2f (%+.2f to %+.2f)", b, b - 1.96 * s, b + 1.96 * s) }, "")) |>
+  kt(align = "lrrr")
+```
+
+The evidence is clear only for urban schools near a major town or city, where most schools are. Elsewhere there are fewer schools, the intervals are wide and the two measures disagree, so this cannot yet say that distance matters less in rural areas.
+
+### And results? {#sec-results}
+
+```{r}
+#| label: tbl-results
+#| tbl-cap: "Attainment 8 for each doubling of how far a school's nearest children live, on the Value Added v2.1 specification for each group of pupils, with a school term, fitted on 2021/22 to 2024/25, with and without absence in the model. Percentage of Attainment 8, with 95% intervals."
+D$results |> mutate(v = sprintf("%+.1f%% (%+.1f to %+.1f)", b, b - 1.96 * se, b + 1.96 * se),
+                    m = ifelse(absence_in_model, "With absence in the model", "Without absence in the model")) |>
+  select(Group = group, m, v) |> pivot_wider(names_from = m, values_from = v) |>
+  select(Group, `Without absence in the model`, `With absence in the model`) |> kt(align = "lrr")
+```
+
+Schools whose nearest children live further away have lower results than their intake predicts, by more for disadvantaged pupils (`r sprintf("%.1f%%", rs("Disadvantaged", FALSE))` for each doubling) than for non-disadvantaged pupils (`r sprintf("%.1f%%", rs("Non-disadvantaged", FALSE))`) or all pupils (`r sprintf("%.1f%%", rs("All pupils", FALSE))`). Allowing for absence takes away about half of that for disadvantaged pupils. These are small differences, and part of what they measure may be the kind of place rather than the journey.
+
+## What if a school were somewhere else? {#sec-whatif}
+
+Straight lines make this quick to test. These keep every neighbourhood and its children where they are and move only the school.
+
+```{r}
+#| label: tbl-whatif
+#| tbl-cap: !expr paste0("Brighton and Hove with a school in a different place. Straight-line distance to the nearest school, and where the difference would rank among ", nd, " districts. The Longhill and CoMArt sites are those in the city's school system model.")
+D$whatif |> transmute(Scenario = scenario, `Most deprived third (km)` = kms(near_dep), `Other neighbourhoods (km)` = kms(near_rest),
+    `How much further` = sprintf("%+.0f%%", 100 * (ratio - 1)), Rank = paste0(rank, " of ", nd)) |> kt(align = "lrrrr")
+```
+
+Either change would take about `r kms(wi("Today", "near_dep") - wi("Longhill", "near_dep"))` km off the distance from the city's deprived neighbourhoods and close most of the gap, which fits the [closure of CoMArt in 2005](https://adamdennett.github.io/bh-school-system/analysis.html#sec-comart) having left the east without a school nearby. Moving Longhill leaves the average for other neighbourhoods much the same, though those near its present site would be further from a school. This is not a forecast of where children would go or how they would travel: [the school system analysis](https://adamdennett.github.io/bh-school-system/analysis.html#sec-weighing) models that, along with the costs.
+
+## What this cannot say, and what comes next {#sec-next}
+
+- **Straight lines are not journeys.** Hills, the sea, bus routes and bus fares are all missing, and they may matter most in places like Brighton and Hove.
+- **The nearest school is not the school attended.** Catchments, admissions and choice decide that. FFT measured from pupils' own postcodes; here distance describes where schools and children are.
+- **These are comparisons between places and schools,** so they show patterns, not what would happen to one child's attendance if their journey changed.
+
+Next on the [roadmap](roadmap.qmd):
+
+1. Walk and public transport journey times with r5r for Brighton and Hove's comparator cities, using the same method as [the city's school system model](https://adamdennett.github.io/bh-school-system/).
+2. Better school-level measures. A gravity model of who goes where would improve on "nearest children", until a published measure of how far each school's pupils travel exists.
+3. Journey time and absence together, to test whether time predicts absence better than distance, and whether the rural and urban difference holds.

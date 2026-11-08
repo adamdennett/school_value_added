@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Distance to school – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="./method.html">
+ <span class="dropdown-text">Value Added v2.1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./v22.html">
+ <span class="dropdown-text">v2.2 candidates</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./geography.html">
+ <span class="dropdown-text">Across England</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_types.html">
+ <span class="dropdown-text">Neighbourhood types (OAC)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_covariates.html">
+ <span class="dropdown-text">Neighbourhood covariates (experiment)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./distance.html">
+ <span class="dropdown-text">Distance to school</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-absence" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Absence</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-absence">    
+        <li>
+    <a class="dropdown-item" href="./absence_causes.html">
+ <span class="dropdown-text">What goes with absence</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./absence_change.html">
+ <span class="dropdown-text">How absence changes</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./twins.html"> 
+<span class="menu-text">Find a twin</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./simulator.html"> 
+<span class="menu-text">Simulator</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./independent.html"> 
+<span class="menu-text">Independent schools</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sec-measure" id="toc-sec-measure" class="nav-link active" data-scroll-target="#sec-measure">What this measures</a></li>
+  <li><a href="#sec-england" id="toc-sec-england" class="nav-link" data-scroll-target="#sec-england">Across England, deprived neighbourhoods are nearer</a></li>
+  <li><a href="#sec-districts" id="toc-sec-districts" class="nav-link" data-scroll-target="#sec-districts">Where it runs the other way</a>
+  <ul class="collapse">
+  <li><a href="#sec-maps" id="toc-sec-maps" class="nav-link" data-scroll-target="#sec-maps">Brighton and Hove and Hastings on the map</a></li>
+  <li><a href="#sec-checks" id="toc-sec-checks" class="nav-link" data-scroll-target="#sec-checks">Does it depend on how it is measured?</a></li>
+  </ul></li>
+  <li><a href="#sec-absence" id="toc-sec-absence" class="nav-link" data-scroll-target="#sec-absence">Does absence go with distance?</a>
+  <ul class="collapse">
+  <li><a href="#sec-la" id="toc-sec-la" class="nav-link" data-scroll-target="#sec-la">By authority, for all three groups</a></li>
+  <li><a href="#sec-school" id="toc-sec-school" class="nav-link" data-scroll-target="#sec-school">By school, for all pupils</a></li>
+  <li><a href="#sec-results" id="toc-sec-results" class="nav-link" data-scroll-target="#sec-results">And results?</a></li>
+  </ul></li>
+  <li><a href="#sec-whatif" id="toc-sec-whatif" class="nav-link" data-scroll-target="#sec-whatif">What if a school were somewhere else?</a></li>
+  <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next">What this cannot say, and what comes next</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Distance to school</h1>
+<p class="subtitle lead">A first check, in straight lines: do children in deprived neighbourhoods live further from a secondary school than their neighbours, where is that unusual, and does absence go with it?</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>In short
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Across England, children in deprived neighbourhoods usually live closer to a secondary school.</strong> That holds in cities, towns and the countryside, and in 81% of districts.</li>
+<li><strong>Brighton and Hove is the other way round.</strong> Children in the most deprived third of its neighbourhoods live 1.57 km from their nearest school, in a straight line, and the rest live 1.18 km. That is 33% further, the 5th largest difference of 293 districts proportionately and the 2nd largest in kilometres. Among the 109 mostly urban local authorities, none has its deprived neighbourhoods further from a school.</li>
+<li><strong>Absence goes with distance, and more for disadvantaged pupils.</strong> Where deprived neighbourhoods are a kilometre further from a school, disadvantaged pupils’ absence is 2.0 to 3.7 points higher. For non-disadvantaged pupils it is 0.3 to 0.4 points and for all pupils 0.9 to 1.7. This is association across authorities, not proof of cause.</li>
+<li><strong>Moving a school would change this.</strong> A school back on CoMArt’s old site, or Longhill moved to the top of Elm Grove, would bring the deprived neighbourhoods of Brighton and Hove to about 1.19 to 1.21 km and close most of the gap.</li>
+<li><strong>These are straight lines.</strong> They ignore hills, bus routes and catchments, and a child’s nearest school need not be the one they attend. Journey times come <a href="#sec-next">next</a>.</li>
+</ul>
+</div>
+</div>
+<section id="sec-measure" class="level2">
+<h2 class="anchored" data-anchor-id="sec-measure">What this measures</h2>
+<p>How far each school’s own pupils travel is not published, so this page starts from where children live and where schools are.</p>
+<ul>
+<li><strong>Schools.</strong> Every open state-funded secondary, all-through and middle deemed secondary school in England in the DfE’s register, Get Information About Schools (June 2026): 3,282 schools taking pupils at 13 or younger and keeping them to at least 16. Special schools, pupil referral units and independent schools are left out.</li>
+<li><strong>Neighbourhoods.</strong> England’s 33,755 Census 2021 Lower Layer Super Output Areas, each placed at the mean of its Output Areas’ population-weighted centroids. Averages are weighted by the 10 to 14 year olds living there.</li>
+<li><strong>Deprivation.</strong> The share of households deprived in two or more of the Census’s four dimensions (employment, education, health, housing), the same measure as <a href="./neighbourhood_covariates.html">the neighbourhood covariates</a>.</li>
+<li><strong>Distance.</strong> The straight line to the nearest school. Each place’s neighbourhoods are split into its most deprived third and the rest, so the comparison is always within one place.</li>
+<li><strong>Kind of place.</strong> The ONS 2021 rural-urban classification. A district or authority is “mostly urban” if at least 80% of its 10 to 14 year olds live in urban neighbourhoods.</li>
+</ul>
+<p>Schools in Wales are not in the register used here, so a few neighbourhoods on the border look further from a school than they are.</p>
+</section>
+<section id="sec-england" class="level2">
+<h2 class="anchored" data-anchor-id="sec-england">Across England, deprived neighbourhoods are nearer</h2>
+<p>Within each kind of place, the most deprived neighbourhoods tend to be among the closest to a school. One likely reason is that they are usually denser and more central.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-national" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-national-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="distance_files/figure-html/fig-national-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-national-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Mean straight-line distance from home to the nearest state secondary school, by how deprived the neighbourhood is (England’s tenths, 10 = most deprived) and the ONS 2021 rural-urban class of the neighbourhood. Weighted by 10 to 14 year olds.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Taken across England as a whole, children in the most deprived third of neighbourhoods live 1.00 km from a school and the rest 1.75 km. Much of that is town against country, which is why the rest of this page compares neighbourhoods within one place.</p>
+</section>
+<section id="sec-districts" class="level2">
+<h2 class="anchored" data-anchor-id="sec-districts">Where it runs the other way</h2>
+<p>In 19% of England’s 293 districts, children in the most deprived third of neighbourhoods live further from a school than the rest. Among the 173 mostly urban districts it is 27%. Brighton and Hove is near the top of both lists.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-districts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="distance_files/figure-html/fig-districts-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-districts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: How much further children in the most deprived third of neighbourhoods live from their nearest school than children in the rest of the same district, for all 293 districts, from largest to smallest. Above 1, the deprived neighbourhoods are further away.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-top" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: The districts where children in deprived neighbourhoods live furthest from a school, relative to the rest of the district, with the rank in kilometres. Straight-line distance to the nearest school, in kilometres.
+</figcaption>
+<div aria-describedby="tbl-top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">District</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Most deprived third</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Other neighbourhoods</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Difference (km)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank in km</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of place</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Havering</td>
+<td style="text-align: right;">1.15</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">+0.37</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Three Rivers</td>
+<td style="text-align: right;">1.92</td>
+<td style="text-align: right;">1.37</td>
+<td style="text-align: right;">+0.55</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Derby</td>
+<td style="text-align: right;">1.24</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">+0.33</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Tameside</td>
+<td style="text-align: right;">1.17</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">+0.29</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">1.57</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">+0.39</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Basildon</td>
+<td style="text-align: right;">1.56</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">+0.37</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Hastings</td>
+<td style="text-align: right;">1.67</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;">+0.38</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Wandsworth</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">+0.17</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">St Albans</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">+0.25</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Mostly urban</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">East Hertfordshire</td>
+<td style="text-align: right;">2.10</td>
+<td style="text-align: right;">1.71</td>
+<td style="text-align: right;">+0.39</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Mixed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The list mixes outer London boroughs, commuter towns and cities such as Derby. Here is Brighton and Hove against other coastal and urban places, and against the rest of Sussex:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-compare" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="distance_files/figure-html/fig-compare-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Straight-line distance to the nearest school: children in the most deprived third of each place’s neighbourhoods against children in the rest.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-compare" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Places compared. Distance as above, with absence in state-funded secondary schools, full year 2024/25, for all three groups of pupils, and the share of secondary pupils who are disadvantaged (DfE, absence by pupil characteristics). DfE publishes these by authority, not by district, so Hastings has none.
+</figcaption>
+<div aria-describedby="tbl-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Place</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Most deprived third (km)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Other (km)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">How much further</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence: disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence: non-disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence: all pupils</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: right;">1.57</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">+33%</td>
+<td style="text-align: right;">5 of 293</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">18.0%</td>
+<td style="text-align: right;">8.0%</td>
+<td style="text-align: right;">10.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hastings</td>
+<td style="text-align: right;">1.67</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;">+30%</td>
+<td style="text-align: right;">7 of 293</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blackpool</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">+17%</td>
+<td style="text-align: right;">13 of 293</td>
+<td style="text-align: right;">48%</td>
+<td style="text-align: right;">13.2%</td>
+<td style="text-align: right;">6.1%</td>
+<td style="text-align: right;">9.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Southampton</td>
+<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">+12%</td>
+<td style="text-align: right;">20 of 293</td>
+<td style="text-align: right;">41%</td>
+<td style="text-align: right;">15.7%</td>
+<td style="text-align: right;">6.8%</td>
+<td style="text-align: right;">10.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portsmouth</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">+4%</td>
+<td style="text-align: right;">44 of 293</td>
+<td style="text-align: right;">39%</td>
+<td style="text-align: right;">15.5%</td>
+<td style="text-align: right;">6.4%</td>
+<td style="text-align: right;">10.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Plymouth</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">0.89</td>
+<td style="text-align: right;">-6%</td>
+<td style="text-align: right;">80 of 293</td>
+<td style="text-align: right;">30%</td>
+<td style="text-align: right;">16.4%</td>
+<td style="text-align: right;">7.4%</td>
+<td style="text-align: right;">10.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Newham</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">-9%</td>
+<td style="text-align: right;">93 of 293</td>
+<td style="text-align: right;">51%</td>
+<td style="text-align: right;">8.3%</td>
+<td style="text-align: right;">5.5%</td>
+<td style="text-align: right;">7.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bristol</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">-14%</td>
+<td style="text-align: right;">115 of 293</td>
+<td style="text-align: right;">36%</td>
+<td style="text-align: right;">15.8%</td>
+<td style="text-align: right;">7.2%</td>
+<td style="text-align: right;">10.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tower Hamlets</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">-17%</td>
+<td style="text-align: right;">132 of 293</td>
+<td style="text-align: right;">56%</td>
+<td style="text-align: right;">7.6%</td>
+<td style="text-align: right;">5.1%</td>
+<td style="text-align: right;">6.5%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section id="sec-maps" class="level3">
+<h3 class="anchored" data-anchor-id="sec-maps">Brighton and Hove and Hastings on the map</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-dots" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="distance_files/figure-html/fig-dots-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Each dot is a neighbourhood, sized by its 10 to 14 year olds and shaded by the straight-line distance to its nearest secondary school. A ring marks the most deprived third of the place’s neighbourhoods. Diamonds are state secondary schools. Census 2021 and Get Information About Schools.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In Brighton and Hove, the neighbourhoods furthest from a school are in the east of the city, around Whitehawk, between the central schools and Longhill. The <a href="https://adamdennett.github.io/bh-school-system/analysis.html">city’s school system</a> model finds the same in routed walk and bus times: in its <a href="https://adamdennett-bh-school-system.share.connect.posit.cloud/">simulator</a>, disadvantaged children travel about 4 minutes further each way than everyone else.</p>
+</section>
+<section id="sec-checks" class="level3">
+<h3 class="anchored" data-anchor-id="sec-checks">Does it depend on how it is measured?</h3>
+<div class="cell">
+<div id="tbl-checks" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-checks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: How much further the most deprived third of neighbourhoods is from a school than the rest, on five versions of the measure, with each place’s rank of 293 districts.
+</figcaption>
+<div aria-describedby="tbl-checks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Brighton and Hove</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Hastings</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Blackpool</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Nearest school (headline)</td>
+<td style="text-align: right;">+33% (5)</td>
+<td style="text-align: right;">+30% (7)</td>
+<td style="text-align: right;">+17% (13)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nearest, measured from Output Areas</td>
+<td style="text-align: right;">+35% (3)</td>
+<td style="text-align: right;">+27% (7)</td>
+<td style="text-align: right;">+17% (12)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mean of the three nearest</td>
+<td style="text-align: right;">+24% (4)</td>
+<td style="text-align: right;">+6% (36)</td>
+<td style="text-align: right;">+4% (42)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nearest neither selective nor faith</td>
+<td style="text-align: right;">+23% (12)</td>
+<td style="text-align: right;">-6% (85)</td>
+<td style="text-align: right;">+10% (31)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nearest; deprived in one or more dimensions</td>
+<td style="text-align: right;">+28% (10)</td>
+<td style="text-align: right;">+23% (13)</td>
+<td style="text-align: right;">+20% (17)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Brighton and Hove’s result holds on every version: its deprived neighbourhoods are 23% to 35% further, in the top 12 of 293 districts. Hastings and Blackpool are less certain. Their deprived neighbourhoods are further from their nearest school, but the difference is much smaller on the mean of the three nearest (+6% and +4%). In Hastings it reverses (-6%) if faith and selective schools are set aside.</p>
+</section>
+</section>
+<section id="sec-absence" class="level2">
+<h2 class="anchored" data-anchor-id="sec-absence">Does absence go with distance?</h2>
+<p><a href="https://ffteducationdatalab.org.uk/2023/11/are-pupils-who-live-further-away-from-their-school-absent-more-often/">FFT Education Datalab</a> compared pupils within schools, using straight-line distance from their home postcodes. Those living furthest away were absent slightly more often, and the difference was wider for disadvantaged pupils. FFT calls distance “a relatively minor factor” and suggests that travel times may be instructive. The published data allow two further tests.</p>
+<section id="sec-la" class="level3">
+<h3 class="anchored" data-anchor-id="sec-la">By authority, for all three groups</h3>
+<p>DfE publishes absence by disadvantage for each local authority, so the distance from deprived neighbourhoods to a school can be set against absence for each group of pupils.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-absence" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="distance_files/figure-html/fig-absence-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Absence in state-funded secondary schools, 2024/25, against the straight-line distance to a school from the most deprived third of each local authority’s neighbourhoods, for 151 authorities. Lines are simple fits.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-la" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Points of absence for each extra kilometre between an authority’s most deprived neighbourhoods and a school, for each group of pupils, with 95% intervals. Second and third rows allow for the share of pupils who are disadvantaged and how urban the authority is.
+</figcaption>
+<div aria-describedby="tbl-la-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Specification</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadvantaged</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Distance alone (151 authorities)</td>
+<td style="text-align: right;">+1.0 (+0.6 to +1.4)</td>
+<td style="text-align: right;">+3.9 (+3.1 to +4.8)</td>
+<td style="text-align: right;">+0.7 (+0.5 to +0.9)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Given the share disadvantaged and how urban (151 authorities)</td>
+<td style="text-align: right;">+1.7 (+1.1 to +2.3)</td>
+<td style="text-align: right;">+3.7 (+2.5 to +5.0)</td>
+<td style="text-align: right;">+0.4 (+0.1 to +0.8)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">And without London (119 authorities)</td>
+<td style="text-align: right;">+0.9 (+0.3 to +1.4)</td>
+<td style="text-align: right;">+2.0 (+0.8 to +3.2)</td>
+<td style="text-align: right;">+0.3 (-0.1 to +0.7)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The slope is about 9 times steeper for disadvantaged pupils than for non-disadvantaged pupils once share and urbanity are allowed for, and about 6 times steeper without London. London pulls the fit up, because its schools are close together and its disadvantaged pupils attend well, so the row without London is the more cautious. There, the slope for non-disadvantaged pupils is no longer clearly above zero.</p>
+<p>Brighton and Hove’s deprived neighbourhoods are 0.56 km further from a school than the median authority’s. If those slopes applied here, that would go with 1.1 to 2.1 points of disadvantaged absence, out of the 4.8 by which the city is above England. So distance could be part of the answer, and it is not all of it.</p>
+<p>It is the distance that goes with absence, not the gap within the authority. Added to the same model, how much further the deprived neighbourhoods are than the rest has no clear relationship with absence for any group (disadvantaged t = -0.2, non-disadvantaged t = -1.4, all pupils t = -0.3). Fairness in access and the level of access are separate questions.</p>
+</section>
+<section id="sec-school" class="level3">
+<h3 class="anchored" data-anchor-id="sec-school">By school, for all pupils</h3>
+<p>DfE does not publish absence by disadvantage school by school, so this test is for all pupils. For each school, its “nearest children” are those in the Output Areas for which it is the nearest school, and the measure is how far they live from it, typically 1.14 km (a tenth of schools under 0.61 km and a tenth over 2.88 km). It is a stand-in: pupils often go elsewhere. Selective schools, and schools that are nearest for fewer than 100 children, are left out. Models compare schools within the same local authority.</p>
+<div class="cell">
+<div id="tbl-kinds" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-kinds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: How a school’s absence, autumn and spring 2025/26, goes with how far its nearest children live: the change for each doubling of the distance, with 95% intervals, given its pupils’ disadvantage, English as an additional language, prior attainment, special needs, mobility, sex, neighbourhood education, age range and kind of place, within local authority. The last column is how much more each doubling goes with for each extra 10 points of free school meals at the school.
+</figcaption>
+<div aria-describedby="tbl-kinds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of absence</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Each doubling of distance</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Extra, per 10 points of FSM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Overall absence</td>
+<td style="text-align: right;">8.3</td>
+<td style="text-align: right;">+0.25 (+0.13 to +0.37)</td>
+<td style="text-align: right;">+0.08 (-0.00 to +0.16)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Illness</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">+0.13 (+0.07 to +0.19)</td>
+<td style="text-align: right;">+0.03 (-0.01 to +0.07)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unauthorised</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">+0.06 (-0.03 to +0.15)</td>
+<td style="text-align: right;">+0.01 (-0.06 to +0.07)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Persistent absence (% of pupils)</td>
+<td style="text-align: right;">22.5</td>
+<td style="text-align: right;">+0.75 (+0.42 to +1.08)</td>
+<td style="text-align: right;">+0.28 (+0.07 to +0.49)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Each doubling goes with 0.25 points more absence, against a mean of 8.3, which is small, as FFT found. It shows up in illness (+0.13) and in persistent absence (+0.75 points of pupils), more clearly than in unauthorised absence (+0.06). It is also stronger in schools with more disadvantaged pupils, which fits FFT’s result and the authority test above.</p>
+<p><strong>Does it matter more in towns and cities?</strong> The <a href="./roadmap.html">roadmap</a> asked this: a longer urban journey may pass more places to stop, while long rural journeys are normal and often by school transport.</p>
+<div class="cell">
+<div id="tbl-place" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Absence for each doubling of how far a school’s nearest children live, by kind of place, with 95% intervals: overall absence in autumn and spring 2025/26 as in the table above, and absence above what intake predicts, 2021/22 to 2024/25.
+</figcaption>
+<div aria-describedby="tbl-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Kind of place</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Overall absence, 2025/26</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above intake, 2021/22 to 2024/25</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Urban, near a major town or city</td>
+<td style="text-align: right;">2,334</td>
+<td style="text-align: right;">+0.28 (+0.15 to +0.41)</td>
+<td style="text-align: right;">+0.25 (+0.12 to +0.38)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Urban, further from one</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">+0.21 (-0.14 to +0.55)</td>
+<td style="text-align: right;">-0.15 (-0.52 to +0.22)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rural</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">+0.21 (-0.06 to +0.49)</td>
+<td style="text-align: right;">-0.08 (-0.35 to +0.19)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The evidence is clear only for urban schools near a major town or city, where most schools are. Elsewhere there are fewer schools, the intervals are wide and the two measures disagree, so this cannot yet say that distance matters less in rural areas.</p>
+</section>
+<section id="sec-results" class="level3">
+<h3 class="anchored" data-anchor-id="sec-results">And results?</h3>
+<div class="cell">
+<div id="tbl-results" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7: Attainment 8 for each doubling of how far a school’s nearest children live, on the Value Added v2.1 specification for each group of pupils, with a school term, fitted on 2021/22 to 2024/25, with and without absence in the model. Percentage of Attainment 8, with 95% intervals.
+</figcaption>
+<div aria-describedby="tbl-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Without absence in the model</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">With absence in the model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">-0.5% (-1.0 to -0.1)</td>
+<td style="text-align: right;">-0.2% (-0.6 to +0.2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">-1.1% (-1.7 to -0.4)</td>
+<td style="text-align: right;">-0.5% (-1.0 to +0.1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">-0.7% (-1.1 to -0.3)</td>
+<td style="text-align: right;">-0.4% (-0.7 to -0.0)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Schools whose nearest children live further away have lower results than their intake predicts, by more for disadvantaged pupils (-1.1% for each doubling) than for non-disadvantaged pupils (-0.7%) or all pupils (-0.5%). Allowing for absence takes away about half of that for disadvantaged pupils. These are small differences, and part of what they measure may be the kind of place rather than the journey.</p>
+</section>
+</section>
+<section id="sec-whatif" class="level2">
+<h2 class="anchored" data-anchor-id="sec-whatif">What if a school were somewhere else?</h2>
+<p>Straight lines make this quick to test. These keep every neighbourhood and its children where they are and move only the school.</p>
+<div class="cell">
+<div id="tbl-whatif" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-whatif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8: Brighton and Hove with a school in a different place. Straight-line distance to the nearest school, and where the difference would rank among 293 districts. The Longhill and CoMArt sites are those in the city’s school system model.
+</figcaption>
+<div aria-describedby="tbl-whatif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Scenario</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Most deprived third (km)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Other neighbourhoods (km)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">How much further</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Today</td>
+<td style="text-align: right;">1.57</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">+33%</td>
+<td style="text-align: right;">5 of 293</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A school back on CoMArt's site</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">1.08</td>
+<td style="text-align: right;">+10%</td>
+<td style="text-align: right;">27 of 293</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Longhill moved to the top of Elm Grove</td>
+<td style="text-align: right;">1.21</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">+5%</td>
+<td style="text-align: right;">37 of 293</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Either change would take about 0.36 km off the distance from the city’s deprived neighbourhoods and close most of the gap, which fits the <a href="https://adamdennett.github.io/bh-school-system/analysis.html#sec-comart">closure of CoMArt in 2005</a> having left the east without a school nearby. Moving Longhill leaves the average for other neighbourhoods much the same, though those near its present site would be further from a school. This is not a forecast of where children would go or how they would travel: <a href="https://adamdennett.github.io/bh-school-system/analysis.html#sec-weighing">the school system analysis</a> models that, along with the costs.</p>
+</section>
+<section id="sec-next" class="level2">
+<h2 class="anchored" data-anchor-id="sec-next">What this cannot say, and what comes next</h2>
+<ul>
+<li><strong>Straight lines are not journeys.</strong> Hills, the sea, bus routes and bus fares are all missing, and they may matter most in places like Brighton and Hove.</li>
+<li><strong>The nearest school is not the school attended.</strong> Catchments, admissions and choice decide that. FFT measured from pupils’ own postcodes; here distance describes where schools and children are.</li>
+<li><strong>These are comparisons between places and schools,</strong> so they show patterns, not what would happen to one child’s attendance if their journey changed.</li>
+</ul>
+<p>Next on the <a href="./roadmap.html">roadmap</a>:</p>
+<ol type="1">
+<li>Walk and public transport journey times with r5r for Brighton and Hove’s comparator cities, using the same method as <a href="https://adamdennett.github.io/bh-school-system/">the city’s school system model</a>.</li>
+<li>Better school-level measures. A gravity model of who goes where would improve on “nearest children”, until a published measure of how far each school’s pupils travel exists.</li>
+<li>Journey time and absence together, to test whether time predicts absence better than distance, and whether the rural and urban difference holds.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
