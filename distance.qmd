@@ -133,15 +133,15 @@ ggplot(cp, aes(y = place)) +
 
 ```{r}
 #| label: tbl-compare
-#| tbl-cap: "Places compared. Distance as above, with absence in state-funded secondary schools, full year 2024/25, for all three groups of pupils, and the share of secondary pupils who are disadvantaged (DfE, absence by pupil characteristics). DfE publishes these by authority, not by district, so Hastings has none."
+#| tbl-cap: !expr paste0("Places compared. Distance to the nearest school in kilometres for the most deprived third of neighbourhoods and the rest, how much further that is, with the rank of ", nd, " districts in brackets, the share of secondary pupils who are disadvantaged, and absence in state-funded secondary schools, full year 2024/25, for disadvantaged pupils, non-disadvantaged pupils and all pupils (DfE, absence by pupil characteristics). DfE publishes these by authority, not by district, so Hastings has none.")
+na_dash <- function(x, f) ifelse(is.na(x), "–", sprintf(f, x))
 D$compare |> arrange(desc(ratio)) |>
-  transmute(Place = place, `Most deprived third (km)` = kms(near_dep), `Other (km)` = kms(near_rest),
-            `How much further` = sprintf("%+.0f%%", 100 * (ratio - 1)), `Rank of ` = paste0(rank_ratio, " of ", nd),
-            `Pupils disadvantaged` = ifelse(is.na(share), "–", sprintf("%.0f%%", share)),
-            `Absence: disadvantaged` = ifelse(is.na(abs_dis), "–", sprintf("%.1f%%", abs_dis)),
-            `Absence: non-disadvantaged` = ifelse(is.na(abs_non), "–", sprintf("%.1f%%", abs_non)),
-            `Absence: all pupils` = ifelse(is.na(abs_all), "–", sprintf("%.1f%%", abs_all))) |>
-  rename(`Rank` = `Rank of `) |> kt(align = "lrrrrrrrr")
+  transmute(Place = place, `Deprived third` = kms(near_dep), Other = kms(near_rest),
+            Further = paste0(sprintf("%+.0f%%", 100 * (ratio - 1)), " (", rank_ratio, ")"),
+            Share = na_dash(share, "%.0f%%"),
+            `Disadv.` = na_dash(abs_dis, "%.1f%%"), `Non-disadv.` = na_dash(abs_non, "%.1f%%"), All = na_dash(abs_all, "%.1f%%")) |>
+  kt(align = "lrrrrrrr") |>
+  kableExtra::add_header_above(c(" " = 1, "Distance to school" = 3, "Pupils disadv." = 1, "Absence" = 3))
 ```
 
 ### Brighton and Hove and Hastings on the map {#sec-maps}

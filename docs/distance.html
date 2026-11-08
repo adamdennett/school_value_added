@@ -480,22 +480,43 @@ Figure&nbsp;3: Straight-line distance to the nearest school: children in the mos
 <div id="tbl-compare" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Places compared. Distance as above, with absence in state-funded secondary schools, full year 2024/25, for all three groups of pupils, and the share of secondary pupils who are disadvantaged (DfE, absence by pupil characteristics). DfE publishes these by authority, not by district, so Hastings has none.
+Table&nbsp;2: Places compared. Distance to the nearest school in kilometres for the most deprived third of neighbourhoods and the rest, how much further that is, with the rank of 293 districts in brackets, the share of secondary pupils who are disadvantaged, and absence in state-funded secondary schools, full year 2024/25, for disadvantaged pupils, non-disadvantaged pupils and all pupils (DfE, absence by pupil characteristics). DfE publishes these by authority, not by district, so Hastings has none.
 </figcaption>
 <div aria-describedby="tbl-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
 <thead>
 <tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Distance to school
+</div></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Pupils disadv.
+</div></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Absence
+</div></th>
+</tr>
+<tr class="even">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Place</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Most deprived third (km)</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Other (km)</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">How much further</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Rank</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils disadvantaged</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Absence: disadvantaged</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Absence: non-disadvantaged</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Absence: all pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Deprived third</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Other</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Further</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Share</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All</th>
 </tr>
 </thead>
 <tbody>
@@ -503,8 +524,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Brighton and Hove</td>
 <td style="text-align: right;">1.57</td>
 <td style="text-align: right;">1.18</td>
-<td style="text-align: right;">+33%</td>
-<td style="text-align: right;">5 of 293</td>
+<td style="text-align: right;">+33% (5)</td>
 <td style="text-align: right;">28%</td>
 <td style="text-align: right;">18.0%</td>
 <td style="text-align: right;">8.0%</td>
@@ -514,8 +534,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Hastings</td>
 <td style="text-align: right;">1.67</td>
 <td style="text-align: right;">1.29</td>
-<td style="text-align: right;">+30%</td>
-<td style="text-align: right;">7 of 293</td>
+<td style="text-align: right;">+30% (7)</td>
 <td style="text-align: right;">–</td>
 <td style="text-align: right;">–</td>
 <td style="text-align: right;">–</td>
@@ -525,8 +544,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Blackpool</td>
 <td style="text-align: right;">1.02</td>
 <td style="text-align: right;">0.87</td>
-<td style="text-align: right;">+17%</td>
-<td style="text-align: right;">13 of 293</td>
+<td style="text-align: right;">+17% (13)</td>
 <td style="text-align: right;">48%</td>
 <td style="text-align: right;">13.2%</td>
 <td style="text-align: right;">6.1%</td>
@@ -536,8 +554,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Southampton</td>
 <td style="text-align: right;">0.87</td>
 <td style="text-align: right;">0.78</td>
-<td style="text-align: right;">+12%</td>
-<td style="text-align: right;">20 of 293</td>
+<td style="text-align: right;">+12% (20)</td>
 <td style="text-align: right;">41%</td>
 <td style="text-align: right;">15.7%</td>
 <td style="text-align: right;">6.8%</td>
@@ -547,8 +564,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Portsmouth</td>
 <td style="text-align: right;">0.85</td>
 <td style="text-align: right;">0.82</td>
-<td style="text-align: right;">+4%</td>
-<td style="text-align: right;">44 of 293</td>
+<td style="text-align: right;">+4% (44)</td>
 <td style="text-align: right;">39%</td>
 <td style="text-align: right;">15.5%</td>
 <td style="text-align: right;">6.4%</td>
@@ -558,8 +574,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Plymouth</td>
 <td style="text-align: right;">0.83</td>
 <td style="text-align: right;">0.89</td>
-<td style="text-align: right;">-6%</td>
-<td style="text-align: right;">80 of 293</td>
+<td style="text-align: right;">-6% (80)</td>
 <td style="text-align: right;">30%</td>
 <td style="text-align: right;">16.4%</td>
 <td style="text-align: right;">7.4%</td>
@@ -569,8 +584,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Newham</td>
 <td style="text-align: right;">0.53</td>
 <td style="text-align: right;">0.58</td>
-<td style="text-align: right;">-9%</td>
-<td style="text-align: right;">93 of 293</td>
+<td style="text-align: right;">-9% (93)</td>
 <td style="text-align: right;">51%</td>
 <td style="text-align: right;">8.3%</td>
 <td style="text-align: right;">5.5%</td>
@@ -580,8 +594,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Bristol</td>
 <td style="text-align: right;">0.84</td>
 <td style="text-align: right;">0.98</td>
-<td style="text-align: right;">-14%</td>
-<td style="text-align: right;">115 of 293</td>
+<td style="text-align: right;">-14% (115)</td>
 <td style="text-align: right;">36%</td>
 <td style="text-align: right;">15.8%</td>
 <td style="text-align: right;">7.2%</td>
@@ -591,8 +604,7 @@ Table&nbsp;2: Places compared. Distance as above, with absence in state-funded s
 <td style="text-align: left;">Tower Hamlets</td>
 <td style="text-align: right;">0.41</td>
 <td style="text-align: right;">0.50</td>
-<td style="text-align: right;">-17%</td>
-<td style="text-align: right;">132 of 293</td>
+<td style="text-align: right;">-17% (132)</td>
 <td style="text-align: right;">56%</td>
 <td style="text-align: right;">7.6%</td>
 <td style="text-align: right;">5.1%</td>
