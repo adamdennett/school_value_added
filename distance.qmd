@@ -448,10 +448,10 @@ This test cannot settle things for disadvantaged pupils, because most pupils in 
 
 ```{r}
 #| label: tbl-left
-#| tbl-cap: "What is left in the fullest model: share, urbanity, the group's ethnic mix, region, seven Census measures and six measures of pupils. Points of absence per kilometre, all years pooled, with 95% intervals, and how much of the variation in distance those controls account for."
+#| tbl-cap: "What is left in the fullest model: share, urbanity, the group's ethnic mix, region, seven Census measures and six measures of pupils. Points of absence per kilometre, all years pooled, with 95% intervals. Explained is the share of the variation in distance that those controls account for."
 R$group_mix |> filter(set == "And every control") |> mutate(v = ci2(b, se)) |> select(sample, group, v) |> pivot_wider(names_from = group, values_from = v) |>
-  left_join(R$full_models |> filter(group == "dis") |> transmute(sample, `Distance explained` = sprintf("%.0f%%", 100 * r2_dist), Authorities = las), by = "sample") |>
-  transmute(Sample = sample, Authorities, `All pupils` = all, Disadvantaged = dis, `Non-disadvantaged` = non, `Distance explained`) |> kt(align = "lrrrrr")
+  left_join(R$full_models |> filter(group == "dis") |> transmute(sample, `Explained` = sprintf("%.0f%%", 100 * r2_dist), Authorities = las), by = "sample") |>
+  transmute(Sample = sample, Authorities, `All pupils` = all, Disadvantaged = dis, `Non-disadvantaged` = non, `Explained`) |> kt(align = "lrrrrr")
 ```
 
 Across all authorities, no clear slope is left for any group: `r sprintf("%+.2f", gm("dis", "And every control"))` for disadvantaged pupils, with an interval from `r sprintf("%+.1f", gm("dis", "And every control") - 1.96 * gm("dis", "And every control", col = "se"))` to `r sprintf("%+.1f", gm("dis", "And every control") + 1.96 * gm("dis", "And every control", col = "se"))`. Adding distance to that model leaves its fit unchanged (R² `r sprintf("%.3f", fm("dis", "r2_without"))` to `r sprintf("%.3f", fm("dis", "r2_with"))`). But that interval does not mean zero. It still allows a little over one point per kilometre, and the controls account for `r sprintf("%.0f%%", 100 * fm("dis", "r2_dist"))` of the variation in distance, so the model has little left to work with, and 28 terms for `r nrow(la)` authorities.
@@ -684,11 +684,11 @@ ggplot(jl, aes(y = place)) + geom_segment(aes(x = t_dep, xend = t_rest, yend = p
 
 ```{r}
 #| label: tbl-journeys
-#| tbl-cap: "Minutes to the quickest state secondary school from the most deprived third of neighbourhoods and the rest, the difference, and the share of children over 30 minutes from a school by walking and bus. Deprived is the most deprived third. In order of the difference by walking and bus. Without allowing for hills."
+#| tbl-cap: "Minutes to the quickest state secondary school from the most deprived third of neighbourhoods and the rest, the difference, and the share of children over 30 minutes from a school by walking and bus. Dep. is the most deprived third; Rest is the other neighbourhoods. In order of the difference by walking and bus. Without allowing for hills."
 jw <- J$places |> filter(scenario %in% c("walk_bus", "walk")) |> select(place, scenario, t_dep, t_rest, gap, over30_dep, over30_rest) |> pivot_wider(names_from = scenario, values_from = c(t_dep, t_rest, gap, over30_dep, over30_rest)) |> arrange(desc(gap_walk_bus))
-jw |> transmute(Place = place, Deprived = sprintf("%.1f", t_dep_walk_bus), Other = sprintf("%.1f", t_rest_walk_bus), Gap = sprintf("%+.1f", gap_walk_bus),
-                `Deprived ` = sprintf("%.1f", t_dep_walk), `Other ` = sprintf("%.1f", t_rest_walk), `Gap ` = sprintf("%+.1f", gap_walk),
-                `Deprived  ` = sprintf("%.0f%%", over30_dep_walk_bus), `Other  ` = sprintf("%.0f%%", over30_rest_walk_bus)) |> kt(align = "lrrrrrrrr") |>
+jw |> transmute(Place = place, `Dep.` = sprintf("%.1f", t_dep_walk_bus), Rest = sprintf("%.1f", t_rest_walk_bus), Gap = sprintf("%+.1f", gap_walk_bus),
+                `Dep. ` = sprintf("%.1f", t_dep_walk), `Rest ` = sprintf("%.1f", t_rest_walk), `Gap ` = sprintf("%+.1f", gap_walk),
+                `Dep.  ` = sprintf("%.0f%%", over30_dep_walk_bus), `Rest  ` = sprintf("%.0f%%", over30_rest_walk_bus)) |> kt(align = "lrrrrrrrr") |>
   kableExtra::add_header_above(c(" " = 1, "Walking and bus (min)" = 3, "Walking alone (min)" = 3, "Over 30 min" = 2))
 ```
 
@@ -717,11 +717,11 @@ A long journey is one thing and a journey with a change of bus is another. Getti
 
 ```{r}
 #| label: tbl-structure
-#| tbl-cap: "How children would reach their quickest school, leaving at 07:45, 08:00 or 08:15, by the most deprived third of neighbourhoods (Deprived) and the rest. The share walking, the share needing two or more buses, and the average number of buses. Late if missed is how many minutes after 08:45 a child would arrive if they missed the last journey that gets there in time."
+#| tbl-cap: "How children would reach their quickest school, leaving at 07:45, 08:00 or 08:15, by the most deprived third of neighbourhoods (Dep.) and the rest (Rest). The share walking, the share needing two or more buses, and the average number of buses on each journey. Late if missed is how many minutes after 08:45 a child would arrive if they missed the last journey that gets there in time."
 st3 <- as.data.table(J$str_third)[!is.na(third)][, t3 := ifelse(third, "dep", "rest")]
 sw <- dcast(st3, place ~ t3, value.var = c("walk_only", "two_plus", "boardings", "late"))
-sw[order(-two_plus_dep)][, .(Place = place, Deprived = sprintf("%.0f%%", walk_only_dep), Other = sprintf("%.0f%%", walk_only_rest), `Deprived ` = sprintf("%.0f%%", two_plus_dep), `Other ` = sprintf("%.0f%%", two_plus_rest), `Deprived  ` = sprintf("%.2f", boardings_dep), `Other  ` = sprintf("%.2f", boardings_rest), `Deprived   ` = sprintf("%.1f", late_dep), `Other   ` = sprintf("%.1f", late_rest))] |> kt(align = "lrrrrrrrr") |>
-  kableExtra::add_header_above(c(" " = 1, "Walking" = 2, "Two or more buses" = 2, "Buses per journey" = 2, "Late if missed (min)" = 2))
+sw[order(-two_plus_dep)][, .(Place = place, `Dep.` = sprintf("%.0f%%", walk_only_dep), Rest = sprintf("%.0f%%", walk_only_rest), `Dep. ` = sprintf("%.0f%%", two_plus_dep), `Rest ` = sprintf("%.0f%%", two_plus_rest), `Dep.  ` = sprintf("%.2f", boardings_dep), `Rest  ` = sprintf("%.2f", boardings_rest), `Dep.   ` = sprintf("%.1f", late_dep), `Rest   ` = sprintf("%.1f", late_rest))] |> kt(align = "lrrrrrrrr") |>
+  kableExtra::add_header_above(c(" " = 1, "Walking" = 2, "2+ buses" = 2, "Buses each" = 2, "Late (min)" = 2))
 ```
 
 **Brighton and Hove's deprived neighbourhoods need the most changes.** `r sprintf("%.0f%%", js(BH, TRUE, "two_plus"))` of children in its most deprived third of neighbourhoods would need two or more buses to reach even the quickest school, against `r sprintf("%.0f%%", js(BH, FALSE, "two_plus"))` of the rest. In the other places shown, the highest figure for deprived neighbourhoods is `r sprintf("%.0f%%", max(st3$two_plus[st3$third & st3$place != BH]))`. `r sprintf("%.0f%%", js(BH, TRUE, "walk_only"))` of those children can walk fastest, against `r sprintf("%.0f%%", js(BH, FALSE, "walk_only"))` of the rest.
@@ -778,9 +778,9 @@ Straight lines also miss the hills. r5r's own elevation setting averages each st
 
 ```{r}
 #| label: tbl-climb-places
-#| tbl-cap: "Walking to the quickest school: metres climbed on the way there and on the way home, for the most deprived third of neighbourhoods (Deprived) and the rest, and the walking time to school with Tobler's hiking function, scaled to 3.6 km/h on the flat."
+#| tbl-cap: "Walking to the quickest school: metres climbed on the way there and on the way home, for the most deprived third of neighbourhoods (Dep.) and the rest (Rest), and the walking time to school with Tobler's hiking function, scaled to 3.6 km/h on the flat."
 cw <- dcast(st3, place ~ t3, value.var = c("up_out", "up_back", "t_flat", "t_out", "t_back"))
-cw[order(-up_back_dep)][, .(Place = place, Deprived = sprintf("%.0f", up_out_dep), Other = sprintf("%.0f", up_out_rest), `Deprived ` = sprintf("%.0f", up_back_dep), `Other ` = sprintf("%.0f", up_back_rest), `Deprived  ` = sprintf("%.1f", t_out_dep), `Other  ` = sprintf("%.1f", t_out_rest), `Deprived, flat` = sprintf("%.1f", t_flat_dep))] |> kt(align = "lrrrrrrr") |>
+cw[order(-up_back_dep)][, .(Place = place, `Dep.` = sprintf("%.0f", up_out_dep), Rest = sprintf("%.0f", up_out_rest), `Dep. ` = sprintf("%.0f", up_back_dep), `Rest ` = sprintf("%.0f", up_back_rest), `Dep.  ` = sprintf("%.1f", t_out_dep), `Rest  ` = sprintf("%.1f", t_out_rest), `Dep., flat` = sprintf("%.1f", t_flat_dep))] |> kt(align = "lrrrrrrr") |>
   kableExtra::add_header_above(c(" " = 1, "Metres up, to school" = 2, "Metres up, home" = 2, "Minutes to school" = 3))
 ```
 
