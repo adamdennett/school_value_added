@@ -168,7 +168,9 @@ la_abs <- la_abs |> filter(geographic_level == "Local authority")
 la <- authorities |> inner_join(la_abs, by = c("place" = "la_name"))
 message(nrow(la), " of ", nrow(la_abs), " authorities matched; unmatched: ", paste(setdiff(la_abs$la_name, la$place), collapse = "; "))
 la <- la |> filter(n_lsoa >= 30) |> identity()
-reg_of <- readRDS(here::here("data", "inputs.rds")) |> distinct(LANAME, gor_name) |> mutate(LANAME = as.character(LANAME))
+# A new authority can carry a blank region in early years, so keep one named row each
+reg_of <- readRDS(here::here("data", "inputs.rds")) |> distinct(LANAME, gor_name) |> filter(!is.na(gor_name)) |>
+  mutate(LANAME = as.character(LANAME)) |> distinct(LANAME, .keep_all = TRUE)
 la <- la |> left_join(reg_of, by = c("place" = "LANAME")) |> mutate(london = gor_name %in% "London")
 LA_GROUPS <- c(abs_dis = "Disadvantaged", abs_non = "Non-disadvantaged", abs_all = "All pupils")
 la_models <- bind_rows(lapply(names(LA_GROUPS), function(y) {

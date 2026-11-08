@@ -216,7 +216,7 @@ What the evidence on this site says about why places differ:
 
 ## How far from school? {#sec-distance}
 
-Where schools are is part of geography too. Across England, children in deprived neighbourhoods usually live closer to a secondary school. In Brighton and Hove they live about a third further away than their neighbours, and absence goes with distance, more for disadvantaged pupils. [Distance to school](distance.qmd) sets out a first test in straight lines.
+Where schools are is part of geography too. Across England, children in deprived neighbourhoods usually live closer to a secondary school. In Brighton and Hove they live about a third further away than their neighbours. Absence goes with distance in every year tested, more for disadvantaged pupils, though most of the size of that link between authorities is who lives where, and a smaller link remains. [Distance to school](distance.qmd) sets out the tests, in straight lines.
 
 ## What it means {#sec-means}
 

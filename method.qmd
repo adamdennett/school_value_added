@@ -930,6 +930,158 @@ bind_rows(shap_shares("all", "v2.0") |> mutate(model = "v2.0"),
   theme_note(14) + theme(legend.position = "bottom", legend.direction = "vertical")
 ```
 
+# Distance to school: data and calculations {#sec-distance-method}
+
+This section documents the [Distance to school](distance.qmd) analysis: where every input comes from, and how every measure is calculated. The code is `R/18_distance.R` (the distance measures for one year and the first tests) and `R/19_distance_absence.R` (years, measures, controls and the tests of how firm the link is). Both are public, build from the sources below, and write `data/distance.rds` and `data/distance_absence.rds`.
+
+```{r}
+#| include: false
+Dm <- readRDS(here::here("data", "distance.rds"))
+Rm <- readRDS(here::here("data", "distance_absence.rds"))
+Pm <- Rm$prov
+```
+
+## Where the data come from {#sec-distance-sources}
+
+```{r}
+#| label: tbl-distance-sources
+#| tbl-cap: "Every source used by the distance analysis. All are published and free to download."
+tibble::tribble(
+  ~Source, ~Publisher, ~`Vintage and unit`, ~`Used for`,
+  "<a href='https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/e2eb493a-dc95-41f4-96ef-b886c5cd2019'>Absence by pupil characteristic</a>", "DfE", "Full years 2018/19, 2020/21 to 2024/25; local authority where pupils go to school", "Absence by disadvantage and phase, and by ethnic group, by kind of absence, persistent absence, and the share disadvantaged",
+  "<a href='https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/6dd7f70e-440f-4c0f-b8d1-056678c25301'>Absence by pupil residence, IDACI and rurality</a>", "DfE", "2023/24 and 2024/25; local authority where pupils live, by IDACI tenth", "The within-authority tests. All pupils only",
+  "<a href='https://explore-education-statistics.service.gov.uk/find-statistics/pupil-absence-in-schools-in-england'>School-level absence, two terms</a>", "DfE", "Autumn and spring, 2018/19 to 2025/26; school", "The school tests. All pupils only",
+  "<a href='https://www.compare-school-performance.service.gov.uk/download-data'>School census and SEN</a>", "DfE", "January, each year to 2026; school", "Free school meals, SEN, English as an additional language, sex and size at school level",
+  "<a href='https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics'>Schools, pupils and their characteristics: pupils by free school meals and ethnicity</a>", "DfE", "January, 2018/19 to 2024/25 release; local authority and phase (spc_pupils_fsm_ethnicity_yrgp.csv)", "The ethnic mix of pupils eligible for free school meals, those not, and all pupils",
+  "<a href='https://get-information-schools.service.gov.uk/Downloads'>Get Information About Schools</a>", "DfE", "Extract of June 2026; every establishment, open or closed", "School location, type, phase, ages, admissions, faith, opening and closing dates",
+  "<a href='https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019'>English Indices of Deprivation 2019, File 7</a>", "MHCLG", "IoD 2019; 2011 LSOA", "IDACI score and tenth. DfE's absence statistics use the 2019 scores for 2021/22 to 2024/25",
+  "<a href='https://www.nomisweb.co.uk/sources/census_2021_bulk'>Census 2021</a>", "ONS, via nomis", "March 2021; Output Area and 2021 LSOA", "TS007a children; TS011 household deprivation; TS006 density; TS021 ethnic group; TS037 health; TS045 cars or vans; TS054 tenure; TS067 qualifications",
+  "<a href='https://geoportal.statistics.gov.uk/'>ONS Open Geography Portal</a>", "ONS", "2021 boundaries", "OA population-weighted centroids (OA_December_2021_EW_PWC_V4); OA to LSOA (OA_LSOA_MSOA_EW_DEC_2021_LU_v3); 2011 to 2021 LSOA (LSOA11_LSOA21_LAD22_EW_LU_v5); LSOA to district and authority (LSOA21_LAD23_EW_LU, LSOA21_UTLA23_EW_LU); rural-urban class (LSOA21_RUC21_EW_LU)"
+) |> kt(align = "llll", escape = FALSE)
+```
+
+## Where people and schools are {#sec-distance-places}
+
+All locations are on the British National Grid, in metres, so distance is simple geometry and needs no map projection.
+
+**Neighbourhoods.** The unit is the 2021 Lower Layer Super Output Area (LSOA), of which England has `r format(Pm$n_lsoa, big.mark = ",")`. An LSOA is placed at the mean of the population-weighted centroids of its Output Areas (`r format(Pm$n_oa, big.mark = ",")` in England). That puts it where people live rather than at the middle of its land, which matters for large rural LSOAs. Averaging the Output Area centroids gives each Output Area equal weight, rather than weighting by its population. The two are close, since Output Areas are built to be of similar size, and the measure from Output Areas directly is one of the checks.
+
+**Schools.** A school counts as secondary if its type group in GIAS is an academy, free school or local authority maintained school, its phase is secondary, all-through or middle deemed secondary, and it takes pupils at 13 or younger and keeps them to at least 16. This leaves out special schools, pupil referral units, independent schools, 16 to 19 colleges and university technical colleges that start at 14. Primary schools, used only for the falsification test, are those of primary, all-through or middle deemed primary phase.
+
+GIAS is used rather than the KS4 performance tables because the tables have no coordinates for 165 schools, mostly all-through, and miss schools too new to have a GCSE cohort. That omission affected an earlier version of this analysis.
+
+**The network each year.** Each year's network is the schools open that September: opened by 30 September and either still open or closed after 1 September. An academy conversion closes the old school number on 31 August and opens a new one on 1 September, so a converting school is counted once. All `r Pm$no_grid` closed secondary schools with no grid reference closed by 1994, so none affects these years. Schools that moved site carry their current location throughout, because GIAS does not keep earlier ones.
+
+```{r}
+#| label: tbl-distance-network
+#| tbl-cap: "State-funded secondary schools in the network each September, and authorities with absence by disadvantage that year. Authorities are fewer in earlier years because DfE's data then use boundaries since reorganised, which are not matched to 2023 authorities."
+Rm$network_n |> left_join(Rm$n_la_year, by = "tp") |> transmute(`School year` = year, Schools = format(schools, big.mark = ","), Authorities = ifelse(is.na(authorities), "–", as.character(authorities))) |> kt(align = "lrr")
+```
+
+## Measuring distance {#sec-distance-measures}
+
+**Nearest school.** For each neighbourhood $i$, the distance $d_i$ to the nearest school $s$ in the set $S$ is
+
+$$d_i = \min_{s \in S} \sqrt{(x_i - x_s)^2 + (y_i - y_s)^2}$$
+
+found with a k-d tree nearest-neighbour search (`nabor::knn`). It is a straight line and takes no account of roads, hills, the sea or admission rules.
+
+**The most deprived third.** Within each place, neighbourhoods are ranked by the share of households deprived in two or more of the Census's four dimensions (employment, education, health, housing), and the top third by number of neighbourhoods form the set $T$. The place's measure is the mean of $d_i$ weighted by $w_i$, the number of 10 to 14 year olds:
+
+$$D_{T} = \frac{\sum_{i \in T} w_i d_i}{\sum_{i \in T} w_i}$$
+
+and the same for the other two-thirds, $D_{R}$. The ratio $D_T / D_R$ is the "how much further" on the page. The third is taken within each place, so it means "most deprived for here", not an absolute level. Places are 2023 districts and upper-tier authorities with at least 30 LSOAs, which drops the Isles of Scilly and City of London.
+
+**Kind of place.** The ONS 2021 Rural Urban Classification of each neighbourhood. A place is "mostly urban" if at least 80% of its 10 to 14 year olds live in urban neighbourhoods. `r sum(Dm$authorities$urban_share >= 80)` of `r nrow(Dm$authorities)` authorities are. Others are "less urban".
+
+**The eleven versions.** `R/19_distance_absence.R` recalculates the measure for each authority and year in these ways:
+
+```{r}
+#| label: tbl-distance-versions
+#| tbl-cap: "The measures of distance from an authority's deprived neighbourhoods."
+tibble::tribble(
+  ~Measure, ~Calculation,
+  "Nearest school (headline)", "The mean distance for the most deprived third, D<sub>T</sub>, as above",
+  "Nearest school, logged", "log<sub>2</sub> of D<sub>T</sub>, so the slope is for each doubling",
+  "Mean of the three nearest", "Distance from each neighbourhood is the mean distance to the three nearest schools, since many children do not go to their nearest",
+  "Nearest neither selective nor faith", "The set of schools leaves out schools with selective admissions or a religious character, which many children cannot or would not attend",
+  "Nearest, from Output Areas", "Distance is measured from each Output Area and weighted by its children up to the LSOA",
+  "Deprived in one or more dimensions", "The third ranks neighbourhoods on one or more dimensions rather than two or more",
+  "Most deprived fifth", "The set is the top fifth rather than the top third",
+  "England's most deprived third", "The set is the neighbourhoods in England's most deprived third, wherever they are, if an authority has at least five",
+  "Weighted by household deprivation", "All neighbourhoods, weighted by 10 to 14 year olds times the share of households deprived",
+  "Weighted by child poverty (IDACI)", "All neighbourhoods, weighted by 10 to 14 year olds times the IDACI score: the distance for a typical child in income deprivation",
+  "Share of children over 2 km", "The share of children in the most deprived third living over 2 km from a school, in points"
+) |> kt(align = "ll", escape = FALSE)
+```
+
+These measures are in different units, so [the specification curve](distance.qmd#sec-curve) expresses slopes per standard deviation of the measure across authorities in that year.
+
+**A school's nearest children.** How far each school's pupils travel is not published. As a stand-in, each Output Area is assigned to its nearest school, which divides the country into Voronoi cells. A school's measure is the mean distance of its assigned Output Areas, weighted by their 10 to 14 year olds, and it is recalculated each year. Schools nearest for fewer than 100 children and selective schools are left out. Many pupils go elsewhere, so this describes where a school sits among children rather than who attends.
+
+**IDACI on 2021 neighbourhoods.** DfE's residence file uses the 2019 IDACI, which is published on 2011 LSOAs. The ONS lookup links them to 2021 LSOAs: in England `r format(Pm$lsoa_change$U, big.mark = ",")` links are unchanged, `r format(Pm$lsoa_change$S, big.mark = ",")` are splits, `r Pm$lsoa_change$M` merges and `r Pm$lsoa_change$X` more complex changes. Each 2021 LSOA takes the mean score of its linked 2011 LSOAs, and its national tenth comes from the score boundaries of the published tenths. No LSOA is left without a score. Children by tenth and authority, built this way, correlate at `r sprintf("%.3f", Pm$corr_cells)` with DfE's pupils by tenth and authority, which is the check that the two line up. Our IDACI is still an approximation for neighbourhoods whose boundaries changed.
+
+## Absence {#sec-distance-absence}
+
+- **Rates.** Overall absence is sessions missed as a percentage of sessions possible, calculated from DfE's counts. Illness uses authorised illness sessions, and unauthorised uses unauthorised sessions, over the same denominator. Persistent absence is the percentage of enrolments missing 10% or more of sessions.
+- **Disadvantaged pupils** are those DfE records as eligible for free school meals in the last six years, and non-disadvantaged pupils those not. The share disadvantaged is calculated from their enrolments, separately by phase and year.
+- **Two geographies.** The characteristics file places pupils where they go to school and the residence file where they live. So the within-authority tests are the closer match to home neighbourhoods. Children crossing authority boundaries add noise to the first.
+- **School files** cover the autumn and spring terms, which is why their rates differ from full-year figures. Schools are followed through changes of number using the links in GIAS, as on [How school absence changes](absence_change.qmd).
+
+## The models {#sec-distance-models}
+
+**Authorities.** For authority $a$, year $t$ and each group of pupils:
+
+$$A_{at} = \beta D_{at} + \gamma' X_{at} + \tau_t + \varepsilon_{at}$$
+
+where $A$ is absence, $D$ the distance measure, $X$ the controls and $\tau_t$ a year effect. Single-year models use robust (HC3) errors. Pooled models cluster errors by authority. One check allows errors to be correlated between authorities within 100 km (Conley). The authority-effects model adds $\alpha_a$ and so uses only changes in the network over time.
+
+**Controls.** They are built up in sets, used in [the specification curve](distance.qmd#sec-curve):
+
+1. Share of pupils disadvantaged, and percentage of 10 to 14 year olds in urban neighbourhoods.
+2. Region (the nine English regions).
+3. Census character of the authority: graduates (level 4 and above), bad or very bad health, White British residents, social renting, households with no car or van, households deprived in two or more dimensions, and the child-weighted mean of log population density.
+4. Pupils in the authority's secondary schools, weighted by size, from January 2026: SEN support, EHC plans, prior attainment, English as an additional language, White British share and mobility. These are one year's values applied to every year.
+5. The same group's primary absence in the same year.
+
+Some of these could lie on the path from distance to absence rather than confound it, such as density and car ownership, so the fullest models may take away part of what they are trying to measure.
+
+**The specification curve.** Every combination of year, measure, control set and sample (all authorities, without London, mostly urban, mostly urban without London, less urban), for each group of pupils and phase: `r format(nrow(Rm$curve), big.mark = ",")` models. The share "above zero" describes sensitivity to these choices, not statistical evidence. The models share data and are far from independent.
+
+**Ethnic mix of each group.** From DfE's counts of pupils by ethnicity and free school meal eligibility, for each authority, phase and year: the shares of a group who are White British, Asian, Black and of mixed heritage, out of those with a recorded ethnic group. Pupils known to be eligible stand in for disadvantaged pupils and those not for non-disadvantaged pupils, since DfE counts current eligibility here and eligibility in the last six years in the absence file. DfE's published categories are used, with Asian including Chinese.
+
+**What takes the slope away (Gelbach decomposition).** Let $b_0$ be the slope on distance given share, urbanity and year, and $b_1$ the slope when controls $z_k$ are added. Then
+
+$$b_0 - b_1 = \sum_k \hat\gamma_k \hat\delta_k$$
+
+where $\hat\gamma_k$ is the coefficient on $z_k$ in the full model and $\hat\delta_k$ the slope of $z_k$ on distance in the base model. This is an identity, so the parts add up exactly and do not depend on the order of the controls (Gelbach, 2016, *Journal of Labor Economics*). Parts are summed into blocks, with intervals from 300 bootstrap samples of authorities. It describes how the slope changes, and does not by itself show which controls are confounders and which mediators: that needs the reasoning on the Distance page.
+
+**Within ethnic groups.** The authority model, on absence for each ethnic group, for authorities with at least 100 pupils in that group, with distance from the deprived neighbourhoods and from where the group lives: $\sum_i n_{ei} d_i / \sum_i n_{ei}$ over all the authority's neighbourhoods, where $n_{ei}$ is the group's Census residents of all ages. DfE does not split these figures by disadvantage.
+
+**Direct standardisation.** For all pupils, expected absence for an authority is $\sum_e p_{ae} r_e$, where $p_{ae}$ is the share of its pupils in each of DfE's minor ethnic groups and $r_e$ is that group's national rate in that year. The slope of actual absence on distance then splits exactly into the slope of expected absence (mix) and the slope of actual minus expected (beyond mix).
+
+**The primary test.** The same model on primary absence, and on secondary minus primary absence for the same authority, year and group. The difference absorbs anything about a place that affects both phases equally.
+
+**Within authorities.** For pupils in authority $a$ and IDACI tenth $k$:
+
+$$A_{akt} = \beta D_{akt} + \gamma' C_{akt} + \alpha_{at} + \kappa_{kt} + \varepsilon_{akt}$$
+
+where $D_{akt}$ is the child-weighted distance from the authority's neighbourhoods in that tenth, $C$ is their Census character, and $\alpha_{at}$ and $\kappa_{kt}$ are effects for each authority and for each tenth, by year. So $\beta$ asks whether, in an authority, the tenths that are further from a school than the national pattern for those tenths have higher absence than expected. Groups with fewer than 30 pupils are dropped, models are weighted by pupils and errors are clustered by authority. Between-authority versions leave out $\alpha_{at}$.
+
+**Schools.** For school $s$ in year $t$, with $\log_2$ of the nearest-children distance $N$:
+
+$$A_{st} = \beta \log_2 N_{st} + \delta (\log_2 N_{st} \times F_{st}) + \gamma' Z_{st} + \lambda_{at} + \varepsilon_{st}$$
+
+where $F$ is the free school meals share, centred, and $Z$ is SEN support, EHC plans, English as an additional language, girls, log size and kind of place. A further version adds the school's White British share from the January 2026 census, held fixed across years because these files do not give earlier shares. Year-by-year models use authority effects. School-effects models replace them with an effect for each school, so $\beta$ uses only schools whose nearest children's distance changed. In those models $\delta$ is mostly driven by free school meals changing at schools whose distance did not, and among the `r Rm$sch_fe_moved$schools` schools with a change of 10% or more its estimate is not clear, so it is not reported as a response to network change.
+
+## What these calculations cannot do {#sec-distance-limits}
+
+- **The people are grouped, not individual.** DfE publishes no absence by disadvantage below authority level, and no disadvantage split in the residence file. The disadvantaged pupils in an authority do not all live in its most deprived third, so $D_T$ is a proxy for their distance, and these tests can differ from what would be found for individual children.
+- **Ethnic groups are broad.** Each combines very different communities, and they stand in for much that is not measured. Nothing here says why attendance differs between them. Pupil ethnicity is not split by disadvantage in the absence data.
+- **Census and IDACI are fixed.** Deprivation, children and Census character are from 2021, and IDACI from 2019, in every year. Only the school network and absence change.
+- **Straight lines are not journeys,** and the nearest school is not always attended.
+- **Network changes are not experiments.** Schools open where populations grow, and few authorities' distances changed much.
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

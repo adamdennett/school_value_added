@@ -150,6 +150,15 @@ subtitle: "What v2.1 does now, and what comes next."
       illness and persistent absence. It builds on
       [FFT Education Datalab's finding](https://ffteducationdatalab.org.uk/2023/11/are-pupils-who-live-further-away-from-their-school-absent-more-often/)
       that pupils who live further away are absent more often.
+- [x] **[How firm is the link with absence?](distance.qmd#sec-firm)** Six
+      years, eleven measures of distance and thousands of models for all three
+      groups of pupils, a falsification test on primary absence, DfE's absence
+      by home neighbourhood within each authority, and changes in the school
+      network. The link is consistent and stronger for disadvantaged pupils,
+      but most of its size between authorities is ethnic mix; a smaller link
+      remains in towns and cities, within authorities and between schools.
+      Every source and calculation is in
+      [the methodology](method.qmd#sec-distance-method).
 - [ ] **Distance to school, on the real networks.** Walk and public
       transport journey times with r5r for Brighton and Hove's comparator
       cities, as the
@@ -164,9 +173,10 @@ subtitle: "What v2.1 does now, and what comes next."
       and may matter *more* in towns and cities, where a longer journey
       passes more places to stop on the way (intervening opportunities),
       than in rural areas, where long journeys are the norm and often by
-      school transport. The [straight-line check](distance.qmd#sec-school)
-      finds a clear relationship only for urban schools near a major town
-      or city, and wide intervals elsewhere, so it needs journey times.
+      school transport. [Between authorities](distance.qmd#sec-urban) the
+      link is strong in mostly urban places and absent in less urban ones,
+      but within authorities and by school it is similar in both, so it needs
+      journey times and data on school transport.
 - [x] **[Independent schools](independent.qmd).** What is published for
       them, term by term against v2.1; why their Attainment 8 cannot be
       compared (IGCSEs score nothing, and KS4 and A level results are
