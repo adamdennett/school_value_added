@@ -6,7 +6,8 @@
 #   council_2024  The council's 2024 proposal: priority 6 (places at the community schools for
 #                 children from the single-school catchments) at 20%, with Dorothy Stringer
 #                 and Blatchington Mill each cut by 30 places to 300.
-#   p6_30         Priority 6 at 30%, as Class Divide argued for.
+#   p6_30_cuts    Priority 6 at 30% with the same cuts, as Class Divide argued for
+#                 (p6_30, without the cuts, for comparison).
 #
 # Both are run here, with the parts of the council's proposal separately, on the published
 # model itself: its app code and inputs (adamdennett/bh-school-system, app/R/model.R,

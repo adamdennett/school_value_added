@@ -188,7 +188,7 @@ subtitle: "What v2.1 does now, and what comes next."
       Attainment 8 point; where the schools are matters far more.
 - [x] **[The proposals that did not go ahead](distance.qmd#sec-proposals).**
       The council's 2024 proposal (priority 6 at 20%, Stringer and
-      Blatchington Mill at 300) and priority 6 at 30%, run on the published
+      Blatchington Mill at 300) and Class Divide's (30%, with the cuts), run on the published
       model: longer journeys and more children displaced, no gain in mixing,
       and nothing more from 30% than from 20%.
 - [ ] **Rail, Metro and trams.** Timetables beyond the Bus Open Data Service,
