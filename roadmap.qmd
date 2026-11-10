@@ -166,15 +166,25 @@ subtitle: "What v2.1 does now, and what comes next."
       stands out on real journeys as it does in straight lines. None of these
       shows a clear general link with absence yet; Longhill stands out on
       missing the bus.
-- [ ] **Journey times for the mostly urban authorities.** Routing enough places
-      to rerun the absence models on time rather than distance, and so test
-      whether time says more than straight lines.
-- [ ] **Points of interest around bus changes and along walking routes.**
-      From OpenStreetMap, within a couple of hundred metres of change points
-      and along routes, to test directly whether a longer urban journey matters
-      because it passes more places to stop. More general than shops, which may
-      not sell to children in school hours. The routes and change points are
-      ready for it.
+- [x] **[Journey times for the 109 mostly urban authorities](distance.qmd#sec-la-journeys).**
+      Every Output Area routed on 28 networks, London included (buses only).
+      No authority's deprived neighbourhoods are as far from a school as
+      Brighton and Hove's, mostly because of distance, and they need the most
+      changes of bus. Time does not beat straight-line distance for absence,
+      and changes, waits and missing a bus add nothing once distance is known.
+      The climb is the one feature that keeps appearing.
+- [x] **[Points of interest around bus changes and along walking routes](distance.qmd#sec-la-poi).**
+      From OpenStreetMap, in five groups. Nothing across authorities; within
+      authorities a hint that busier change points go with more secondary
+      absence, mostly in London, where bus-only routes are least like real
+      journeys.
+- [x] **[What it could mean for GCSE results](distance.qmd#sec-gcse).**
+      Distance carried through absence to Attainment 8, a direct check, and
+      Gorard and Siddiqui's mixing estimate on the same scale.
+- [ ] **What Brighton and Hove's admissions changes did to journeys.** From
+      the city's school system model, to set against the mixing estimate.
+- [ ] **Rail, Metro and trams.** Timetables beyond the Bus Open Data Service,
+      for London and the large conurbations.
 - [ ] **School bells.** Published start times for each school, in place of the
       time inferred from the last school bus, for the penalty for missing one.
 - [ ] **Distance to school: how far each school's pupils travel.** A better

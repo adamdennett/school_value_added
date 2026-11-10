@@ -1178,6 +1178,124 @@ for slope $s$ in the direction of travel, and is applied to each stretch. Routes
 - *One file per network.* R5 reads one OpenStreetMap file per folder, so areas crossing county extracts are merged. Brighton and Hove is in the West Sussex extract.
 - *Agreement with the city's model.* See [the page](distance.qmd#sec-journey-limits).
 
+## Journeys in the 109 mostly urban authorities: data and calculations {#sec-la-routing-method}
+
+The [109-authority analysis](distance.qmd#sec-la-journeys) repeats the routing above at scale. The code is `R/26_la_networks.R` (networks and their inputs), `R/27_la_routing.R` (routing, one network at a time), `R/28_la_pois.R` (points of interest, [below](#sec-poi-method)) and `R/29_la_analysis.R` (measures and models), with `pipeline/la_resume.sh` and `pipeline/la_pause.sh` to run the routing in stages. Only `R/29`'s output, `data/journey_la.rds`, is committed; the networks and routes run to many gigabytes.
+
+```{r}
+#| include: false
+library(data.table)
+JLm <- readRDS(here::here("data", "journey_la.rds"))
+PLm <- JLm$places[JLm$places$in_models == TRUE, ]
+```
+
+**Which authorities.** The sample is [R/19's "mostly urban" authorities](#sec-distance-models): at least 80% of children aged 10 to 14 living in urban LSOAs on the ONS 2021 rural-urban classification, and at least 30 LSOAs. That gives `r nrow(PLm)`: `r sum(PLm$london)` London boroughs and `r sum(!PLm$london)` others. Hastings was routed as well, so that the [nine places](distance.qmd#sec-journeys) can be reproduced, but it is a district and has no DfE absence by characteristic, so it is not in the models. In all, `r format(JLm$n_oas, big.mark = ",")` Output Areas were routed.
+
+**Networks.** Neighbouring authorities share a network, so that a child can be routed across a boundary to the nearest school: `r nrow(JLm$nets)` networks, from London's `r format(JLm$nets$oas[JLm$nets$net == "london"], big.mark = ",")` Output Areas in `r JLm$nets$las[JLm$nets$net == "london"]` boroughs to single authorities. Each takes the [OpenStreetMap England extract](https://download.geofabrik.de/europe/united-kingdom/england.html) (Geofabrik, `england-latest.osm.pbf`, 1.71 GB, dated 8 November 2026), clipped with osmosis to a box 30 km beyond its Output Areas, keeping ways that cross the edge. Milton Keynes uses 31 km: at 30 km the edge cut a car park to a single point, and R5 stopped while building park-and-ride areas.
+
+```{r}
+#| label: tbl-la-networks
+#| tbl-cap: "The 28 networks. Schools are state secondary schools within reach of the network's Output Areas. Bus files are the Bus Open Data Service regional files used."
+nm <- JLm$flat_meta[, .(net, schools, feeds = gsub("gtfs_|\\.zip", "", feeds))]
+mem <- vapply(names(JLm$members), function(n) if (n == "london") "The 32 London boroughs" else paste(JLm$members[[n]], collapse = ", "), "")
+merge(JLm$nets[, .(net, las, oas)], nm, by = "net")[order(-oas)][, .(Network = gsub("_", " ", net), Authorities = mem[net], `Output Areas` = format(oas, big.mark = ","), Schools = schools, `Bus files` = gsub("_", " ", feeds))] |> kt(align = "llrrl")
+```
+
+**Bus files.** The Department for Transport's [Bus Open Data Service](https://data.bus-data.dft.gov.uk/downloads/) publishes GTFS timetables by region, but the regions follow operators, not places. So stops in every regional file were counted within 5 km of each network's box, and a network takes every file with at least 50 such stops and at least 2% of the largest count. Each file is clipped to the network's box plus 30 km with `gtfstools`. One file needed repair: in the South East file, Sullivan Buses route 84 is written as two frequency-based trips (every 20 minutes from 09:25 to 13:05), which `r5r`'s detailed itineraries cannot use. They were converted to timetabled trips with `gtfstools::frequencies_to_stop_times`, adding 22 trips to six networks. Journey times rerun after the change were identical to those before it.
+
+**Routing.** As [for the nine places](#sec-journey-method), with r5r 2.3.0 and Java 21, on Tuesday `r format(JLm$flat_meta$date[1], "%e %B %Y")`, in term. Each network runs in its own process, saving after each step:
+
+```{r}
+#| label: tbl-la-steps
+#| tbl-cap: "The routing steps for each network. Walking speed is 3.6 km/h except where stated. Trips are limited to 120 minutes and walking within a bus journey to 60."
+tibble::tribble(
+  ~Step, ~What, ~Measures,
+  "Journey times", "Walking and bus, departures 07:45 to 08:15 (the median); walking alone; walking and bus at 4.8 km/h (not London, for memory)", "Minutes to the quickest school, the three quickest and the quickest neither selective nor faith; schools within 30 and 45 minutes",
+  "Journey structure", "The journey to the quickest school by walking and bus, leaving at 07:45, 08:00 and 08:15", "Walking only, one bus, two or more; buses per journey; minutes waiting; stops where children board, change and alight",
+  "Walking route", "The route on foot to the quickest school on foot, as a line", "Metres climbed each way, from OS Terrain 50 every 50 m; walking time by Tobler's function",
+  "Missing a journey", "Every departure minute from 07:00, with a bell at 08:45 (08:30 as a check)", "The last departure that arrives by the bell, and minutes late on the best journey after it"
+) |> kt(align = "lll")
+```
+
+London ran alone, with a 52 GB Java heap and six threads; other networks used 18 GB and five. `r format(sum(JLm$no_route$no_bus), big.mark = ",")` Output Areas have no route by walking and bus and `r format(sum(JLm$no_route$no_walk), big.mark = ",")` none on foot within the limits, mostly on the rural edges of large authorities; they are left out of the averages.
+
+**From routes to measures.** For each authority, each measure $m_o$ for Output Area $o$ is averaged over the most deprived third of its neighbourhoods $T$ and over the rest, weighted by children aged 10 to 14, [as for the nine places](#sec-journey-method):
+
+$$M_T = \frac{\sum_{o \in T} w_o m_o}{\sum_{o \in T} w_o}$$
+
+The gap is $M_T - M_{\text{rest}}$. Two other splits check the result. For children in income-deprived families, each Output Area's children are split by its LSOA's IDACI rate $r_o$, so the weights are $w_o r_o$ and $w_o (1 - r_o)$. For England's most deprived three tenths, $T$ is the LSOAs in IDACI tenths 1 to 3 nationally. Minutes per kilometre is the deprived third's mean minutes divided by its mean straight-line distance.
+
+**Is Brighton and Hove unusual?** Each measure is ranked across the `r nrow(PLm)` authorities, and across the `r sum(!PLm$london)` outside London. To ask whether the city is unusual *given* its distance, each measure is regressed across authorities on the matching straight-line distance (and density, for changes of bus), and the city's studentised residual is compared with the others'.
+
+**Reproduction.** The nine places' journey times were recomputed in the new networks. For Brighton and Hove, Blackpool, Bristol, Hastings, Newham, Plymouth, Portsmouth, Southampton and Tower Hamlets, the deprived third, the rest and the gap are identical to [those above](distance.qmd#tbl-journeys).
+
+**The models.** Three designs, each with its own weaknesses, as for straight-line distance:
+
+- *Authorities.* DfE's [absence by pupil characteristics](https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/e2eb493a-dc95-41f4-96ef-b886c5cd2019), secondary and primary, for disadvantaged, non-disadvantaged and all pupils, 2018/19 and 2020/21 to 2024/25. Each group's absence is regressed on the deprived third's journey measure with year effects and errors clustered by authority. Controls are added in four sets: the share of pupils disadvantaged and how urban the authority is; then the group's ethnic mix (shares White British, Asian, Black and mixed heritage, from DfE's [free school meals by ethnicity](https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics)); then region; then seven Census measures (graduates, bad health, White British residents, social renting, no car, deprivation and density) and six of pupils (special needs support, education, health and care plans, prior attainment, English as an additional language, White British and mobility). "Given km" adds straight-line distance from the deprived third.
+- *Tenths within authorities.* DfE's [absence by pupil residence and IDACI tenth](https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/6dd7f70e-440f-4c0f-b8d1-056678c25301), all pupils, 2023/24 and 2024/25. Each tenth of each authority takes the child-weighted mean journey of its Output Areas. Effects for each authority in each year and each tenth in each year, weighted by pupils, with errors clustered by authority. Census character is as [above](#sec-distance-models).
+- *Schools within authorities.* Each school's "nearest children" are those whose quickest school it is, and a school needs at least 100 of them. Autumn and spring 2025/26 absence for all pupils, with authority effects and the intake controls of the [straight-line school models](#sec-distance-models): free school meals, English as an additional language, White British share, prior attainment, neighbourhood education, special needs, mobility, single-sex, age range and kind of place. Distance enters as the doubling of the mean straight-line distance of those children. Selective schools are left out.
+
+Measures are reported for one standard deviation more, so that minutes, shares and metres can be compared, and the samples are repeated without London and without Brighton and Hove.
+
+**What this cannot do.** The timetables are buses only. They miss the Underground, Overground, Elizabeth line and DLR in London, Metrolink, the Tyne and Wear Metro, West Midlands Metro, Supertram, Nottingham's trams and local rail, all of which would shorten journeys where they run. Journeys go to the quickest school, not the one attended, and bells are assumed. Deprivation is of the neighbourhood, and absence by disadvantage is published only for whole authorities.
+
+## Points of interest on the way: data and calculations {#sec-poi-method}
+
+`R/28_la_pois.R` takes points of interest from the same OpenStreetMap extract as the networks (dated `r format(JLm$poi$osm_date, "%e %B %Y")`), with `osmextract`, and counts them along each journey of `R/27`.
+
+**What counts.** Five groups, from OpenStreetMap's own tags. Schools, transport, parking and street furniture are left out. Things mapped as areas are represented by a point inside them, except open spaces, which keep their outlines, because a child walks past the edge of a park, not its middle.
+
+```{r}
+#| label: tbl-poi-tags
+#| tbl-cap: !expr paste0(format(JLm$poi$n, big.mark = ","), " points of interest in England. The commonest tags in each group are shown, with counts.")
+TG <- c(food_drink = "Food and drink", shops = "Shops", leisure = "Leisure", open_space = "Open space", civic = "Civic")
+DEF <- c(food_drink = "amenity = cafe, fast_food, restaurant, pub, bar, ice_cream, food_court, biergarten",
+         shops = "any shop, except vacant or disused",
+         leisure = "cinemas, theatres, arts centres, nightclubs, gambling, arcades, bowling, sports and fitness centres, swimming pools, ice rinks, trampoline and water parks, museums, galleries, attractions, viewpoints, zoos",
+         open_space = "leisure = park, playground, recreation_ground, common, nature_reserve, dog_park; beaches",
+         civic = "libraries, community and youth centres, places of worship, town halls, post offices, banks, pharmacies, doctors, dentists, clinics, hospitals, police and fire stations, courts, markets")
+bc <- JLm$poi$by_cat[, .(n = sum(n)), by = cat]
+tt <- JLm$poi$top_tags[, .(top = paste(sprintf("%s (%s)", gsub("_", " ", tag), format(n, big.mark = ",", trim = TRUE)), collapse = ", ")), by = cat]
+merge(bc, tt, by = "cat")[match(names(TG), cat)][, .(Group = TG[cat], Tags = DEF[cat], `In England` = format(n, big.mark = ","), Commonest = top)] |> kt(align = "llrl")
+```
+
+**Where they are counted.** For every Output Area's journey to its quickest school, and each departure at 07:45, 08:00 and 08:15:
+
+- *Around stops:* points of interest within 200 metres of the stop where the journey starts, of each stop where it changes bus, and of the stop where it ends. A journey that changes twice adds the counts at both changes. 400 metres is a check.
+- *Along walking:* within 50 metres of the whole walking route to the quickest school on foot, and of the walking legs of the 08:00 bus journey. 100 metres is a check.
+- *Around home:* within 400 metres of the Output Area's centroid, as a control.
+
+Counts are averaged over the three departures. A journey with no change has none at changes, so the change measure mixes how often children change with how busy the changes are; a model with the share needing two or more buses and the number of buses held constant separates them.
+
+**Measures and models.** Each authority's deprived third, each IDACI tenth within an authority and each school's nearest children take the child-weighted mean count, as for journey times, and enter the same three designs [above](#sec-la-routing-method), with points of interest near home added as a control in the within-authority design.
+
+**Limits.** OpenStreetMap's coverage of shops and cafés varies from place to place and is usually fuller in cities, so a count partly measures how well a place is mapped. A point of interest is not a reason to stay off school, and nothing here says what children did there.
+
+## From absence to GCSE results: data and calculations {#sec-gcse-method}
+
+`R/30_distance_gcse.R` writes `data/distance_gcse.rds` for [the GCSE section](distance.qmd#sec-gcse).
+
+```{r}
+#| include: false
+GCm <- readRDS(here::here("data", "distance_gcse.rds"))
+```
+
+**Results.** Attainment 8 for disadvantaged, non-disadvantaged and all pupils, by school, from the [KS4 performance tables](https://www.compare-school-performance.service.gov.uk/download-data) for 2021/22 to 2024/25, as in [the model](#sec-full-spec). An authority's figure for each group is the mean of its schools' figures weighted by the number of pupils in that group at the end of KS4, and the same for Progress 8.
+
+**The chain.** The [authority model](#sec-la-routing-method) gives $\beta_{km}$, points of absence per kilometre for each group, here fitted on the years with results. Value Added v2.1 models log Attainment 8 on log absence with elasticity $\varepsilon$ (`r sprintf("%.3f", GCm$means$elasticity[GCm$means$g == "dis"])` for disadvantaged pupils, `r sprintf("%.3f", GCm$means$elasticity[GCm$means$g == "non"])` non-disadvantaged, `r sprintf("%.3f", GCm$means$elasticity[GCm$means$g == "all"])` all). At a group's mean Attainment 8 $\bar{A}$ and absence $\bar{a}$ across the `r GCm$n_las` authorities, a point of absence is worth $\bar{A} \varepsilon / \bar{a}$ points, and the chain is
+
+$$\Delta A_{km} = \beta_{km} \times \frac{\bar{A} \, \varepsilon}{\bar{a}}$$
+
+The v2.1 elasticity is for a school's absence of all pupils, so applying it to a group's own absence assumes that a point of absence costs the group's pupils what it costs a school. As a check, the second link is also estimated across the authorities, by the slope of each group's Attainment 8 on its own absence with the same controls. That gives a smaller chain. The interval for the chain reflects the first link only, because the second is estimated far more precisely.
+
+**The direct check.** Each group's Attainment 8, and Progress 8, regressed on the same distance with the same controls, years and clustering. Between schools, each school's Attainment 8 for each group on the doubling of its nearest children's distance, within authority, with the intake controls of [the school design](#sec-la-routing-method).
+
+**The mixing estimate on the same scale.** Gorard and Siddiqui (2019) model capped KS4 points (each pupil's best eight GCSEs or equivalents) for the `r format(GCm$gorard$n, big.mark = ",")` pupils who finished KS4 in `r GCm$gorard$cohort`: mean `r GCm$gorard$mean_capped`, standard deviation `r GCm$gorard$sd_capped` between pupils (their Table 1). On that scale a grade is 6 points (C = 40, B = 46), so a grade higher in all eight subjects is 48 points. Attainment 8 counts English and maths twice, ten weights in all, and a grade is one point in each, so a grade higher in all subjects is 10 points. One Attainment 8 point is therefore about `r GCm$gorard$capped_per_att8` capped points, and their standard deviation is about `r sprintf("%.1f", GCm$gorard$sd_att8)` Attainment 8 points. Their 0.05 to 0.15 is then `r sprintf("%.1f", GCm$gorard$att8[["lo"]])` to `r sprintf("%.1f", GCm$gorard$att8[["hi"]])` points. DfE's [2016 key figures](https://dera.ioe.ac.uk/27618/1/Progress_8_key_figures_2016_V1.0.pdf) give the standard deviation of pupils' Progress 8 scores as `r GCm$gorard$p8_sd_2016` a slot, or `r sprintf("%.1f", 10 * GCm$gorard$p8_sd_2016)` Attainment 8 points: the spread left once prior attainment is known. On that narrower scale the range is `r sprintf("%.1f", GCm$gorard$att8_p8scale[["lo"]])` to `r sprintf("%.1f", GCm$gorard$att8_p8scale[["hi"]])`. Their outcome is the raw score, so the first conversion is the right one; the second shows how much it depends on the scale. The 2015 GCSEs were graded A* to G, and today's 9 to 1 scale is not the same, so this is approximate.
+
+Gorard and Siddiqui do not show how the range is derived. It matches the size of their standardised school composition coefficients at the end of KS4, such as `r GCm$gorard$coefs_y11[["School mean points score"]]` for the school's mean points score and `r GCm$gorard$coefs_y11[["Always-FSM segregation for school"]]` for its segregation of always-disadvantaged pupils, which are per standard deviation of the school measure.
+
+**Limits.** The chain multiplies two associations, both between places or schools, so it is what distance would cost if both were causal. Authority figures for a group average over very different schools, and the direct check has wide intervals.
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

@@ -50,6 +50,10 @@ Rscript R/23_school_buses.R       # school buses from the timetables, for all of
 Rscript R/24_school_bus_penalty.R # what it costs to miss a school bus, in the routed places
 Rscript R/25_climb.R              # climb to and from school across England, against absence
 Rscript R/21_journey_analysis.R   # the journey time analysis
+STEP=frame Rscript R/26_la_networks.R  # the 109 mostly urban authorities: networks (then STEP=osm, STEP=gtfs, STEP=freq)
+bash pipeline/la_resume.sh        # R/27 routing and R/28 POI counts for every network but London, then R/29 (hours; pipeline/la_pause.sh stops it)
+bash pipeline/la_resume.sh london # London alone (10 to 14 hours, 52 GB heap), then R/29
+Rscript R/30_distance_gcse.R      # from distance to absence to Attainment 8, and the mixing estimate on that scale (~1 min)
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```
@@ -121,6 +125,11 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/23_school_buses.R` | finds dedicated school buses in the Bus Open Data Service timetables for all of England and relates them to absence; writes `data/school_buses.rds` |
 | `R/24_school_bus_penalty.R` | how late a child is if they miss a school bus, by the best real alternative; writes `data/cache/journey` |
 | `R/25_climb.R` | climb from every Output Area to its nearest school across England, against absence, for schools, IDACI tenths and all three pupil groups by authority; writes `data/climb.rds` |
+| `R/26_la_networks.R` | networks for the 109 mostly urban authorities: Output Areas, 28 shared networks, OpenStreetMap and Bus Open Data Service clips, frequency trips made timetabled; writes `data/cache/journey_la` and `data-raw/r5/net_la` |
+| `R/27_la_routing.R` | routes every Output Area in those networks: journey times, journey structure, walking routes with climb, and missing a journey, saved step by step |
+| `R/28_la_pois.R` | points of interest from OpenStreetMap around stops and along walking routes of each journey, with a control around home |
+| `R/29_la_analysis.R` | is Brighton and Hove unusual among the 109; journeys and points of interest against absence for authorities, IDACI tenths and schools; writes `data/journey_la.rds` |
+| `R/30_distance_gcse.R` | carries the distance link through absence to Attainment 8, checks it directly, and puts Gorard and Siddiqui's mixing estimate on the same scale; writes `data/distance_gcse.rds` |
 | `R/16_parents_not_adults.R` | parents, not adults: neighbourhood education from ONS custom Census tables (qualification by dependent children and age by MSOA; by age by LSOA), against v2.1 for every group, with held-out years, the split between parents and other adults, and London tested separately (`neighbourhood_covariates.qmd`); caches about 1.5 GB of API responses in `data-raw/census2021/ons_custom/` |
 | `R/15_graduate_deprivation.R` | two kinds of deprived neighbourhood: tests whether the deprivation effect is a recent-graduate effect (interaction, by kind of place, early-career measures, deprivation in parts) and value added by kind of neighbourhood (`neighbourhood_covariates.qmd`) |
 | `R/14_v22_candidates.R` | v2.2 candidates: pupils' ethnicity (school White British share each January, from the SPC releases downloaded into `data-raw/ees/spc_all/`) and neighbourhood household deprivation (Census 2021 TS011), against v2.1 for every group, with leave-one-year-out prediction, year-by-year fits and who gains (`v22.qmd`) |

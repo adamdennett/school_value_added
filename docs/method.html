@@ -290,6 +290,9 @@ window.Quarto = {
   <li><a href="#sec-distance-models" id="toc-sec-distance-models" class="nav-link" data-scroll-target="#sec-distance-models">The models</a></li>
   <li><a href="#sec-distance-limits" id="toc-sec-distance-limits" class="nav-link" data-scroll-target="#sec-distance-limits">What these calculations cannot do</a></li>
   <li><a href="#sec-journey-method" id="toc-sec-journey-method" class="nav-link" data-scroll-target="#sec-journey-method">Journey times: data and calculations</a></li>
+  <li><a href="#sec-la-routing-method" id="toc-sec-la-routing-method" class="nav-link" data-scroll-target="#sec-la-routing-method">Journeys in the 109 mostly urban authorities: data and calculations</a></li>
+  <li><a href="#sec-poi-method" id="toc-sec-poi-method" class="nav-link" data-scroll-target="#sec-poi-method">Points of interest on the way: data and calculations</a></li>
+  <li><a href="#sec-gcse-method" id="toc-sec-gcse-method" class="nav-link" data-scroll-target="#sec-gcse-method">From absence to GCSE results: data and calculations</a></li>
   </ul></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul>
@@ -4660,6 +4663,375 @@ Table&nbsp;17: School buses found, by Bus Open Data Service regional file, on th
 <li><em>One file per network.</em> R5 reads one OpenStreetMap file per folder, so areas crossing county extracts are merged. Brighton and Hove is in the West Sussex extract.</li>
 <li><em>Agreement with the city’s model.</em> See <a href="./distance.html#sec-journey-limits">the page</a>.</li>
 </ul>
+</section>
+<section id="sec-la-routing-method" class="level2">
+<h2 class="anchored" data-anchor-id="sec-la-routing-method">Journeys in the 109 mostly urban authorities: data and calculations</h2>
+<p>The <a href="./distance.html#sec-la-journeys">109-authority analysis</a> repeats the routing above at scale. The code is <code>R/26_la_networks.R</code> (networks and their inputs), <code>R/27_la_routing.R</code> (routing, one network at a time), <code>R/28_la_pois.R</code> (points of interest, <a href="#sec-poi-method">below</a>) and <code>R/29_la_analysis.R</code> (measures and models), with <code>pipeline/la_resume.sh</code> and <code>pipeline/la_pause.sh</code> to run the routing in stages. Only <code>R/29</code>’s output, <code>data/journey_la.rds</code>, is committed; the networks and routes run to many gigabytes.</p>
+<p><strong>Which authorities.</strong> The sample is <a href="#sec-distance-models">R/19’s “mostly urban” authorities</a>: at least 80% of children aged 10 to 14 living in urban LSOAs on the ONS 2021 rural-urban classification, and at least 30 LSOAs. That gives 109: 32 London boroughs and 77 others. Hastings was routed as well, so that the <a href="./distance.html#sec-journeys">nine places</a> can be reproduced, but it is a district and has no DfE absence by characteristic, so it is not in the models. In all, 105,066 Output Areas were routed.</p>
+<p><strong>Networks.</strong> Neighbouring authorities share a network, so that a child can be routed across a boundary to the nearest school: 28 networks, from London’s 26,335 Output Areas in 32 boroughs to single authorities. Each takes the <a href="https://download.geofabrik.de/europe/united-kingdom/england.html">OpenStreetMap England extract</a> (Geofabrik, <code>england-latest.osm.pbf</code>, 1.71 GB, dated 8 November 2026), clipped with osmosis to a box 30 km beyond its Output Areas, keeping ways that cross the edge. Milton Keynes uses 31 km: at 30 km the edge cut a car park to a single point, and R5 stopped while building park-and-ride areas.</p>
+<div class="cell">
+<div id="tbl-la-networks" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-la-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;18: The 28 networks. Schools are state secondary schools within reach of the network’s Output Areas. Bus files are the Bus Open Data Service regional files used.
+</figcaption>
+<div aria-describedby="tbl-la-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Network</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Authorities</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Output Areas</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Schools</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Bus files</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">london</td>
+<td style="text-align: left;">The 32 London boroughs</td>
+<td style="text-align: right;">26,335</td>
+<td style="text-align: right;">714</td>
+<td style="text-align: left;">london + south east</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gmcr</td>
+<td style="text-align: left;">Bolton, Bury, Manchester, Oldham, Rochdale, Salford, Stockport, Tameside, Trafford, Wigan</td>
+<td style="text-align: right;">8,966</td>
+<td style="text-align: right;">355</td>
+<td style="text-align: left;">east midlands + north west + yorkshire</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">west mids</td>
+<td style="text-align: left;">Birmingham, Coventry, Dudley, Sandwell, Solihull, Walsall, Wolverhampton</td>
+<td style="text-align: right;">8,735</td>
+<td style="text-align: right;">312</td>
+<td style="text-align: left;">east midlands + west midlands</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">west yorks</td>
+<td style="text-align: left;">Leeds, Bradford, Kirklees, Calderdale, Wakefield</td>
+<td style="text-align: right;">7,345</td>
+<td style="text-align: right;">345</td>
+<td style="text-align: left;">north west + yorkshire</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">merseyside</td>
+<td style="text-align: left;">Liverpool, Knowsley, Sefton, St. Helens, Wirral, Halton, Warrington</td>
+<td style="text-align: right;">5,881</td>
+<td style="text-align: right;">303</td>
+<td style="text-align: left;">north west</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lancashire</td>
+<td style="text-align: left;">Lancashire, Blackpool, Blackburn with Darwen</td>
+<td style="text-align: right;">4,982</td>
+<td style="text-align: right;">389</td>
+<td style="text-align: left;">north west + yorkshire</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">south yorks</td>
+<td style="text-align: left;">Sheffield, Rotherham, Barnsley, Doncaster</td>
+<td style="text-align: right;">4,514</td>
+<td style="text-align: right;">185</td>
+<td style="text-align: left;">east midlands + yorkshire</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">herts luton</td>
+<td style="text-align: left;">Hertfordshire, Luton</td>
+<td style="text-align: right;">4,284</td>
+<td style="text-align: right;">580</td>
+<td style="text-align: left;">east anglia + london + south east</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sussex</td>
+<td style="text-align: left;">Brighton and Hove, West Sussex, Hastings</td>
+<td style="text-align: right;">4,066</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: left;">london + south east + south west</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tyne wear</td>
+<td style="text-align: left;">Newcastle upon Tyne, Gateshead, North Tyneside, South Tyneside, Sunderland</td>
+<td style="text-align: right;">3,893</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: left;">north east</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">surrey</td>
+<td style="text-align: left;">Surrey</td>
+<td style="text-align: right;">3,662</td>
+<td style="text-align: right;">586</td>
+<td style="text-align: left;">london + south east + south west</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">east mids</td>
+<td style="text-align: left;">Derby, Leicester, Nottingham</td>
+<td style="text-align: right;">2,815</td>
+<td style="text-align: right;">184</td>
+<td style="text-align: left;">east midlands + west midlands</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thames valley</td>
+<td style="text-align: left;">Reading, Slough, Bracknell Forest, Windsor and Maidenhead, Wokingham</td>
+<td style="text-align: right;">2,331</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: left;">london + south east + south west</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bristol</td>
+<td style="text-align: left;">Bristol, South Gloucestershire</td>
+<td style="text-align: right;">2,304</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: left;">south west</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tees</td>
+<td style="text-align: left;">Darlington, Hartlepool, Middlesbrough, Stockton-on-Tees</td>
+<td style="text-align: right;">1,813</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: left;">north east + yorkshire</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">solent</td>
+<td style="text-align: left;">Portsmouth, Southampton</td>
+<td style="text-align: right;">1,449</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">south east + south west</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">humber</td>
+<td style="text-align: left;">Kingston upon Hull, North East Lincolnshire</td>
+<td style="text-align: right;">1,427</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">east midlands + yorkshire</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">devon</td>
+<td style="text-align: left;">Plymouth, Torbay</td>
+<td style="text-align: right;">1,345</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">south west</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cheshire east</td>
+<td style="text-align: left;">Cheshire East</td>
+<td style="text-align: right;">1,298</td>
+<td style="text-align: right;">240</td>
+<td style="text-align: left;">east midlands + north west + west midlands</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bcp</td>
+<td style="text-align: left;">Bournemouth, Christchurch and Poole</td>
+<td style="text-align: right;">1,258</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">south west</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">south essex</td>
+<td style="text-align: left;">Southend-on-Sea, Thurrock</td>
+<td style="text-align: right;">1,114</td>
+<td style="text-align: right;">211</td>
+<td style="text-align: left;">london + south east</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mk</td>
+<td style="text-align: left;">Milton Keynes</td>
+<td style="text-align: right;">874</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">east midlands + south east</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stoke</td>
+<td style="text-align: left;">Stoke-on-Trent</td>
+<td style="text-align: right;">863</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">north west + west midlands</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">medway</td>
+<td style="text-align: left;">Medway</td>
+<td style="text-align: right;">853</td>
+<td style="text-align: right;">106</td>
+<td style="text-align: left;">south east</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">swindon</td>
+<td style="text-align: left;">Swindon</td>
+<td style="text-align: right;">759</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">south east + south west</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">york</td>
+<td style="text-align: left;">York</td>
+<td style="text-align: right;">659</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">yorkshire</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">peterborough</td>
+<td style="text-align: left;">Peterborough</td>
+<td style="text-align: right;">656</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">east anglia + east midlands</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">telford</td>
+<td style="text-align: left;">Telford and Wrekin</td>
+<td style="text-align: right;">585</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">west midlands</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Bus files.</strong> The Department for Transport’s <a href="https://data.bus-data.dft.gov.uk/downloads/">Bus Open Data Service</a> publishes GTFS timetables by region, but the regions follow operators, not places. So stops in every regional file were counted within 5 km of each network’s box, and a network takes every file with at least 50 such stops and at least 2% of the largest count. Each file is clipped to the network’s box plus 30 km with <code>gtfstools</code>. One file needed repair: in the South East file, Sullivan Buses route 84 is written as two frequency-based trips (every 20 minutes from 09:25 to 13:05), which <code>r5r</code>’s detailed itineraries cannot use. They were converted to timetabled trips with <code>gtfstools::frequencies_to_stop_times</code>, adding 22 trips to six networks. Journey times rerun after the change were identical to those before it.</p>
+<p><strong>Routing.</strong> As <a href="#sec-journey-method">for the nine places</a>, with r5r 2.3.0 and Java 21, on Tuesday 17 November 2026, in term. Each network runs in its own process, saving after each step:</p>
+<div class="cell">
+<div id="tbl-la-steps" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-la-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;19: The routing steps for each network. Walking speed is 3.6 km/h except where stated. Trips are limited to 120 minutes and walking within a bus journey to 60.
+</figcaption>
+<div aria-describedby="tbl-la-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Step</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">What</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measures</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Journey times</td>
+<td style="text-align: left;">Walking and bus, departures 07:45 to 08:15 (the median); walking alone; walking and bus at 4.8 km/h (not London, for memory)</td>
+<td style="text-align: left;">Minutes to the quickest school, the three quickest and the quickest neither selective nor faith; schools within 30 and 45 minutes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Journey structure</td>
+<td style="text-align: left;">The journey to the quickest school by walking and bus, leaving at 07:45, 08:00 and 08:15</td>
+<td style="text-align: left;">Walking only, one bus, two or more; buses per journey; minutes waiting; stops where children board, change and alight</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Walking route</td>
+<td style="text-align: left;">The route on foot to the quickest school on foot, as a line</td>
+<td style="text-align: left;">Metres climbed each way, from OS Terrain 50 every 50 m; walking time by Tobler's function</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Missing a journey</td>
+<td style="text-align: left;">Every departure minute from 07:00, with a bell at 08:45 (08:30 as a check)</td>
+<td style="text-align: left;">The last departure that arrives by the bell, and minutes late on the best journey after it</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>London ran alone, with a 52 GB Java heap and six threads; other networks used 18 GB and five. 255 Output Areas have no route by walking and bus and 533 none on foot within the limits, mostly on the rural edges of large authorities; they are left out of the averages.</p>
+<p><strong>From routes to measures.</strong> For each authority, each measure <span class="math inline">\(m_o\)</span> for Output Area <span class="math inline">\(o\)</span> is averaged over the most deprived third of its neighbourhoods <span class="math inline">\(T\)</span> and over the rest, weighted by children aged 10 to 14, <a href="#sec-journey-method">as for the nine places</a>:</p>
+<p><span class="math display">\[M_T = \frac{\sum_{o \in T} w_o m_o}{\sum_{o \in T} w_o}\]</span></p>
+<p>The gap is <span class="math inline">\(M_T - M_{\text{rest}}\)</span>. Two other splits check the result. For children in income-deprived families, each Output Area’s children are split by its LSOA’s IDACI rate <span class="math inline">\(r_o\)</span>, so the weights are <span class="math inline">\(w_o r_o\)</span> and <span class="math inline">\(w_o (1 - r_o)\)</span>. For England’s most deprived three tenths, <span class="math inline">\(T\)</span> is the LSOAs in IDACI tenths 1 to 3 nationally. Minutes per kilometre is the deprived third’s mean minutes divided by its mean straight-line distance.</p>
+<p><strong>Is Brighton and Hove unusual?</strong> Each measure is ranked across the 109 authorities, and across the 77 outside London. To ask whether the city is unusual <em>given</em> its distance, each measure is regressed across authorities on the matching straight-line distance (and density, for changes of bus), and the city’s studentised residual is compared with the others’.</p>
+<p><strong>Reproduction.</strong> The nine places’ journey times were recomputed in the new networks. For Brighton and Hove, Blackpool, Bristol, Hastings, Newham, Plymouth, Portsmouth, Southampton and Tower Hamlets, the deprived third, the rest and the gap are identical to <a href="./distance.html#tbl-journeys">those above</a>.</p>
+<p><strong>The models.</strong> Three designs, each with its own weaknesses, as for straight-line distance:</p>
+<ul>
+<li><em>Authorities.</em> DfE’s <a href="https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/e2eb493a-dc95-41f4-96ef-b886c5cd2019">absence by pupil characteristics</a>, secondary and primary, for disadvantaged, non-disadvantaged and all pupils, 2018/19 and 2020/21 to 2024/25. Each group’s absence is regressed on the deprived third’s journey measure with year effects and errors clustered by authority. Controls are added in four sets: the share of pupils disadvantaged and how urban the authority is; then the group’s ethnic mix (shares White British, Asian, Black and mixed heritage, from DfE’s <a href="https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics">free school meals by ethnicity</a>); then region; then seven Census measures (graduates, bad health, White British residents, social renting, no car, deprivation and density) and six of pupils (special needs support, education, health and care plans, prior attainment, English as an additional language, White British and mobility). “Given km” adds straight-line distance from the deprived third.</li>
+<li><em>Tenths within authorities.</em> DfE’s <a href="https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/6dd7f70e-440f-4c0f-b8d1-056678c25301">absence by pupil residence and IDACI tenth</a>, all pupils, 2023/24 and 2024/25. Each tenth of each authority takes the child-weighted mean journey of its Output Areas. Effects for each authority in each year and each tenth in each year, weighted by pupils, with errors clustered by authority. Census character is as <a href="#sec-distance-models">above</a>.</li>
+<li><em>Schools within authorities.</em> Each school’s “nearest children” are those whose quickest school it is, and a school needs at least 100 of them. Autumn and spring 2025/26 absence for all pupils, with authority effects and the intake controls of the <a href="#sec-distance-models">straight-line school models</a>: free school meals, English as an additional language, White British share, prior attainment, neighbourhood education, special needs, mobility, single-sex, age range and kind of place. Distance enters as the doubling of the mean straight-line distance of those children. Selective schools are left out.</li>
+</ul>
+<p>Measures are reported for one standard deviation more, so that minutes, shares and metres can be compared, and the samples are repeated without London and without Brighton and Hove.</p>
+<p><strong>What this cannot do.</strong> The timetables are buses only. They miss the Underground, Overground, Elizabeth line and DLR in London, Metrolink, the Tyne and Wear Metro, West Midlands Metro, Supertram, Nottingham’s trams and local rail, all of which would shorten journeys where they run. Journeys go to the quickest school, not the one attended, and bells are assumed. Deprivation is of the neighbourhood, and absence by disadvantage is published only for whole authorities.</p>
+</section>
+<section id="sec-poi-method" class="level2">
+<h2 class="anchored" data-anchor-id="sec-poi-method">Points of interest on the way: data and calculations</h2>
+<p><code>R/28_la_pois.R</code> takes points of interest from the same OpenStreetMap extract as the networks (dated 8 November 2026), with <code>osmextract</code>, and counts them along each journey of <code>R/27</code>.</p>
+<p><strong>What counts.</strong> Five groups, from OpenStreetMap’s own tags. Schools, transport, parking and street furniture are left out. Things mapped as areas are represented by a point inside them, except open spaces, which keep their outlines, because a child walks past the edge of a park, not its middle.</p>
+<div class="cell">
+<div id="tbl-poi-tags" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-poi-tags-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;20: 627,553 points of interest in England. The commonest tags in each group are shown, with counts.
+</figcaption>
+<div aria-describedby="tbl-poi-tags-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Tags</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">In England</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Commonest</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Food and drink</td>
+<td style="text-align: left;">amenity = cafe, fast_food, restaurant, pub, bar, ice_cream, food_court, biergarten</td>
+<td style="text-align: right;">145,731</td>
+<td style="text-align: left;">fast food (39,035), pub (33,167), cafe (32,915), restaurant (31,746), bar (6,223), ice cream (1,060), bakery (419), food court (187)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shops</td>
+<td style="text-align: left;">any shop, except vacant or disused</td>
+<td style="text-align: right;">246,415</td>
+<td style="text-align: left;">convenience (29,170), hairdresser (25,965), clothes (13,280), beauty (11,279), car repair (10,267), supermarket (8,574), charity (7,135), car (6,091)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Leisure</td>
+<td style="text-align: left;">cinemas, theatres, arts centres, nightclubs, gambling, arcades, bowling, sports and fitness centres, swimming pools, ice rinks, trampoline and water parks, museums, galleries, attractions, viewpoints, zoos</td>
+<td style="text-align: right;">51,623</td>
+<td style="text-align: left;">swimming pool (22,767), sports centre (6,473), fitness centre (4,222), attraction (3,617), viewpoint (3,087), museum (2,231), theatre (1,337), gallery (937)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Open space</td>
+<td style="text-align: left;">leisure = park, playground, recreation_ground, common, nature_reserve, dog_park; beaches</td>
+<td style="text-align: right;">95,042</td>
+<td style="text-align: left;">playground (38,042), park (29,585), recreation ground (20,037), nature reserve (3,440), beach (2,706), common (593), dog park (481), sports centre (26)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Civic</td>
+<td style="text-align: left;">libraries, community and youth centres, places of worship, town halls, post offices, banks, pharmacies, doctors, dentists, clinics, hospitals, police and fire stations, courts, markets</td>
+<td style="text-align: right;">88,742</td>
+<td style="text-align: left;">place of worship (33,316), community centre (13,291), pharmacy (7,508), post office (6,813), doctors (5,839), dentist (5,644), bank (3,998), library (3,113)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Where they are counted.</strong> For every Output Area’s journey to its quickest school, and each departure at 07:45, 08:00 and 08:15:</p>
+<ul>
+<li><em>Around stops:</em> points of interest within 200 metres of the stop where the journey starts, of each stop where it changes bus, and of the stop where it ends. A journey that changes twice adds the counts at both changes. 400 metres is a check.</li>
+<li><em>Along walking:</em> within 50 metres of the whole walking route to the quickest school on foot, and of the walking legs of the 08:00 bus journey. 100 metres is a check.</li>
+<li><em>Around home:</em> within 400 metres of the Output Area’s centroid, as a control.</li>
+</ul>
+<p>Counts are averaged over the three departures. A journey with no change has none at changes, so the change measure mixes how often children change with how busy the changes are; a model with the share needing two or more buses and the number of buses held constant separates them.</p>
+<p><strong>Measures and models.</strong> Each authority’s deprived third, each IDACI tenth within an authority and each school’s nearest children take the child-weighted mean count, as for journey times, and enter the same three designs <a href="#sec-la-routing-method">above</a>, with points of interest near home added as a control in the within-authority design.</p>
+<p><strong>Limits.</strong> OpenStreetMap’s coverage of shops and cafés varies from place to place and is usually fuller in cities, so a count partly measures how well a place is mapped. A point of interest is not a reason to stay off school, and nothing here says what children did there.</p>
+</section>
+<section id="sec-gcse-method" class="level2">
+<h2 class="anchored" data-anchor-id="sec-gcse-method">From absence to GCSE results: data and calculations</h2>
+<p><code>R/30_distance_gcse.R</code> writes <code>data/distance_gcse.rds</code> for <a href="./distance.html#sec-gcse">the GCSE section</a>.</p>
+<p><strong>Results.</strong> Attainment 8 for disadvantaged, non-disadvantaged and all pupils, by school, from the <a href="https://www.compare-school-performance.service.gov.uk/download-data">KS4 performance tables</a> for 2021/22 to 2024/25, as in <a href="#sec-full-spec">the model</a>. An authority’s figure for each group is the mean of its schools’ figures weighted by the number of pupils in that group at the end of KS4, and the same for Progress 8.</p>
+<p><strong>The chain.</strong> The <a href="#sec-la-routing-method">authority model</a> gives <span class="math inline">\(\beta_{km}\)</span>, points of absence per kilometre for each group, here fitted on the years with results. Value Added v2.1 models log Attainment 8 on log absence with elasticity <span class="math inline">\(\varepsilon\)</span> (-0.325 for disadvantaged pupils, -0.183 non-disadvantaged, -0.230 all). At a group’s mean Attainment 8 <span class="math inline">\(\bar{A}\)</span> and absence <span class="math inline">\(\bar{a}\)</span> across the 109 authorities, a point of absence is worth <span class="math inline">\(\bar{A} \varepsilon / \bar{a}\)</span> points, and the chain is</p>
+<p><span class="math display">\[\Delta A_{km} = \beta_{km} \times \frac{\bar{A} \, \varepsilon}{\bar{a}}\]</span></p>
+<p>The v2.1 elasticity is for a school’s absence of all pupils, so applying it to a group’s own absence assumes that a point of absence costs the group’s pupils what it costs a school. As a check, the second link is also estimated across the authorities, by the slope of each group’s Attainment 8 on its own absence with the same controls. That gives a smaller chain. The interval for the chain reflects the first link only, because the second is estimated far more precisely.</p>
+<p><strong>The direct check.</strong> Each group’s Attainment 8, and Progress 8, regressed on the same distance with the same controls, years and clustering. Between schools, each school’s Attainment 8 for each group on the doubling of its nearest children’s distance, within authority, with the intake controls of <a href="#sec-la-routing-method">the school design</a>.</p>
+<p><strong>The mixing estimate on the same scale.</strong> Gorard and Siddiqui (2019) model capped KS4 points (each pupil’s best eight GCSEs or equivalents) for the 549,186 pupils who finished KS4 in 2015: mean 311, standard deviation 97.77 between pupils (their Table 1). On that scale a grade is 6 points (C = 40, B = 46), so a grade higher in all eight subjects is 48 points. Attainment 8 counts English and maths twice, ten weights in all, and a grade is one point in each, so a grade higher in all subjects is 10 points. One Attainment 8 point is therefore about 4.8 capped points, and their standard deviation is about 20.4 Attainment 8 points. Their 0.05 to 0.15 is then 1.0 to 3.1 points. DfE’s <a href="https://dera.ioe.ac.uk/27618/1/Progress_8_key_figures_2016_V1.0.pdf">2016 key figures</a> give the standard deviation of pupils’ Progress 8 scores as 1.0652 a slot, or 10.7 Attainment 8 points: the spread left once prior attainment is known. On that narrower scale the range is 0.5 to 1.6. Their outcome is the raw score, so the first conversion is the right one; the second shows how much it depends on the scale. The 2015 GCSEs were graded A* to G, and today’s 9 to 1 scale is not the same, so this is approximate.</p>
+<p>Gorard and Siddiqui do not show how the range is derived. It matches the size of their standardised school composition coefficients at the end of KS4, such as -0.133 for the school’s mean points score and -0.077 for its segregation of always-disadvantaged pupils, which are per standard deviation of the school measure.</p>
+<p><strong>Limits.</strong> The chain multiplies two associations, both between places or schools, so it is what distance would cost if both were causal. Authority figures for a group average over very different schools, and the direct check has wide intervals.</p>
 </section>
 </section>
 <section id="data" class="level1">
