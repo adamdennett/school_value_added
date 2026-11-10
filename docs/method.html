@@ -294,6 +294,7 @@ window.Quarto = {
   <li><a href="#sec-poi-method" id="toc-sec-poi-method" class="nav-link" data-scroll-target="#sec-poi-method">Points of interest on the way: data and calculations</a></li>
   <li><a href="#sec-gcse-method" id="toc-sec-gcse-method" class="nav-link" data-scroll-target="#sec-gcse-method">From absence to GCSE results: data and calculations</a></li>
   <li><a href="#sec-admissions-method" id="toc-sec-admissions-method" class="nav-link" data-scroll-target="#sec-admissions-method">What the admissions changes did: data and calculations</a></li>
+  <li><a href="#sec-proposals-method" id="toc-sec-proposals-method" class="nav-link" data-scroll-target="#sec-proposals-method">The proposals that did not go ahead: data and calculations</a></li>
   </ul></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul>
@@ -5044,6 +5045,13 @@ Table&nbsp;20: 627,553 points of interest in England. The commonest tags in each
 <p><span class="math display">\[\text{gain} = \frac{-\Delta G}{G_{\text{before}}} \times (1.0 \text{ to } 3.1)\]</span></p>
 <p>Attainment 8 points. Nothing in their paper says the gain is proportional, so this is an assumption made to put the two on one scale.</p>
 <p><strong>Limits.</strong> The model’s journeys are to the school offered on national offer day, not the school attended in September, and its disadvantaged children are modelled, not observed. Averages hide the children whose journeys changed most. The change in the index is close to the size the model’s own documentation treats as within its uncertainty.</p>
+</section>
+<section id="sec-proposals-method" class="level2">
+<h2 class="anchored" data-anchor-id="sec-proposals-method">The proposals that did not go ahead: data and calculations</h2>
+<p><code>R/32_admissions_proposals.R</code> writes <code>data/admissions_proposals.rds</code> for <a href="./distance.html#sec-proposals">the proposals section</a>.</p>
+<p><strong>The model.</strong> The school system model has no published runs of these proposals, so they are run on the model itself rather than on its outputs. Its simulator code and inputs, <code>app/R/model.R</code>, <code>app/R/outcomes.R</code> and <code>app/data/sim_inputs.rds</code>, are downloaded from <a href="https://github.com/adamdennett/bh-school-system">its repository</a> at commit 40a055a, the version whose published runs <a href="#sec-admissions-method">R/31 uses</a>, and run unchanged under today’s map and priorities. As a check, the script first runs today’s arrangements and compares them with the model’s own published run of today: the segregation index and both journey measures are identical in 2026 and 2030, and the script stops if they differ by more than a millionth.</p>
+<p><strong>The runs.</strong> Each changes only what the proposal changes: the priority 6 share (5% today; 20% in the council’s proposal; 30% as Class Divide proposed), and the admission numbers of Dorothy Stringer and Blatchington Mill, each cut by 30 from 330 to 300. The parts of the council’s proposal are also run separately, and the priority 6 share is swept from 0 to 40%, with and without the cuts, to find where it stops binding. The measures are those of <a href="#sec-admissions-method">the published runs</a>, plus the children displaced from their catchment school and the places taken under priority 6, as the model defines them. Effects are against today in the same year, and are put on the Attainment 8 scale <a href="#sec-admissions-method">as above</a>.</p>
+<p><strong>Limits.</strong> The model’s demand for places holds families’ preferences as they are. A larger share might draw more applications from the single-school catchments than the model allows, so the ceiling it finds is for today’s preferences. Everything else in <a href="#sec-admissions-method">the limits above</a> applies.</p>
 </section>
 </section>
 <section id="data" class="level1">
