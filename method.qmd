@@ -1334,6 +1334,16 @@ APm <- readRDS(here::here("data", "admissions_proposals.rds"))
 
 **Limits.** The model's demand for places holds families' preferences as they are. A larger share might draw more applications from the single-school catchments than the model allows, so the ceiling it finds is for today's preferences. Everything else in [the limits above](#sec-admissions-method) applies.
 
+## Whose journeys changed: data and calculations {#sec-neighbourhoods-method}
+
+`R/33_admissions_neighbourhoods.R` writes `data/admissions_neighbourhoods.rds` for [the neighbourhood section](distance.qmd#sec-admissions-neighbourhoods). It runs the same model, at the same commit, as [R/32](#sec-proposals-method), for the pre-2024 catchments, today, and the council's 2024 proposal, all for 2026 entry under today's priorities.
+
+**Zones.** The model's origins are zones: Census LSOAs, or where a catchment boundary crosses an LSOA, the parts on either side. Each zone's catchment on each map comes from the model's own designs, so a zone is grouped by how the 2024 map moved it: out of Longhill's catchment into Stringer and Varndean's, the other way, other changes, or unchanged. Zones are named by the [House of Commons Library's MSOA names](https://houseofcommonslibrary.github.io/msoanames/) (version 2.2), through the ONS 2021 LSOA to MSOA lookup.
+
+**Measures.** For each zone and run: the children the model places (a year's applicants), its modelled disadvantaged children (as for [the city figures](#sec-admissions-method)), the mean walking and bus minutes to the school offered at the city's schools for all of them and for the disadvantaged children, and the shares offered Longhill and Dorothy Stringer or Varndean. Groups take means weighted by children, or by disadvantaged children for their journeys. Whitehawk's cost in Attainment 8 points is costed [as above](#sec-admissions-method), from its disadvantaged children's change in minutes.
+
+**Limits.** Zones hold a few children a year each, as the model places them, so single zones are not reported on their own. The model's children are spread over schools in proportion to its probabilities, so a zone's journey is an average over where its children might go. Applying a link measured across authorities to one neighbourhood is an extrapolation.
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

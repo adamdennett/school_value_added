@@ -191,6 +191,10 @@ subtitle: "What v2.1 does now, and what comes next."
       Blatchington Mill at 300) and Class Divide's (30%, with the cuts), run on the published
       model: longer journeys and more children displaced, no gain in mixing,
       and nothing more from 30% than from 20%.
+- [x] **[Whose journeys changed most](distance.qmd#sec-admissions-neighbourhoods).**
+      Neighbourhood by neighbourhood: the 2024 map lengthened journeys from
+      Whitehawk by about three minutes, more for its disadvantaged children,
+      while the city average barely moved.
 - [ ] **Rail, Metro and trams.** Timetables beyond the Bus Open Data Service,
       for London and the large conurbations.
 - [ ] **School bells.** Published start times for each school, in place of the
