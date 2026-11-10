@@ -181,8 +181,11 @@ subtitle: "What v2.1 does now, and what comes next."
 - [x] **[What it could mean for GCSE results](distance.qmd#sec-gcse).**
       Distance carried through absence to Attainment 8, a direct check, and
       Gorard and Siddiqui's mixing estimate on the same scale.
-- [ ] **What Brighton and Hove's admissions changes did to journeys.** From
-      the city's school system model, to set against the mixing estimate.
+- [x] **[What Brighton and Hove's admissions changes did](distance.qmd#sec-admissions).**
+      From the city's school system model: the 2024 map and priority 6
+      lengthened disadvantaged children's journeys by well under a minute and
+      lowered segregation a little. Both are worth a fraction of an
+      Attainment 8 point; where the schools are matters far more.
 - [ ] **Rail, Metro and trams.** Timetables beyond the Bus Open Data Service,
       for London and the large conurbations.
 - [ ] **School bells.** Published start times for each school, in place of the

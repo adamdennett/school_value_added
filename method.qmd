@@ -1296,6 +1296,29 @@ Gorard and Siddiqui do not show how the range is derived. It matches the size of
 
 **Limits.** The chain multiplies two associations, both between places or schools, so it is what distance would cost if both were causal. Authority figures for a group average over very different schools, and the direct check has wide intervals.
 
+## What the admissions changes did: data and calculations {#sec-admissions-method}
+
+`R/31_admissions_journeys.R` writes `data/admissions_journeys.rds` for [the admissions section](distance.qmd#sec-admissions).
+
+```{r}
+#| include: false
+AJm <- readRDS(here::here("data", "admissions_journeys.rds"))
+```
+
+**Source.** The published scenario runs of [the city's school system model](https://adamdennett.github.io/bh-school-system/), `data/council_options.rds` in [its repository](https://github.com/`r AJm$source$repo`), downloaded at commit `r substr(AJm$source$commit, 1, 7)` (model run of `r format(AJm$source$model_built, "%e %B %Y")`). The model allocates each year's applicants to the city's schools under a given catchment map and set of priorities, with journeys routed by r5r over OpenStreetMap and bus timetables. Its disadvantaged children are placed using `r AJm$source$dis_source`. How it is built and checked is set out in its own documentation; nothing is refitted here.
+
+**The runs.** *Today* is the 2024 catchment map with today's priorities, including priority 6 at 5%. *The pre-2024 catchments* keeps today's priorities on the earlier map. *Today, without priority 6* keeps the map and drops the priority. The map's effect $\Delta_{\text{map}}$ is today minus the pre-2024 run, and priority 6's $\Delta_{6}$ is today minus the run without it. The model has no run with both undone, so their joint effect is taken as $\Delta_{\text{map}} + \Delta_{6}$. The 2026 entry year is used; 2030 is similar.
+
+**Measures.** Journeys are the model's mean walking and bus minutes from home to the school offered, weighted by children, for the city's schools, for disadvantaged children ($t_D$), for others, and for all. Mixing is the model's Gorard index of disadvantaged children across the city's modelled intakes, $G$.
+
+**On the Attainment 8 scale.** A change in journeys $\Delta t$ is costed two ways. Through distance, $\Delta t$ is divided by the `r sprintf("%.1f", AJm$mpk)` minutes per straight-line kilometre of Brighton and Hove's deprived journeys ([above](#sec-la-routing-method)) and multiplied by the chain per kilometre for disadvantaged pupils ([above](#sec-gcse-method)), from all 109 authorities and from those outside London. Through time, $\Delta t$ is multiplied by the authority model's points of absence per minute for disadvantaged pupils with every control (`r sprintf("%.3f", AJm$per_min[["All 109"]])` for all 109, `r sprintf("%.3f", AJm$per_min[["Without London"]])` outside London) and by `r sprintf("%.2f", AJm$per_point)` Attainment 8 points per point of absence. The range in the text spans the four. The mixing gain assumes that Gorard and Siddiqui's 0.05 to 0.15 of a standard deviation, for intakes as mixed as possible ($G = 0$), applies in proportion to the segregation removed:
+
+$$\text{gain} = \frac{-\Delta G}{G_{\text{before}}} \times (1.0 \text{ to } 3.1)$$
+
+Attainment 8 points. Nothing in their paper says the gain is proportional, so this is an assumption made to put the two on one scale.
+
+**Limits.** The model's journeys are to the school offered on national offer day, not the school attended in September, and its disadvantaged children are modelled, not observed. Averages hide the children whose journeys changed most. The change in the index is close to the size the model's own documentation treats as within its uncertainty.
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

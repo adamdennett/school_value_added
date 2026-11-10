@@ -107,6 +107,9 @@ cl_t <- function(term0, ctl, s = "All authorities", ph = "sec", col = "t") { x <
 bhc <- JL$bh_chg[order(-children)]
 gs <- function(mo, col = "b", s = "All schools") { x <- GC$school_models; x[[col]][x$model == mo & x$sample == s] }
 gch <- function(g, s, col, ctl = "And every control") { x <- GC$chain; x[[col]][x$group == g & x$sample == s & x$ctrl == ctl] }
+AJ <- readRDS(here::here("data", "admissions_journeys.rds"))   # R/31, the city's school system model
+aje <- function(m, col, y = 2026) { x <- AJ$effects; x[[col]][x$measure == m & x$year == y] }
+aj_run <- function(i, col, y = 2026) { x <- AJ$runs; x[[col]][x$id == i & x$year == y] }
 ```
 
 ::: {.callout-important}
@@ -122,6 +125,7 @@ gch <- function(g, s, col, ctl = "And every control") { x <- GC$chain; x[[col]][
 - **Among all `r nrow(PL)` mostly urban authorities, none has its deprived neighbourhoods as far from a school by walking and bus.** The next largest gaps are `r and_list(sprintf("%s (%.1f minutes)", gap_top$la[2:3], gap_top$t_bus_gap[2:3]))`, and in the median authority the deprived third is nearer. It is mostly distance, not slow buses, but `r sprintf("%.0f%%", ol("p_two_dep"))` of those journeys need two or more buses, the most of any authority. See [the 109 authorities](#sec-la-journeys).
 - **Across those authorities, distance still goes with disadvantaged absence, and the rest of the journey adds little.** With every control, `r sprintf("%.1f", lam("km1_dep"))` points per kilometre (`r sprintf("%.1f", lam("km1_dep", s = "Without London"))` outside London), and little in primary. Journey time does not beat straight-line distance, and changes of bus, waiting and missing a bus add nothing once distance is known. The climb on the walk home, and busy change points (mostly in London), are hints that need more testing. School buses show no general link either: Longhill, where missing the last workable journey means arriving about `r sprintf("%.0f", sbv("Longhill High School", "late"))` minutes late, is a striking case, not a pattern.
 - **What it could mean for GCSE results.** *If* the extra absence is caused by the journey, each kilometre would cost disadvantaged pupils about `r sprintf("%.1f", -gch("dis", "All 109", "chain_va"))` to `r sprintf("%.1f", -gch("dis", "Without London", "chain_va"))` Attainment 8 points, and Brighton and Hove's gap about `r sprintf("%.0f", -GC$bh$km_gap * gch("dis", "Without London", "chain_va"))`. That is about the lower end of Gorard and Siddiqui's estimate of what mixing intakes could gain, `r sprintf("%.0f", GC$gorard$att8[["lo"]])` to `r sprintf("%.0f", GC$gorard$att8[["hi"]])` points. GCSE results do not show the distance cost directly. See [GCSE results](#sec-gcse).
+- **The admissions changes themselves did little either way.** On the city's school system model, the 2024 map and priority 6 together lengthened disadvantaged children's journeys by about `r sprintf("%.1f", aje("dep_min", "both"))` minutes and lowered segregation by about `r sprintf("%.0f%%", 100 * AJ$summary[change == "both", share_removed])`. In Attainment 8 points that is a journey cost of about `r sprintf("%.2f", -AJ$summary[change == "both", cost_lo])` against a generous mixing gain of up to `r sprintf("%.2f", AJ$summary[change == "both", gain_hi])`: both a fraction of a point. The gap comes from where the schools are. See [the admissions changes](#sec-admissions).
 - **Most of this page is in straight lines.** They ignore hills, bus routes and catchments, and a child's nearest school need not be the one they attend. Every source and calculation is in [the methodology](method.qmd#sec-distance-method).
 :::
 
@@ -939,9 +943,27 @@ Brighton and Hove's deprived third is `r sprintf("%.2f", GC$bh$km_gap)` km furth
 
 - **The two are not the same kind of change.** The mixing estimate is for moving from today's intakes to intakes as mixed as possible, and Brighton and Hove's schools are already more mixed than most: `r ord(GC$bh$seg_rank)` least segregated of `r GC$bh$seg_n` authorities on Gorard's own index in `r sub("-20", "/", GC$bh$seg_year)` (`r sprintf("%.3f", GC$bh$seg)`, against a median of `r sprintf("%.3f", GC$bh$seg_median)`). The distance cost is today's gap, not a change caused by any one policy.
 - **They fall on different children.** The mixing gain is for every pupil; the distance cost falls mostly on disadvantaged pupils.
-- **What the city's admissions changes did to journeys is not measured here.** The [school system model](https://adamdennett.github.io/bh-school-system/) can estimate it, and that is the comparison that would bear directly on the policy.
+- **The gap is not what the admissions changes did.** That is a much smaller change, [below](#sec-admissions).
 
 So the fair reading is that, for disadvantaged pupils, a longer journey could plausibly cost about as much as the lower end of what mixing is estimated to gain, and that estimate is itself an optimistic one. Neither is shown directly in GCSE results.
+
+### What the admissions changes did {#sec-admissions}
+
+The comparison that bears on policy is not today's gap but what the city's admissions changes did to journeys and to mixing. The [city's school system model](https://adamdennett.github.io/bh-school-system/) allocates each year's children to schools under different rules and reports both, so its published runs can answer this. Two changes are separated: the catchment map introduced in 2024, against the catchments before it, and priority 6, the share of places at community schools for children from the single-school catchments (5% from 2026/27). Journeys are the model's walking and bus minutes from home to the school offered, for the city's schools; mixing is its Gorard index over the modelled intakes. Sources are in [the methodology](method.qmd#sec-admissions-method).
+
+```{r}
+#| label: tbl-admissions
+#| tbl-cap: !expr paste0("The city's school system model, 2026 entry (model run of ", format(AJ$source$model_built, "%e %B %Y"), "). Disadvantaged children's mean journey to the school offered, the difference from other children, the mean for all children, and the Gorard segregation index over the modelled intakes of the city's schools. Today is the 2024 map with today's priorities, priority 6 at 5%.")
+AJ$runs[year == 2026][match(c("today", "pre2024", "p6_off", "whitehawk", "comart"), id)][, .(Run = label, `Disadvantaged (min)` = sprintf("%.1f", dep_min), `Against others (min)` = sprintf("%+.1f", dep_gap), `All children (min)` = sprintf("%.1f", mean_min), `Segregation index` = sprintf("%.3f", gorard))] |> kt(align = "lrrrr")
+```
+
+**On journeys, the changes made very little difference.** The 2024 map lengthened disadvantaged children's journeys by about `r sprintf("%.1f", aje("dep_min", "map"))` minutes on average, from `r sprintf("%.1f", aje("dep_min", "before"))` to `r sprintf("%.1f", aje("dep_min", "today"))`, and priority 6 by another `r sprintf("%.2f", aje("dep_min", "p6"))`. That is a few per cent of the `r sprintf("%.1f", AJ$bh_gap$t_bus_gap)` minute gap between the city's deprived neighbourhoods and the rest, which comes from where the schools are: with CoMArt reopened, disadvantaged children's journeys would be `r sprintf("%.1f", aj_run("today", "dep_min") - aj_run("comart", "dep_min"))` minutes shorter.
+
+**On mixing, a small change too.** The 2024 map lowered the model's index by `r sprintf("%.3f", -aje("gorard", "map"))`, about `r sprintf("%.0f%%", 100 * AJ$summary[change == "map", share_removed])` of the segregation before it, and priority 6 raised it by `r sprintf("%.3f", aje("gorard", "p6"))`. The system model itself warns that differences of a few thousandths are within what a change of measure has moved, so this is at the edge of what it can resolve. Much of the map's effect is Whitehawk's move out of Longhill's catchment: putting it back would shorten disadvantaged children's journeys by `r sprintf("%.1f", aj_run("today", "dep_min") - aj_run("whitehawk", "dep_min"))` minutes and raise the index by `r sprintf("%.3f", aj_run("whitehawk", "gorard") - aj_run("today", "gorard"))`.
+
+**In Attainment 8 points, both are a fraction of a point.** Carried through the [chain above](#sec-gcse), the `r sprintf("%.2f", AJ$summary[change == "both", dmin])` extra minutes would cost disadvantaged pupils about `r sprintf("%.2f", -AJ$summary[change == "both", cost_hi])` to `r sprintf("%.2f", -AJ$summary[change == "both", cost_lo])` points, whether the minutes are turned into kilometres at the `r sprintf("%.1f", AJ$mpk)` minutes per kilometre of the city's deprived journeys or into absence directly. If Gorard and Siddiqui's gain from making schools as mixed as possible applies in proportion to the segregation removed, the changes would gain every pupil about `r sprintf("%.2f", AJ$summary[change == "both", gain_lo])` to `r sprintf("%.2f", AJ$summary[change == "both", gain_hi])` points, or `r sprintf("%.2f", AJ$summary[change == "map", gain_lo])` to `r sprintf("%.2f", AJ$summary[change == "map", gain_hi])` for the map alone.
+
+So, on the model and on these estimates, the admissions changes did not lengthen journeys enough to cost more than the most hopeful reading of their mixing gain, and neither is large. That is a different picture from the one today's gap gives, because the gap is mostly not the policy's doing. The proportional reading of Gorard and Siddiqui is generous to mixing, because their estimate is for a much larger change, may be a statistical artefact, and is not shown in Brighton and Hove's results. And the journey cost may be understated, because a modelled average hides the children whose journeys changed most, and because the minutes are to the school offered on the model, not to the school attended. Neither number is large enough to decide the policy on. What matters far more for journeys is where the schools are.
 
 
 ## What if a school were somewhere else? {#sec-whatif}
@@ -965,7 +987,7 @@ Either change would take about `r kms(wi("Today", "near_dep") - wi("Longhill", "
 
 Next on the [roadmap](roadmap.qmd):
 
-1. What Brighton and Hove's admissions changes did to journeys, from [the school system model](https://adamdennett.github.io/bh-school-system/), set against what the [mixing estimate](#sec-gcse) says they could gain.
+1. The children whose journeys the [admissions changes](#sec-admissions) lengthened most, such as those in Whitehawk, rather than the city's average, from [the school system model](https://adamdennett.github.io/bh-school-system/).
 2. Better school-level measures. A gravity model of who goes where would improve on "nearest children", until a published measure of how far each school's pupils travel exists.
 3. Real bell times, and the climb and the [busy change points](#sec-la-poi) tested again with them.
 4. Rail, Metro and tram timetables for London and the large conurbations, where buses alone overstate journeys.
