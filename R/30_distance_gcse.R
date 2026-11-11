@@ -70,6 +70,31 @@ chain <- merge(chain, means[, .(group = g, per_point_va)], by = "group")
 # Interval for the chain from the first link alone; the second is estimated far more precisely
 chain[, `:=`(chain_va = -b_abs * per_point_va, se_chain_va = se_abs * per_point_va, chain_la = -b_abs * per_point_la)]
 
+# ---- 1b. Does it flatten? Distance in bands, and as a spline -----------------------------------------
+# The same models with distance in 0.1 km bands (against 0.8 to 0.9 km, where both samples have
+# authorities) and as a natural cubic spline with three degrees of freedom. London's boroughs sit
+# almost all under 0.8 km, so the shape across all 109 partly compares London with elsewhere.
+BRK <- c(0, 0.8, 0.9, 1.0, 1.1, 1.2, Inf); BLAB <- c("Under 0.8", "0.8 to 0.9", "0.9 to 1.0", "1.0 to 1.1", "1.1 to 1.2", "1.2 and over")
+D[, band := factor(as.character(cut(km1_dep, BRK, labels = BLAB, right = FALSE)), BLAB)]
+EVERY <- ACT[["And every control"]]; SHAPE_S <- SAMP[c("All 109", "Without London")]
+shape_bands <- rbindlist(lapply(c("dis", "non", "all"), function(gr) rbindlist(lapply(names(SHAPE_S), function(sa) rbindlist(lapply(c("overall", "att8"), function(y) {
+  dd <- SHAPE_S[[sa]](D[g == gr]); dd <- dd[complete.cases(dd[, c(y, "km1_dep", EVERY), with = FALSE])]
+  m <- feols(as.formula(paste0(y, " ~ i(band, ref = '0.8 to 0.9') + ", paste(EVERY, collapse = " + "), " | tp")), dd, cluster = ~la)
+  k <- grep("^band::", names(coef(m)))
+  cnt <- unique(dd[, .(la, band, km1_dep)])[, .(las = .N, km_mid = median(km1_dep)), by = band]
+  rbind(data.table(band = sub("^band::", "", names(coef(m))[k]), b = coef(m)[k], se = se(m)[k]), data.table(band = "0.8 to 0.9", b = 0, se = 0))[
+    cnt, on = "band"][, `:=`(group = gr, sample = sa, outcome = y)] }))))))
+spline_fit <- function(y, dd, x0 = 0.85) {
+  dd <- dd[complete.cases(dd[, c(y, "km1_dep", EVERY), with = FALSE])]
+  basis <- splines::ns(dd$km1_dep, df = 3); dd[, paste0("s", 1:3) := as.data.table(unclass(basis)[, 1:3])]
+  m <- feols(as.formula(paste0(y, " ~ s1 + s2 + s3 + ", paste(EVERY, collapse = " + "), " | tp")), dd, cluster = ~la)
+  grid <- seq(quantile(dd$km1_dep, 0.02), quantile(dd$km1_dep, 0.98), length.out = 60)
+  B <- predict(basis, grid) - matrix(predict(basis, x0), nrow = length(grid), ncol = 3, byrow = TRUE)
+  bb <- coef(m)[c("s1", "s2", "s3")]; V <- vcov(m)[c("s1", "s2", "s3"), c("s1", "s2", "s3")]
+  data.table(km = grid, fit = as.vector(B %*% bb), se = sqrt(rowSums((B %*% V) * B))) }
+shape_spline <- rbindlist(lapply(c("dis", "non", "all"), function(gr) rbindlist(lapply(names(SHAPE_S), function(sa) rbindlist(lapply(c("overall", "att8"), function(y)
+  spline_fit(y, SHAPE_S[[sa]](D[g == gr]))[, `:=`(group = gr, sample = sa, outcome = y)]))))))
+
 # ---- 2b. Schools within authority -----------------------------------------------------------------
 KS <- p[, .(att8_all = mean(ATT8SCR, na.rm = TRUE), att8_dis = wm(ATT8SCR_FSM6CLA1A, TFSM6CLA1A), att8_non = wm(ATT8SCR_NFSM6CLA1A, TNOTFSM6CLA1A),
             p8_dis = mean(P8MEA_FSM6CLA1A, na.rm = TRUE), p8_non = mean(P8MEA_NFSM6CLA1A, na.rm = TRUE)), by = .(URN = as.character(URN))]
@@ -107,7 +132,7 @@ bh[, `:=`(med_km_dep = median(PL$km1_dep, na.rm = TRUE), med_km_dep_nol = median
 sg <- unique(p[!is.na(gorard_segregation), .(la = as.character(LANAME), academic_year, g = gorard_segregation)])[academic_year == max(academic_year)]
 bh[, `:=`(seg_year = sg$academic_year[1], seg = sg[la == BH, g], seg_median = median(sg$g), seg_rank = sg[, frank(g)][sg$la == BH], seg_n = nrow(sg))]
 
-out <- list(built = Sys.Date(), n_las = uniqueN(D$la), years = sort(unique(D$tp)), la_models = la_models, chain = chain, means = means,
+out <- list(built = Sys.Date(), n_las = uniqueN(D$la), years = sort(unique(D$tp)), la_models = la_models, chain = chain, means = means, shape_bands = shape_bands, shape_spline = shape_spline,
             school_models = school_models, n_schools = nrow(DS), school_las = uniqueN(DS$la), gorard = gor, bh = bh)
 saveRDS(out, here::here("data", "distance_gcse.rds")); message("Saved data/distance_gcse.rds")
 print(chain[ctrl == "And every control", .(group, sample, b_abs = round(b_abs, 2), chain_va = round(chain_va, 2), chain_la = round(chain_la, 2), direct = round(direct, 2), lo = round(direct - 1.96 * se_direct, 1), hi = round(direct + 1.96 * se_direct, 1))][order(sample, group)])
