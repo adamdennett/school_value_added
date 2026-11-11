@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -73,6 +108,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -789,6 +853,27 @@ Table&nbsp;4: Points of absence for each extra kilometre between an authority’
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_a = \alpha + \beta\,\text{near\_dep}_a + \gamma_1\,\text{share}_a + \gamma_2\,\text{urban\_share}_a + \varepsilon_a\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/18_distance.R: one row per authority, 2024/25; the same for abs_non and abs_all</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(abs_dis <span class="sc">~</span> near_dep,                       <span class="at">data =</span> la)                 <span class="co"># Distance alone</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(abs_dis <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share, <span class="at">data =</span> la)                 <span class="co"># Given share and urbanity</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(abs_dis <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share, <span class="at">data =</span> <span class="fu">filter</span>(la, <span class="sc">!</span>london))  <span class="co"># And without London</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(\beta\)</span> is the table’s figure: points of absence for each extra kilometre. <code>abs_dis</code>, <code>abs_non</code>, <code>abs_all</code> are overall absence, % of sessions, in state-funded secondary schools for each group; <code>near_dep</code> is the child-weighted mean straight-line km from the authority’s most deprived third of neighbourhoods to the nearest state secondary; <code>share</code> is the % of pupils disadvantaged; <code>urban_share</code> the % of 10 to 14 year olds in urban neighbourhoods.</p>
+</div>
+</div>
+</div>
 <p>The slope looks about 9 times steeper for disadvantaged pupils than for non-disadvantaged pupils once share and urbanity are allowed for, and about 5 times steeper without London. London pulls the fit up, because its schools are close together and its disadvantaged pupils attend well.</p>
 <p>It is the distance that goes with absence, not the gap within the authority. Added to the same model, how much further the deprived neighbourhoods are than the rest has no clear relationship with absence for any group (disadvantaged t = -0.4, non-disadvantaged t = -1.4, all pupils t = -0.3). Fairness in access and the level of access are separate questions.</p>
 <p>One year, one measure and three controls cannot carry much weight. The rest of this section tries to break the result.</p>
@@ -910,6 +995,30 @@ Table&nbsp;5: Points of absence for each extra kilometre between an authority’
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \boldsymbol{\delta}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: authorities by year, secondary, one group at a time</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, <span class="at">data =</span> A, <span class="at">cluster =</span> <span class="sc">~</span>la)                   <span class="co"># first rows</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">+</span> gor_name <span class="sc">|</span> tp, ...)                             <span class="co"># given region</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">+</span> eth_wb <span class="sc">+</span> eth_asian <span class="sc">+</span> eth_black <span class="sc">+</span> eth_mixed <span class="sc">|</span> tp, ...)   <span class="co"># given ethnic mix</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">+</span> eth_wb <span class="sc">+</span> eth_asian <span class="sc">+</span> eth_black <span class="sc">+</span> eth_mixed <span class="sc">+</span> gor_name <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        graduates <span class="sc">+</span> bad_health <span class="sc">+</span> white_british <span class="sc">+</span> social_rent <span class="sc">+</span> no_car <span class="sc">+</span> deprived <span class="sc">+</span> log_density <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> ks2_c <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> mobile <span class="sc">|</span> tp, ...)                                  <span class="co"># every control</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(t\)</span> is the year (2018/19, 2020/21 to 2024/25), <span class="math inline">\(\tau_t\)</span> year effects, and errors are clustered by authority <span class="math inline">\(a\)</span>. <span class="math inline">\(\mathbf{x}\)</span> is whichever extra controls the row names. The primary rows use primary absence on the left. Every variable is in <a href="./method.html#sec-model-variables">the glossary</a>.</p>
+</div>
 </div>
 </div>
 <section id="sec-years" class="level4">
@@ -1037,6 +1146,28 @@ Table&nbsp;6: The share of those models in which the slope is above zero, and in
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_a = \alpha + \beta\,\text{distance}^{(m)}_a + \boldsymbol{\gamma}'\mathbf{x}^{(c)}_a + \varepsilon_a \quad \text{(one year at a time)}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: every combination of year, distance measure m, control set c and sample</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(overall <span class="sc">~</span> measure <span class="sc">+</span> <span class="er">&lt;</span>controls<span class="sc">&gt;</span>, <span class="at">data =</span> <span class="sc">&lt;</span>one year, one sample<span class="sc">&gt;</span>)      <span class="co"># HC3 errors</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   measure:  each of the eleven distance measures (table below)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   controls: none; share and urbanity; and region; and Census place; and pupils; and primary absence</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   sample:   all authorities, without London, mostly urban, mostly urban without London, less urban</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The table counts how often <span class="math inline">\(\beta &gt; 0\)</span> across those models, and how often its 95% interval is wholly above zero; the figure shows <span class="math inline">\(\beta\)</span> times the standard deviation of the measure that year.</p>
+</div>
 </div>
 </div>
 <p>Across all of these, 77% of the slopes for disadvantaged pupils are above zero, 40% clearly so and 2% clearly below. The choice of measure makes little difference. The choice of controls and sample makes a great deal, as <a href="#tbl-curve" class="quarto-xref">Table&nbsp;6</a> shows: with few controls most models are clearly positive, and under the fullest sets few are.</p>
@@ -1185,6 +1316,25 @@ Mostly urban, without London
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,t} = \beta\,z^{(m)}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \tau_t + \varepsilon_{a,t}, \qquad z^{(m)}_{a,t} = \frac{\text{measure}^{(m)}_{a,t}}{\text{sd}_t\!\left(\text{measure}^{(m)}\right)}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: one model for each measure m</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> z <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, <span class="at">data =</span> A, <span class="at">cluster =</span> <span class="sc">~</span>la)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each measure is divided by its standard deviation across authorities in that year, so <span class="math inline">\(\beta\)</span> is points of absence for one standard deviation more distance, comparable across measures.</p>
+</div>
+</div>
+</div>
 <p>Nor does it depend on a handful of places. <a href="#tbl-influence" class="quarto-xref">Table&nbsp;8</a> repeats the 2024/25 model with errors that allow for neighbouring authorities being alike, with pupil weights, with a method that discounts outliers, and without the most influential authorities. Dropping any one authority leaves the slope for disadvantaged pupils between 3.6 and 4.2.</p>
 <div class="cell">
 <div id="tbl-influence" class="cell quarto-float quarto-figure quarto-figure-center anchored">
@@ -1245,6 +1395,29 @@ Table&nbsp;8: Checks on the 2024/25 model of <a href="#tbl-la" class="quarto-xre
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_a = \alpha + \beta\,\text{near\_dep}_a + \gamma_1\,\text{share}_a + \gamma_2\,\text{urban\_share}_a + \varepsilon_a\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: 2024/25, one row per authority</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(f, d)                                        <span class="co"># the base model</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(f, d[<span class="sc">-</span>i, ])                                  <span class="co"># leaving out each authority in turn</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>MASS<span class="sc">::</span><span class="fu">rlm</span>(f, <span class="at">data =</span> d, <span class="at">method =</span> <span class="st">"MM"</span>)           <span class="co"># robust to outliers</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(f, d, <span class="at">weights =</span> n_all)                       <span class="co"># weighted by pupils, HC3 errors</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(f, d, <span class="at">vcov =</span> <span class="fu">vcov_conley</span>(<span class="at">lat =</span> <span class="sc">~</span>lat, <span class="at">lon =</span> <span class="sc">~</span>lon, <span class="at">cutoff =</span> <span class="dv">100</span>))   <span class="co"># errors allowing for neighbours within 100 km</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <p>Which neighbourhoods’ distance matters is also informative. Put the deprived neighbourhoods and the others in one model, and for disadvantaged pupils the deprived neighbourhoods’ distance carries about twice the weight (+3.1 against +1.6 per kilometre). For non-disadvantaged pupils the two are about equal (+0.4 and +0.4).</p>
@@ -1372,6 +1545,26 @@ Table&nbsp;9: Within each ethnic group: points of secondary absence per kilometr
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}^{(e)}_{a,t} = \beta\,\text{distance}^{(e)}_{a} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \tau_t + \varepsilon_{a,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: one ethnic group e at a time, authorities with 100+ pupils in it</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, <span class="at">data =</span> E, <span class="at">cluster =</span> <span class="sc">~</span>la)       <span class="co"># from deprived neighbourhoods</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_e <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, <span class="at">data =</span> E, <span class="at">cluster =</span> <span class="sc">~</span>la)       <span class="co"># from where the group lives</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>overall</code> is the absence of all pupils of ethnic group <span class="math inline">\(e\)</span> in the authority (DfE does not split these by disadvantage). <code>near_e</code> is the mean straight-line km to a school over all neighbourhoods, weighted by the group’s Census residents.</p>
+</div>
+</div>
+</div>
 <p>The slope mostly goes. For White British pupils it is +0.84 per kilometre, and about zero outside London (+0.14) and in mostly urban authorities outside London (-0.02). For Asian and Black pupils it is below zero. Directly standardising says the same for all pupils: of a slope of 1.70, 1.01 is what each authority’s ethnic mix would give at national rates, and 0.69 is left (t = 3.3), or 0.28 without London (t = 1.1).</p>
 <p>This test cannot settle things for disadvantaged pupils, because most pupils in each ethnic group are not disadvantaged, and non-disadvantaged pupils show little slope anyway. A clear link among disadvantaged White British pupils could be hidden inside a flat line for all White British pupils. DfE publishes nothing that would show it.</p>
 </section>
@@ -1442,6 +1635,32 @@ Table&nbsp;10: What is left in the fullest model: share, urbanity, the group’s
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \underbrace{\gamma_1\,\text{share} + \gamma_2\,\text{urban\_share}}_{\text{share and urbanity}} + \underbrace{\boldsymbol{\delta}'\,\text{ethnic mix}}_{4} + \underbrace{\rho_{\text{region}}}_{9} + \underbrace{\boldsymbol{\kappa}'\,\text{Census}}_{7} + \underbrace{\boldsymbol{\pi}'\,\text{pupils}}_{6} + \tau_t + \varepsilon_{a,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: authorities by year, secondary, for each group (dis, non, all) and sample</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        eth_wb <span class="sc">+</span> eth_asian <span class="sc">+</span> eth_black <span class="sc">+</span> eth_mixed <span class="sc">+</span>                                    <span class="co"># ethnic mix of this group</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        gor_name <span class="sc">+</span>                                                                      <span class="co"># region</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        graduates <span class="sc">+</span> bad_health <span class="sc">+</span> white_british <span class="sc">+</span> social_rent <span class="sc">+</span> no_car <span class="sc">+</span> deprived <span class="sc">+</span> log_density <span class="sc">+</span>   <span class="co"># Census</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> ks2_c <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> mobile                                     <span class="co"># pupils</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="sc">|</span> tp, <span class="at">data =</span> A, <span class="at">cluster =</span> <span class="sc">~</span>la)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># "Explained": R-squared of the same controls predicting near_dep</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(near_dep <span class="sc">~</span> share <span class="sc">+</span> urban_share <span class="sc">+</span> eth_wb <span class="sc">+</span> ... <span class="sc">+</span> mobile <span class="sc">|</span> tp, <span class="at">data =</span> A)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(\beta\)</span> is the table’s figure. The ethnic mix is the shares of that group’s pupils who are White British, Asian, Black and of mixed heritage; the Census measures are of the authority’s residents and households; the pupil measures are of its secondary pupils. Every variable is in <a href="./method.html#sec-model-variables">the glossary</a>.</p>
+</div>
 </div>
 </div>
 <p>Across all authorities, no clear slope is left for any group: +0.34 for disadvantaged pupils, with an interval from -0.6 to +1.2. Adding distance to that model leaves its fit unchanged (R² 0.881 to 0.881). But that interval does not mean zero. It still allows a little over one point per kilometre, and the controls account for 76% of the variation in distance, so the model has little left to work with, and 28 terms for 150 authorities.</p>
@@ -1548,6 +1767,28 @@ Neighbourhoods by IDACI tenth
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,d,t} = \beta\,\text{near}_{a,d} + \boldsymbol{\gamma}'\mathbf{c}_{a,d} + \alpha_{a,t} + \delta_{d,t} + \varepsilon_{a,d,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: one row per authority a, IDACI tenth d and year t, secondary, weighted by pupils</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near <span class="sc">|</span> dec<span class="sc">^</span>tp,                     <span class="at">data =</span> B, <span class="at">weights =</span> <span class="sc">~</span>enrol, <span class="at">cluster =</span> <span class="sc">~</span>la)   <span class="co"># between authorities</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near <span class="sc">+</span> urban_c <span class="sc">+</span> dens_c <span class="sc">|</span> dec<span class="sc">^</span>tp,  ...)                                         <span class="co"># between, given urban and dense</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near <span class="sc">|</span> la<span class="sc">^</span>tp <span class="sc">+</span> dec<span class="sc">^</span>tp,             ...)                                         <span class="co"># within authorities</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near <span class="sc">+</span> urban_c <span class="sc">+</span> dens_c <span class="sc">+</span> grad_c <span class="sc">+</span> wbri_c <span class="sc">+</span> nocar_c <span class="sc">+</span> social_c <span class="sc">+</span> bad_c <span class="sc">|</span> la<span class="sc">^</span>tp <span class="sc">+</span> dec<span class="sc">^</span>tp, ...)   <span class="co"># within, given Census character</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>overall</code> is absence of all pupils living in that tenth of that authority (DfE, absence by pupil residence). <code>near</code> is the child-weighted mean straight-line km from those neighbourhoods to the nearest school. <span class="math inline">\(\alpha_{a,t}\)</span> (authority by year) compares neighbourhoods within one authority; <span class="math inline">\(\delta_{d,t}\)</span> (tenth by year) takes out the national pattern for each tenth. The <code>_c</code> terms are the Census character of the neighbourhoods, centred.</p>
+</div>
+</div>
+</div>
 <p>Three things follow.</p>
 <ul>
 <li><strong>Most of the slope between authorities is not there within them.</strong> For the most deprived three tenths it is +2.5 per kilometre between authorities, and +0.21 within them, or +0.45 given Census character. Part of that fall will be noise, because the distance for a tenth of an authority’s neighbourhoods is a rough average of places that can be far apart. Even so, the safer reading is that most of the slope between authorities is about the authorities, which fits what ethnic mix does above. Holding Census character raises the slope, because within an authority the further neighbourhoods tend to be less urban and less dense (r = -0.51 and -0.46), and differ little in their White British share (r = 0.10). So the clearer estimate depends on that adjustment: without it the interval includes zero.</li>
@@ -1625,6 +1866,27 @@ Table&nbsp;12: When distance changes in the same place. Authority rows use autho
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma\,\text{share}_{a,t} + \alpha_a + \tau_t + \varepsilon_{a,t} \qquad \text{absence}_{s,t} = \beta\,\log_2 \text{km}_{s,t} + \boldsymbol{\gamma}'\mathbf{z}_{s,t} + \alpha_s + \tau_t + \varepsilon_{s,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(dis_sec <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">|</span> la <span class="sc">+</span> tp, <span class="at">data =</span> wide, <span class="at">cluster =</span> <span class="sc">~</span>la)                     <span class="co"># authorities; likewise each group and phase</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">+</span> fsm_c <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> eal <span class="sc">+</span> girls <span class="sc">+</span> lsize <span class="sc">|</span> cid <span class="sc">+</span> tp, <span class="at">data =</span> S, <span class="at">cluster =</span> <span class="sc">~</span>cid)          <span class="co"># schools</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">+</span> l2<span class="sc">:</span>fsm_c <span class="sc">+</span> fsm_c <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> eal <span class="sc">+</span> girls <span class="sc">+</span> lsize <span class="sc">|</span> cid <span class="sc">+</span> la_g<span class="sc">^</span>tp, <span class="at">data =</span> S, <span class="at">cluster =</span> <span class="sc">~</span>cid)   <span class="co"># schools, against others in the authority that year</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With an effect <span class="math inline">\(\alpha\)</span> for each authority or school, <span class="math inline">\(\beta\)</span> is estimated only from changes over time in the same place, as schools open, close and change. <code>l2</code> is <span class="math inline">\(\log_2\)</span> of the mean straight-line km of the school’s nearest children; <code>cid</code> follows a school through changes of number.</p>
+</div>
 </div>
 </div>
 <p>All point in the expected direction, and at the secondary level the authority estimate for disadvantaged pupils (+3.2) is similar in size to the slope between authorities. But its interval is wide and includes zero. At school level, 156 of 3,121 schools saw their nearest children’s distance change by 10% or more. These are consistent with distance mattering, but do not establish it. New schools also open where populations are growing, so these changes are not random.</p>
@@ -1741,6 +2003,28 @@ Table&nbsp;13: Points per kilometre by kind of absence, all years pooled, allowi
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}^{(k)}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \tau_t + \varepsilon_{a,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: for each kind of absence k and group</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall    <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, <span class="at">data =</span> A, <span class="at">cluster =</span> <span class="sc">~</span>la)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(illness    <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, ...)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(unauth     <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, ...)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(persistent <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, ...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>illness</code> and <code>unauth</code> are % of sessions missed for that reason; <code>persistent</code> is the % of pupils missing 10% or more.</p>
+</div>
+</div>
+</div>
 <p>For disadvantaged pupils the link is mainly with unauthorised absence (+2.8 of the +3.5 points) and hardly with illness (+0.3). It is also large for persistent absence (+10.5 points of pupils per kilometre, against a mean of 37). The within-authority test agrees: for pupils in the most deprived three tenths of neighbourhoods, +0.32 of the +0.45 is unauthorised. In mostly urban authorities outside London, given ethnic mix and region, it is +1.5 unauthorised and +0.6 illness, and +6.4 points of pupils persistently absent. That is what missed journeys might look like, more than ill health, though the data cannot say why pupils were absent. It matters here because Brighton and Hove’s <a href="./absence_causes.html#sec-bh-codes">overall gap with England is mostly coded as illness</a>, while its disadvantaged pupils are high on both.</p>
 </section>
 <section id="sec-urban" class="level4">
@@ -1825,6 +2109,26 @@ Table&nbsp;14: Mostly urban authorities outside London (at least 80% of 10 to 14
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \boldsymbol{\delta}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: mostly urban authorities (urban_share &gt;= 80) outside London</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> near_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">|</span> tp, <span class="at">data =</span> <span class="fu">filter</span>(A, urban_share <span class="sc">&gt;=</span> <span class="dv">80</span>, <span class="sc">!</span>london), <span class="at">cluster =</span> <span class="sc">~</span>la)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ... without Brighton and Hove; without the five with most influence (Cook's distance, 2024/25)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ... given the group's ethnic mix, region, density, or every control, as in the table of what is left</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
 <p>In mostly urban authorities outside London, disadvantaged absence rises 3.6 points per kilometre, in every year, and 2.5 given ethnic mix and region. It holds without Brighton and Hove (3.5) and without the five most influential authorities (4.2). In less urban authorities the slope is +0.3, with an interval around zero, in every year. Secondary minus primary tells the same story (+3.2 against -0.2).</p>
 <p>Two other tests do not agree, so this is suggestive rather than settled.</p>
 <ul>
@@ -1884,6 +2188,26 @@ Table&nbsp;15: How a school’s absence, autumn and spring 2025/26, goes with ho
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_s = \beta\,\log_2 \text{km}_s + \theta\,(\log_2 \text{km}_s \times \text{fsm\_c}_s) + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/18_distance.R: one row per school, autumn and spring 2025/26</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">+</span> fsm <span class="sc">+</span> eal <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> place <span class="sc">+</span> age16 <span class="sc">|</span> la, <span class="at">data =</span> fr, <span class="at">cluster =</span> <span class="sc">~</span>la)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">*</span> fsm_c <span class="sc">+</span> eal <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> place <span class="sc">+</span> age16 <span class="sc">|</span> la, ...)   <span class="co"># last column</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(\beta\)</span> is points of absence for each doubling of <code>km</code> (<code>l2</code> = <span class="math inline">\(\log_2\)</span> km), the mean straight-line distance of the school’s nearest children; <span class="math inline">\(\theta\)</span> is the last column, the extra for each 10 points of free school meals (scaled). <span class="math inline">\(\alpha_a\)</span> compares schools in the same authority. The intake terms are those of Value Added v2.1: free school meals, English as an additional language, prior attainment, neighbourhood education (<code>z_l4</code>), special needs, mobility, girls, kind of place, and whether the school stops at 16.</p>
+</div>
 </div>
 </div>
 <p>Each doubling goes with 0.25 points more absence, against a mean of 8.3, which is small, as FFT found. It shows up in illness (+0.13) and in persistent absence (+0.75 points of pupils), more clearly than in unauthorised absence (+0.06). It is also stronger in schools with more disadvantaged pupils, which fits FFT’s result and the authority test above.</p>
@@ -1953,6 +2277,26 @@ Table&nbsp;16: All pupils, by school, six years pooled. Each doubling of how far
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{s,t} = \beta\,\log_2 \text{km}_s + \theta\,(\log_2 \text{km}_s \times \text{fsm\_c}_{s,t}) + \lambda\,\text{wbri}_s + \boldsymbol{\gamma}'\mathbf{z}_{s,t} + \alpha_{a,t} + \pi_{\text{place}} + \varepsilon_{s,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/19_distance_absence.R: schools by year, 2018/19 to 2025/26</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">+</span> l2<span class="sc">:</span>fsm_c <span class="sc">+</span> fsm_c <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> eal <span class="sc">+</span> girls <span class="sc">+</span> lsize <span class="sc">|</span> la_g<span class="sc">^</span>tp <span class="sc">+</span> place, <span class="at">data =</span> S2, <span class="at">cluster =</span> <span class="sc">~</span>la_g)          <span class="co"># without</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">+</span> l2<span class="sc">:</span>fsm_c <span class="sc">+</span> wbri <span class="sc">+</span> fsm_c <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> eal <span class="sc">+</span> girls <span class="sc">+</span> lsize <span class="sc">|</span> la_g<span class="sc">^</span>tp <span class="sc">+</span> place, <span class="at">data =</span> S2, <span class="at">cluster =</span> <span class="sc">~</span>la_g)   <span class="co"># with the White British share</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>wbri</code> is the school’s White British share in January 2026, held across years. <code>lsize</code> is log of the school roll.</p>
+</div>
+</div>
+</div>
 <p><strong>By kind of place.</strong> <a href="#tbl-place" class="quarto-xref">Table&nbsp;17</a> splits schools by the same three kinds of place. The authority test is in <a href="#sec-urban">the section above</a>.</p>
 <div class="cell">
 <div id="tbl-place" class="cell quarto-float quarto-figure quarto-figure-center anchored">
@@ -1997,6 +2341,26 @@ Table&nbsp;17: Absence for each doubling of how far a school’s nearest childre
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_s = \beta\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s \quad \text{(each kind of place separately)}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/18_distance.R</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> l2 <span class="sc">+</span> fsm <span class="sc">+</span> eal <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> age16 <span class="sc">|</span> la, <span class="at">data =</span> <span class="fu">filter</span>(fr, place <span class="sc">==</span> p), <span class="at">cluster =</span> <span class="sc">~</span>la)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(abs_excess <span class="sc">~</span> l2 <span class="sc">|</span> la, <span class="at">data =</span> sch_abs, <span class="at">cluster =</span> <span class="sc">~</span>la)    <span class="co"># absence above what intake predicts, 2021/22 to 2024/25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>abs_excess</code> is a school’s absence minus what its intake predicts, as on the area pages.</p>
+</div>
+</div>
+</div>
 <p>The estimates are similar in size across kinds of place, but only urban schools near a major town or city, where most schools are, give a clear answer. There are fewer schools elsewhere and the intervals are wide, so this cannot show whether distance matters less in rural areas.</p>
 </section>
 <section id="sec-results" class="level3">
@@ -2038,6 +2402,28 @@ Table&nbsp;18: Attainment 8 for each doubling of how far a school’s nearest ch
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\log \text{Att8}_{s,t} = \beta\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{x}_{s,t} + u_t + u_{r} + u_{a(r)} + u_s + \varepsilon_{s,t}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/18_distance.R: the Value Added v2.1 model for each group, with distance added</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lmer</span>(<span class="fu">log</span>(ATT8SCR_FSM6CLA1A) <span class="sc">~</span> l2 <span class="sc">+</span> <span class="fu">log</span>(PTFSM6CLA1A) <span class="sc">+</span> <span class="fu">log</span>(PERCTOT) <span class="sc">+</span> <span class="fu">log</span>(PNUMEAL) <span class="sc">+</span> ks2_c <span class="sc">+</span> ADMPOL_PT <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>       z_l4 <span class="sc">+</span> sen_support <span class="sc">+</span> sen_ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls_school <span class="sc">+</span> age16 <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>       (<span class="dv">1</span> <span class="sc">|</span> year_label) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> gor_name<span class="sc">/</span>LANAME) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> URN), <span class="at">data =</span> dg, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># "without absence in the model" drops log(PERCTOT)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(u\)</span> are random effects for year, region, authority within region and school. <span class="math inline">\(100\,(e^{\beta} - 1)\)</span> is the % change in Attainment 8 for each doubling of distance, the table’s figure. The terms are <a href="./method.html#sec-full-spec">those of v2.1</a>.</p>
+</div>
 </div>
 </div>
 <p>Schools whose nearest children live further away have lower results than their intake predicts, by more for disadvantaged pupils (-1.1% for each doubling) than for non-disadvantaged pupils (-0.7%) or all pupils (-0.5%). Allowing for absence takes away about half of that for disadvantaged pupils. These are small differences, and part of what they measure may be the kind of place rather than the journey.</p>
@@ -2533,6 +2919,25 @@ Table&nbsp;22: Schools in the routed places: absence for one standard deviation 
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_s = \beta\,x_s + \lambda\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/21_journey_analysis.R: schools in the nine routed places</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> x <span class="sc">+</span> l2 <span class="sc">+</span> fsm <span class="sc">+</span> wbri <span class="sc">+</span> sen_sup <span class="sc">+</span> ks2_c <span class="sc">|</span> la, <span class="at">data =</span> sch, <span class="at">cluster =</span> <span class="sc">~</span>la)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(x\)</span> is the journey feature in the row, as the child-weighted mean over the school’s nearest children; the table gives <span class="math inline">\(\beta\)</span> times the standard deviation of <span class="math inline">\(x\)</span>.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="sec-school-buses" class="level3">
 <h3 class="anchored" data-anchor-id="sec-school-buses">School buses and missing them</h3>
@@ -2782,6 +3187,25 @@ Table&nbsp;25: Secondary schools in England, absence at schools with a school bu
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_s = \beta\,\text{has\_bus}_s + \lambda\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \pi_{\text{place}} + \alpha_a + \varepsilon_s\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/23_school_buses.R: every state secondary in England</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> has_bus <span class="sc">+</span> l2 <span class="sc">+</span> place <span class="sc">+</span> fsm <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> age16 <span class="sc">|</span> la, <span class="at">data =</span> d, <span class="at">cluster =</span> <span class="sc">~</span>la)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>has_bus</code> is 1 if a school bus route serves the school (see <a href="./method.html#sec-journey-method">the method</a>).</p>
+</div>
+</div>
+</div>
 </section>
 <section id="sec-hills" class="level3">
 <h3 class="anchored" data-anchor-id="sec-hills">The climb</h3>
@@ -2994,6 +3418,25 @@ Table&nbsp;27: Secondary schools in England, absence for each extra 10 metres cl
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_s = \beta\,\text{up\_back}_s + \lambda\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/25_climb.R: every state secondary in England</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> up_back <span class="sc">+</span> l2 <span class="sc">+</span> fsm <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> age16 <span class="sc">+</span> place <span class="sc">|</span> la, <span class="at">data =</span> S, <span class="at">cluster =</span> <span class="sc">~</span>la)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>up_back</code> is the child-weighted mean metres climbed on the way home, along the straight line from each of the school’s nearest Output Areas; the table gives <span class="math inline">\(10\beta\)</span>.</p>
+</div>
 </div>
 </div>
 <p>Across England the link for overall absence is small and not clear: +0.018 points for each extra 10 metres (t = 1.1), and within authorities by home neighbourhood +0.056 (t = 1.4). There is a small link with illness absence (t = 2.0), clearer for schools near major towns and cities, and none with unauthorised absence. Between authorities the link for disadvantaged pupils is larger, given their ethnic mix (+0.34 per 10 metres, t = 3.0; non-disadvantaged pupils +0.15, all pupils +0.18), and falls by about half given region. So the first result looks largely local, with at most a small general link. Straight lines do understate climb, so a modest effect could still be there, and with climb along real walking routes in the 109 mostly urban authorities it is <a href="#sec-la-time">clearer</a>.</p>
@@ -3418,6 +3861,35 @@ Schools
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\begin{aligned}
+\textbf{Authorities:}\quad &amp; \text{absence}^{\text{dis}}_{a,t} = \beta\,x_a\,[+\,\lambda\,\text{km1\_dep}_a] + \boldsymbol{\gamma}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}\\
+\textbf{Tenths:}\quad &amp; \text{absence}_{a,d,t} = \beta\,x_{a,d}\,[+\,\lambda\,\text{km}_{a,d}] + \boldsymbol{\gamma}'\mathbf{c}_{a,d} + \alpha_{a,t} + \delta_{d,t} + \varepsilon_{a,d,t}\\
+\textbf{Schools:}\quad &amp; \text{absence}_s = \beta\,x_s + \lambda\,\log_2\text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s
+\end{aligned}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/29_la_analysis.R; x is the journey feature in the row (t_bus_dep, t_walk_dep, p_two_dep, wait_dep, late_dep, up_back_dep, ...)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> x [<span class="sc">+</span> km1_dep] <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">+</span> eth_wb <span class="sc">+</span> eth_asian <span class="sc">+</span> eth_black <span class="sc">+</span> eth_mixed <span class="sc">+</span> gor <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        graduates <span class="sc">+</span> bad_health <span class="sc">+</span> white_british <span class="sc">+</span> social_rent <span class="sc">+</span> no_car <span class="sc">+</span> deprived <span class="sc">+</span> log_density <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> ks2_c <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> mobile <span class="sc">|</span> tp, <span class="at">data =</span> A, <span class="at">cluster =</span> <span class="sc">~</span>la)                     <span class="co"># authorities, disadvantaged</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> x [<span class="sc">+</span> km] <span class="sc">+</span> urban_c <span class="sc">+</span> dens_c <span class="sc">+</span> grad_c <span class="sc">+</span> wbri_c <span class="sc">+</span> nocar_c <span class="sc">+</span> social_c <span class="sc">+</span> bad_c <span class="sc">|</span> la<span class="sc">^</span>tp <span class="sc">+</span> dec<span class="sc">^</span>tp,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> B, <span class="at">weights =</span> <span class="sc">~</span>enrol, <span class="at">cluster =</span> <span class="sc">~</span>la)                                                       <span class="co"># tenths, all pupils</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> x <span class="sc">+</span> l2 <span class="sc">+</span> fsm <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> age16 <span class="sc">+</span> place <span class="sc">|</span> la,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> S, <span class="at">cluster =</span> <span class="sc">~</span>la)                                                                         <span class="co"># schools, all pupils</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Journey features for authorities are of the most deprived third of neighbourhoods; for tenths and schools, of the Output Areas in them. Each figure is <span class="math inline">\(\beta\)</span> times the standard deviation of <span class="math inline">\(x\)</span>, with its t value. “Primary” is the authority model with primary absence on the left.</p>
+</div>
+</div>
+</div>
 <ul>
 <li><strong>Distance holds up, most clearly outside London.</strong> For disadvantaged pupils, with every control, absence is 1.9 points higher for each extra kilometre between the deprived third and a school (t = 2.9), 2.5 outside London (t = 3.7) and 2.0 without Brighton and Hove (t = 2.5). It is smaller for non-disadvantaged pupils (0.5, t = 2.1) and all pupils (0.7, t = 2.1), and much weaker in primary (0.4, t = 1.5). This matches the straight-line results <a href="#sec-urban">above</a>.</li>
 <li><strong>Time does not beat distance.</strong> Minutes and kilometres are too closely tied to separate (r = 0.93 across authorities, 0.86 within them). Put in the same model for disadvantaged pupils, distance keeps its link (t = 2.0) and time loses its own (t = -0.9). Within authorities neither wins.</li>
@@ -3522,6 +3994,28 @@ Schools
 </figure>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{absence}_{a,d,t} = \beta\,\text{POI}_{a,d} + \lambda\,\text{km}_{a,d} + \boldsymbol{\gamma}'\mathbf{c}_{a,d} + \eta\,\text{home400}_{a,d} + \phi_1\,\text{two\_share}_{a,d} + \phi_2\,\text{boardings}_{a,d} + \alpha_{a,t} + \delta_{d,t} + \varepsilon\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/29_la_analysis.R; poi is the count in the row (walk50_any, leg50_any, p_any_board, p_any_change, p_any_alight)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> poi_dep <span class="sc">+</span> share <span class="sc">+</span> urban_share <span class="sc">+</span> <span class="er">&lt;</span>ethnic mix, region, Census, pupils<span class="sc">&gt;</span> <span class="er">|</span> tp, <span class="at">data =</span> A, <span class="at">cluster =</span> <span class="sc">~</span>la)   <span class="co"># authorities</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> poi <span class="sc">+</span> km <span class="sc">+</span> urban_c <span class="sc">+</span> dens_c <span class="sc">+</span> grad_c <span class="sc">+</span> wbri_c <span class="sc">+</span> nocar_c <span class="sc">+</span> social_c <span class="sc">+</span> bad_c <span class="sc">+</span> home400_any <span class="sc">+</span> two_share <span class="sc">+</span> boardings</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>      <span class="sc">|</span> la<span class="sc">^</span>tp <span class="sc">+</span> dec<span class="sc">^</span>tp, <span class="at">data =</span> B, <span class="at">weights =</span> <span class="sc">~</span>enrol, <span class="at">cluster =</span> <span class="sc">~</span>la)                                                   <span class="co"># tenths</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> poi <span class="sc">+</span> l2 <span class="sc">+</span> fsm <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> ks2_c <span class="sc">+</span> z_l4 <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> age16 <span class="sc">+</span> place <span class="sc">|</span> la, <span class="at">data =</span> S, <span class="at">cluster =</span> <span class="sc">~</span>la)   <span class="co"># schools</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>home400_any</code> is points of interest within 400 m of home; <code>two_share</code> and <code>boardings</code> hold how often the journey changes bus, so a busier change point is compared with a quieter one, not with no change at all.</p>
+</div>
+</div>
+</div>
 <p><strong>Across authorities, nothing.</strong> Where an authority’s deprived journeys pass more points of interest, its disadvantaged pupils’ absence is no higher, at stops or along walking routes.</p>
 <p><strong>Within authorities, a hint, mostly in London.</strong> Home neighbourhoods whose bus journeys start, change or walk among more points of interest have a little more secondary absence than others in the same authority. One standard deviation more at changes of bus goes with 0.10 points more (t = 2.4), given distance, Census character, points of interest near home and how many buses the journey takes, so it is not just that these journeys change more often. It shows up in persistent absence too, and food and drink, shops and leisure behave alike. Primary absence shows nothing. But outside London it almost disappears (t = 0.5), it is not there for the most deprived three tenths, and between schools more points of interest along the way go with slightly <em>less</em> absence. London is where a bus-only network is least like the journeys children make. So this is a lead worth following with better routes and real bell times, not a finding. OpenStreetMap is also fuller in some places than others, which can make a count measure the map as much as the street.</p>
 <p>In Brighton and Hove the busiest change point on the way to the quickest school is White Horses, on the coast road, where about 440 children would change, 254 of them from the city’s most deprived third, with 51 points of interest within 200 metres. Next is the Open Market on London Road (218 children, 127 points of interest).</p>
@@ -3603,6 +4097,27 @@ Table&nbsp;32: From distance to GCSE results, 109 mostly urban authorities, ever
 </div>
 </div>
 </figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The model behind this table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\underbrace{\text{absence}_{a,t} = \beta_{km}\,\text{km1\_dep}_a + \dots}_{\text{first link}} \qquad \underbrace{\frac{\partial\,\text{Att8}}{\partial\,\text{absence}} = \frac{\bar{A}\,\varepsilon}{\bar{a}}}_{\text{second link, v2.1}} \qquad \text{chain} = \beta_{km} \times \frac{\bar{A}\,\varepsilon}{\bar{a}}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R/30_distance_gcse.R: authorities by year, 2021/22 to 2024/25, every control, for each group</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(overall <span class="sc">~</span> km1_dep <span class="sc">+</span> <span class="er">&lt;</span>every control<span class="sc">&gt;</span> <span class="er">|</span> tp, <span class="at">data =</span> D, <span class="at">cluster =</span> <span class="sc">~</span>la)              <span class="co"># Absence</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(att8    <span class="sc">~</span> overall <span class="sc">+</span> <span class="er">&lt;</span>every control<span class="sc">&gt;</span> <span class="er">|</span> tp, <span class="at">data =</span> D, <span class="at">cluster =</span> <span class="sc">~</span>la)              <span class="co"># Per point of absence, in brackets</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(att8    <span class="sc">~</span> km1_dep <span class="sc">+</span> <span class="er">&lt;</span>every control<span class="sc">&gt;</span> <span class="er">|</span> tp, <span class="at">data =</span> D, <span class="at">cluster =</span> <span class="sc">~</span>la)              <span class="co"># Direct</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(\varepsilon\)</span> is the Value Added v2.1 elasticity of Attainment 8 on absence for the group, and <span class="math inline">\(\bar{A}\)</span> and <span class="math inline">\(\bar{a}\)</span> the group’s mean Attainment 8 and absence across these authorities. <code>att8</code> is the authority’s Attainment 8 for the group, the mean of its schools weighted by their pupils in that group. Details in <a href="./method.html#sec-gcse-method">the method</a>.</p>
+</div>
 </div>
 </div>
 <p><strong>The GCSE results themselves do not show it.</strong> Modelled directly, an authority’s Attainment 8 for disadvantaged pupils has no clear link with distance once every control is in: +0.1 points per kilometre, with an interval from -2.4 to +2.5, and +0.1 outside London. With fewer controls it is negative, but for non-disadvantaged pupils too, which points to the kind of area. Between schools within authorities there is no link with distance either way, for absence or for results. The interval is wide enough to include the chain in most versions, but outside London the chain falls just outside it. So the chain is an “if”: <em>if</em> the extra absence is caused by the journey, and <em>if</em> each point of it costs what it appears to, this is what distance would cost. It is not a measured effect on results, and it may be an overstatement.</p>

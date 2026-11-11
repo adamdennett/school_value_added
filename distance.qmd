@@ -311,6 +311,21 @@ D$la_models |> mutate(v = sprintf("%+.1f (%+.1f to %+.1f)", b, b - 1.96 * se, b 
   select(`Specification` = spec, `All pupils`, Disadvantaged, `Non-disadvantaged`) |> kt(align = "lrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_a = \alpha + \beta\,\text{near\_dep}_a + \gamma_1\,\text{share}_a + \gamma_2\,\text{urban\_share}_a + \varepsilon_a$$
+
+```r
+# R/18_distance.R: one row per authority, 2024/25; the same for abs_non and abs_all
+lm(abs_dis ~ near_dep,                       data = la)                 # Distance alone
+lm(abs_dis ~ near_dep + share + urban_share, data = la)                 # Given share and urbanity
+lm(abs_dis ~ near_dep + share + urban_share, data = filter(la, !london))  # And without London
+```
+
+$\beta$ is the table's figure: points of absence for each extra kilometre. `abs_dis`, `abs_non`, `abs_all` are overall absence, % of sessions, in state-funded secondary schools for each group; `near_dep` is the child-weighted mean straight-line km from the authority's most deprived third of neighbourhoods to the nearest state secondary; `share` is the % of pupils disadvantaged; `urban_share` the % of 10 to 14 year olds in urban neighbourhoods.
+:::
+
 The slope looks about `r round(lm_b("Disadvantaged", S1) / lm_b("Non-disadvantaged", S1))` times steeper for disadvantaged pupils than for non-disadvantaged pupils once share and urbanity are allowed for, and about `r round(lm_b("Disadvantaged", S2) / lm_b("Non-disadvantaged", S2))` times steeper without London. London pulls the fit up, because its schools are close together and its disadvantaged pupils attend well.
 
 It is the distance that goes with absence, not the gap within the authority. Added to the same model, how much further the deprived neighbourhoods are than the rest has no clear relationship with absence for any group (`r paste(sprintf("%s t = %.1f", tolower(D$la_ratio_models$group), D$la_ratio_models$t), collapse = ", ")`). Fairness in access and the level of access are separate questions.
@@ -348,6 +363,24 @@ LAD <- bind_rows(
   ladder("Authority effects: as each school network changed", function(g) { x <- R$fe_la |> filter(out == key(g)); ci2(x$b, x$se) }))
 LAD |> kt(align = "lrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \boldsymbol{\delta}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}$$
+
+```r
+# R/19_distance_absence.R: authorities by year, secondary, one group at a time
+feols(overall ~ near_dep + share + urban_share | tp, data = A, cluster = ~la)                   # first rows
+feols(overall ~ near_dep + share + urban_share + gor_name | tp, ...)                             # given region
+feols(overall ~ near_dep + share + urban_share + eth_wb + eth_asian + eth_black + eth_mixed | tp, ...)   # given ethnic mix
+feols(overall ~ near_dep + share + urban_share + eth_wb + eth_asian + eth_black + eth_mixed + gor_name +
+        graduates + bad_health + white_british + social_rent + no_car + deprived + log_density +
+        sen_sup + ehcp + ks2_c + eal + wbri + mobile | tp, ...)                                  # every control
+```
+
+$t$ is the year (2018/19, 2020/21 to 2024/25), $\tau_t$ year effects, and errors are clustered by authority $a$. $\mathbf{x}$ is whichever extra controls the row names. The primary rows use primary absence on the left. Every variable is in [the glossary](method.qmd#sec-model-variables).
+:::
 
 #### Across six years {#sec-years}
 
@@ -396,6 +429,22 @@ bind_rows(cshare("control") |> mutate(ord = match(k, R$controls), kind = "Contro
   arrange(ord) |> transmute(`Choice` = k, `All pupils` = all, Disadvantaged = dis, `Non-disadvantaged` = non) |> kt(align = "lrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_a = \alpha + \beta\,\text{distance}^{(m)}_a + \boldsymbol{\gamma}'\mathbf{x}^{(c)}_a + \varepsilon_a \quad \text{(one year at a time)}$$
+
+```r
+# R/19_distance_absence.R: every combination of year, distance measure m, control set c and sample
+lm(overall ~ measure + <controls>, data = <one year, one sample>)      # HC3 errors
+#   measure:  each of the eleven distance measures (table below)
+#   controls: none; share and urbanity; and region; and Census place; and pupils; and primary absence
+#   sample:   all authorities, without London, mostly urban, mostly urban without London, less urban
+```
+
+The table counts how often $\beta > 0$ across those models, and how often its 95% interval is wholly above zero; the figure shows $\beta$ times the standard deviation of the measure that year.
+:::
+
 Across all of these, `r sprintf("%.0f%%", 100 * mean(cv_dis$b > 0))` of the slopes for disadvantaged pupils are above zero, `r sprintf("%.0f%%", 100 * mean(cv_dis$t > 1.96))` clearly so and `r sprintf("%.0f%%", 100 * mean(cv_dis$t < -1.96))` clearly below. The choice of measure makes little difference. The choice of controls and sample makes a great deal, as @tbl-curve shows: with few controls most models are clearly positive, and under the fullest sets few are.
 
 ```{r}
@@ -409,6 +458,19 @@ ms |> select(Measure, `All authorities all`, `All authorities dis`, `All authori
   kableExtra::add_header_above(c(" " = 1, "All authorities" = 3, "Mostly urban, without London" = 3))
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,t} = \beta\,z^{(m)}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \tau_t + \varepsilon_{a,t}, \qquad z^{(m)}_{a,t} = \frac{\text{measure}^{(m)}_{a,t}}{\text{sd}_t\!\left(\text{measure}^{(m)}\right)}$$
+
+```r
+# R/19_distance_absence.R: one model for each measure m
+feols(overall ~ z + share + urban_share | tp, data = A, cluster = ~la)
+```
+
+Each measure is divided by its standard deviation across authorities in that year, so $\beta$ is points of absence for one standard deviation more distance, comparable across measures.
+:::
+
 Nor does it depend on a handful of places. @tbl-influence repeats the 2024/25 model with errors that allow for neighbouring authorities being alike, with pupil weights, with a method that discounts outliers, and without the most influential authorities. Dropping any one authority leaves the slope for disadvantaged pupils between `r sprintf("%.1f", ckla("dis", "Baseline, 2024/25 (robust errors)", "loo_min"))` and `r sprintf("%.1f", ckla("dis", "Baseline, 2024/25 (robust errors)", "loo_max"))`.
 
 ```{r}
@@ -417,6 +479,22 @@ Nor does it depend on a handful of places. @tbl-influence repeats the 2024/25 mo
 R$checks_la |> mutate(v = ci2(b, se)) |> select(Check = check, group, v) |> pivot_wider(names_from = group, values_from = v) |>
   transmute(Check, `All pupils` = all, Disadvantaged = dis, `Non-disadvantaged` = non) |> kt(align = "lrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_a = \alpha + \beta\,\text{near\_dep}_a + \gamma_1\,\text{share}_a + \gamma_2\,\text{urban\_share}_a + \varepsilon_a$$
+
+```r
+# R/19_distance_absence.R: 2024/25, one row per authority
+f <- overall ~ near_dep + share + urban_share
+lm(f, d)                                        # the base model
+lm(f, d[-i, ])                                  # leaving out each authority in turn
+MASS::rlm(f, data = d, method = "MM")           # robust to outliers
+lm(f, d, weights = n_all)                       # weighted by pupils, HC3 errors
+feols(f, d, vcov = vcov_conley(lat = ~lat, lon = ~lon, cutoff = 100))   # errors allowing for neighbours within 100 km
+```
+:::
 
 Which neighbourhoods' distance matters is also informative. Put the deprived neighbourhoods and the others in one model, and for disadvantaged pupils the deprived neighbourhoods' distance carries about twice the weight (`r sprintf("%+.1f", rc("dis", "b_dep"))` against `r sprintf("%+.1f", rc("dis", "b_rest"))` per kilometre). For non-disadvantaged pupils the two are about equal (`r sprintf("%+.1f", rc("non", "b_dep"))` and `r sprintf("%+.1f", rc("non", "b_rest"))`).
 
@@ -474,6 +552,20 @@ R$within_eth |> filter(phase == "sec", control == "Share, urban", sample %in% c(
   mutate(`Ethnic group` = factor(`Ethnic group`, c("White British", "Asian", "Black", "Mixed heritage"))) |> arrange(`Ethnic group`, Distance) |> kt(align = "llrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}^{(e)}_{a,t} = \beta\,\text{distance}^{(e)}_{a} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \tau_t + \varepsilon_{a,t}$$
+
+```r
+# R/19_distance_absence.R: one ethnic group e at a time, authorities with 100+ pupils in it
+feols(overall ~ near_dep + share + urban_share | tp, data = E, cluster = ~la)       # from deprived neighbourhoods
+feols(overall ~ near_e + share + urban_share | tp, data = E, cluster = ~la)       # from where the group lives
+```
+
+`overall` is the absence of all pupils of ethnic group $e$ in the authority (DfE does not split these by disadvantage). `near_e` is the mean straight-line km to a school over all neighbourhoods, weighted by the group's Census residents.
+:::
+
 The slope mostly goes. For White British pupils it is `r sprintf("%+.2f", we("White British", "All authorities"))` per kilometre, and about zero outside London (`r sprintf("%+.2f", we("White British", "Without London"))`) and in mostly urban authorities outside London (`r sprintf("%+.2f", we("White British", "Mostly urban, without London"))`). For Asian and Black pupils it is below zero. Directly standardising says the same for all pupils: of a slope of `r sprintf("%.2f", dm("Actual absence"))`, `r sprintf("%.2f", dm("Explained by ethnic mix"))` is what each authority's ethnic mix would give at national rates, and `r sprintf("%.2f", dm("Beyond ethnic mix"))` is left (t = `r sprintf("%.1f", dm("Beyond ethnic mix") / dm("Beyond ethnic mix", "se"))`), or `r sprintf("%.2f", dm("Beyond ethnic mix", s = "Without London"))` without London (t = `r sprintf("%.1f", dm("Beyond ethnic mix", s = "Without London") / dm("Beyond ethnic mix", s = "Without London", "se"))`).
 
 This test cannot settle things for disadvantaged pupils, because most pupils in each ethnic group are not disadvantaged, and non-disadvantaged pupils show little slope anyway. A clear link among disadvantaged White British pupils could be hidden inside a flat line for all White British pupils. DfE publishes nothing that would show it.
@@ -487,6 +579,26 @@ R$group_mix |> filter(set == "And every control") |> mutate(v = ci2(b, se)) |> s
   left_join(R$full_models |> filter(group == "dis") |> transmute(sample, `Explained` = sprintf("%.0f%%", 100 * r2_dist), Authorities = las), by = "sample") |>
   transmute(Sample = sample, Authorities, `All pupils` = all, Disadvantaged = dis, `Non-disadvantaged` = non, `Explained`) |> kt(align = "lrrrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \underbrace{\gamma_1\,\text{share} + \gamma_2\,\text{urban\_share}}_{\text{share and urbanity}} + \underbrace{\boldsymbol{\delta}'\,\text{ethnic mix}}_{4} + \underbrace{\rho_{\text{region}}}_{9} + \underbrace{\boldsymbol{\kappa}'\,\text{Census}}_{7} + \underbrace{\boldsymbol{\pi}'\,\text{pupils}}_{6} + \tau_t + \varepsilon_{a,t}$$
+
+```r
+# R/19_distance_absence.R: authorities by year, secondary, for each group (dis, non, all) and sample
+feols(overall ~ near_dep + share + urban_share +
+        eth_wb + eth_asian + eth_black + eth_mixed +                                    # ethnic mix of this group
+        gor_name +                                                                      # region
+        graduates + bad_health + white_british + social_rent + no_car + deprived + log_density +   # Census
+        sen_sup + ehcp + ks2_c + eal + wbri + mobile                                     # pupils
+      | tp, data = A, cluster = ~la)
+# "Explained": R-squared of the same controls predicting near_dep
+feols(near_dep ~ share + urban_share + eth_wb + ... + mobile | tp, data = A)
+```
+
+$\beta$ is the table's figure. The ethnic mix is the shares of that group's pupils who are White British, Asian, Black and of mixed heritage; the Census measures are of the authority's residents and households; the pupil measures are of its secondary pupils. Every variable is in [the glossary](method.qmd#sec-model-variables).
+:::
 
 Across all authorities, no clear slope is left for any group: `r sprintf("%+.2f", gm("dis", "And every control"))` for disadvantaged pupils, with an interval from `r sprintf("%+.1f", gm("dis", "And every control") - 1.96 * gm("dis", "And every control", col = "se"))` to `r sprintf("%+.1f", gm("dis", "And every control") + 1.96 * gm("dis", "And every control", col = "se"))`. Adding distance to that model leaves its fit unchanged (R² `r sprintf("%.3f", fm("dis", "r2_without"))` to `r sprintf("%.3f", fm("dis", "r2_with"))`). But that interval does not mean zero. It still allows a little over one point per kilometre, and the controls account for `r sprintf("%.0f%%", 100 * fm("dis", "r2_dist"))` of the variation in distance, so the model has little left to work with, and 28 terms for `r nrow(la)` authorities.
 
@@ -552,6 +664,22 @@ R$between |> mutate(v = ci2(b, se), band = sub(" three tenths| four tenths", "",
   kableExtra::add_header_above(c(" " = 1, "Neighbourhoods by IDACI tenth" = 3))
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,d,t} = \beta\,\text{near}_{a,d} + \boldsymbol{\gamma}'\mathbf{c}_{a,d} + \alpha_{a,t} + \delta_{d,t} + \varepsilon_{a,d,t}$$
+
+```r
+# R/19_distance_absence.R: one row per authority a, IDACI tenth d and year t, secondary, weighted by pupils
+feols(overall ~ near | dec^tp,                     data = B, weights = ~enrol, cluster = ~la)   # between authorities
+feols(overall ~ near + urban_c + dens_c | dec^tp,  ...)                                         # between, given urban and dense
+feols(overall ~ near | la^tp + dec^tp,             ...)                                         # within authorities
+feols(overall ~ near + urban_c + dens_c + grad_c + wbri_c + nocar_c + social_c + bad_c | la^tp + dec^tp, ...)   # within, given Census character
+```
+
+`overall` is absence of all pupils living in that tenth of that authority (DfE, absence by pupil residence). `near` is the child-weighted mean straight-line km from those neighbourhoods to the nearest school. $\alpha_{a,t}$ (authority by year) compares neighbourhoods within one authority; $\delta_{d,t}$ (tenth by year) takes out the national pattern for each tenth. The `_c` terms are the Census character of the neighbourhoods, centred.
+:::
+
 Three things follow.
 
 - **Most of the slope between authorities is not there within them.** For the most deprived three tenths it is `r sprintf("%+.1f", bw("Most deprived three tenths", "Between authorities"))` per kilometre between authorities, and `r sprintf("%+.2f", bw("Most deprived three tenths", "Within authorities"))` within them, or `r sprintf("%+.2f", bw("Most deprived three tenths", "Within, given Census character"))` given Census character. Part of that fall will be noise, because the distance for a tenth of an authority's neighbourhoods is a rough average of places that can be far apart. Even so, the safer reading is that most of the slope between authorities is about the authorities, which fits what ethnic mix does above. Holding Census character raises the slope, because within an authority the further neighbourhoods tend to be less urban and less dense (r = `r sprintf("%.2f", R$within_sort[["urban"]])` and `r sprintf("%.2f", R$within_sort[["density"]])`), and differ little in their White British share (r = `r sprintf("%.2f", R$within_sort[["wbri"]])`). So the clearer estimate depends on that adjustment: without it the interval includes zero.
@@ -582,6 +710,21 @@ tibble(`Comparison` = c("Authorities: secondary, disadvantaged", "Authorities: s
        Estimate = c(fe("dis_sec"), fe("non_sec"), fe("all_sec"), fe("dis_pri"), fe("non_pri"), fe("all_pri"), ci2(fs$b, fs$se), ci2(fs$b_la, fs$se_la))) |> kt(align = "lr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma\,\text{share}_{a,t} + \alpha_a + \tau_t + \varepsilon_{a,t} \qquad \text{absence}_{s,t} = \beta\,\log_2 \text{km}_{s,t} + \boldsymbol{\gamma}'\mathbf{z}_{s,t} + \alpha_s + \tau_t + \varepsilon_{s,t}$$
+
+```r
+# R/19_distance_absence.R
+feols(dis_sec ~ near_dep + share | la + tp, data = wide, cluster = ~la)                     # authorities; likewise each group and phase
+feols(overall ~ l2 + fsm_c + sen_sup + ehcp + eal + girls + lsize | cid + tp, data = S, cluster = ~cid)          # schools
+feols(overall ~ l2 + l2:fsm_c + fsm_c + sen_sup + ehcp + eal + girls + lsize | cid + la_g^tp, data = S, cluster = ~cid)   # schools, against others in the authority that year
+```
+
+With an effect $\alpha$ for each authority or school, $\beta$ is estimated only from changes over time in the same place, as schools open, close and change. `l2` is $\log_2$ of the mean straight-line km of the school's nearest children; `cid` follows a school through changes of number.
+:::
+
 All point in the expected direction, and at the secondary level the authority estimate for disadvantaged pupils (`r sprintf("%+.1f", R$fe_la$b[R$fe_la$out == "dis_sec"])`) is similar in size to the slope between authorities. But its interval is wide and includes zero. At school level, `r R$sch_move$changed10` of `r format(R$sch_move$schools, big.mark = ",")` schools saw their nearest children's distance change by 10% or more. These are consistent with distance mattering, but do not establish it. New schools also open where populations are growing, so these changes are not random.
 
 #### What kind of absence? {#sec-kinds-la}
@@ -593,6 +736,22 @@ KL <- c(overall = "Overall", illness = "Illness", unauth = "Unauthorised", persi
 R$kinds_la |> mutate(v = ci2(b, se), Group = unname(GRL[group]), Kind = KL[outcome]) |> select(Group, Kind, Mean = mean, sample, v) |> pivot_wider(names_from = sample, values_from = v) |>
   mutate(Group = factor(Group, names(GROUP_COL)[1:3]), Kind = factor(Kind, KL), Mean = sprintf("%.1f", Mean)) |> arrange(Group, Kind) |> kt(align = "llrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}^{(k)}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \tau_t + \varepsilon_{a,t}$$
+
+```r
+# R/19_distance_absence.R: for each kind of absence k and group
+feols(overall    ~ near_dep + share + urban_share | tp, data = A, cluster = ~la)
+feols(illness    ~ near_dep + share + urban_share | tp, ...)
+feols(unauth     ~ near_dep + share + urban_share | tp, ...)
+feols(persistent ~ near_dep + share + urban_share | tp, ...)
+```
+
+`illness` and `unauth` are % of sessions missed for that reason; `persistent` is the % of pupils missing 10% or more.
+:::
 
 For disadvantaged pupils the link is mainly with unauthorised absence (`r sprintf("%+.1f", kl("dis", "unauth"))` of the `r sprintf("%+.1f", kl("dis", "overall"))` points) and hardly with illness (`r sprintf("%+.1f", kl("dis", "illness"))`). It is also large for persistent absence (`r sprintf("%+.1f", kl("dis", "persistent"))` points of pupils per kilometre, against a mean of `r sprintf("%.0f", kl("dis", "persistent", "mean"))`). The within-authority test agrees: for pupils in the most deprived three tenths of neighbourhoods, `r sprintf("%+.2f", bk3("unauth"))` of the `r sprintf("%+.2f", bk3("overall"))` is unauthorised. In mostly urban authorities outside London, given ethnic mix and region, it is `r sprintf("%+.1f", gk("dis", "unauth"))` unauthorised and `r sprintf("%+.1f", gk("dis", "illness"))` illness, and `r sprintf("%+.1f", gk("dis", "persistent"))` points of pupils persistently absent. That is what missed journeys might look like, more than ill health, though the data cannot say why pupils were absent. It matters here because Brighton and Hove's [overall gap with England is mostly coded as illness](absence_causes.qmd#sec-bh-codes), while its disadvantaged pupils are high on both.
 
@@ -608,6 +767,19 @@ ugm <- R$group_mix |> filter(sample == "Mostly urban, without London", set %in% 
 lur <- R$urb_sample |> filter(sample == "Less urban") |> mutate(v = ci2(b, se), Sample = ifelse(control == "Share, urban", "Less urban authorities", "Less urban authorities, given region")) |> select(Sample, group, v) |> pivot_wider(names_from = group, values_from = v)
 bind_rows(ucr, ugm, lur) |> transmute(Sample, `All pupils` = all, Disadvantaged = dis, `Non-disadvantaged` = non) |> kt(align = "lrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,t} = \beta\,\text{near\_dep}_{a,t} + \gamma_1\,\text{share}_{a,t} + \gamma_2\,\text{urban\_share}_{a} + \boldsymbol{\delta}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}$$
+
+```r
+# R/19_distance_absence.R: mostly urban authorities (urban_share >= 80) outside London
+feols(overall ~ near_dep + share + urban_share | tp, data = filter(A, urban_share >= 80, !london), cluster = ~la)
+# ... without Brighton and Hove; without the five with most influence (Cook's distance, 2024/25)
+# ... given the group's ethnic mix, region, density, or every control, as in the table of what is left
+```
+:::
 
 In mostly urban authorities outside London, disadvantaged absence rises `r sprintf("%.1f", oa("dis", "None beyond share and urbanity", "Mostly urban, without London"))` points per kilometre, in every year, and `r sprintf("%.1f", gm("dis", "And ethnic mix and region", "Mostly urban, without London"))` given ethnic mix and region. It holds without Brighton and Hove (`r sprintf("%.1f", uc("dis", "And without Brighton and Hove"))`) and without the five most influential authorities (`r sprintf("%.1f", uc("dis", "And without the five most influential"))`). In less urban authorities the slope is `r sprintf("%+.1f", us2("dis"))`, with an interval around zero, in every year. Secondary minus primary tells the same story (`r sprintf("%+.1f", us("step_dis"))` against `r sprintf("%+.1f", us("step_dis", s = "Less urban"))`).
 
@@ -630,6 +802,20 @@ D$kinds |> transmute(`Kind of absence` = outcome, `Mean` = sprintf("%.1f", mean)
     `Extra, per 10 points of FSM` = sprintf("%+.2f (%+.2f to %+.2f)", 10 * b_int, 10 * (b_int - 1.96 * se_int), 10 * (b_int + 1.96 * se_int))) |>
   kt(align = "lrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_s = \beta\,\log_2 \text{km}_s + \theta\,(\log_2 \text{km}_s \times \text{fsm\_c}_s) + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s$$
+
+```r
+# R/18_distance.R: one row per school, autumn and spring 2025/26
+feols(overall ~ l2 + fsm + eal + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + place + age16 | la, data = fr, cluster = ~la)
+feols(overall ~ l2 * fsm_c + eal + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + place + age16 | la, ...)   # last column
+```
+
+$\beta$ is points of absence for each doubling of `km` (`l2` = $\log_2$ km), the mean straight-line distance of the school's nearest children; $\theta$ is the last column, the extra for each 10 points of free school meals (scaled). $\alpha_a$ compares schools in the same authority. The intake terms are those of Value Added v2.1: free school meals, English as an additional language, prior attainment, neighbourhood education (`z_l4`), special needs, mobility, girls, kind of place, and whether the school stops at 16.
+:::
 
 Each doubling goes with `r sprintf("%.2f", kn("Overall absence"))` points more absence, against a mean of `r sprintf("%.1f", kn("Overall absence", "mean"))`, which is small, as FFT found. It shows up in illness (`r sprintf("%+.2f", kn("Illness"))`) and in persistent absence (`r sprintf("%+.2f", kn("Persistent absence (% of pupils)"))` points of pupils), more clearly than in unauthorised absence (`r sprintf("%+.2f", kn("Unauthorised"))`). It is also stronger in schools with more disadvantaged pupils, which fits FFT's result and the authority test above.
 
@@ -658,6 +844,20 @@ SW <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised
 R$sch_wb_pool |> transmute(`Kind of absence` = SW[outcome], `Without ethnic make-up` = ci2(b0, se0), `With ethnic make-up` = ci2(b1, se1), `Extra, per 10 points of FSM` = ci2(10 * int1, 10 * se_int1)) |> kt(align = "lrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{s,t} = \beta\,\log_2 \text{km}_s + \theta\,(\log_2 \text{km}_s \times \text{fsm\_c}_{s,t}) + \lambda\,\text{wbri}_s + \boldsymbol{\gamma}'\mathbf{z}_{s,t} + \alpha_{a,t} + \pi_{\text{place}} + \varepsilon_{s,t}$$
+
+```r
+# R/19_distance_absence.R: schools by year, 2018/19 to 2025/26
+feols(overall ~ l2 + l2:fsm_c + fsm_c + sen_sup + ehcp + eal + girls + lsize | la_g^tp + place, data = S2, cluster = ~la_g)          # without
+feols(overall ~ l2 + l2:fsm_c + wbri + fsm_c + sen_sup + ehcp + eal + girls + lsize | la_g^tp + place, data = S2, cluster = ~la_g)   # with the White British share
+```
+
+`wbri` is the school's White British share in January 2026, held across years. `lsize` is log of the school roll.
+:::
+
 **By kind of place.** @tbl-place splits schools by the same three kinds of place. The authority test is in [the section above](#sec-urban).
 
 ```{r}
@@ -671,6 +871,20 @@ tibble(`Kind of place` = ord_p,
   kt(align = "lrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_s = \beta\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s \quad \text{(each kind of place separately)}$$
+
+```r
+# R/18_distance.R
+feols(overall ~ l2 + fsm + eal + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + age16 | la, data = filter(fr, place == p), cluster = ~la)
+feols(abs_excess ~ l2 | la, data = sch_abs, cluster = ~la)    # absence above what intake predicts, 2021/22 to 2024/25
+```
+
+`abs_excess` is a school's absence minus what its intake predicts, as on the area pages.
+:::
+
 The estimates are similar in size across kinds of place, but only urban schools near a major town or city, where most schools are, give a clear answer. There are fewer schools elsewhere and the intervals are wide, so this cannot show whether distance matters less in rural areas.
 
 ### And results? {#sec-results}
@@ -683,6 +897,22 @@ D$results |> mutate(v = sprintf("%+.1f%% (%+.1f to %+.1f)", b, b - 1.96 * se, b 
   select(Group = group, m, v) |> pivot_wider(names_from = m, values_from = v) |>
   select(Group, `Without absence in the model`, `With absence in the model`) |> kt(align = "lrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\log \text{Att8}_{s,t} = \beta\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{x}_{s,t} + u_t + u_{r} + u_{a(r)} + u_s + \varepsilon_{s,t}$$
+
+```r
+# R/18_distance.R: the Value Added v2.1 model for each group, with distance added
+lmer(log(ATT8SCR_FSM6CLA1A) ~ l2 + log(PTFSM6CLA1A) + log(PERCTOT) + log(PNUMEAL) + ks2_c + ADMPOL_PT +
+       z_l4 + sen_support + sen_ehcp + mobile + girls_school + age16 +
+       (1 | year_label) + (1 | gor_name/LANAME) + (1 | URN), data = dg, REML = FALSE)
+# "without absence in the model" drops log(PERCTOT)
+```
+
+$u$ are random effects for year, region, authority within region and school. $100\,(e^{\beta} - 1)$ is the % change in Attainment 8 for each doubling of distance, the table's figure. The terms are [those of v2.1](method.qmd#sec-full-spec).
+:::
 
 Schools whose nearest children live further away have lower results than their intake predicts, by more for disadvantaged pupils (`r sprintf("%.1f%%", rs("Disadvantaged", FALSE))` for each doubling) than for non-disadvantaged pupils (`r sprintf("%.1f%%", rs("Non-disadvantaged", FALSE))`) or all pupils (`r sprintf("%.1f%%", rs("All pupils", FALSE))`). Allowing for absence takes away about half of that for disadvantaged pupils. These are small differences, and part of what they measure may be the kind of place rather than the journey.
 
@@ -775,6 +1005,19 @@ SL <- c(`Share of children needing a bus` = 1, `Share needing two or more buses`
 as.data.table(J$school_models)[term %in% names(SL) & outcome %in% c("overall", "unauth", "persistent")][, v := sprintf("%+.2f (t = %.1f)", b_km * sd_x, b_km / se_km)] |> dcast(term ~ outcome, value.var = "v") |> (\(x) x[order(SL[term])])() |> (\(x) x[, .(`Feature of the journey` = term, `Overall absence` = overall, Unauthorised = unauth, `Persistent absence (% of pupils)` = persistent)])() |> kt(align = "lrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_s = \beta\,x_s + \lambda\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s$$
+
+```r
+# R/21_journey_analysis.R: schools in the nine routed places
+feols(overall ~ x + l2 + fsm + wbri + sen_sup + ks2_c | la, data = sch, cluster = ~la)
+```
+
+$x$ is the journey feature in the row, as the child-weighted mean over the school's nearest children; the table gives $\beta$ times the standard deviation of $x$.
+:::
+
 ### School buses and missing them {#sec-school-buses}
 
 Many places run dedicated school buses, with a few trips in the morning and a few back in the afternoon. In Brighton and Hove, for example, the 72 and 72A run from Whitehawk to Longhill's grounds, three trips each morning and three back. Miss one and the alternatives may be poor. These routes can be picked out of the timetables by their pattern, for [all of England](method.qmd#sec-journey-method): at most `r SB$rules$max_trips` trips a day, all within school travel hours, ending or starting by a state secondary school and no nearer a college. That finds `r format(nrow(SB$routes), big.mark = ",")` route and school pairs serving `r format(nrow(SB$by_school), big.mark = ",")` schools. Timetables do not say who a bus is for, so this will include a few commuter journeys and miss school contracts that are not in them.
@@ -806,6 +1049,19 @@ SO <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised
 as.data.table(SB$models)[spec == "Has a school bus"][, v := sprintf("%+.2f (t = %.1f)", b, b / se)] |> dcast(outcome ~ sample, value.var = "v") |> (\(x) x[match(names(SO), outcome)][, .(`Kind of absence` = SO[outcome], `All schools`, Urban, Rural, `High free school meals` = `With high FSM`)])() |> kt(align = "lrrrr")
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_s = \beta\,\text{has\_bus}_s + \lambda\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \pi_{\text{place}} + \alpha_a + \varepsilon_s$$
+
+```r
+# R/23_school_buses.R: every state secondary in England
+feols(overall ~ has_bus + l2 + place + fsm + eal + wbri + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + age16 | la, data = d, cluster = ~la)
+```
+
+`has_bus` is 1 if a school bus route serves the school (see [the method](method.qmd#sec-journey-method)).
+:::
+
 ### The climb {#sec-hills}
 
 Straight lines also miss the hills. r5r's own elevation setting averages each street in both directions and did not change walking times in our tests, so the climb was measured directly, from OS Terrain 50 along each walking route, separately for the way to school and the way home.
@@ -828,6 +1084,19 @@ In Brighton and Hove, children in the most deprived third of neighbourhoods clim
 CO <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)", abs_excess = "Above intake, 2021/22 to 2024/25")
 as.data.table(CB$sch_models)[term == "up_back" & sample %in% c("All schools", "Urban", "Rural", "High free school meals", "Without Brighton and Hove")][, v := sprintf("%+.3f (t = %.1f)", 10 * b, b / se)] |> dcast(outcome ~ sample, value.var = "v") |> (\(x) x[match(names(CO), outcome)][, .(`Kind of absence` = CO[outcome], `All schools`, Urban, Rural, `High free school meals`, `Without Brighton and Hove`)])() |> kt(align = "lrrrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_s = \beta\,\text{up\_back}_s + \lambda\,\log_2 \text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s$$
+
+```r
+# R/25_climb.R: every state secondary in England
+feols(overall ~ up_back + l2 + fsm + eal + wbri + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + age16 + place | la, data = S, cluster = ~la)
+```
+
+`up_back` is the child-weighted mean metres climbed on the way home, along the straight line from each of the school's nearest Output Areas; the table gives $10\beta$.
+:::
 
 Across England the link for overall absence is small and not clear: `r sprintf("%+.3f", 10 * cbs("overall"))` points for each extra 10 metres (t = `r sprintf("%.1f", cbs("overall") / cbs("overall", "se"))`), and within authorities by home neighbourhood `r sprintf("%+.3f", 10 * cbc("overall"))` (t = `r sprintf("%.1f", cbc("overall") / cbc("overall", "se"))`). There is a small link with illness absence (t = `r sprintf("%.1f", cbs("illness") / cbs("illness", "se"))`), clearer for schools near major towns and cities, and none with unauthorised absence. Between authorities the link for disadvantaged pupils is larger, given their ethnic mix (`r sprintf("%+.2f", 10 * cbl("dis", "And ethnic mix of the group"))` per 10 metres, t = `r sprintf("%.1f", cbl("dis", "And ethnic mix of the group") / cbl("dis", "And ethnic mix of the group", "se"))`; non-disadvantaged pupils `r sprintf("%+.2f", 10 * cbl("non", "And ethnic mix of the group"))`, all pupils `r sprintf("%+.2f", 10 * cbl("all", "And ethnic mix of the group"))`), and falls by about half given region. So the first result looks largely local, with at most a small general link. Straight lines do understate climb, so a modest effect could still be there, and with climb along real walking routes in the 109 mostly urban authorities it is [clearer](#sec-la-time).
 
@@ -929,6 +1198,29 @@ data.table(`Feature of the journey` = TT, Alone = sapply(names(TT), la_v), `Give
   kt(align = "lrrrrrr") |> kableExtra::add_header_above(c(" " = 1, "Authorities, disadvantaged" = 3, "Tenths, within authority" = 2, "Schools" = 1))
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\begin{aligned}
+\textbf{Authorities:}\quad & \text{absence}^{\text{dis}}_{a,t} = \beta\,x_a\,[+\,\lambda\,\text{km1\_dep}_a] + \boldsymbol{\gamma}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}\\
+\textbf{Tenths:}\quad & \text{absence}_{a,d,t} = \beta\,x_{a,d}\,[+\,\lambda\,\text{km}_{a,d}] + \boldsymbol{\gamma}'\mathbf{c}_{a,d} + \alpha_{a,t} + \delta_{d,t} + \varepsilon_{a,d,t}\\
+\textbf{Schools:}\quad & \text{absence}_s = \beta\,x_s + \lambda\,\log_2\text{km}_s + \boldsymbol{\gamma}'\mathbf{z}_s + \alpha_a + \varepsilon_s
+\end{aligned}$$
+
+```r
+# R/29_la_analysis.R; x is the journey feature in the row (t_bus_dep, t_walk_dep, p_two_dep, wait_dep, late_dep, up_back_dep, ...)
+feols(overall ~ x [+ km1_dep] + share + urban_share + eth_wb + eth_asian + eth_black + eth_mixed + gor +
+        graduates + bad_health + white_british + social_rent + no_car + deprived + log_density +
+        sen_sup + ehcp + ks2_c + eal + wbri + mobile | tp, data = A, cluster = ~la)                     # authorities, disadvantaged
+feols(overall ~ x [+ km] + urban_c + dens_c + grad_c + wbri_c + nocar_c + social_c + bad_c | la^tp + dec^tp,
+      data = B, weights = ~enrol, cluster = ~la)                                                       # tenths, all pupils
+feols(overall ~ x + l2 + fsm + eal + wbri + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + age16 + place | la,
+      data = S, cluster = ~la)                                                                         # schools, all pupils
+```
+
+Journey features for authorities are of the most deprived third of neighbourhoods; for tenths and schools, of the Output Areas in them. Each figure is $\beta$ times the standard deviation of $x$, with its t value. "Primary" is the authority model with primary absence on the left.
+:::
+
 - **Distance holds up, most clearly outside London.** For disadvantaged pupils, with every control, absence is `r sprintf("%.1f", lam("km1_dep"))` points higher for each extra kilometre between the deprived third and a school (t = `r sprintf("%.1f", lat("km1_dep"))`), `r sprintf("%.1f", lam("km1_dep", s = "Without London"))` outside London (t = `r sprintf("%.1f", lat("km1_dep", s = "Without London"))`) and `r sprintf("%.1f", lam("km1_dep", s = "Without Brighton and Hove"))` without Brighton and Hove (t = `r sprintf("%.1f", lat("km1_dep", s = "Without Brighton and Hove"))`). It is smaller for non-disadvantaged pupils (`r sprintf("%.1f", lam("km1_dep", "non"))`, t = `r sprintf("%.1f", lat("km1_dep", "non"))`) and all pupils (`r sprintf("%.1f", lam("km1_dep", "all"))`, t = `r sprintf("%.1f", lat("km1_dep", "all"))`), and much weaker in primary (`r sprintf("%.1f", lam("km1_dep", ph = "pri"))`, t = `r sprintf("%.1f", lat("km1_dep", ph = "pri"))`). This matches the straight-line results [above](#sec-urban).
 - **Time does not beat distance.** Minutes and kilometres are too closely tied to separate (r = `r sprintf("%.2f", JL$cor_la$r_t_km)` across authorities, `r sprintf("%.2f", JL$sep$r_within)` within them). Put in the same model for disadvantaged pupils, distance keeps its link (t = `r sprintf("%.1f", ha("b_km") / ha("se_km"))`) and time loses its own (t = `r sprintf("%.1f", ha("b_t") / ha("se_t"))`). Within authorities neither wins.
 - **Changes of bus, waiting and the penalty for a missed bus add nothing beyond distance.** With fewer controls each goes with more absence across authorities, because long journeys have more of them, but given distance none keeps a clear link.
@@ -949,6 +1241,22 @@ data.table(`Points of interest` = PT, Secondary = sapply(names(PT), la_p, ph = "
   kt(align = "lrrrrrr") |> kableExtra::add_header_above(c(" " = 1, "Authorities, disadvantaged" = 2, "Tenths, within authority" = 3, "Schools" = 1))
 ```
 
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,d,t} = \beta\,\text{POI}_{a,d} + \lambda\,\text{km}_{a,d} + \boldsymbol{\gamma}'\mathbf{c}_{a,d} + \eta\,\text{home400}_{a,d} + \phi_1\,\text{two\_share}_{a,d} + \phi_2\,\text{boardings}_{a,d} + \alpha_{a,t} + \delta_{d,t} + \varepsilon$$
+
+```r
+# R/29_la_analysis.R; poi is the count in the row (walk50_any, leg50_any, p_any_board, p_any_change, p_any_alight)
+feols(overall ~ poi_dep + share + urban_share + <ethnic mix, region, Census, pupils> | tp, data = A, cluster = ~la)   # authorities
+feols(overall ~ poi + km + urban_c + dens_c + grad_c + wbri_c + nocar_c + social_c + bad_c + home400_any + two_share + boardings
+      | la^tp + dec^tp, data = B, weights = ~enrol, cluster = ~la)                                                   # tenths
+feols(overall ~ poi + l2 + fsm + eal + wbri + ks2_c + z_l4 + sen_sup + ehcp + mobile + girls + age16 + place | la, data = S, cluster = ~la)   # schools
+```
+
+`home400_any` is points of interest within 400 m of home; `two_share` and `boardings` hold how often the journey changes bus, so a busier change point is compared with a quieter one, not with no change at all.
+:::
+
 **Across authorities, nothing.** Where an authority's deprived journeys pass more points of interest, its disadvantaged pupils' absence is no higher, at stops or along walking routes.
 
 **Within authorities, a hint, mostly in London.** Home neighbourhoods whose bus journeys start, change or walk among more points of interest have a little more secondary absence than others in the same authority. One standard deviation more at changes of bus goes with `r sprintf("%.2f", cl_t("p_any_change", "And changes of bus", col = "b"))` points more (t = `r sprintf("%.1f", cl_t("p_any_change", "And changes of bus"))`), given distance, Census character, points of interest near home and how many buses the journey takes, so it is not just that these journeys change more often. It shows up in persistent absence too, and food and drink, shops and leisure behave alike. Primary absence shows nothing. But outside London it almost disappears (t = `r sprintf("%.1f", cl_t("p_any_change", "And changes of bus", s = "Without London"))`), it is not there for the most deprived three tenths, and between schools more points of interest along the way go with slightly *less* absence. London is where a bus-only network is least like the journeys children make. So this is a lead worth following with better routes and real bell times, not a finding. OpenStreetMap is also fuller in some places than others, which can make a count measure the map as much as the street.
@@ -967,6 +1275,21 @@ GC$chain[ctrl == "And every control" & sample %in% names(GCS)][, .(Group = GRL[g
   `Per point of absence` = sprintf("%.2f (%.2f)", per_point_va, per_point_la), Chain = sprintf("%+.1f", chain_va),
   Direct = sprintf("%+.1f (%+.1f to %+.1f)", direct, direct - 1.96 * se_direct, direct + 1.96 * se_direct), o = match(group, names(GRL)))][order(Sample, o)][, o := NULL][] |> kt(align = "llrrrr")
 ```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\underbrace{\text{absence}_{a,t} = \beta_{km}\,\text{km1\_dep}_a + \dots}_{\text{first link}} \qquad \underbrace{\frac{\partial\,\text{Att8}}{\partial\,\text{absence}} = \frac{\bar{A}\,\varepsilon}{\bar{a}}}_{\text{second link, v2.1}} \qquad \text{chain} = \beta_{km} \times \frac{\bar{A}\,\varepsilon}{\bar{a}}$$
+
+```r
+# R/30_distance_gcse.R: authorities by year, 2021/22 to 2024/25, every control, for each group
+feols(overall ~ km1_dep + <every control> | tp, data = D, cluster = ~la)              # Absence
+feols(att8    ~ overall + <every control> | tp, data = D, cluster = ~la)              # Per point of absence, in brackets
+feols(att8    ~ km1_dep + <every control> | tp, data = D, cluster = ~la)              # Direct
+```
+
+$\varepsilon$ is the Value Added v2.1 elasticity of Attainment 8 on absence for the group, and $\bar{A}$ and $\bar{a}$ the group's mean Attainment 8 and absence across these authorities. `att8` is the authority's Attainment 8 for the group, the mean of its schools weighted by their pupils in that group. Details in [the method](method.qmd#sec-gcse-method).
+:::
 
 **The GCSE results themselves do not show it.** Modelled directly, an authority's Attainment 8 for disadvantaged pupils has no clear link with distance once every control is in: `r sprintf("%+.1f", gch("dis", "All 109", "direct"))` points per kilometre, with an interval from `r sprintf("%+.1f", gch("dis", "All 109", "direct") - 1.96 * gch("dis", "All 109", "se_direct"))` to `r sprintf("%+.1f", gch("dis", "All 109", "direct") + 1.96 * gch("dis", "All 109", "se_direct"))`, and `r sprintf("%+.1f", gch("dis", "Without London", "direct"))` outside London. With fewer controls it is negative, but for non-disadvantaged pupils too, which points to the kind of area. Between schools within authorities there is no link with distance either way, for absence or for results. The interval is wide enough to include the chain in most versions, but outside London the chain falls just outside it. So the chain is an "if": *if* the extra absence is caused by the journey, and *if* each point of it costs what it appears to, this is what distance would cost. It is not a measured effect on results, and it may be an overstatement.
 

@@ -288,6 +288,7 @@ window.Quarto = {
   <li><a href="#sec-distance-measures" id="toc-sec-distance-measures" class="nav-link" data-scroll-target="#sec-distance-measures">Measuring distance</a></li>
   <li><a href="#sec-distance-absence" id="toc-sec-distance-absence" class="nav-link" data-scroll-target="#sec-distance-absence">Absence</a></li>
   <li><a href="#sec-distance-models" id="toc-sec-distance-models" class="nav-link" data-scroll-target="#sec-distance-models">The models</a></li>
+  <li><a href="#sec-model-variables" id="toc-sec-model-variables" class="nav-link" data-scroll-target="#sec-model-variables">The variables in the models</a></li>
   <li><a href="#sec-distance-limits" id="toc-sec-distance-limits" class="nav-link" data-scroll-target="#sec-distance-limits">What these calculations cannot do</a></li>
   <li><a href="#sec-journey-method" id="toc-sec-journey-method" class="nav-link" data-scroll-target="#sec-journey-method">Journey times: data and calculations</a></li>
   <li><a href="#sec-la-routing-method" id="toc-sec-la-routing-method" class="nav-link" data-scroll-target="#sec-la-routing-method">Journeys in the 109 mostly urban authorities: data and calculations</a></li>
@@ -4244,6 +4245,234 @@ Table&nbsp;12: The measures of distance from an authority’s deprived neighbour
 <p><span class="math display">\[A_{st} = \beta \log_2 N_{st} + \delta (\log_2 N_{st} \times F_{st}) + \gamma' Z_{st} + \lambda_{at} + \varepsilon_{st}\]</span></p>
 <p>where <span class="math inline">\(F\)</span> is the free school meals share, centred, and <span class="math inline">\(Z\)</span> is SEN support, EHC plans, English as an additional language, girls, log size and kind of place. A further version adds the school’s White British share from the January 2026 census, held fixed across years because these files do not give earlier shares. Year-by-year models use authority effects. School-effects models replace them with an effect for each school, so <span class="math inline">\(\beta\)</span> uses only schools whose nearest children’s distance changed. In those models <span class="math inline">\(\delta\)</span> is mostly driven by free school meals changing at schools whose distance did not, and among the 156 schools with a change of 10% or more its estimate is not clear, so it is not reported as a response to network change.</p>
 </section>
+<section id="sec-model-variables" class="level2">
+<h2 class="anchored" data-anchor-id="sec-model-variables">The variables in the models</h2>
+<p>The notes under each table on <a href="./distance.html">the distance page</a> give each model as an equation and as the R call that fits it. These are the variable names in those calls. Authorities are DfE local authorities; tenths are the ten national IDACI groups of neighbourhood within an authority; schools are state-funded secondary schools.</p>
+<div class="cell">
+<div id="tbl-model-variables" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-variables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;13: Variables in the distance, journey and GCSE models, by the unit they describe. Where a variable is centred (suffix _c), its mean has been taken off.
+</figcaption>
+<div aria-describedby="tbl-model-variables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Meaning</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Outcomes</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">overall</td>
+<td style="text-align: left;">Overall absence: % of possible sessions missed, for the group of pupils (disadvantaged, non-disadvantaged, all) or the tenth or school</td>
+<td style="text-align: left;">DfE absence statistics (by characteristic, by pupil residence, school level)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">illness, unauth</td>
+<td style="text-align: left;">% of sessions missed through illness, or unauthorised</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">persistent</td>
+<td style="text-align: left;">% of pupils missing 10% or more of sessions</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">abs_dis, abs_non, abs_all</td>
+<td style="text-align: left;">Overall absence in 2024/25 for each group (R/18)</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">abs_excess</td>
+<td style="text-align: left;">A school's absence minus what its intake predicts, 2021/22 to 2024/25</td>
+<td style="text-align: left;">This site's absence model</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">att8, ATT8SCR…</td>
+<td style="text-align: left;">Attainment 8 for the group</td>
+<td style="text-align: left;">KS4 performance tables</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Distance and journeys</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">near_dep, km1_dep</td>
+<td style="text-align: left;">Child-weighted mean straight-line km from the authority's most deprived third of neighbourhoods to the nearest state secondary school</td>
+<td style="text-align: left;">Census 2021, GIAS (R/18, R/29)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">near_rest, near_e</td>
+<td style="text-align: left;">The same for the other neighbourhoods, or over all neighbourhoods weighted by an ethnic group's residents</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pri_dep</td>
+<td style="text-align: left;">The same distance to the nearest primary school</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">near, km</td>
+<td style="text-align: left;">Child-weighted mean straight-line km to the nearest school from the neighbourhoods in a tenth</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">l2</td>
+<td style="text-align: left;">log₂ of the mean straight-line km of a school's nearest children, so a coefficient is per doubling</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">t_bus, t_walk (_dep)</td>
+<td style="text-align: left;">Minutes to the quickest school by walking and bus, or walking alone</td>
+<td style="text-align: left;">r5r routing (R/27)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">p_two, two_share (_dep)</td>
+<td style="text-align: left;">Share of journeys needing two or more buses</td>
+<td style="text-align: left;">r5r itineraries (R/27)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wait, late (_dep)</td>
+<td style="text-align: left;">Minutes waiting for buses; minutes late if the last workable journey is missed</td>
+<td style="text-align: left;">As above</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">up_back (_dep)</td>
+<td style="text-align: left;">Metres climbed walking home from school</td>
+<td style="text-align: left;">OS Terrain 50 (R/25, R/27)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">walk50_any, leg50_any, p_any_board, p_any_change, p_any_alight</td>
+<td style="text-align: left;">Points of interest along the walking route, the walking legs of a bus journey, or within 200 m of the first, change or last stop</td>
+<td style="text-align: left;">OpenStreetMap (R/28)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">home400_any</td>
+<td style="text-align: left;">Points of interest within 400 m of home</td>
+<td style="text-align: left;">OpenStreetMap (R/28)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">has_bus</td>
+<td style="text-align: left;">1 if a dedicated school bus route serves the school</td>
+<td style="text-align: left;">Bus Open Data Service (R/23)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Authority controls</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">share</td>
+<td style="text-align: left;">% of pupils disadvantaged (free school meals in the last six years) in that phase</td>
+<td style="text-align: left;">DfE absence by characteristic</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">urban_share</td>
+<td style="text-align: left;">% of children aged 10 to 14 in urban neighbourhoods</td>
+<td style="text-align: left;">Census 2021, ONS rural-urban classification</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">eth_wb, eth_asian, eth_black, eth_mixed</td>
+<td style="text-align: left;">Shares of the group's pupils who are White British, Asian, Black, of mixed heritage</td>
+<td style="text-align: left;">DfE, free school meals by ethnicity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gor_name, gor</td>
+<td style="text-align: left;">Region (an effect for each)</td>
+<td style="text-align: left;">ONS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">graduates, bad_health, white_british, social_rent, no_car, deprived, log_density</td>
+<td style="text-align: left;">Residents with degree-level qualifications, in bad health, White British; households socially renting, with no car, deprived in two or more dimensions; log persons per km²</td>
+<td style="text-align: left;">Census 2021</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sen_sup, ehcp, ks2_c, eal, wbri, mobile</td>
+<td style="text-align: left;">Secondary pupils with SEN support, with an EHC plan, prior attainment (centred), English as an additional language, White British, joining mid-year</td>
+<td style="text-align: left;">DfE school census, KS2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Tenth controls</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">urban_c, dens_c, grad_c, wbri_c, nocar_c, social_c, bad_c</td>
+<td style="text-align: left;">The tenth's neighbourhoods: urban, density, graduates, White British, no car, social renting, bad health, centred</td>
+<td style="text-align: left;">Census 2021</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>School controls</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fsm, fsm_c</td>
+<td style="text-align: left;">% of pupils eligible for free school meals (centred)</td>
+<td style="text-align: left;">DfE school census</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">eal, ks2_c, z_l4, sen_sup, ehcp, mobile, girls, age16, place</td>
+<td style="text-align: left;">English as an additional language, prior attainment, neighbourhood education (standardised), SEN support, EHC plans, mobility, % girls, stops at 16, kind of place</td>
+<td style="text-align: left;">As in Value Added v2.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wbri, lsize</td>
+<td style="text-align: left;">White British share (January 2026); log of the roll</td>
+<td style="text-align: left;">DfE school census</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Effects and weights</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">| tp</td>
+<td style="text-align: left;">An effect for each year</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">| la, la_g</td>
+<td style="text-align: left;">An effect for each authority: comparisons within one authority</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">| la^tp, dec^tp</td>
+<td style="text-align: left;">Effects for each authority in each year, and each IDACI tenth in each year</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">| cid</td>
+<td style="text-align: left;">An effect for each school, followed through changes of number</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster = ~la</td>
+<td style="text-align: left;">Standard errors allowing for correlation within an authority</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">weights = ~enrol</td>
+<td style="text-align: left;">Weighted by the pupils in the tenth</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
 <section id="sec-distance-limits" class="level2">
 <h2 class="anchored" data-anchor-id="sec-distance-limits">What these calculations cannot do</h2>
 <ul>
@@ -4261,7 +4490,7 @@ Table&nbsp;12: The measures of distance from an authority’s deprived neighbour
 <div id="tbl-journey-sources" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-journey-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13: Additional sources for the journey time analysis. All are published and free to download.
+Table&nbsp;14: Additional sources for the journey time analysis. All are published and free to download.
 </figcaption>
 <div aria-describedby="tbl-journey-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4311,7 +4540,7 @@ Table&nbsp;13: Additional sources for the journey time analysis. All are publish
 <div id="tbl-journey-networks" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-journey-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;14: The networks. Trips are those running on the routing date, from the timetable files for that network.
+Table&nbsp;15: The networks. Trips are those running on the routing date, from the timetable files for that network.
 </figcaption>
 <div aria-describedby="tbl-journey-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4395,7 +4624,7 @@ Table&nbsp;14: The networks. Trips are those running on the routing date, from t
 <div id="tbl-journey-audit" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-journey-audit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;15: Bus stops within 3 km of each place’s centre, in each regional timetable file.
+Table&nbsp;16: Bus stops within 3 km of each place’s centre, in each regional timetable file.
 </figcaption>
 <div aria-describedby="tbl-journey-audit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4487,7 +4716,7 @@ Table&nbsp;15: Bus stops within 3 km of each place’s centre, in each regional 
 <div id="tbl-journey-settings" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-journey-settings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;16: The routing scenarios. All use a 120 minute limit on the journey. With buses, walking to and from stops is limited to 60 minutes.
+Table&nbsp;17: The routing scenarios. All use a 120 minute limit on the journey. With buses, walking to and from stops is limited to 60 minutes.
 </figcaption>
 <div aria-describedby="tbl-journey-settings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4549,7 +4778,7 @@ Table&nbsp;16: The routing scenarios. All use a 120 minute limit on the journey.
 <div id="tbl-sb-regions" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sb-regions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;17: School buses found, by Bus Open Data Service regional file, on the routing date. Candidates meet the rule on trips and hours. College routes end nearer a college than a school and are left out.
+Table&nbsp;18: School buses found, by Bus Open Data Service regional file, on the routing date. Candidates meet the rule on trips and hours. College routes end nearer a college than a school and are left out.
 </figcaption>
 <div aria-describedby="tbl-sb-regions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4677,7 +4906,7 @@ Table&nbsp;17: School buses found, by Bus Open Data Service regional file, on th
 <div id="tbl-la-networks" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-la-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;18: The 28 networks. Schools are state secondary schools within reach of the network’s Output Areas. Bus files are the Bus Open Data Service regional files used.
+Table&nbsp;19: The 28 networks. Schools are state secondary schools within reach of the network’s Output Areas. Bus files are the Bus Open Data Service regional files used.
 </figcaption>
 <div aria-describedby="tbl-la-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -4901,7 +5130,7 @@ Table&nbsp;18: The 28 networks. Schools are state secondary schools within reach
 <div id="tbl-la-steps" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-la-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;19: The routing steps for each network. Walking speed is 3.6 km/h except where stated. Trips are limited to 120 minutes and walking within a bus journey to 60.
+Table&nbsp;20: The routing steps for each network. Walking speed is 3.6 km/h except where stated. Trips are limited to 120 minutes and walking within a bus journey to 60.
 </figcaption>
 <div aria-describedby="tbl-la-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -5007,7 +5236,7 @@ Figure&nbsp;18: From routes to a measure. Every Output Area in Brighton and Hove
 <div id="tbl-poi-tags" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-poi-tags-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;20: 627,553 points of interest in England. The commonest tags in each group are shown, with counts.
+Table&nbsp;21: 627,553 points of interest in England. The commonest tags in each group are shown, with counts.
 </figcaption>
 <div aria-describedby="tbl-poi-tags-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">

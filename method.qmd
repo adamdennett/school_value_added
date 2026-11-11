@@ -1074,6 +1074,58 @@ $$A_{st} = \beta \log_2 N_{st} + \delta (\log_2 N_{st} \times F_{st}) + \gamma' 
 
 where $F$ is the free school meals share, centred, and $Z$ is SEN support, EHC plans, English as an additional language, girls, log size and kind of place. A further version adds the school's White British share from the January 2026 census, held fixed across years because these files do not give earlier shares. Year-by-year models use authority effects. School-effects models replace them with an effect for each school, so $\beta$ uses only schools whose nearest children's distance changed. In those models $\delta$ is mostly driven by free school meals changing at schools whose distance did not, and among the `r Rm$sch_fe_moved$schools` schools with a change of 10% or more its estimate is not clear, so it is not reported as a response to network change.
 
+## The variables in the models {#sec-model-variables}
+
+The notes under each table on [the distance page](distance.qmd) give each model as an equation and as the R call that fits it. These are the variable names in those calls. Authorities are DfE local authorities; tenths are the ten national IDACI groups of neighbourhood within an authority; schools are state-funded secondary schools.
+
+```{r}
+#| label: tbl-model-variables
+#| tbl-cap: "Variables in the distance, journey and GCSE models, by the unit they describe. Where a variable is centred (suffix _c), its mean has been taken off."
+tibble::tribble(
+  ~Variable, ~Meaning, ~Source,
+  "<b>Outcomes</b>", "", "",
+  "overall", "Overall absence: % of possible sessions missed, for the group of pupils (disadvantaged, non-disadvantaged, all) or the tenth or school", "DfE absence statistics (by characteristic, by pupil residence, school level)",
+  "illness, unauth", "% of sessions missed through illness, or unauthorised", "As above",
+  "persistent", "% of pupils missing 10% or more of sessions", "As above",
+  "abs_dis, abs_non, abs_all", "Overall absence in 2024/25 for each group (R/18)", "As above",
+  "abs_excess", "A school's absence minus what its intake predicts, 2021/22 to 2024/25", "This site's absence model",
+  "att8, ATT8SCR…", "Attainment 8 for the group", "KS4 performance tables",
+  "<b>Distance and journeys</b>", "", "",
+  "near_dep, km1_dep", "Child-weighted mean straight-line km from the authority's most deprived third of neighbourhoods to the nearest state secondary school", "Census 2021, GIAS (R/18, R/29)",
+  "near_rest, near_e", "The same for the other neighbourhoods, or over all neighbourhoods weighted by an ethnic group's residents", "As above",
+  "pri_dep", "The same distance to the nearest primary school", "As above",
+  "near, km", "Child-weighted mean straight-line km to the nearest school from the neighbourhoods in a tenth", "As above",
+  "l2", "log₂ of the mean straight-line km of a school's nearest children, so a coefficient is per doubling", "As above",
+  "t_bus, t_walk (_dep)", "Minutes to the quickest school by walking and bus, or walking alone", "r5r routing (R/27)",
+  "p_two, two_share (_dep)", "Share of journeys needing two or more buses", "r5r itineraries (R/27)",
+  "wait, late (_dep)", "Minutes waiting for buses; minutes late if the last workable journey is missed", "As above",
+  "up_back (_dep)", "Metres climbed walking home from school", "OS Terrain 50 (R/25, R/27)",
+  "walk50_any, leg50_any, p_any_board, p_any_change, p_any_alight", "Points of interest along the walking route, the walking legs of a bus journey, or within 200 m of the first, change or last stop", "OpenStreetMap (R/28)",
+  "home400_any", "Points of interest within 400 m of home", "OpenStreetMap (R/28)",
+  "has_bus", "1 if a dedicated school bus route serves the school", "Bus Open Data Service (R/23)",
+  "<b>Authority controls</b>", "", "",
+  "share", "% of pupils disadvantaged (free school meals in the last six years) in that phase", "DfE absence by characteristic",
+  "urban_share", "% of children aged 10 to 14 in urban neighbourhoods", "Census 2021, ONS rural-urban classification",
+  "eth_wb, eth_asian, eth_black, eth_mixed", "Shares of the group's pupils who are White British, Asian, Black, of mixed heritage", "DfE, free school meals by ethnicity",
+  "gor_name, gor", "Region (an effect for each)", "ONS",
+  "graduates, bad_health, white_british, social_rent, no_car, deprived, log_density", "Residents with degree-level qualifications, in bad health, White British; households socially renting, with no car, deprived in two or more dimensions; log persons per km²", "Census 2021",
+  "sen_sup, ehcp, ks2_c, eal, wbri, mobile", "Secondary pupils with SEN support, with an EHC plan, prior attainment (centred), English as an additional language, White British, joining mid-year", "DfE school census, KS2",
+  "<b>Tenth controls</b>", "", "",
+  "urban_c, dens_c, grad_c, wbri_c, nocar_c, social_c, bad_c", "The tenth's neighbourhoods: urban, density, graduates, White British, no car, social renting, bad health, centred", "Census 2021",
+  "<b>School controls</b>", "", "",
+  "fsm, fsm_c", "% of pupils eligible for free school meals (centred)", "DfE school census",
+  "eal, ks2_c, z_l4, sen_sup, ehcp, mobile, girls, age16, place", "English as an additional language, prior attainment, neighbourhood education (standardised), SEN support, EHC plans, mobility, % girls, stops at 16, kind of place", "As in Value Added v2.1",
+  "wbri, lsize", "White British share (January 2026); log of the roll", "DfE school census",
+  "<b>Effects and weights</b>", "", "",
+  "| tp", "An effect for each year", "",
+  "| la, la_g", "An effect for each authority: comparisons within one authority", "",
+  "| la^tp, dec^tp", "Effects for each authority in each year, and each IDACI tenth in each year", "",
+  "| cid", "An effect for each school, followed through changes of number", "",
+  "cluster = ~la", "Standard errors allowing for correlation within an authority", "",
+  "weights = ~enrol", "Weighted by the pupils in the tenth", ""
+) |> kt(align = "lll", escape = FALSE)
+```
+
 ## What these calculations cannot do {#sec-distance-limits}
 
 - **The people are grouped, not individual.** DfE publishes no absence by disadvantage below authority level, and no disadvantage split in the residence file. The disadvantaged pupils in an authority do not all live in its most deprived third, so $D_T$ is a proxy for their distance, and these tests can differ from what would be found for individual children.
