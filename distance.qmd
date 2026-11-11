@@ -303,6 +303,13 @@ ggplot(lp, aes(near_dep, abs)) +
 ```
 
 ```{r}
+#| label: fig-la-ci
+#| fig-cap: !expr paste("Points of absence for each extra kilometre between an authority's most deprived neighbourhoods and a school, 2024/25, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3
+D$la_models |> transmute(row = spec, group, b, se) |> ci_plot("Points of absence per km")
+```
+
+```{r}
 #| label: tbl-la
 #| tbl-cap: "Points of absence for each extra kilometre between an authority's most deprived neighbourhoods and a school, 2024/25, for each group of pupils, with 95% intervals. Second and third rows allow for the share of pupils who are disadvantaged and how urban the authority is."
 D$la_models |> mutate(v = sprintf("%+.1f (%+.1f to %+.1f)", b, b - 1.96 * se, b + 1.96 * se),
@@ -341,6 +348,28 @@ One year, one measure and three controls cannot carry much weight. The rest of t
 :::
 
 @tbl-ladder puts the authority tests side by side, pooling the six years.
+
+```{r}
+#| label: fig-ladder-ci
+#| fig-cap: !expr paste("The tests in the table below, in points of absence per kilometre.", CI_NOTE)
+#| fig-height: 8
+lad3 <- function(lab, f) bind_rows(lapply(c("all", "dis", "non"), function(g) tibble(row = lab, group = unname(GRL[g]), b = f(g, "b"), se = f(g, "se"))))
+bind_rows(
+  lad3("Secondary, all authorities", function(g, k) oa(g, "None beyond share and urbanity", "All authorities", k)),
+  lad3("Secondary, without London", function(g, k) oa(g, "None beyond share and urbanity", "Without London", k)),
+  lad3("Secondary, given region", function(g, k) oa(g, "Region", "All authorities", k)),
+  lad3("Secondary, given the group's ethnic mix", function(g, k) gm(g, "And full ethnic mix of this group", col = k)),
+  lad3("Secondary, given every control", function(g, k) gm(g, "And every control", col = k)),
+  lad3("Mostly urban, without London", function(g, k) oa(g, "None beyond share and urbanity", "Mostly urban, without London", k)),
+  lad3("Mostly urban, without London, given ethnic mix", function(g, k) gm(g, "And full ethnic mix of this group", "Mostly urban, without London", k)),
+  lad3("Mostly urban, without London, given ethnic mix and region", function(g, k) gm(g, "And ethnic mix and region", "Mostly urban, without London", k)),
+  lad3("Mostly urban, without London, given every control", function(g, k) gm(g, "And every control", "Mostly urban, without London", k)),
+  lad3("Less urban authorities", function(g, k) { x <- R$urb_sample |> filter(group == g, sample == "Less urban", control == "Share, urban"); x[[k]] }),
+  lad3("Falsification: primary absence", function(g, k) pl(paste0(g, "_pri"), col = k)),
+  lad3("Secondary minus primary absence", function(g, k) pl(paste0("step_", g), col = k)),
+  lad3("Authority effects, as networks changed", function(g, k) { x <- R$fe_la |> filter(out == paste0(g, "_sec")); x[[k]] })) |>
+  ci_plot("Points of absence per km")
+```
 
 ```{r}
 #| label: tbl-ladder
@@ -448,6 +477,14 @@ The table counts how often $\beta > 0$ across those models, and how often its 95
 Across all of these, `r sprintf("%.0f%%", 100 * mean(cv_dis$b > 0))` of the slopes for disadvantaged pupils are above zero, `r sprintf("%.0f%%", 100 * mean(cv_dis$t > 1.96))` clearly so and `r sprintf("%.0f%%", 100 * mean(cv_dis$t < -1.96))` clearly below. The choice of measure makes little difference. The choice of controls and sample makes a great deal, as @tbl-curve shows: with few controls most models are clearly positive, and under the fullest sets few are.
 
 ```{r}
+#| label: fig-measures-ci
+#| fig-cap: !expr paste("Points of absence for one standard deviation more of each measure of distance, the estimates in the table below.", CI_NOTE)
+#| fig-height: 6.5
+R$measure_simple |> filter(sample %in% c("All authorities", "Mostly urban, without London")) |>
+  transmute(row = label, group = unname(GRL[group]), b = b_sd, se = se_sd, panel = sample) |> ci_plot("Points of absence per standard deviation of distance", wrap = 40)
+```
+
+```{r}
 #| label: tbl-measures
 #| tbl-cap: "Eleven measures of distance from an authority's deprived neighbourhoods. Points of absence for one standard deviation more distance, all years pooled, allowing for the share disadvantaged and how urban the authority is. A dagger marks a 95% interval that includes zero."
 ms <- R$measure_simple |> filter(sample %in% c("All authorities", "Mostly urban, without London")) |>
@@ -472,6 +509,13 @@ Each measure is divided by its standard deviation across authorities in that yea
 :::
 
 Nor does it depend on a handful of places. @tbl-influence repeats the 2024/25 model with errors that allow for neighbouring authorities being alike, with pupil weights, with a method that discounts outliers, and without the most influential authorities. Dropping any one authority leaves the slope for disadvantaged pupils between `r sprintf("%.1f", ckla("dis", "Baseline, 2024/25 (robust errors)", "loo_min"))` and `r sprintf("%.1f", ckla("dis", "Baseline, 2024/25 (robust errors)", "loo_max"))`.
+
+```{r}
+#| label: fig-influence-ci
+#| fig-cap: !expr paste("The checks in the table below, in points of absence per kilometre, 2024/25.", CI_NOTE)
+#| fig-height: 4
+R$checks_la |> transmute(row = check, group = unname(GRL[group]), b, se) |> ci_plot("Points of absence per km")
+```
 
 ```{r}
 #| label: tbl-influence
@@ -545,6 +589,15 @@ Why would ethnic mix do this? In 2024/25 the White British share of an authority
 The test of composition is whether the link holds within one ethnic group. DfE publishes absence by ethnic group for each authority, though not split by disadvantage.
 
 ```{r}
+#| label: fig-eth-ci
+#| fig-cap: !expr paste("Within each ethnic group, points of secondary absence per kilometre, the estimates in the table below.", CI_NOTE)
+#| fig-height: 4.6
+R$within_eth |> filter(phase == "sec", control == "Share, urban", sample %in% c("All authorities", "Without London", "Mostly urban, without London")) |>
+  mutate(eth = factor(eth, c("White British", "Asian", "Black", "Mixed heritage"))) |> arrange(eth) |>
+  transmute(row = as.character(eth), group = distance, b, se, panel = sample) |> ci_plot("Points of absence per km", ncol = 3)
+```
+
+```{r}
 #| label: tbl-eth
 #| tbl-cap: "Within each ethnic group: points of secondary absence per kilometre between an authority's deprived neighbourhoods and a school, and from where that group lives (the mean over all neighbourhoods weighted by the group's Census residents), all years pooled, allowing for the share disadvantaged and how urban the authority is, with 95% intervals. All pupils in each ethnic group; DfE does not split these by disadvantage. Authorities with at least 100 pupils in the group."
 R$within_eth |> filter(phase == "sec", control == "Share, urban", sample %in% c("All authorities", "Without London", "Mostly urban, without London")) |>
@@ -571,6 +624,13 @@ The slope mostly goes. For White British pupils it is `r sprintf("%+.2f", we("Wh
 This test cannot settle things for disadvantaged pupils, because most pupils in each ethnic group are not disadvantaged, and non-disadvantaged pupils show little slope anyway. A clear link among disadvantaged White British pupils could be hidden inside a flat line for all White British pupils. DfE publishes nothing that would show it.
 
 #### Is anything left once the controls are in? {#sec-left}
+
+```{r}
+#| label: fig-left-ci
+#| fig-cap: !expr paste("What is left with every control, in points of absence per kilometre, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.6
+R$group_mix |> filter(set == "And every control") |> transmute(row = sample, group = unname(GRL[group]), b, se) |> ci_plot("Points of absence per km, given every control")
+```
 
 ```{r}
 #| label: tbl-left
@@ -657,6 +717,13 @@ ggplot(dz, aes(dec, value, colour = place)) + geom_line(linewidth = 0.9) + geom_
 The children in the city's most deprived tenth of neighbourhoods live `r sprintf("%.2f", dc(BH, 1, "near"))` km from a school, against `r sprintf("%.2f", dc("England", 1, "near"))` km for that tenth across England. They miss `r sprintf("%.1f%%", dc(BH, 1, "overall"))` of sessions against `r sprintf("%.1f%%", dc("England", 1, "overall"))`, and `r sprintf("%.0f%%", dc(BH, 1, "persistent"))` are persistently absent against `r sprintf("%.0f%%", dc("England", 1, "persistent"))`.
 
 ```{r}
+#| label: fig-within-ci
+#| fig-cap: !expr paste("Points of absence per kilometre for pupils in each kind of neighbourhood, between and within authorities, the estimates in the table below. All pupils.", CI_NOTE)
+#| fig-height: 3.6
+R$between |> mutate(band = sub(" three tenths| four tenths", "", band)) |> transmute(row = comparison, group = band, b, se) |> ci_plot("Points of absence per km")
+```
+
+```{r}
 #| label: tbl-within
 #| tbl-cap: "Points of absence per kilometre for secondary pupils living in each kind of neighbourhood, 2023/24 and 2024/25, weighted by pupils, with 95% intervals and errors clustered by authority. All pupils in those neighbourhoods. Between authorities compares the same IDACI tenth across authorities; within authorities compares neighbourhoods in the same authority, against the national pattern for each tenth. Census character is how urban and dense the neighbourhoods are, and their graduates, White British residents, households with no car, social renting and bad health."
 R$between |> mutate(v = ci2(b, se), band = sub(" three tenths| four tenths", "", band)) |> select(Comparison = comparison, band, v) |> pivot_wider(names_from = band, values_from = v) |>
@@ -702,6 +769,16 @@ ggplot(dd1, aes(dec, b, colour = phase)) + geom_hline(yintercept = 0, colour = G
 The strongest test available would follow the same place as a school opens or closes nearby. @tbl-network does this for authorities and for schools. Very few authorities' distance moved much: only `r R$fe_var$n_changed` of `r R$fe_var$n` changed by 50 metres or more between 2018/19 and 2024/25. Brighton and Hove did not change at all. So these estimates are imprecise.
 
 ```{r}
+#| label: fig-network-ci
+#| fig-cap: !expr paste("When distance changes in the same place. Authorities, in points of absence per kilometre (left), and schools, per doubling of how far their nearest children live (right), the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.4
+fs <- R$sch_fe |> filter(outcome == "overall")
+(R$fe_la |> filter(out %in% c("dis_sec", "non_sec", "all_sec", "dis_pri", "non_pri", "all_pri")) |>
+   transmute(row = ifelse(endsWith(out, "sec"), "Secondary", "Primary"), group = unname(GRL[sub("_.*", "", out)]), b, se) |> ci_plot("Authorities: points per km")) +
+(tibble(row = c("Schools", "Schools, against others in the authority that year"), b = c(fs$b, fs$b_la), se = c(fs$se, fs$se_la)) |> ci_plot("Schools: points per doubling", wrap = 26))
+```
+
+```{r}
 #| label: tbl-network
 #| tbl-cap: "When distance changes in the same place. Authority rows use authority and year effects and allow for the share disadvantaged, in points of absence per kilometre. School rows use school and year effects and allow for intake, in points of overall absence for each doubling of how far a school's nearest children live, with the second row adding effects for each authority in each year. DfE publishes school absence for all pupils only. 95% intervals; errors clustered by authority or by school."
 fe <- function(k) { x <- R$fe_la |> filter(out == k); ci2(x$b, x$se) }
@@ -728,6 +805,14 @@ With an effect $\alpha$ for each authority or school, $\beta$ is estimated only 
 All point in the expected direction, and at the secondary level the authority estimate for disadvantaged pupils (`r sprintf("%+.1f", R$fe_la$b[R$fe_la$out == "dis_sec"])`) is similar in size to the slope between authorities. But its interval is wide and includes zero. At school level, `r R$sch_move$changed10` of `r format(R$sch_move$schools, big.mark = ",")` schools saw their nearest children's distance change by 10% or more. These are consistent with distance mattering, but do not establish it. New schools also open where populations are growing, so these changes are not random.
 
 #### What kind of absence? {#sec-kinds-la}
+
+```{r}
+#| label: fig-kinds-la-ci
+#| fig-cap: !expr paste("Points per kilometre by kind of absence, the estimates in the table below. Persistent absence is in points of pupils, so its scale differs.", CI_NOTE)
+#| fig-height: 4.6
+R$kinds_la |> mutate(Kind = c(overall = "Overall", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence")[outcome]) |>
+  transmute(row = sample, group = unname(GRL[group]), b, se, panel = Kind) |> ci_plot("Points per km", free_x = TRUE)
+```
 
 ```{r}
 #| label: tbl-kinds-la
@@ -758,6 +843,18 @@ For disadvantaged pupils the link is mainly with unauthorised absence (`r sprint
 #### Does it matter more in towns and cities? {#sec-urban}
 
 The [roadmap](roadmap.qmd) asked whether distance matters more in towns and cities, where a longer journey may pass more places to stop, and less in the countryside, where long journeys are normal and often by school transport. Between authorities the answer looks like yes, and strikingly so.
+
+```{r}
+#| label: fig-urban-ci
+#| fig-cap: !expr paste("Mostly urban and less urban authorities, in points of absence per kilometre, the estimates in the table below.", CI_NOTE)
+#| fig-height: 6
+bind_rows(
+  R$urban_checks |> filter(!grepl("^Given", check)) |> transmute(row = check, group = unname(GRL[group]), b, se),
+  R$group_mix |> filter(sample == "Mostly urban, without London", set %in% c("And full ethnic mix of this group", "And ethnic mix and region", "And ethnic mix, region and density", "And every control")) |>
+    transmute(row = paste0("Mostly urban, without London, ", sub("^And ", "given ", set)), group = unname(GRL[group]), b, se),
+  R$urb_sample |> filter(sample == "Less urban") |> transmute(row = ifelse(control == "Share, urban", "Less urban authorities", "Less urban authorities, given region"), group = unname(GRL[group]), b, se)) |>
+  ci_plot("Points of absence per km")
+```
 
 ```{r}
 #| label: tbl-urban
@@ -793,6 +890,15 @@ One reading is that an average distance for a whole rural county says little abo
 ### By school, for all pupils {#sec-school}
 
 DfE does not publish absence by disadvantage school by school, so this test is for all pupils, and the closest it can come is to ask whether the link is stronger in schools with more pupils on free school meals. For each school, its "nearest children" are those in the Output Areas for which it is the nearest school, and the measure is how far they live from it, typically `r kms(D$school_km$p50)` km (a tenth of schools under `r kms(D$school_km$p10)` km and a tenth over `r kms(D$school_km$p90)` km). It is a stand-in: pupils often go elsewhere. Selective schools, and schools that are nearest for fewer than 100 children, are left out. Models compare schools within the same local authority.
+
+```{r}
+#| label: fig-kinds-ci
+#| fig-cap: !expr paste("Schools. Absence for each doubling of how far a school's nearest children live, and the extra for each 10 points of free school meals, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.2
+bind_rows(D$kinds |> transmute(row = outcome, b, se, panel = "Each doubling of distance"),
+          D$kinds |> transmute(row = outcome, b = 10 * b_int, se = 10 * se_int, panel = "Extra, per 10 points of free school meals")) |>
+  ci_plot("Points of absence", free_x = TRUE)
+```
 
 ```{r}
 #| label: tbl-kinds
@@ -838,6 +944,17 @@ The link appears in all `r nrow(sy_all)` years (from `r sprintf("%+.2f", min(sy_
 The models above leave out ethnic make-up. Since it matters so much between authorities, @tbl-school-wb adds each school's White British share. It takes about a quarter off the slope for overall absence, and the slope stays clear. The extra for schools with more free school meals does not change.
 
 ```{r}
+#| label: fig-school-wb-ci
+#| fig-cap: !expr paste("Schools, six years pooled. Each doubling of distance without and with the school's White British share, and the extra per 10 points of free school meals, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.2
+SWL <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)")
+bind_rows(R$sch_wb_pool |> transmute(row = SWL[outcome], b = b0, se = se0, group = "Without ethnic make-up", panel = "Each doubling of distance"),
+          R$sch_wb_pool |> transmute(row = SWL[outcome], b = b1, se = se1, group = "With ethnic make-up", panel = "Each doubling of distance"),
+          R$sch_wb_pool |> transmute(row = SWL[outcome], b = 10 * int1, se = 10 * se_int1, group = "With ethnic make-up", panel = "Extra, per 10 points of free school meals")) |>
+  ci_plot("Points of absence", free_x = TRUE)
+```
+
+```{r}
 #| label: tbl-school-wb
 #| tbl-cap: "All pupils, by school, six years pooled. Each doubling of how far a school's nearest children live, against other schools in the same authority and year, with and without the school's White British share (January 2026, held across years), and the extra for each 10 points of free school meals, with that share in the model. 95% intervals; errors clustered by authority."
 SW <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)")
@@ -859,6 +976,14 @@ feols(overall ~ l2 + l2:fsm_c + wbri + fsm_c + sen_sup + ehcp + eal + girls + ls
 :::
 
 **By kind of place.** @tbl-place splits schools by the same three kinds of place. The authority test is in [the section above](#sec-urban).
+
+```{r}
+#| label: fig-place-ci
+#| fig-cap: !expr paste("Schools by kind of place. Absence for each doubling of distance, the estimates in the table below.", CI_NOTE)
+#| fig-height: 2.8
+bind_rows(lapply(c(UR, UF, RU), function(p) tibble(row = p, panel = c("Overall absence, 2025/26", "Above intake, 2021/22 to 2024/25"),
+  b = c(kp("Overall absence", p), ex(p)), se = c(kp("Overall absence", p, "se"), ex(p, "se"))))) |> ci_plot("Points of absence per doubling", free_x = TRUE)
+```
 
 ```{r}
 #| label: tbl-place
@@ -888,6 +1013,13 @@ feols(abs_excess ~ l2 | la, data = sch_abs, cluster = ~la)    # absence above wh
 The estimates are similar in size across kinds of place, but only urban schools near a major town or city, where most schools are, give a clear answer. There are fewer schools elsewhere and the intervals are wide, so this cannot show whether distance matters less in rural areas.
 
 ### And results? {#sec-results}
+
+```{r}
+#| label: fig-results-ci
+#| fig-cap: !expr paste("Attainment 8 for each doubling of distance, % change, the estimates in the table below.", CI_NOTE)
+#| fig-height: 2.6
+D$results |> transmute(row = ifelse(absence_in_model, "With absence in the model", "Without absence in the model"), group, b, se) |> ci_plot("% change in Attainment 8 per doubling of distance")
+```
 
 ```{r}
 #| label: tbl-results
@@ -999,6 +1131,16 @@ as.data.table(J$interchanges)[place == BH][order(-children)][1:8, .(Stop = stop,
 **This does not show up in absence, so far.** Within authorities and given each school's intake, schools whose nearest children need more buses do not have clearly higher absence (@tbl-journey-signal). That is `r J$n_school_model` schools in `r J$school_models$schools_la[1]` authorities, and uses journeys to the quickest school as a stand-in for real ones, so it is a weak test. Before distance is allowed for, the share needing two or more buses is clearer (t = `r sprintf("%.1f", jsm("Share needing two or more buses"))`), but that largely goes with distance. None of this rules out an effect on the children who do change buses.
 
 ```{r}
+#| label: fig-journey-signal-ci
+#| fig-cap: !expr paste("Schools in the nine routed places. Absence for one standard deviation more of each feature of the journey, given distance, the estimates in the table below.", CI_NOTE)
+#| fig-height: 4
+SLn <- c(`Share of children needing a bus` = 1, `Share needing two or more buses` = 2, `Buses per journey` = 3, `Minutes late if the last bus is missed` = 4, `Minutes on the journey` = 5, `Metres climbed to school` = 6, `Metres climbed home` = 7)
+as.data.table(J$school_models)[term %in% names(SLn) & outcome %in% c("overall", "unauth", "persistent")][order(SLn[term])][,
+  .(row = term, b = b_km * sd_x, se = se_km * sd_x, panel = c(overall = "Overall", unauth = "Unauthorised", persistent = "Persistent (% of pupils)")[outcome])] |>
+  ci_plot("Points per standard deviation", ncol = 3, free_x = TRUE, wrap = 30)
+```
+
+```{r}
 #| label: tbl-journey-signal
 #| tbl-cap: "Schools in the routed places: absence for one standard deviation more of each feature of the journeys of the school's nearest children, within authority, given straight-line distance, free school meals, White British share, special needs and prior attainment, with t values. All pupils; DfE publishes no split by school. A guide only, with so few schools and authorities."
 SL <- c(`Share of children needing a bus` = 1, `Share needing two or more buses` = 2, `Buses per journey` = 3, `Minutes late if the last bus is missed` = 4, `Minutes on the journey` = 5, `Metres climbed to school` = 6, `Metres climbed home` = 7)
@@ -1043,6 +1185,14 @@ fmt_sb(sbt("plymouth"))
 **Longhill is a striking case, not a pattern.** Across the `r nrow(sb_all)` schools in the routed places with school bus figures and published absence, the correlation between the penalty and absence is `r sprintf("%.2f", cor(sb_all$late, sb_all$overall))`, and for unauthorised absence `r sprintf("%.2f", cor(sb_all$late, sb_all$unauth))`. Several schools with larger penalties than Longhill's have low absence, usually with fewer disadvantaged pupils. Nor is having a school bus linked with absence across England (@tbl-sb-models). Having a bus is not the same as depending on one, and it often means the school has made sure that children can get there, so a null here does not mean that missing one is harmless. Still, these tests give no general support.
 
 ```{r}
+#| label: fig-sb-models-ci
+#| fig-cap: !expr paste("Schools with a school bus against others in the same authority, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.4
+SOn <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)")
+as.data.table(SB$models)[spec == "Has a school bus"][, .(row = sample, b, se, panel = SOn[outcome])] |> ci_plot("Points of absence", free_x = TRUE)
+```
+
+```{r}
 #| label: tbl-sb-models
 #| tbl-cap: !expr paste0("Secondary schools in England, absence at schools with a school bus against other schools in the same authority, given distance, intake, ethnic make-up and kind of place, with t values. ", format(SB$n_schools, big.mark = ","), " schools, autumn and spring 2025/26, all pupils. High free school meals is the top quarter of schools.")
 SO <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)")
@@ -1077,6 +1227,15 @@ cw[order(-up_back_dep)][, .(Place = place, `Dep.` = sprintf("%.0f", up_out_dep),
 In Brighton and Hove, children in the most deprived third of neighbourhoods climb about `r sprintf("%.0f", js(BH, TRUE, "up_back"))` metres on the walk home, against `r sprintf("%.0f", js(BH, FALSE, "up_back"))` for the rest. That is the largest difference of the places here. Those children have both further to go and more to climb, which a straight line cannot show.
 
 **A signal in the routed places did not hold across England.** In the schools of @tbl-journey-signal, more climb went clearly with more absence, more strongly than anything else tested. With so few schools that needed checking. Climb can be measured for all of England without routing, along the straight line from each of `r format(CB$n_oa, big.mark = ",")` Output Areas to its nearest school. In the routed places that matches the climb along the real route closely (r = `r sprintf("%.2f", CB$check$r_back)`).
+
+```{r}
+#| label: fig-climb-ci
+#| fig-cap: !expr paste("Schools in England. Absence for each extra 10 metres climbed on the way home, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.6
+COn <- c(overall = "Overall absence", illness = "Illness", unauth = "Unauthorised", persistent = "Persistent absence (% of pupils)", abs_excess = "Above intake, 2021/22 to 2024/25")
+as.data.table(CB$sch_models)[term == "up_back" & sample %in% c("All schools", "Urban", "Rural", "High free school meals", "Without Brighton and Hove")][, .(row = sample, b = 10 * b, se = 10 * se, panel = COn[outcome])] |>
+  ci_plot("Points per 10 metres", ncol = 3, free_x = TRUE)
+```
 
 ```{r}
 #| label: tbl-climb
@@ -1184,6 +1343,25 @@ fig_route_anatomy()
 With `r nrow(PL)` authorities the tests above can be rerun on journeys. @tbl-la-tests sets out the three designs: authorities for disadvantaged pupils, home neighbourhoods within authorities for all pupils, and schools within authorities for all pupils, with primary absence as the falsification test.
 
 ```{r}
+#| label: fig-la-tests-ci
+#| fig-cap: !expr paste("The tests in the table below. Secondary absence for one standard deviation more of each feature of the journey, in each design. Primary is the falsification test.", CI_NOTE)
+#| fig-height: 6.5
+TTn <- c(km = "Straight-line distance", t_bus = "Minutes by walking and bus", t_walk = "Minutes walking", two_share = "Share needing two or more buses", wait = "Minutes waiting", late = "Minutes late if the last journey is missed", up_back = "Metres climbed walking home")
+ltn <- c(km = "km1_dep", t_bus = "t_bus_dep", t_walk = "t_walk_dep", two_share = "p_two_dep", wait = "wait_dep", late = "late_dep", up_back = "up_back_dep")
+sdv <- function(x) if (nrow(x)) tibble(b = x$b * x$sd_x, se = x$se * x$sd_x) else tibble(b = NA_real_, se = NA_real_)
+bind_rows(lapply(names(TTn), function(tm) bind_rows(
+  sdv(JL$la_models[term == ltn[[tm]] & group == "dis" & ctrl == "And every control" & sample == "All 109" & phase == "sec" & outcome == "overall"]) |> mutate(panel = "Authorities, disadvantaged"),
+  sdv(JL$la_given[term == ltn[[tm]] & group == "dis" & ctrl == "And every control" & sample == "All 109" & phase == "sec"]) |> mutate(panel = "Authorities, given km"),
+  sdv(JL$la_models[term == ltn[[tm]] & group == "dis" & ctrl == "And every control" & sample == "All 109" & phase == "pri" & outcome == "overall"]) |> mutate(panel = "Authorities, primary"),
+  sdv(JL$cell_models[term == tm & sample == "All authorities" & ctrl == "And Census character" & phase == "sec" & outcome == "overall"]) |> mutate(panel = "Tenths, within authority"),
+  sdv(JL$cell_models[term == tm & sample == "All authorities" & ctrl == "And straight-line km" & phase == "sec" & outcome == "overall"]) |> mutate(panel = "Tenths, given km"),
+  sdv(JL$school_models[term == ifelse(tm == "km", "l2", tm) & sample == "All schools" & outcome == "overall"]) |> mutate(panel = "Schools, given distance")) |>
+  mutate(row = TTn[[tm]]))) |> filter(!(row == TTn[["km"]] & panel %in% c("Authorities, given km", "Tenths, given km"))) |>
+  mutate(panel = factor(panel, c("Authorities, disadvantaged", "Authorities, given km", "Authorities, primary", "Tenths, within authority", "Tenths, given km", "Schools, given distance"))) |>
+  ci_plot("Points of absence per standard deviation", ncol = 3, wrap = 26)
+```
+
+```{r}
 #| label: tbl-la-tests
 #| tbl-cap: !expr paste0("Secondary absence for one standard deviation more of each feature of the journeys from the most deprived third of neighbourhoods (authorities) or from each neighbourhood (tenths and schools), with t values in brackets. Authorities are disadvantaged pupils, ", nrow(PL), " authorities, 2018/19 to 2024/25, every control. Tenths are all pupils by IDACI tenth of home neighbourhood, within authority, 2023/24 and 2024/25, given Census character. Schools are all pupils, within authority, given intake and distance, autumn and spring 2025/26. Given km adds straight-line distance. Primary is the same authority model for primary absence.")
 TT <- c(km = "Straight-line distance", t_bus = "Minutes by walking and bus", t_walk = "Minutes walking", two_share = "Share needing two or more buses", wait = "Minutes waiting", late = "Minutes late if the last journey is missed", up_back = "Metres climbed walking home")
@@ -1231,6 +1409,21 @@ Journey features for authorities are of the most deprived third of neighbourhood
 If a journey matters partly for what it passes, a child who gets off a bus beside a row of shops and cafés has more chances to go elsewhere than one who gets off at the school gate. So `r format(JL$poi$n, big.mark = ",")` points of interest were taken from OpenStreetMap, in five groups: food and drink, shops, leisure, open space and civic places. Schools, transport and parking are left out. Each was counted within 200 metres of the stop where a journey starts, every change of bus and the last stop, and within 50 metres of the walking route and the walking legs of bus journeys. The points of interest within 400 metres of home are a control, because a child in a busy place passes busy places whatever their journey. The tags and checks are in [the methodology](method.qmd#sec-poi-method).
 
 ```{r}
+#| label: fig-la-poi-ci
+#| fig-cap: !expr paste("The tests in the table below. Absence for one standard deviation more points of interest on the way, in each design.", CI_NOTE)
+#| fig-height: 5.8
+PTn <- c(walk50_any = "Along the walking route, within 50 m", leg50_any = "Along walking legs of bus journeys, within 50 m", p_any_board = "At the first stop, within 200 m", p_any_change = "At changes of bus, within 200 m", p_any_alight = "At the last stop, within 200 m")
+bind_rows(lapply(names(PTn), function(tm) bind_rows(
+  sdv(JL$la_models[term == paste0(tm, "_dep") & group == "dis" & ctrl == "And every control" & sample == "All 109" & phase == "sec" & outcome == "overall"]) |> mutate(panel = "Authorities, secondary"),
+  sdv(JL$la_models[term == paste0(tm, "_dep") & group == "dis" & ctrl == "And every control" & sample == "All 109" & phase == "pri" & outcome == "overall"]) |> mutate(panel = "Authorities, primary"),
+  sdv(JL$cell_models[term == tm & sample == "All authorities" & ctrl == "And changes of bus" & phase == "sec" & outcome == "overall"]) |> mutate(panel = "Tenths, secondary"),
+  sdv(JL$cell_models[term == tm & sample == "All authorities" & ctrl == "And changes of bus" & phase == "pri" & outcome == "overall"]) |> mutate(panel = "Tenths, primary"),
+  sdv(JL$cell_models[term == tm & sample == "Without London" & ctrl == "And changes of bus" & phase == "sec" & outcome == "overall"]) |> mutate(panel = "Tenths, outside London"),
+  sdv(JL$school_models[term == tm & sample == "All schools" & outcome == "overall"]) |> mutate(panel = "Schools")) |>
+  mutate(row = PTn[[tm]]))) |> ci_plot("Points of absence per standard deviation", ncol = 3, wrap = 26)
+```
+
+```{r}
 #| label: tbl-la-poi
 #| tbl-cap: !expr paste0("Absence for one standard deviation more points of interest on the way to the quickest school, with t values in brackets, on the same designs as the table above. Authorities are disadvantaged pupils, every control. Tenths are all pupils, within authority, given distance, Census character, points of interest near home, the share needing two or more buses and buses per journey. Schools are all pupils, within authority, given intake and distance. OpenStreetMap, ", format(JL$poi$osm_date, "%e %B %Y"), ".")
 PT <- c(walk50_any = "Along the walking route, within 50 m", leg50_any = "Along walking legs of bus journeys, within 50 m", p_any_board = "At the first stop, within 200 m", p_any_change = "At changes of bus, within 200 m", p_any_alight = "At the last stop, within 200 m")
@@ -1266,6 +1459,16 @@ In Brighton and Hove the busiest change point on the way to the quickest school 
 ## What could it mean for GCSE results? {#sec-gcse}
 
 Absence matters for results, and more for disadvantaged pupils. Between schools in the same authority, with controls for intake, each point of absence goes with about `r sprintf("%.1f", -gs("Attainment 8, all pupils, per point of absence"))` fewer Attainment 8 points for all pupils and `r sprintf("%.1f", -gs("Attainment 8, disadvantaged, per point of absence"))` for disadvantaged pupils (t = `r sprintf("%.0f", abs(gs("Attainment 8, disadvantaged, per point of absence") / gs("Attainment 8, disadvantaged, per point of absence", "se")))`). So the distance link can be carried through to results. If each extra kilometre between an authority's deprived neighbourhoods and a school adds `r sprintf("%.1f", gch("dis", "All 109", "b_abs"))` points of absence for its disadvantaged pupils, and each point of absence costs what Value Added v2.1 says, that kilometre costs them about `r sprintf("%.1f", -gch("dis", "All 109", "chain_va"))` Attainment 8 points, and `r sprintf("%.1f", -gch("dis", "Without London", "chain_va"))` outside London. That is the chain in @tbl-gcse.
+
+```{r}
+#| label: fig-gcse-ci
+#| fig-cap: !expr paste("Attainment 8 points per kilometre. The chain through absence against the direct estimate, the figures in the table below. The chain's interval reflects its first link only.", CI_NOTE)
+#| fig-height: 3.8
+GC$chain[ctrl == "And every control" & sample %in% c("All 109", "Without London")][, o := match(group, c("dis", "non", "all"))][order(sample, o)] |>
+  (\(x) bind_rows(x[, .(row = paste0(GRL[group], ", ", ifelse(sample == "All 109", "all 109", "outside London")), group = "The chain", b = chain_va, se = se_chain_va)],
+                  x[, .(row = paste0(GRL[group], ", ", ifelse(sample == "All 109", "all 109", "outside London")), group = "Direct estimate", b = direct, se = se_direct)]))() |>
+  ci_plot("Attainment 8 points per km")
+```
 
 ```{r}
 #| label: tbl-gcse

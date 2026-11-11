@@ -365,3 +365,28 @@ map_schools <- function(w, lads, height = 520, X = NULL) {
     leaflet::fitBounds(bb[["xmin"]], bb[["ymin"]], bb[["xmax"]], bb[["ymax"]]) |>
     htmlwidgets::onRender(MAP_JS, data = payload)
 }
+
+# ---- Estimates with intervals, against zero --------------------------------------------------
+# For the tables that report an estimate with its 95% interval: one dot and line per estimate,
+# a zero line, groups side by side within a row in the site's group colours. Solid dots have
+# intervals clear of zero; hollow dots include it. d needs row (top to bottom in the order
+# given), b and se; group and panel are optional. Rows are shared across panels.
+CI_NOTE <- "Dots are estimates and lines their 95% intervals; solid dots have intervals clear of zero."
+ci_plot <- function(d, xlab, ncol = 2, free_x = FALSE, wrap = 46) {
+  d <- as.data.frame(d); d <- d[is.finite(d$b) & is.finite(d$se), , drop = FALSE]
+  if (is.null(d$group)) d$group <- "All pupils"
+  rows <- unique(d$row); d$row <- factor(d$row, rev(rows))
+  gl <- unique(as.character(d$group)); gl <- c(intersect(names(GROUP_COL), gl), setdiff(gl, names(GROUP_COL))); k <- length(gl)
+  cols <- if (all(gl %in% names(GROUP_COL))) GROUP_COL[gl] else setNames(c(DPURPLE, BPURPLE, MPURPLE, BLUE, GREY)[seq_len(k)], gl)
+  d$group <- factor(d$group, gl)
+  d$y <- as.numeric(d$row) + if (k > 1) (as.numeric(d$group) - (k + 1) / 2) * min(0.22, 0.7 / k) else 0
+  d$lo <- d$b - 1.96 * d$se; d$hi <- d$b + 1.96 * d$se; d$fillk <- ifelse(abs(d$b / d$se) >= 1.96, as.character(d$group), "none")
+  p <- ggplot(d, aes(y = y, colour = group)) + geom_vline(xintercept = 0, colour = GREY, linewidth = 0.45) +
+    geom_linerange(aes(xmin = lo, xmax = hi), linewidth = 0.8) +
+    geom_point(aes(x = b, fill = fillk), shape = 21, size = 2.3, stroke = 0.9) +
+    scale_fill_manual(values = c(cols, none = "white"), guide = "none") + scale_colour_manual(values = cols, name = NULL) +
+    scale_y_continuous(breaks = seq_along(levels(d$row)), labels = stringr::str_wrap(levels(d$row), wrap), expand = expansion(add = 0.5)) +
+    labs(x = xlab, y = NULL) + theme_note() + theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank(), legend.position = if (k > 1) "top" else "none")
+  if (!is.null(d$panel)) { p$data$panel <- factor(p$data$panel, if (is.factor(d$panel)) levels(d$panel) else unique(as.character(d$panel))); p <- p + facet_wrap(~panel, ncol = ncol, scales = if (free_x) "free_x" else "fixed") }
+  p
+}
