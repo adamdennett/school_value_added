@@ -1,0 +1,4933 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Aldridge Education – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
+
+<script src="site_libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+
+<script src="site_libs/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="./method.html">
+ <span class="dropdown-text">Value Added v2.1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./v22.html">
+ <span class="dropdown-text">v2.2 candidates</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./geography.html">
+ <span class="dropdown-text">Across England</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_types.html">
+ <span class="dropdown-text">Neighbourhood types (OAC)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_covariates.html">
+ <span class="dropdown-text">Neighbourhood covariates (experiment)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./distance.html">
+ <span class="dropdown-text">Distance to school</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-absence" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Absence</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-absence">    
+        <li>
+    <a class="dropdown-item" href="./absence_causes.html">
+ <span class="dropdown-text">What goes with absence</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./absence_change.html">
+ <span class="dropdown-text">How absence changes</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./twins.html"> 
+<span class="menu-text">Find a twin</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./simulator.html"> 
+<span class="menu-text">Simulator</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./independent.html"> 
+<span class="menu-text">Independent schools</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-trusts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Trusts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-trusts">    
+        <li>
+    <a class="dropdown-item" href="./trust_aldridge.html">
+ <span class="dropdown-text">Aldridge Education</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sec-schools" id="toc-sec-schools" class="nav-link active" data-scroll-target="#sec-schools">The schools</a></li>
+  <li><a href="#sec-va" id="toc-sec-va" class="nav-link" data-scroll-target="#sec-va">Value added</a></li>
+  <li><a href="#sec-quadrant" id="toc-sec-quadrant" class="nav-link" data-scroll-target="#sec-quadrant">Value added and attendance</a></li>
+  <li><a href="#sec-intake" id="toc-sec-intake" class="nav-link" data-scroll-target="#sec-intake">Intakes</a></li>
+  <li><a href="#sec-explains" id="toc-sec-explains" class="nav-link" data-scroll-target="#sec-explains">What explains the results</a></li>
+  <li><a href="#sec-place" id="toc-sec-place" class="nav-link" data-scroll-target="#sec-place">Place</a></li>
+  <li><a href="#sec-targets" id="toc-sec-targets" class="nav-link" data-scroll-target="#sec-targets">Targets</a></li>
+  <li><a href="#sec-levers" id="toc-sec-levers" class="nav-link" data-scroll-target="#sec-levers">Where the points are, and who to ask</a>
+  <ul class="collapse">
+  <li><a href="#sec-marginal" id="toc-sec-marginal" class="nav-link" data-scroll-target="#sec-marginal">Marginal gains</a></li>
+  </ul></li>
+  <li><a href="#sec-twins" id="toc-sec-twins" class="nav-link" data-scroll-target="#sec-twins">Schools like these</a></li>
+  <li><a href="#sec-by-school" id="toc-sec-by-school" class="nav-link" data-scroll-target="#sec-by-school">School by school</a>
+  <ul class="collapse">
+  <li><a href="#darwen-aldridge" id="toc-darwen-aldridge" class="nav-link" data-scroll-target="#darwen-aldridge">Darwen Aldridge</a></li>
+  <li><a href="#darwen-aldridge-enterprise-studio" id="toc-darwen-aldridge-enterprise-studio" class="nav-link" data-scroll-target="#darwen-aldridge-enterprise-studio">Darwen Aldridge Enterprise Studio</a></li>
+  <li><a href="#darwen-vale-high" id="toc-darwen-vale-high" class="nav-link" data-scroll-target="#darwen-vale-high">Darwen Vale High</a></li>
+  <li><a href="#brighton-aldridge" id="toc-brighton-aldridge" class="nav-link" data-scroll-target="#brighton-aldridge">Brighton Aldridge</a></li>
+  <li><a href="#portslade-aldridge" id="toc-portslade-aldridge" class="nav-link" data-scroll-target="#portslade-aldridge">Portslade Aldridge</a></li>
+  <li><a href="#dukes-aldridge" id="toc-dukes-aldridge" class="nav-link" data-scroll-target="#dukes-aldridge">Duke’s Aldridge</a></li>
+  <li><a href="#aldridgeutcmediacityuk" id="toc-aldridgeutcmediacityuk" class="nav-link" data-scroll-target="#aldridgeutcmediacityuk">AldridgeUTC@MediaCityUK</a></li>
+  <li><a href="#utc-warrington" id="toc-utc-warrington" class="nav-link" data-scroll-target="#utc-warrington">UTC Warrington</a></li>
+  </ul></li>
+  <li><a href="#sec-trust-method" id="toc-sec-trust-method" class="nav-link" data-scroll-target="#sec-trust-method">How these figures are made</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aldridge Education</h1>
+<p class="subtitle lead">The trust’s secondary schools on Value Added v2.1: what they add, attendance, place, how each compares with schools like it, and targets that start from each school’s intake.</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>In short
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>8 secondary schools</strong> in four places: Darwen (Darwen Aldridge, Darwen Aldridge Enterprise Studio and Darwen Vale High), Brighton and Hove (Brighton Aldridge and Portslade Aldridge), London (Duke’s Aldridge) and Greater Manchester and Cheshire (AldridgeUTC@MediaCityUK and UTC Warrington).</li>
+<li><strong>Value added.</strong> Over 2021/22 to 2024/25, 2 schools add clearly more than their intakes predict for all pupils, and 2 clearly less; the rest are within the margin of error. The strongest are Portslade Aldridge and Brighton Aldridge.</li>
+<li><strong>Attendance is the common thread.</strong> Every school’s absence is above what its intake predicts, by 0.3 to 6.0 points. Bringing it down to the level the intake predicts would, on the v2.1 model, be worth about 0.3 to 3.3 Attainment 8 points for disadvantaged pupils.</li>
+<li><strong>Targets that start from the intake.</strong> For each school and group the page sets three: keep the value the school already adds, match the better quarter of the ten schools in England most like it, and reach England’s top tenth. Each is the model’s expected Attainment 8 for the latest intake plus that much value added. See <a href="#sec-targets">targets</a>.</li>
+<li><strong>Where the points are, and who to ask.</strong> For each school the page ranks the things it can work on (attendance, English, maths, the EBacc and open subjects, filling the slots) by what matching the better of schools like it would be worth, and names similar schools doing well on each, to talk to. See <a href="#sec-levers">levers</a>.</li>
+<li>Every figure is from published data. The method is <a href="#sec-trust-method">at the end</a> and in <a href="./method.html">the methodology</a>.</li>
+</ul>
+</div>
+</div>
+<section id="sec-schools" class="level2">
+<h2 class="anchored" data-anchor-id="sec-schools">The schools</h2>
+<div class="cell">
+<div id="fig-trust-map" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="htmlwidget-80126378d01066219e3e" style="width:100%;height:347px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-80126378d01066219e3e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"scrollWheelZoom":false},"calls":[{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[53.694041778338,53.69638455668036,53.71516724682781,50.85776883135672,50.85064352003757,51.60491060532507,53.47537250702155,53.39261243064465],[-2.463078256259073,-2.470797818272377,-2.469174236233455,-0.09418517296942031,-0.2257738380582976,-0.06333723591875123,-2.296407912167668,-2.595389843196593],9,null,null,{"interactive":true,"className":"","stroke":true,"color":"#1a1a2e","weight":1.5,"opacity":0.5,"fill":true,"fillColor":["#B087BC","#E9E0EC","#D9EDD5","#BDE3B7","#A1D79C","#E5F1E3","#E7DEEB","#782E85"],"fillOpacity":0.95},null,null,["<b>Darwen Aldridge Community Academy<\/b><br>Blackburn with Darwen<br>Ages 11 to 19, 1,065 pupils<br>Attainment 8, four years: 38.1<br>Value added, all pupils: -3.7 (-5.4 to -2.1)<br>Absence against intake: +2.6 points<br>Ofsted: Good","<b>Darwen Aldridge Enterprise Studio<\/b><br>Blackburn with Darwen<br>Ages 13 to 19,   264 pupils<br>Attainment 8, four years: 35.1<br>Value added, all pupils: -0.8 (-2.3 to +0.7)<br>Absence against intake: +2.3 points<br>Ofsted: Expected standard","<b>Darwen Vale High School<\/b><br>Blackburn with Darwen<br>Ages 11 to 16, 1,071 pupils<br>Attainment 8, four years: 43.4<br>Value added, all pupils: +1.1 (-0.7 to +3.0)<br>Absence against intake: +1.5 points<br>Ofsted: Good","<b>Brighton Aldridge Community Academy<\/b><br>Brighton and Hove<br>Ages 11 to 19,   813 pupils<br>Attainment 8, four years: 36.8<br>Value added, all pupils: +2.2 (+0.7 to +3.8)<br>Absence against intake: +3.7 points<br>Ofsted: Good","<b>Portslade Aldridge Community Academy<\/b><br>Brighton and Hove<br>Ages 11 to 16,   928 pupils<br>Attainment 8, four years: 45.9<br>Value added, all pupils: +3.1 (+1.2 to +5.1)<br>Absence against intake: +2.1 points<br>Ofsted: Expected standard","<b>Duke's Aldridge<\/b><br>Haringey<br>Ages 11 to 16,   965 pupils<br>Attainment 8, four years: 40.2<br>Value added, all pupils: +0.7 (-1.0 to +2.4)<br>Absence against intake: +1.7 points<br>Ofsted: Good","<b>AldridgeUTC@MediaCityUK<\/b><br>Salford<br>Ages 13 to 19,   456 pupils<br>Attainment 8, four years: 40.4<br>Value added, all pupils: -0.9 (-2.6 to +0.9)<br>Absence against intake: +0.3 points<br>Ofsted: Good","<b>UTC Warrington<\/b><br>Warrington<br>Ages 14 to 19,   296 pupils<br>Attainment 8, four years: 27.2<br>Value added, all pupils: -5.9 (-7.1 to -4.7)<br>Absence against intake: +6.0 points<br>Ofsted: Good"],null,["Darwen Aldridge","Darwen Aldridge Enterprise Studio","Darwen Vale High","Brighton Aldridge","Portslade Aldridge","Duke's Aldridge","AldridgeUTC@MediaCityUK","UTC Warrington"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[[53.694041778338,53.69638455668036,53.71516724682781,50.85776883135672,50.85064352003757,51.60491060532507,53.47537250702155,53.39261243064465],[-2.463078256259073,-2.470797818272377,-2.469174236233455,-0.09418517296942031,-0.2257738380582976,-0.06333723591875123,-2.296407912167668,-2.595389843196593],{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Darwen Aldridge","Darwen Aldridge Enterprise Studio","Darwen Vale High","Brighton Aldridge","Portslade Aldridge","Duke's Aldridge","AldridgeUTC@MediaCityUK","UTC Warrington"],{"interactive":false,"permanent":true,"direction":"right","opacity":1,"offset":[10,0],"textsize":"10px","textOnly":true,"style":{"color":"#1a1a2e","font-size":"11px"},"className":"","sticky":true},null]}],"limits":{"lat":[50.85064352003757,53.71516724682781],"lng":[-2.595389843196593,-0.06333723591875123]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The trust’s secondary schools, coloured by Value Added v2.1 for all pupils (purple below expectation, green above). Click a school for its figures.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-trust-schools" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-trust-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: The schools. Attainment 8 and value added are four-year figures, 2021/22 to 2024/25, against England, with 95% intervals; absence is against what the school’s intake predicts, averaged over the same four years (percentage points). FSM is free school meals.
+</figcaption>
+<div aria-describedby="tbl-trust-schools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th colspan="6" data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Value added (Attainment 8 points)
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: right; empty-cells: hide; border-bottom: hidden;"></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Area</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Ages</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">FSM</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Attainment 8</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Absence vs intake</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Ofsted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Darwen Aldridge Community Academy</td>
+<td style="text-align: left;">Blackburn with Darwen</td>
+<td style="text-align: left;">11 to 19</td>
+<td style="text-align: right;">1,065</td>
+<td style="text-align: right;">31%</td>
+<td style="text-align: right;">38.1</td>
+<td style="text-align: right;">-3.7 (-5.4 to -2.1)</td>
+<td style="text-align: right;">-4.8 (-7.0 to -2.3)</td>
+<td style="text-align: right;">-3.4 (-5.2 to -1.4)</td>
+<td style="text-align: right;">+2.6</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Darwen Aldridge Enterprise Studio</td>
+<td style="text-align: left;">Blackburn with Darwen</td>
+<td style="text-align: left;">13 to 19</td>
+<td style="text-align: right;">264</td>
+<td style="text-align: right;">56%</td>
+<td style="text-align: right;">35.1</td>
+<td style="text-align: right;">-0.8 (-2.3 to +0.7)</td>
+<td style="text-align: right;">+3.1 (+0.6 to +5.8)</td>
+<td style="text-align: right;">-3.1 (-4.8 to -1.4)</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: left;">Expected standard</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Darwen Vale High School</td>
+<td style="text-align: left;">Blackburn with Darwen</td>
+<td style="text-align: left;">11 to 16</td>
+<td style="text-align: right;">1,071</td>
+<td style="text-align: right;">31%</td>
+<td style="text-align: right;">43.4</td>
+<td style="text-align: right;">+1.1 (-0.7 to +3.0)</td>
+<td style="text-align: right;">-0.4 (-3.0 to +2.5)</td>
+<td style="text-align: right;">+1.7 (-0.4 to +3.8)</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brighton Aldridge Community Academy</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: left;">11 to 19</td>
+<td style="text-align: right;">813</td>
+<td style="text-align: right;">53%</td>
+<td style="text-align: right;">36.8</td>
+<td style="text-align: right;">+2.2 (+0.7 to +3.8)</td>
+<td style="text-align: right;">+2.4 (+0.1 to +4.9)</td>
+<td style="text-align: right;">+2.6 (+0.8 to +4.5)</td>
+<td style="text-align: right;">+3.7</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portslade Aldridge Community Academy</td>
+<td style="text-align: left;">Brighton and Hove</td>
+<td style="text-align: left;">11 to 16</td>
+<td style="text-align: right;">928</td>
+<td style="text-align: right;">30%</td>
+<td style="text-align: right;">45.9</td>
+<td style="text-align: right;">+3.1 (+1.2 to +5.1)</td>
+<td style="text-align: right;">+0.7 (-2.0 to +3.5)</td>
+<td style="text-align: right;">+3.4 (+1.2 to +5.6)</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: left;">Expected standard</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Duke's Aldridge</td>
+<td style="text-align: left;">Haringey</td>
+<td style="text-align: left;">11 to 16</td>
+<td style="text-align: right;">965</td>
+<td style="text-align: right;">49%</td>
+<td style="text-align: right;">40.2</td>
+<td style="text-align: right;">+0.7 (-1.0 to +2.4)</td>
+<td style="text-align: right;">+3.3 (+0.4 to +6.4)</td>
+<td style="text-align: right;">-1.6 (-3.4 to +0.4)</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AldridgeUTC@MediaCityUK</td>
+<td style="text-align: left;">Salford</td>
+<td style="text-align: left;">13 to 19</td>
+<td style="text-align: right;">456</td>
+<td style="text-align: right;">46%</td>
+<td style="text-align: right;">40.4</td>
+<td style="text-align: right;">-0.9 (-2.6 to +0.9)</td>
+<td style="text-align: right;">+3.0 (+0.2 to +6.0)</td>
+<td style="text-align: right;">-2.7 (-4.6 to -0.8)</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">UTC Warrington</td>
+<td style="text-align: left;">Warrington</td>
+<td style="text-align: left;">14 to 19</td>
+<td style="text-align: right;">296</td>
+<td style="text-align: right;">53%</td>
+<td style="text-align: right;">27.2</td>
+<td style="text-align: right;">-5.9 (-7.1 to -4.7)</td>
+<td style="text-align: right;">-2.9 (-4.7 to -0.9)</td>
+<td style="text-align: right;">-7.2 (-8.5 to -5.8)</td>
+<td style="text-align: right;">+6.0</td>
+<td style="text-align: left;">Good</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Three of the schools take pupils from 13 or 14 (Darwen Aldridge Enterprise Studio, AldridgeUTC@MediaCityUK and UTC Warrington). Their value added is measured the same way, against the KS2 results of the pupils they teach, but they are compared with each other and with schools like them, not with 11 to 16 schools, in <a href="#sec-twins">the look-alikes</a>.</p>
+</section>
+<section id="sec-va" class="level2">
+<h2 class="anchored" data-anchor-id="sec-va">Value added</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-va" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-va-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-va-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Value Added v2.1 for each school and group, 2021/22 to 2024/25, in Attainment 8 points against England. Dots are estimates and lines their 95% intervals; solid dots have intervals clear of zero.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-years" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-years-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Value added year by year for each school and group (unshrunk, so single years swing more than the four-year figure). The last point, hollow, is 2025/26. 2025/26 is provisional: predicted from the v2.1 model using DfE’s provisional KS4 results (October 2026), with absence bridged from autumn and spring and the intake data not yet published carried forward. It will be updated with the revised KS4 release in February 2027.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-actual-expected" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-actual-expected-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-actual-expected-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-actual-expected-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Attainment 8 for all pupils each year, against what the model expects for that year’s intake. Where the purple line is above the grey, the school added value that year.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-quadrant" class="level2">
+<h2 class="anchored" data-anchor-id="sec-quadrant">Value added and attendance</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-quadrant" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-quadrant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-quadrant-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-quadrant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Every secondary school in England (grey) on the two questions: across, absence against what the intake predicts (percentage points, right is worse); up, Value Added v2.1 for all pupils. The trust’s schools are labelled.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Every school sits to the right of the line</strong>: its pupils miss more school than pupils with similar characteristics elsewhere. Several still add value, which says the teaching is doing well despite attendance, not because of it. Absence is part of the model, so value added already allows for it; the <a href="#sec-targets">targets</a> show what bringing it down would be worth on top.</p>
+</section>
+<section id="sec-intake" class="level2">
+<h2 class="anchored" data-anchor-id="sec-intake">Intakes</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-intake" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-intake-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-intake-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-intake-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The trust’s schools (purple) against every secondary school in England (shaded: the middle half of England’s schools; line: the median), on the intake characteristics in the v2.1 model.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>These are the intakes the targets start from. Most of the trust’s schools have far more pupils on free school meals than the typical English school, and several have lower prior attainment. Value added already allows for all of this: it is measured against what pupils like these achieve elsewhere.</p>
+</section>
+<section id="sec-explains" class="level2">
+<h2 class="anchored" data-anchor-id="sec-explains">What explains the results</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-decomp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-decomp-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-decomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Why the trust’s average Attainment 8 differs from England’s, by factor, for all pupils, disadvantaged and non-disadvantaged pupils: each bar is one factor’s contribution on the v2.1 model, and they sum to the gap. School is the schools’ own value added.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-place" class="level2">
+<h2 class="anchored" data-anchor-id="sec-place">Place</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-place" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-place-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: The local authority effect on the v2.1 model for each authority the trust works in. How much more or less pupils there achieve than pupils with the same characteristics elsewhere, in % of Attainment 8. Dots are estimates and lines their 95% intervals; solid dots have intervals clear of zero.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Place matters, and it is not in the schools’ gift. Where the authority effect is negative, schools there start behind; where it is positive, part of a school’s results reflects its area. For Brighton and Hove, the <a href="./bh_effect.html">geographical effects page</a> shows the city’s effect is largely one of attendance, and <a href="./distance.html#sec-la-journeys">the distance page</a> that children in the city’s most deprived neighbourhoods face the longest journeys to school of any mostly urban authority in England. Brighton Aldridge Community Academy’s catchment, in the north-east of the city, includes some of its most deprived neighbourhoods.</p>
+</section>
+<section id="sec-targets" class="level2">
+<h2 class="anchored" data-anchor-id="sec-targets">Targets</h2>
+<p>A target that ignores intake rewards schools with advantaged pupils and punishes the rest. These start from what the v2.1 model expects for each school’s own pupils, and add value at three levels:</p>
+<ul>
+<li><strong>Keep what the school adds:</strong> the latest intake’s expected Attainment 8, plus the school’s own four-year value added.</li>
+<li><strong>Match the better of schools like it:</strong> plus the value added of the upper quartile of the ten schools in England most like it on intake and setting (<a href="#sec-twins">below</a>), or its own if higher.</li>
+<li><strong>Reach England’s top tenth:</strong> plus the value added of England’s top tenth of schools for that group (+3.2 for all pupils), or its own if higher.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-targets" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-targets-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Attainment 8 for each school and group: the four-year average (black), what the model expects for the latest intake (grey ring), and the three targets (purple, light to dark). The bar spans expected to the top-tenth target. Disadvantaged cohorts are small in some schools, so their figures move more.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-trust-targets" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-trust-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Attainment 8 targets for each school and group, against the four-year average. Expected is for the latest intake (2024/25) at the school’s current absence. The year-to-year spread is the standard deviation of the school’s own yearly value added: a target within about that much of the expected is inside ordinary variation.
+</figcaption>
+<div aria-describedby="tbl-trust-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Four-year average</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Expected, latest intake</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Keep what it adds</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Better of schools like it</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">England's top tenth</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Year-to-year spread</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">Darwen Aldridge</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">38.1</td>
+<td style="text-align: right;">41.9</td>
+<td style="text-align: right;">38.1</td>
+<td style="text-align: right;">43.6</td>
+<td style="text-align: right;">45.1</td>
+<td style="text-align: right;">±1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">27.6</td>
+<td style="text-align: right;">33.3</td>
+<td style="text-align: right;">28.5</td>
+<td style="text-align: right;">33.6</td>
+<td style="text-align: right;">36.9</td>
+<td style="text-align: right;">±2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">42.1</td>
+<td style="text-align: right;">46.0</td>
+<td style="text-align: right;">42.6</td>
+<td style="text-align: right;">48.3</td>
+<td style="text-align: right;">49.1</td>
+<td style="text-align: right;">±1.4</td>
+</tr>
+<tr class="even">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">Darwen Aldridge Enterprise Studio</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">35.1</td>
+<td style="text-align: right;">33.2</td>
+<td style="text-align: right;">32.4</td>
+<td style="text-align: right;">34.6</td>
+<td style="text-align: right;">36.3</td>
+<td style="text-align: right;">±1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">33.2</td>
+<td style="text-align: right;">25.9</td>
+<td style="text-align: right;">29.0</td>
+<td style="text-align: right;">29.0</td>
+<td style="text-align: right;">29.6</td>
+<td style="text-align: right;">±1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">37.1</td>
+<td style="text-align: right;">38.4</td>
+<td style="text-align: right;">35.3</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">41.5</td>
+<td style="text-align: right;">±3.0</td>
+</tr>
+<tr class="odd">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">Darwen Vale High</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">43.4</td>
+<td style="text-align: right;">42.8</td>
+<td style="text-align: right;">43.9</td>
+<td style="text-align: right;">44.4</td>
+<td style="text-align: right;">45.9</td>
+<td style="text-align: right;">±1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">33.6</td>
+<td style="text-align: right;">34.4</td>
+<td style="text-align: right;">34.0</td>
+<td style="text-align: right;">34.8</td>
+<td style="text-align: right;">38.0</td>
+<td style="text-align: right;">±0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">47.9</td>
+<td style="text-align: right;">46.8</td>
+<td style="text-align: right;">48.5</td>
+<td style="text-align: right;">48.5</td>
+<td style="text-align: right;">50.0</td>
+<td style="text-align: right;">±1.9</td>
+</tr>
+<tr class="even">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">Brighton Aldridge</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">36.8</td>
+<td style="text-align: right;">34.0</td>
+<td style="text-align: right;">36.2</td>
+<td style="text-align: right;">36.2</td>
+<td style="text-align: right;">37.2</td>
+<td style="text-align: right;">±0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">30.8</td>
+<td style="text-align: right;">27.2</td>
+<td style="text-align: right;">29.6</td>
+<td style="text-align: right;">29.6</td>
+<td style="text-align: right;">30.8</td>
+<td style="text-align: right;">±3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">42.0</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">41.6</td>
+<td style="text-align: right;">41.6</td>
+<td style="text-align: right;">42.2</td>
+<td style="text-align: right;">±2.6</td>
+</tr>
+<tr class="odd">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">Portslade Aldridge</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">45.9</td>
+<td style="text-align: right;">41.8</td>
+<td style="text-align: right;">44.9</td>
+<td style="text-align: right;">44.9</td>
+<td style="text-align: right;">45.0</td>
+<td style="text-align: right;">±2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">34.4</td>
+<td style="text-align: right;">32.7</td>
+<td style="text-align: right;">33.4</td>
+<td style="text-align: right;">33.4</td>
+<td style="text-align: right;">36.4</td>
+<td style="text-align: right;">±3.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">50.2</td>
+<td style="text-align: right;">46.1</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">±1.9</td>
+</tr>
+<tr class="even">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">Duke's Aldridge</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">40.2</td>
+<td style="text-align: right;">38.9</td>
+<td style="text-align: right;">39.5</td>
+<td style="text-align: right;">40.8</td>
+<td style="text-align: right;">42.0</td>
+<td style="text-align: right;">±2.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">38.2</td>
+<td style="text-align: right;">32.9</td>
+<td style="text-align: right;">36.2</td>
+<td style="text-align: right;">36.2</td>
+<td style="text-align: right;">36.6</td>
+<td style="text-align: right;">±3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">41.9</td>
+<td style="text-align: right;">43.4</td>
+<td style="text-align: right;">41.8</td>
+<td style="text-align: right;">44.6</td>
+<td style="text-align: right;">46.5</td>
+<td style="text-align: right;">±3.3</td>
+</tr>
+<tr class="odd">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">AldridgeUTC@MediaCityUK</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">40.4</td>
+<td style="text-align: right;">40.9</td>
+<td style="text-align: right;">40.1</td>
+<td style="text-align: right;">40.1</td>
+<td style="text-align: right;">44.1</td>
+<td style="text-align: right;">±3.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">36.8</td>
+<td style="text-align: right;">32.5</td>
+<td style="text-align: right;">35.5</td>
+<td style="text-align: right;">35.5</td>
+<td style="text-align: right;">36.2</td>
+<td style="text-align: right;">±4.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">43.0</td>
+<td style="text-align: right;">45.9</td>
+<td style="text-align: right;">43.2</td>
+<td style="text-align: right;">43.7</td>
+<td style="text-align: right;">49.0</td>
+<td style="text-align: right;">±4.8</td>
+</tr>
+<tr class="even">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">UTC Warrington</td>
+<td style="text-align: left;">All pupils</td>
+<td style="text-align: right;">27.2</td>
+<td style="text-align: right;">32.9</td>
+<td style="text-align: right;">27.0</td>
+<td style="text-align: right;">31.1</td>
+<td style="text-align: right;">36.1</td>
+<td style="text-align: right;">±3.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Disadvantaged</td>
+<td style="text-align: right;">22.9</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">23.2</td>
+<td style="text-align: right;">24.6</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">±3.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-disadvantaged</td>
+<td style="text-align: right;">30.1</td>
+<td style="text-align: right;">37.9</td>
+<td style="text-align: right;">30.8</td>
+<td style="text-align: right;">34.9</td>
+<td style="text-align: right;">41.0</td>
+<td style="text-align: right;">±3.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Attendance targets come first.</strong> Expected Attainment 8 is for each school’s current absence, which in every case is above what the intake predicts. Bringing absence down raises what can be expected, before any change in teaching.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-absence" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-absence-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Absence, 2021/22 to 2024/25 on average: actual (purple), what the intake predicts (grey ring), and the best quarter of the ten schools most like it (dark ring). Labels are what bringing absence down to the intake’s level would be worth in Attainment 8 for disadvantaged pupils, on the v2.1 model.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-trust-absence" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-trust-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Absence targets and what they are worth. Absence is overall absence, % of sessions, averaged over 2021/22 to 2024/25. Worth is the rise in Attainment 8 if absence fell to that level, on the v2.1 absence elasticity for each group, at the school’s current Attainment 8.
+</figcaption>
+<div aria-describedby="tbl-trust-absence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th colspan="4" data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Worth, at the intake's level
+</div></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Worth, at the best of schools like it
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th">School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Now</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Intake predicts</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Best of schools like it</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadv.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadv.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Darwen Aldridge</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Darwen Aldridge Enterprise Studio</td>
+<td style="text-align: right;">14.2</td>
+<td style="text-align: right;">11.9</td>
+<td style="text-align: right;">10.1</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+2.0</td>
+<td style="text-align: right;">+1.2</td>
+<td style="text-align: right;">+2.9</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">+2.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Darwen Vale High</td>
+<td style="text-align: right;">10.8</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">+1.5</td>
+<td style="text-align: right;">+1.6</td>
+<td style="text-align: right;">+1.3</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+1.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brighton Aldridge</td>
+<td style="text-align: right;">16.0</td>
+<td style="text-align: right;">12.2</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+2.8</td>
+<td style="text-align: right;">+2.1</td>
+<td style="text-align: right;">+2.5</td>
+<td style="text-align: right;">+3.0</td>
+<td style="text-align: right;">+2.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portslade Aldridge</td>
+<td style="text-align: right;">11.7</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">+2.2</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+1.9</td>
+<td style="text-align: right;">+3.1</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+2.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Duke's Aldridge</td>
+<td style="text-align: right;">10.1</td>
+<td style="text-align: right;">8.5</td>
+<td style="text-align: right;">7.9</td>
+<td style="text-align: right;">+1.7</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+1.4</td>
+<td style="text-align: right;">+2.3</td>
+<td style="text-align: right;">+3.2</td>
+<td style="text-align: right;">+1.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AldridgeUTC@MediaCityUK</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">10.6</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+0.3</td>
+<td style="text-align: right;">+0.2</td>
+<td style="text-align: right;">+0.6</td>
+<td style="text-align: right;">+0.8</td>
+<td style="text-align: right;">+0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">UTC Warrington</td>
+<td style="text-align: right;">17.7</td>
+<td style="text-align: right;">11.7</td>
+<td style="text-align: right;">9.9</td>
+<td style="text-align: right;">+2.7</td>
+<td style="text-align: right;">+3.3</td>
+<td style="text-align: right;">+2.4</td>
+<td style="text-align: right;">+3.9</td>
+<td style="text-align: right;">+4.7</td>
+<td style="text-align: right;">+3.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>How to use these.</strong> They are ranges for a conversation, not verdicts. A school whose expected and “keep” targets differ by less than its year-to-year spread is doing what it does, and a year above or below says little. The “schools like it” target is the most useful: it is set by real schools with intakes like this one’s. Disadvantaged cohorts are small in several schools, so their targets should be read over two or three years.</p>
+</section>
+<section id="sec-levers" class="level2">
+<h2 class="anchored" data-anchor-id="sec-levers">Where the points are, and who to ask</h2>
+<p>A target says where to aim; this says where the points are likely to come from. For each school, each of the things below is compared with the ten schools in England most like it, and put into Attainment 8 points as what it would be worth to match the better quarter of them. These are things a school can work on. They are not the only ones, and how to work on them is for the school: the point is to find schools with similar pupils that are doing well on the same thing, and that might be worth a conversation.</p>
+<ul>
+<li><strong>Attendance</strong>: overall absence, worth Attainment 8 through the v2.1 absence elasticity; persistent absence is shown beside it as part of the same lever.</li>
+<li><strong>Subject areas</strong>: Progress 8 in English, maths, the three EBacc slots and the three open slots, averaged over the years DfE published it. A point of Progress 8 is a grade in each slot, so the gap times the slots is Attainment 8 points.</li>
+<li><strong>Filling the slots</strong>: how many of the three EBacc and three open slots pupils fill. An empty slot scores nothing, so a gap here is worth looking at before subject progress.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-levers" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-levers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-levers-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-levers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: For each school, what matching the better quarter of the ten schools most like it would be worth, lever by lever, in Attainment 8 points for all pupils. Levers where the school already does as well are not shown. The gains overlap (better attendance also lifts subject progress), so they should not be added up.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-slots" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-slots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-slots-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-slots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: EBacc and open slots filled on average (out of three each), each school (purple) against the ten schools most like it (grey). An unfilled slot scores nothing.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="sec-marginal" class="level3">
+<h3 class="anchored" data-anchor-id="sec-marginal">Marginal gains</h3>
+<p>No single one of these transforms results. Like the marginal gains British Cycling made famous, the case is that several small improvements, each with evidence behind it, add up. Here attendance is joined by three things about a school’s staff that go with its value added across England, beyond what its intake and its pupils’ absence already explain: how many teachers stay from one year to the next, how many days teachers lose to sickness, and how many pupils there are for each qualified teacher.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-marginal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-marginal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-marginal-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-marginal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Marginal gains: what matching the better quarter of the ten schools most like it would be worth, piece by piece, for all pupils and for disadvantaged pupils, in Attainment 8 points. Attendance is through the v2.1 absence elasticity; the staffing pieces through their joint link with value added across England, counted for a group only where that link is clear. The total is at the end of each bar.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-trust-wf-links" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-trust-wf-links-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: How each staffing measure goes with Value Added v2.1 across England’s secondary schools, 2021/22 to 2024/25, fitted together, beyond intake and absence. Attainment 8 points for each unit, with t values; a dash where the link is not clear for that group. School Workforce in England.
+</figcaption>
+<div aria-describedby="tbl-trust-wf-links-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">All pupils</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Disadvantaged</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Non-disadvantaged</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Teacher sickness, per day per teacher</td>
+<td style="text-align: right;">-0.128 (t -5.7)</td>
+<td style="text-align: right;">-0.175 (t -7.1)</td>
+<td style="text-align: right;">-0.144 (t -6.1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Teacher retention, per percentage point</td>
+<td style="text-align: right;">+0.040 (t 5.7)</td>
+<td style="text-align: right;">– (t -1.5)</td>
+<td style="text-align: right;">+0.049 (t 6.4)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pupils per qualified teacher, per pupil</td>
+<td style="text-align: right;">– (t -0.6)</td>
+<td style="text-align: right;">-0.125 (t -4.6)</td>
+<td style="text-align: right;">– (t 0.3)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>These are associations, and the honest reading is modest. A well-run school both keeps its teachers and gets good results, so part of the link runs the other way. But they are consistent across England’s schools, they are beyond what the intake explains, and they are things a trust can work on: staff wellbeing and sickness, keeping teachers, and staffing levels. Teacher sickness has the clearest link of the three, for every group.</p>
+<p><strong>First the constraint, then the margins.</strong> Marginal gains, from British Cycling’s “aggregation of marginal gains”, is a management philosophy more than a theory: many small improvements, none decisive alone, adding up. It has a well-known limit. In operations research, the theory of constraints holds that a system moves at the pace of its tightest bottleneck, and that refining everything else first achieves little (Goldratt and Cox, <em>The Goal</em>, 1984); continuous small improvement, or <em>kaizen</em>, works best once that bottleneck is being dealt with (Imai, <em>Kaizen</em>, 1986). Here the bottleneck is clear. For 8 of the 8 schools, attendance is the largest single piece in the chart above, and it sits beside every other lever: pupils who are not in school cannot gain from better teaching, staffing or curriculum. So the order these pages suggest is attendance first, with the staffing and subject gains as the margins that add up around it.</p>
+</section>
+</section>
+<section id="sec-twins" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins">Schools like these</h2>
+<p>The ten schools in England most like each one, on free school meals, prior attainment, English as an additional language, ethnicity, mobility, sex, special needs, neighbourhood education, size, kind of place, admissions, sixth form, religious character and the age pupils join. Each characteristic is weighted by how much it moves Attainment 8, as on <a href="./twins.html">Find a twin</a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-trust-twins" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-trust-twins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="trust_aldridge_files/figure-html/fig-trust-twins-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trust-twins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Each school (purple) against its ten closest look-alikes (grey), Value Added v2.1 for all pupils against absence, 2021/22 to 2024/25.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-by-school" class="level2">
+<h2 class="anchored" data-anchor-id="sec-by-school">School by school</h2>
+<section id="darwen-aldridge" class="level3">
+<h3 class="anchored" data-anchor-id="darwen-aldridge">Darwen Aldridge</h3>
+<p><strong>Darwen Aldridge Community Academy</strong>, Blackburn with Darwen. Ages 11 to 19, 1,065 pupils, 31% on free school meals. Ofsted: Good.</p>
+<ul>
+<li><strong>Value added, four years:</strong> -3.7 (-5.4 to -2.1) for all pupils, -4.8 (-7.0 to -2.3) for disadvantaged and -3.4 (-5.2 to -1.4) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 11.4% against 8.8% predicted for its intake; the best quarter of schools like it manage 8.8%.</li>
+<li><strong>Targets, all pupils:</strong> expected 41.9 for the latest intake; keep 38.1; schools like it 43.6; England’s top tenth 45.1 (four-year average 38.1).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 33.3; schools like it 33.6; top tenth 36.9.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the EBacc subjects (about 2.1 points), the open subjects (about 1.8 points) and maths (about 1.3 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+EBacc subjects
+</td>
+<td style="text-align:right;">
+-0.79
+</td>
+<td style="text-align:right;">
+-0.19
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
++2.1
+</td>
+<td style="text-align:left;">
+Etone College (Warwickshire, +0.21); Meadowhead School Academy Trust (Sheffield, +0.08); King Charles I School (Worcestershire, +0.00)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open subjects
+</td>
+<td style="text-align:right;">
+-0.71
+</td>
+<td style="text-align:right;">
+-0.19
+</td>
+<td style="text-align:right;">
+-0.11
+</td>
+<td style="text-align:right;">
++1.8
+</td>
+<td style="text-align:left;">
+Etone College (Warwickshire, +0.82); Immanuel College (Bradford, +0.55); Meadowhead School Academy Trust (Sheffield, +0.43)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maths
+</td>
+<td style="text-align:right;">
+-0.65
+</td>
+<td style="text-align:right;">
+-0.14
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:right;">
++1.3
+</td>
+<td style="text-align:left;">
+Etone College (Warwickshire, +0.11); Meadowhead School Academy Trust (Sheffield, +0.09); King Charles I School (Worcestershire, +0.01)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.73
+</td>
+<td style="text-align:right;">
+2.81
+</td>
+<td style="text-align:right;">
+2.84
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Etone College (Warwickshire, 2.95 slots); Hermitage Academy (County Durham, 2.90 slots); King Charles I School (Worcestershire, 2.85 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.62
+</td>
+<td style="text-align:right;">
+2.79
+</td>
+<td style="text-align:right;">
+2.84
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Etone College (Warwickshire, 2.92 slots); Hermitage Academy (County Durham, 2.92 slots); King Charles I School (Worcestershire, 2.85 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 3.5 Attainment 8 points for all pupils and 3.8 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+11.4%
+</td>
+<td style="text-align:right;">
+8.8%
+</td>
+<td style="text-align:right;">
++2.3
+</td>
+<td style="text-align:right;">
++2.4
+</td>
+<td style="text-align:left;">
+Etone College (Warwickshire, 8.5%); Hermitage Academy (County Durham, 8.6%); King Charles I School (Worcestershire, 9.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+39.3%
+</td>
+<td style="text-align:right;">
+20.5%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Hermitage Academy (County Durham, 15.6%); Friesland School (Derbyshire, 20.1%); Consett Academy (County Durham, 20.2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+10.2
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
++0.9
+</td>
+<td style="text-align:right;">
++1.2
+</td>
+<td style="text-align:left;">
+King Charles I School (Worcestershire, 3.2); Immanuel College (Bradford, 3.6); Richard Rose Central Academy (Cumberland, 4.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+76%
+</td>
+<td style="text-align:right;">
+83%
+</td>
+<td style="text-align:right;">
++0.3
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Cannock Chase High School (Staffordshire, 92%); Etone College (Warwickshire, 89%); Meadowhead School Academy Trust (Sheffield, 87%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+18.1
+</td>
+<td style="text-align:right;">
+16.7
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:left;">
+Hermitage Academy (County Durham, 14.6); Bitterne Park School (Southampton, 14.9); Etone College (Warwickshire, 15.1)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Magna Academy
+</td>
+<td style="text-align:left;">
+Bournemouth, Christchurch and Poole
+</td>
+<td style="text-align:right;">
+24%
+</td>
+<td style="text-align:right;">
+-0.7
+</td>
+<td style="text-align:right;">
++0.9
+</td>
+<td style="text-align:right;">
+9.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Richard Rose Central Academy
+</td>
+<td style="text-align:left;">
+Cumberland
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:right;">
++0.5
+</td>
+<td style="text-align:right;">
+11.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+King Charles I School
+</td>
+<td style="text-align:left;">
+Worcestershire
+</td>
+<td style="text-align:right;">
+28%
+</td>
+<td style="text-align:right;">
++1.8
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
+9.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+The Long Eaton School
+</td>
+<td style="text-align:left;">
+Derbyshire
+</td>
+<td style="text-align:right;">
+34%
+</td>
+<td style="text-align:right;">
+-0.4
+</td>
+<td style="text-align:right;">
+-0.1
+</td>
+<td style="text-align:right;">
+10.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Friesland School
+</td>
+<td style="text-align:left;">
+Derbyshire
+</td>
+<td style="text-align:right;">
+29%
+</td>
+<td style="text-align:right;">
++1.5
+</td>
+<td style="text-align:right;">
+-1.1
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ellowes Hall Sports College
+</td>
+<td style="text-align:left;">
+Dudley
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
+-0.2
+</td>
+<td style="text-align:right;">
+-3.2
+</td>
+<td style="text-align:right;">
+10.1
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="darwen-aldridge-enterprise-studio" class="level3">
+<h3 class="anchored" data-anchor-id="darwen-aldridge-enterprise-studio">Darwen Aldridge Enterprise Studio</h3>
+<p><strong>Darwen Aldridge Enterprise Studio</strong>, Blackburn with Darwen. Ages 13 to 19, 264 pupils, 56% on free school meals. Ofsted: Expected standard.</p>
+<ul>
+<li><strong>Value added, four years:</strong> -0.8 (-2.3 to +0.7) for all pupils, +3.1 (+0.6 to +5.8) for disadvantaged and -3.1 (-4.8 to -1.4) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 14.2% against 11.9% predicted for its intake; the best quarter of schools like it manage 10.1%.</li>
+<li><strong>Targets, all pupils:</strong> expected 33.2 for the latest intake; keep 32.4; schools like it 34.6; England’s top tenth 36.3 (four-year average 35.1).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 25.9; schools like it 29.0; top tenth 29.6.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the EBacc subjects (about 3.9 points), English (about 0.7 points) and maths (about 0.6 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+EBacc subjects
+</td>
+<td style="text-align:right;">
+-1.75
+</td>
+<td style="text-align:right;">
+-1.11
+</td>
+<td style="text-align:right;">
+-0.44
+</td>
+<td style="text-align:right;">
++3.9
+</td>
+<td style="text-align:left;">
+Granville Academy (Derbyshire, +0.12); Sir John Hunt Community Sports College (Plymouth, -0.07); Broadlands Academy (Bath and North East Somerset, -0.21)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English
+</td>
+<td style="text-align:right;">
+-0.62
+</td>
+<td style="text-align:right;">
+-0.55
+</td>
+<td style="text-align:right;">
+-0.29
+</td>
+<td style="text-align:right;">
++0.7
+</td>
+<td style="text-align:left;">
+Granville Academy (Derbyshire, +0.09); Marine Academy Plymouth (Plymouth, -0.02); Sir John Hunt Community Sports College (Plymouth, -0.26)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maths
+</td>
+<td style="text-align:right;">
+-0.78
+</td>
+<td style="text-align:right;">
+-0.66
+</td>
+<td style="text-align:right;">
+-0.49
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:left;">
+Granville Academy (Derbyshire, +0.57); Somerset Studio School (Bath and North East Somerset, -0.04); Sir John Hunt Community Sports College (Plymouth, -0.21)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.12
+</td>
+<td style="text-align:right;">
+2.44
+</td>
+<td style="text-align:right;">
+2.79
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Sir John Hunt Community Sports College (Plymouth, 2.92 slots); Marine Academy Plymouth (Plymouth, 2.88 slots); Granville Academy (Derbyshire, 2.88 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+2.74
+</td>
+<td style="text-align:right;">
+2.82
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Marine Academy Plymouth (Plymouth, 2.90 slots); Sir John Hunt Community Sports College (Plymouth, 2.88 slots); Granville Academy (Derbyshire, 2.85 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 4.1 Attainment 8 points for all pupils and 5.5 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+14.2%
+</td>
+<td style="text-align:right;">
+10.1%
+</td>
+<td style="text-align:right;">
++2.9
+</td>
+<td style="text-align:right;">
++3.9
+</td>
+<td style="text-align:left;">
+Granville Academy (Derbyshire, 7.8%); Christ’s College (Sunderland, 9.2%); Swanwick Hall School (Derbyshire, 11.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+52.0%
+</td>
+<td style="text-align:right;">
+28.2%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Granville Academy (Derbyshire, 17.5%); Christ’s College (Sunderland, 23.6%); Swanwick Hall School (Derbyshire, 23.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+12.7
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
++1.1
+</td>
+<td style="text-align:right;">
++1.5
+</td>
+<td style="text-align:left;">
+Christ’s College (Sunderland, 3.9); Marine Academy Plymouth (Plymouth, 4.0); Somerset Studio School (Bath and North East Somerset, 4.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+80%
+</td>
+<td style="text-align:right;">
+81%
+</td>
+<td style="text-align:right;">
++0.0
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Sir John Hunt Community Sports College (Plymouth, 88%); Granville Academy (Derbyshire, 83%); Swanwick Hall School (Derbyshire, 80%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+13.6
+</td>
+<td style="text-align:right;">
+15.6
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Somerset Studio School (Bath and North East Somerset, 13.4); Sir John Hunt Community Sports College (Plymouth, 13.8); Marine Academy Plymouth (Plymouth, 15.5)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+UTC Warrington
+</td>
+<td style="text-align:left;">
+Warrington
+</td>
+<td style="text-align:right;">
+34%
+</td>
+<td style="text-align:right;">
+-5.9
+</td>
+<td style="text-align:right;">
+-2.9
+</td>
+<td style="text-align:right;">
+17.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UTC South Durham
+</td>
+<td style="text-align:left;">
+County Durham
+</td>
+<td style="text-align:right;">
+32%
+</td>
+<td style="text-align:right;">
+-5.7
+</td>
+<td style="text-align:right;">
+-2.6
+</td>
+<td style="text-align:right;">
+9.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sir John Hunt Community Sports College
+</td>
+<td style="text-align:left;">
+Plymouth
+</td>
+<td style="text-align:right;">
+43%
+</td>
+<td style="text-align:right;">
++4.6
+</td>
+<td style="text-align:right;">
++6.0
+</td>
+<td style="text-align:right;">
+14.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+South Devon UTC
+</td>
+<td style="text-align:left;">
+Devon
+</td>
+<td style="text-align:right;">
+35%
+</td>
+<td style="text-align:right;">
+-1.3
+</td>
+<td style="text-align:right;">
+-1.7
+</td>
+<td style="text-align:right;">
+21.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bmat Stem Academy
+</td>
+<td style="text-align:left;">
+Essex
+</td>
+<td style="text-align:right;">
+28%
+</td>
+<td style="text-align:right;">
+-7.4
+</td>
+<td style="text-align:right;">
+-3.5
+</td>
+<td style="text-align:right;">
+11.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Marine Academy Plymouth
+</td>
+<td style="text-align:left;">
+Plymouth
+</td>
+<td style="text-align:right;">
+43%
+</td>
+<td style="text-align:right;">
++4.5
+</td>
+<td style="text-align:right;">
++5.2
+</td>
+<td style="text-align:right;">
+12.9
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="darwen-vale-high" class="level3">
+<h3 class="anchored" data-anchor-id="darwen-vale-high">Darwen Vale High</h3>
+<p><strong>Darwen Vale High School</strong>, Blackburn with Darwen. Ages 11 to 16, 1,071 pupils, 31% on free school meals. Ofsted: Good.</p>
+<ul>
+<li><strong>Value added, four years:</strong> +1.1 (-0.7 to +3.0) for all pupils, -0.4 (-3.0 to +2.5) for disadvantaged and +1.7 (-0.4 to +3.8) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 10.8% against 9.3% predicted for its intake; the best quarter of schools like it manage 8.8%.</li>
+<li><strong>Targets, all pupils:</strong> expected 42.8 for the latest intake; keep 43.9; schools like it 44.4; England’s top tenth 45.9 (four-year average 43.4).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 34.4; schools like it 34.8; top tenth 38.0.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the EBacc subjects (about 1.1 points), the open subjects (about 0.6 points) and English (about 0.4 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+EBacc subjects
+</td>
+<td style="text-align:right;">
+-0.33
+</td>
+<td style="text-align:right;">
+-0.30
+</td>
+<td style="text-align:right;">
++0.04
+</td>
+<td style="text-align:right;">
++1.1
+</td>
+<td style="text-align:left;">
+Portslade Aldridge Community Academy (Brighton and Hove, +0.38); Albany Academy (Lancashire, +0.37); Carleton High School (Wakefield, +0.32)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open subjects
+</td>
+<td style="text-align:right;">
+-0.18
+</td>
+<td style="text-align:right;">
+-0.20
+</td>
+<td style="text-align:right;">
++0.02
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, +0.67); Horizon Community College (Barnsley, +0.47); Woodham Academy (County Durham, +0.39)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English
+</td>
+<td style="text-align:right;">
+-0.28
+</td>
+<td style="text-align:right;">
+-0.23
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
++0.4
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, +0.24); Horbury Academy (Wakefield, +0.21); Redmoor Academy (Leicestershire, +0.17)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.77
+</td>
+<td style="text-align:right;">
+2.81
+</td>
+<td style="text-align:right;">
+2.85
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Horizon Community College (Barnsley, 2.90 slots); Redmoor Academy (Leicestershire, 2.88 slots); The Heath School (Halton, 2.85 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+2.81
+</td>
+<td style="text-align:right;">
+2.87
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Horizon Community College (Barnsley, 2.90 slots); The Heath School (Halton, 2.88 slots); The Queen Elizabeth Academy (Warwickshire, 2.88 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 2.5 Attainment 8 points for all pupils and 2.7 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+10.8%
+</td>
+<td style="text-align:right;">
+8.8%
+</td>
+<td style="text-align:right;">
++2.1
+</td>
+<td style="text-align:right;">
++2.3
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, 7.4%); Horizon Community College (Barnsley, 7.7%); Redmoor Academy (Leicestershire, 8.5%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+29.5%
+</td>
+<td style="text-align:right;">
+21.6%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, 17.2%); Woodham Academy (County Durham, 19.8%); The Byrchall High School (Wigan, 20.0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
++0.0
+</td>
+<td style="text-align:right;">
++0.0
+</td>
+<td style="text-align:left;">
+Woodham Academy (County Durham, 3.5); Portslade Aldridge Community Academy (Brighton and Hove, 4.1); Horizon Community College (Barnsley, 5.5)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+76%
+</td>
+<td style="text-align:right;">
+86%
+</td>
+<td style="text-align:right;">
++0.4
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Woodham Academy (County Durham, 92%); St Michael’s Catholic Academy (Stockton-on-Tees, 90%); Redmoor Academy (Leicestershire, 89%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+19.7
+</td>
+<td style="text-align:right;">
+16.6
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
++0.4
+</td>
+<td style="text-align:left;">
+Horizon Community College (Barnsley, 16.2); Biddick Academy (Sunderland, 16.4); Woodham Academy (County Durham, 16.5)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+The Heath School
+</td>
+<td style="text-align:left;">
+Halton
+</td>
+<td style="text-align:right;">
+33%
+</td>
+<td style="text-align:right;">
++0.4
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:right;">
+8.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carleton High School
+</td>
+<td style="text-align:left;">
+Wakefield
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
++3.2
+</td>
+<td style="text-align:right;">
+-1.2
+</td>
+<td style="text-align:right;">
+7.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Westfield School
+</td>
+<td style="text-align:left;">
+Sheffield
+</td>
+<td style="text-align:right;">
+29%
+</td>
+<td style="text-align:right;">
+-0.4
+</td>
+<td style="text-align:right;">
+-3.2
+</td>
+<td style="text-align:right;">
+9.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+The Queen Elizabeth Academy
+</td>
+<td style="text-align:left;">
+Warwickshire
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
++1.7
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:right;">
+11.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hawkley Hall High School
+</td>
+<td style="text-align:left;">
+Wigan
+</td>
+<td style="text-align:right;">
+27%
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-1.9
+</td>
+<td style="text-align:right;">
+9.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Testwood School
+</td>
+<td style="text-align:left;">
+Hampshire
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-2.4
+</td>
+<td style="text-align:right;">
+10.7
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="brighton-aldridge" class="level3">
+<h3 class="anchored" data-anchor-id="brighton-aldridge">Brighton Aldridge</h3>
+<p><strong>Brighton Aldridge Community Academy</strong>, Brighton and Hove. Ages 11 to 19, 813 pupils, 53% on free school meals. Ofsted: Good.</p>
+<ul>
+<li><strong>Value added, four years:</strong> +2.2 (+0.7 to +3.8) for all pupils, +2.4 (+0.1 to +4.9) for disadvantaged and +2.6 (+0.8 to +4.5) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 16.0% against 12.2% predicted for its intake; the best quarter of schools like it manage 12.0%.</li>
+<li><strong>Targets, all pupils:</strong> expected 34.0 for the latest intake; keep 36.2; schools like it 36.2; England’s top tenth 37.2 (four-year average 36.8).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 27.2; schools like it 29.6; top tenth 30.8.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the open subjects (about 1.2 points), maths (about 0.8 points) and the EBacc subjects (about 0.2 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Open subjects
+</td>
+<td style="text-align:right;">
+-0.62
+</td>
+<td style="text-align:right;">
+-0.54
+</td>
+<td style="text-align:right;">
+-0.22
+</td>
+<td style="text-align:right;">
++1.2
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, +0.75); Lipson Co-operative Academy (Plymouth, +0.45); Stoke Damerel Community College (Plymouth, +0.31)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maths
+</td>
+<td style="text-align:right;">
+-0.58
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
+-0.19
+</td>
+<td style="text-align:right;">
++0.8
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, +0.82); Fearnhill School (Hertfordshire, +0.24); Royds Hall, A Share Academy (Kirklees, +0.18)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc subjects
+</td>
+<td style="text-align:right;">
+-0.51
+</td>
+<td style="text-align:right;">
+-0.73
+</td>
+<td style="text-align:right;">
+-0.44
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, +0.96); Fearnhill School (Hertfordshire, +0.38); Lipson Co-operative Academy (Plymouth, -0.09)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.62
+</td>
+<td style="text-align:right;">
+2.62
+</td>
+<td style="text-align:right;">
+2.69
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Lipson Co-operative Academy (Plymouth, 2.90 slots); Henley Bank High School (Gloucestershire, 2.88 slots); Fearnhill School (Hertfordshire, 2.77 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.58
+</td>
+<td style="text-align:right;">
+2.62
+</td>
+<td style="text-align:right;">
+2.67
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, 2.90 slots); Lipson Co-operative Academy (Plymouth, 2.88 slots); Royds Hall, A Share Academy (Kirklees, 2.85 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 3.3 Attainment 8 points for all pupils and 3.2 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+16.0%
+</td>
+<td style="text-align:right;">
+12.0%
+</td>
+<td style="text-align:right;">
++2.5
+</td>
+<td style="text-align:right;">
++3.0
+</td>
+<td style="text-align:left;">
+Royds Hall, A Share Academy (Kirklees, 6.8%); Lipson Co-operative Academy (Plymouth, 9.9%); Henley Bank High School (Gloucestershire, 10.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+39.0%
+</td>
+<td style="text-align:right;">
+27.6%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Royds Hall, A Share Academy (Kirklees, 16.3%); Fearnhill School (Hertfordshire, 25.2%); Henley Bank High School (Gloucestershire, 26.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, 3.8); Broadlands Academy (Bath and North East Somerset, 5.5); Fearnhill School (Hertfordshire, 5.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+68%
+</td>
+<td style="text-align:right;">
+87%
+</td>
+<td style="text-align:right;">
++0.7
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Stoke Damerel Community College (Plymouth, 90%); Lipson Co-operative Academy (Plymouth, 90%); Henley Bank High School (Gloucestershire, 84%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+16.8
+</td>
+<td style="text-align:right;">
+16.1
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:left;">
+Stoke Damerel Community College (Plymouth, 14.9); Fearnhill School (Hertfordshire, 14.9); Lipson Co-operative Academy (Plymouth, 15.6)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Oasis Academy Brightstowe
+</td>
+<td style="text-align:left;">
+Bristol, City of
+</td>
+<td style="text-align:right;">
+49%
+</td>
+<td style="text-align:right;">
+-0.7
+</td>
+<td style="text-align:right;">
+-0.4
+</td>
+<td style="text-align:right;">
+16.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ellesmere Port Church of England College
+</td>
+<td style="text-align:left;">
+Cheshire West and Chester
+</td>
+<td style="text-align:right;">
+43%
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-1.9
+</td>
+<td style="text-align:right;">
+9.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lipson Co-operative Academy
+</td>
+<td style="text-align:left;">
+Plymouth
+</td>
+<td style="text-align:right;">
+40%
+</td>
+<td style="text-align:right;">
++4.1
+</td>
+<td style="text-align:right;">
++4.3
+</td>
+<td style="text-align:right;">
+9.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Miltoncross Academy
+</td>
+<td style="text-align:left;">
+Portsmouth
+</td>
+<td style="text-align:right;">
+47%
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-1.3
+</td>
+<td style="text-align:right;">
+12.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dixons Brooklands Academy
+</td>
+<td style="text-align:left;">
+Manchester
+</td>
+<td style="text-align:right;">
+52%
+</td>
+<td style="text-align:right;">
++2.1
+</td>
+<td style="text-align:right;">
++3.5
+</td>
+<td style="text-align:right;">
+16.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+The Open Academy
+</td>
+<td style="text-align:left;">
+Norfolk
+</td>
+<td style="text-align:right;">
+40%
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
++1.2
+</td>
+<td style="text-align:right;">
+11.7
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="portslade-aldridge" class="level3">
+<h3 class="anchored" data-anchor-id="portslade-aldridge">Portslade Aldridge</h3>
+<p><strong>Portslade Aldridge Community Academy</strong>, Brighton and Hove. Ages 11 to 16, 928 pupils, 30% on free school meals. Ofsted: Expected standard.</p>
+<ul>
+<li><strong>Value added, four years:</strong> +3.1 (+1.2 to +5.1) for all pupils, +0.7 (-2.0 to +3.5) for disadvantaged and +3.4 (+1.2 to +5.6) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 11.7% against 9.6% predicted for its intake; the best quarter of schools like it manage 8.8%.</li>
+<li><strong>Targets, all pupils:</strong> expected 41.8 for the latest intake; keep 44.9; schools like it 44.9; England’s top tenth 45.0 (four-year average 45.9).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 32.7; schools like it 33.4; top tenth 36.4.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the open subjects (about 0.7 points) and English (about 0.5 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Open subjects
+</td>
+<td style="text-align:right;">
+-0.27
+</td>
+<td style="text-align:right;">
+-0.18
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
++0.7
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, +0.67); Horbury Academy (Wakefield, +0.38); Lowton Church of England High School (Wigan, +0.02)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English
+</td>
+<td style="text-align:right;">
+-0.29
+</td>
+<td style="text-align:right;">
+-0.20
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
++0.5
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, +0.24); Horbury Academy (Wakefield, +0.21); Alder Community High School (Tameside, -0.00)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+2.81
+</td>
+<td style="text-align:right;">
+2.84
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Stockport School (Stockport, 2.90 slots); Belvidere School (Shropshire, 2.85 slots); The Hamble School (Hampshire, 2.85 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.70
+</td>
+<td style="text-align:right;">
+2.80
+</td>
+<td style="text-align:right;">
+2.82
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Lowton Church of England High School (Wigan, 2.88 slots); The Queen Elizabeth Academy (Warwickshire, 2.88 slots); The Heath School (Halton, 2.88 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 3.3 Attainment 8 points for all pupils and 3.3 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+11.7%
+</td>
+<td style="text-align:right;">
+8.8%
+</td>
+<td style="text-align:right;">
++3.1
+</td>
+<td style="text-align:right;">
++3.3
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, 7.4%); The Heath School (Halton, 8.7%); Albany Academy (Lancashire, 8.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+24.4%
+</td>
+<td style="text-align:right;">
+20.1%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Carleton High School (Wakefield, 17.2%); The Byrchall High School (Wigan, 20.0%); Horbury Academy (Wakefield, 22.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Wey Valley Academy (Dorset, 1.5); The Byrchall High School (Wigan, 5.6); Lowton Church of England High School (Wigan, 5.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+82%
+</td>
+<td style="text-align:right;">
+87%
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Stockport School (Stockport, 92%); Albany Academy (Lancashire, 89%); The Heath School (Halton, 86%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+16.7
+</td>
+<td style="text-align:right;">
+17.3
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Stockport School (Stockport, 16.1); Belvidere School (Shropshire, 16.5); The Hamble School (Hampshire, 16.8)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+The Hamble School
+</td>
+<td style="text-align:left;">
+Hampshire
+</td>
+<td style="text-align:right;">
+26%
+</td>
+<td style="text-align:right;">
++1.6
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:right;">
+10.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stanley High School
+</td>
+<td style="text-align:left;">
+Sefton
+</td>
+<td style="text-align:right;">
+27%
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-0.7
+</td>
+<td style="text-align:right;">
+10.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+King James’s School
+</td>
+<td style="text-align:left;">
+Kirklees
+</td>
+<td style="text-align:right;">
+29%
+</td>
+<td style="text-align:right;">
+-1.0
+</td>
+<td style="text-align:right;">
+-4.2
+</td>
+<td style="text-align:right;">
+7.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Penketh High School
+</td>
+<td style="text-align:left;">
+Warrington
+</td>
+<td style="text-align:right;">
+28%
+</td>
+<td style="text-align:right;">
+-1.8
+</td>
+<td style="text-align:right;">
+-1.3
+</td>
+<td style="text-align:right;">
+8.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lowton Church of England High School
+</td>
+<td style="text-align:left;">
+Wigan
+</td>
+<td style="text-align:right;">
+30%
+</td>
+<td style="text-align:right;">
++1.0
+</td>
+<td style="text-align:right;">
++0.7
+</td>
+<td style="text-align:right;">
+9.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alder Community High School
+</td>
+<td style="text-align:left;">
+Tameside
+</td>
+<td style="text-align:right;">
+30%
+</td>
+<td style="text-align:right;">
++0.8
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
+9.2
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dukes-aldridge" class="level3">
+<h3 class="anchored" data-anchor-id="dukes-aldridge">Duke’s Aldridge</h3>
+<p><strong>Duke’s Aldridge</strong>, Haringey. Ages 11 to 16, 965 pupils, 49% on free school meals. Ofsted: Good.</p>
+<ul>
+<li><strong>Value added, four years:</strong> +0.7 (-1.0 to +2.4) for all pupils, +3.3 (+0.4 to +6.4) for disadvantaged and -1.6 (-3.4 to +0.4) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 10.1% against 8.5% predicted for its intake; the best quarter of schools like it manage 7.9%.</li>
+<li><strong>Targets, all pupils:</strong> expected 38.9 for the latest intake; keep 39.5; schools like it 40.8; England’s top tenth 42.0 (four-year average 40.2).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 32.9; schools like it 36.2; top tenth 36.6.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the open subjects (about 1.3 points), English (about 1.2 points) and maths (about 0.2 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Open subjects
+</td>
+<td style="text-align:right;">
+-0.07
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
++0.36
+</td>
+<td style="text-align:right;">
++1.3
+</td>
+<td style="text-align:left;">
+Moor End Academy (Kirklees, +0.84); Carlton Bolling (Bradford, +0.84); Essa Academy (Bolton, +0.49)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English
+</td>
+<td style="text-align:right;">
+-0.31
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
++0.28
+</td>
+<td style="text-align:right;">
++1.2
+</td>
+<td style="text-align:left;">
+Ark Elvin Academy (Brent, +0.64); Starbank School (Birmingham, +0.62); Moor End Academy (Kirklees, +0.56)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maths
+</td>
+<td style="text-align:right;">
++0.44
+</td>
+<td style="text-align:right;">
++0.20
+</td>
+<td style="text-align:right;">
++0.54
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:left;">
+Moor End Academy (Kirklees, +0.62); Ark Elvin Academy (Brent, +0.62); Harlington School (Hillingdon, +0.51)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.67
+</td>
+<td style="text-align:right;">
+2.77
+</td>
+<td style="text-align:right;">
+2.83
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Ark Elvin Academy (Brent, 2.85 slots); Moor End Academy (Kirklees, 2.85 slots); Matthew Moss High School (Rochdale, 2.85 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.73
+</td>
+<td style="text-align:right;">
+2.81
+</td>
+<td style="text-align:right;">
+2.88
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Essa Academy (Bolton, 2.95 slots); Moor End Academy (Kirklees, 2.92 slots); Westborough High School (Kirklees, 2.90 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 3.5 Attainment 8 points for all pupils and 4.8 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+10.1%
+</td>
+<td style="text-align:right;">
+7.9%
+</td>
+<td style="text-align:right;">
++2.3
+</td>
+<td style="text-align:right;">
++3.2
+</td>
+<td style="text-align:left;">
+Essa Academy (Bolton, 5.9%); Moor End Academy (Kirklees, 6.8%); Starbank School (Birmingham, 7.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+27.8%
+</td>
+<td style="text-align:right;">
+19.4%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Moor End Academy (Kirklees, 15.3%); Carlton Bolling (Bradford, 22.2%); Bedford Academy (Bedford, 23.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+12.7
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
++1.0
+</td>
+<td style="text-align:right;">
++1.4
+</td>
+<td style="text-align:left;">
+Starbank School (Birmingham, 3.1); Ark Elvin Academy (Brent, 3.8); Essa Academy (Bolton, 3.8)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+79%
+</td>
+<td style="text-align:right;">
+82%
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Westborough High School (Kirklees, 83%); Bedford Academy (Bedford, 82%); Harlington School (Hillingdon, 81%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+17.8
+</td>
+<td style="text-align:right;">
+15.9
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:left;">
+Westborough High School (Kirklees, 13.8); Carlton Bolling (Bradford, 14.9); Oasis Academy Lister Park (Bradford, 15.8)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Marsden Heights Community College
+</td>
+<td style="text-align:left;">
+Lancashire
+</td>
+<td style="text-align:right;">
+35%
+</td>
+<td style="text-align:right;">
+-0.9
+</td>
+<td style="text-align:right;">
++0.0
+</td>
+<td style="text-align:right;">
+8.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ark Elvin Academy
+</td>
+<td style="text-align:left;">
+Brent
+</td>
+<td style="text-align:right;">
+42%
+</td>
+<td style="text-align:right;">
++1.9
+</td>
+<td style="text-align:right;">
++4.2
+</td>
+<td style="text-align:right;">
+8.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carlton Bolling
+</td>
+<td style="text-align:left;">
+Bradford
+</td>
+<td style="text-align:right;">
+46%
+</td>
+<td style="text-align:right;">
++1.9
+</td>
+<td style="text-align:right;">
++3.4
+</td>
+<td style="text-align:right;">
+9.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Moor End Academy
+</td>
+<td style="text-align:left;">
+Kirklees
+</td>
+<td style="text-align:right;">
+48%
+</td>
+<td style="text-align:right;">
++3.1
+</td>
+<td style="text-align:right;">
++2.9
+</td>
+<td style="text-align:right;">
+6.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sir John Thursby Community College
+</td>
+<td style="text-align:left;">
+Lancashire
+</td>
+<td style="text-align:right;">
+43%
+</td>
+<td style="text-align:right;">
+-1.4
+</td>
+<td style="text-align:right;">
+-0.5
+</td>
+<td style="text-align:right;">
+8.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+One In A Million Free School
+</td>
+<td style="text-align:left;">
+Bradford
+</td>
+<td style="text-align:right;">
+53%
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
+-1.7
+</td>
+<td style="text-align:right;">
+12.9
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="aldridgeutcmediacityuk" class="level3">
+<h3 class="anchored" data-anchor-id="aldridgeutcmediacityuk">AldridgeUTC@MediaCityUK</h3>
+<p><strong>AldridgeUTC@MediaCityUK</strong>, Salford. Ages 13 to 19, 456 pupils, 46% on free school meals. Ofsted: Good.</p>
+<ul>
+<li><strong>Value added, four years:</strong> -0.9 (-2.6 to +0.9) for all pupils, +3.0 (+0.2 to +6.0) for disadvantaged and -2.7 (-4.6 to -0.8) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 11.3% against 11.0% predicted for its intake; the best quarter of schools like it manage 10.6%.</li>
+<li><strong>Targets, all pupils:</strong> expected 40.9 for the latest intake; keep 40.1; schools like it 40.1; England’s top tenth 44.1 (four-year average 40.4).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 32.5; schools like it 35.5; top tenth 36.2.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the EBacc subjects (about 2.7 points), maths (about 0.6 points) and English (about 0.6 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+EBacc subjects
+</td>
+<td style="text-align:right;">
+-1.44
+</td>
+<td style="text-align:right;">
+-0.67
+</td>
+<td style="text-align:right;">
+-0.52
+</td>
+<td style="text-align:right;">
++2.7
+</td>
+<td style="text-align:left;">
+Fearnhill School (Hertfordshire, +0.38); St Benedict’s Catholic High School (Warwickshire, +0.26); Queen’s Park High School (Cheshire West and Chester, +0.17)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maths
+</td>
+<td style="text-align:right;">
+-0.65
+</td>
+<td style="text-align:right;">
+-0.45
+</td>
+<td style="text-align:right;">
+-0.34
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:left;">
+Fearnhill School (Hertfordshire, +0.24); Scott Medical and Healthcare College (Plymouth, +0.24); St Benedict’s Catholic High School (Warwickshire, +0.06)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English
+</td>
+<td style="text-align:right;">
+-0.56
+</td>
+<td style="text-align:right;">
+-0.47
+</td>
+<td style="text-align:right;">
+-0.26
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:left;">
+St Benedict’s Catholic High School (Warwickshire, +0.26); Scott Medical and Healthcare College (Plymouth, +0.24); Queen’s Park High School (Cheshire West and Chester, +0.21)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.12
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+2.79
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Scott Medical and Healthcare College (Plymouth, 2.90 slots); Marine Academy Plymouth (Plymouth, 2.88 slots); Queen’s Park High School (Cheshire West and Chester, 2.85 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+2.82
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Marine Academy Plymouth (Plymouth, 2.90 slots); Queen’s Park High School (Cheshire West and Chester, 2.82 slots); St Benedict’s Catholic High School (Warwickshire, 2.80 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 1.3 Attainment 8 points for all pupils and 1.4 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+11.3%
+</td>
+<td style="text-align:right;">
+10.6%
+</td>
+<td style="text-align:right;">
++0.6
+</td>
+<td style="text-align:right;">
++0.8
+</td>
+<td style="text-align:left;">
+St Benedict’s Catholic High School (Warwickshire, 9.3%); Queen’s Park High School (Cheshire West and Chester, 9.7%); Fearnhill School (Hertfordshire, 10.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+37.1%
+</td>
+<td style="text-align:right;">
+25.0%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+St Benedict’s Catholic High School (Warwickshire, 21.3%); Queen’s Park High School (Cheshire West and Chester, 23.4%); Laureate Academy (Hertfordshire, 25.0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+7.6
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
++0.3
+</td>
+<td style="text-align:right;">
++0.4
+</td>
+<td style="text-align:left;">
+Laureate Academy (Hertfordshire, 3.7); Marine Academy Plymouth (Plymouth, 4.0); Queen’s Park High School (Cheshire West and Chester, 5.6)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+71%
+</td>
+<td style="text-align:right;">
+80%
+</td>
+<td style="text-align:right;">
++0.4
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+The Studio School Liverpool (Liverpool, 90%); Hove Park School and Sixth Form Centre (Brighton and Hove, 88%); Queen’s Park High School (Cheshire West and Chester, 85%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+17.2
+</td>
+<td style="text-align:right;">
+16.0
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:left;">
+Hove Park School and Sixth Form Centre (Brighton and Hove, 14.7); Fearnhill School (Hertfordshire, 14.9); Marine Academy Plymouth (Plymouth, 15.5)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+The Sele School
+</td>
+<td style="text-align:left;">
+Hertfordshire
+</td>
+<td style="text-align:right;">
+32%
+</td>
+<td style="text-align:right;">
+-1.6
+</td>
+<td style="text-align:right;">
++0.2
+</td>
+<td style="text-align:right;">
+12.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nether Stowe School
+</td>
+<td style="text-align:left;">
+Staffordshire
+</td>
+<td style="text-align:right;">
+35%
+</td>
+<td style="text-align:right;">
+-2.1
+</td>
+<td style="text-align:right;">
+-1.7
+</td>
+<td style="text-align:right;">
+11.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+University Technical College Norfolk
+</td>
+<td style="text-align:left;">
+Norfolk
+</td>
+<td style="text-align:right;">
+24%
+</td>
+<td style="text-align:right;">
+-2.3
+</td>
+<td style="text-align:right;">
++2.9
+</td>
+<td style="text-align:right;">
+8.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Queen’s Park High School
+</td>
+<td style="text-align:left;">
+Cheshire West and Chester
+</td>
+<td style="text-align:right;">
+26%
+</td>
+<td style="text-align:right;">
++1.2
+</td>
+<td style="text-align:right;">
+-3.5
+</td>
+<td style="text-align:right;">
+9.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bmat Stem Academy
+</td>
+<td style="text-align:left;">
+Essex
+</td>
+<td style="text-align:right;">
+28%
+</td>
+<td style="text-align:right;">
+-7.4
+</td>
+<td style="text-align:right;">
+-3.5
+</td>
+<td style="text-align:right;">
+11.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+The Radcliffe School
+</td>
+<td style="text-align:left;">
+Milton Keynes
+</td>
+<td style="text-align:right;">
+39%
+</td>
+<td style="text-align:right;">
+-2.5
+</td>
+<td style="text-align:right;">
+-2.4
+</td>
+<td style="text-align:right;">
+10.3
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="utc-warrington" class="level3">
+<h3 class="anchored" data-anchor-id="utc-warrington">UTC Warrington</h3>
+<p><strong>UTC Warrington</strong>, Warrington. Ages 14 to 19, 296 pupils, 53% on free school meals. Ofsted: Good.</p>
+<ul>
+<li><strong>Value added, four years:</strong> -5.9 (-7.1 to -4.7) for all pupils, -2.9 (-4.7 to -0.9) for disadvantaged and -7.2 (-8.5 to -5.8) for non-disadvantaged pupils.</li>
+<li><strong>Attendance:</strong> absence 17.7% against 11.7% predicted for its intake; the best quarter of schools like it manage 9.9%.</li>
+<li><strong>Targets, all pupils:</strong> expected 32.9 for the latest intake; keep 27.0; schools like it 31.1; England’s top tenth 36.1 (four-year average 27.2).</li>
+<li><strong>Disadvantaged pupils:</strong> expected 26.0; schools like it 24.6; top tenth 29.7.</li>
+</ul>
+<p><strong>Subject areas, and who to ask.</strong> Against the ten schools most like it, the biggest gains in progress are in the open subjects (about 4.8 points), English (about 1.8 points) and the EBacc subjects (about 1.4 points). Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+This school
+</th>
+<th style="text-align:right;">
+Schools like it
+</th>
+<th style="text-align:right;">
+Their better quarter
+</th>
+<th style="text-align:right;">
+Worth (Att8)
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Open subjects
+</td>
+<td style="text-align:right;">
+-2.21
+</td>
+<td style="text-align:right;">
+-1.19
+</td>
+<td style="text-align:right;">
+-0.60
+</td>
+<td style="text-align:right;">
++4.8
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, +0.75); Marriotts School (Hertfordshire, +0.29); Scarborough University Technical College (North Yorkshire, +0.20)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+English
+</td>
+<td style="text-align:right;">
+-1.50
+</td>
+<td style="text-align:right;">
+-0.96
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
++1.8
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, +0.47); Holmleigh Park High School (Gloucestershire, -0.14); Broadlands Academy (Bath and North East Somerset, -0.30)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc subjects
+</td>
+<td style="text-align:right;">
+-1.45
+</td>
+<td style="text-align:right;">
+-1.40
+</td>
+<td style="text-align:right;">
+-0.98
+</td>
+<td style="text-align:right;">
++1.4
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, +0.96); Holmleigh Park High School (Gloucestershire, +0.14); Broadlands Academy (Bath and North East Somerset, -0.21)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EBacc slots filled
+</td>
+<td style="text-align:right;">
+2.20
+</td>
+<td style="text-align:right;">
+2.21
+</td>
+<td style="text-align:right;">
+2.45
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, 2.88 slots); Holmleigh Park High School (Gloucestershire, 2.82 slots); Scarborough University Technical College (North Yorkshire, 2.80 slots)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Open slots filled
+</td>
+<td style="text-align:right;">
+1.90
+</td>
+<td style="text-align:right;">
+2.64
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, 2.90 slots); Scarborough University Technical College (North Yorkshire, 2.85 slots); Holmleigh Park High School (Gloucestershire, 2.80 slots)
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Marginal gains.</strong> Attendance and staffing together could be worth about 4.0 Attainment 8 points for all pupils and 4.8 for disadvantaged pupils, if the school matched the better quarter of schools like it on each:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Lever
+</th>
+<th style="text-align:right;">
+Now
+</th>
+<th style="text-align:right;">
+Schools like it, better quarter
+</th>
+<th style="text-align:right;">
+Worth, all
+</th>
+<th style="text-align:right;">
+Worth, disadvantaged
+</th>
+<th style="text-align:left;">
+Schools to talk to
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Attendance: overall absence
+</td>
+<td style="text-align:right;">
+17.7%
+</td>
+<td style="text-align:right;">
+9.9%
+</td>
+<td style="text-align:right;">
++3.9
+</td>
+<td style="text-align:right;">
++4.7
+</td>
+<td style="text-align:left;">
+Marriotts School (Hertfordshire, 9.5%); Henley Bank High School (Gloucestershire, 10.1%); Scarborough University Technical College (North Yorkshire, 10.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Attendance: persistent absence (part of attendance)
+</td>
+<td style="text-align:right;">
+42.9%
+</td>
+<td style="text-align:right;">
+24.9%
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Marriotts School (Hertfordshire, 21.9%); Scarborough University Technical College (North Yorkshire, 24.4%); Henley Bank High School (Gloucestershire, 26.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher sickness (days per teacher)
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:left;">
+Henley Bank High School (Gloucestershire, 3.8); Walsall Studio School (Walsall, 4.1); Holmleigh Park High School (Gloucestershire, 5.4)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Teacher retention (% staying a year)
+</td>
+<td style="text-align:right;">
+79%
+</td>
+<td style="text-align:right;">
+81%
+</td>
+<td style="text-align:right;">
++0.1
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Marriotts School (Hertfordshire, 87%); Holmleigh Park High School (Gloucestershire, 87%); St John Henry Newman Catholic School (Cumberland, 85%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pupils per qualified teacher
+</td>
+<td style="text-align:right;">
+15.8
+</td>
+<td style="text-align:right;">
+16.2
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:right;">
+–
+</td>
+<td style="text-align:left;">
+Scarborough University Technical College (North Yorkshire, 12.8); Walsall Studio School (Walsall, 12.9); Broadlands Academy (Bath and North East Somerset, 15.8)
+</td>
+</tr>
+</tbody>
+</table>
+<p>Its closest look-alikes:</p>
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+School
+</th>
+<th style="text-align:left;">
+Area
+</th>
+<th style="text-align:right;">
+FSM
+</th>
+<th style="text-align:right;">
+Value added, all
+</th>
+<th style="text-align:right;">
+Disadvantaged
+</th>
+<th style="text-align:right;">
+Absence
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Darwen Aldridge Enterprise Studio
+</td>
+<td style="text-align:left;">
+Blackburn with Darwen
+</td>
+<td style="text-align:right;">
+41%
+</td>
+<td style="text-align:right;">
+-0.8
+</td>
+<td style="text-align:right;">
++3.1
+</td>
+<td style="text-align:right;">
+14.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crewe Engineering and Design UTC
+</td>
+<td style="text-align:left;">
+Cheshire East
+</td>
+<td style="text-align:right;">
+29%
+</td>
+<td style="text-align:right;">
+-5.9
+</td>
+<td style="text-align:right;">
+-2.7
+</td>
+<td style="text-align:right;">
+14.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+South Devon UTC
+</td>
+<td style="text-align:left;">
+Devon
+</td>
+<td style="text-align:right;">
+35%
+</td>
+<td style="text-align:right;">
+-1.3
+</td>
+<td style="text-align:right;">
+-1.7
+</td>
+<td style="text-align:right;">
+21.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Engineering UTC Northern Lincolnshire
+</td>
+<td style="text-align:left;">
+North Lincolnshire
+</td>
+<td style="text-align:right;">
+36%
+</td>
+<td style="text-align:right;">
+-3.1
+</td>
+<td style="text-align:right;">
+-0.0
+</td>
+<td style="text-align:right;">
+10.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+King’s Oak Academy
+</td>
+<td style="text-align:left;">
+South Gloucestershire
+</td>
+<td style="text-align:right;">
+29%
+</td>
+<td style="text-align:right;">
+-0.6
+</td>
+<td style="text-align:right;">
+-2.6
+</td>
+<td style="text-align:right;">
+9.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bmat Stem Academy
+</td>
+<td style="text-align:left;">
+Essex
+</td>
+<td style="text-align:right;">
+28%
+</td>
+<td style="text-align:right;">
+-7.4
+</td>
+<td style="text-align:right;">
+-3.5
+</td>
+<td style="text-align:right;">
+11.9
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="sec-trust-method" class="level2">
+<h2 class="anchored" data-anchor-id="sec-trust-method">How these figures are made</h2>
+<p><code>R/35_trust_summary.R</code> writes <code>data/trust_aldridge_education.rds</code>; any trust can be run by name.</p>
+<ul>
+<li><strong>The schools</strong> are the trust’s open secondary schools in Get Information About Schools (June 2026). Its primary school has no KS4 results and is not included.</li>
+<li><strong>Value added</strong> is <a href="./method.html">Value Added v2.1</a>: Attainment 8 for each group against what the model expects for its intake, four years pooled and shrunk, with 95% intervals. Yearly figures are unshrunk. 2025/26 is provisional.</li>
+<li><strong>Expected Attainment 8</strong> is the model’s prediction for the school’s pupils in that year, with no school effect: intake, context, absence and place. The latest is 2024/25.</li>
+<li><strong>Absence against intake</strong> is from the site’s absence model (<a href="./absence_causes.html">what goes with absence</a>): each school’s overall absence against what its intake predicts, averaged over 2021/22 to 2024/25 (the value-added model’s years).</li>
+<li><strong>Look-alikes</strong> use the matching of <a href="./twins.html">Find a twin</a>: a weighted Gower-type distance over the characteristics listed above, each numeric gap in standard deviations capped at three, categories as match or not, weighted by the spread of each characteristic’s contribution in a regression of Attainment 8 on all of them. The age pupils join is added here, so that UTCs and studio schools are matched with schools like them.</li>
+<li><strong>Targets</strong> are <span class="math inline">\(\hat{A}_{2024/25} + \max(\text{VA}_{\text{own}}, \text{VA}_{\text{level}})\)</span>, where <span class="math inline">\(\hat{A}\)</span> is the expected Attainment 8 for the latest intake and the level is the school’s own four-year value added, the 75th percentile of its look-alikes’ value added, or England’s 90th percentile for the group.</li>
+<li><strong>What absence is worth</strong> uses the v2.1 elasticity of Attainment 8 on absence for each group, <span class="math inline">\(\varepsilon\)</span>: moving from absence <span class="math inline">\(a\)</span> to <span class="math inline">\(a'\)</span> changes Attainment 8 by <span class="math inline">\(A\left[(a'/a)^{\varepsilon} - 1\right]\)</span>, as on <a href="./method.html#sec-add-take">the area pages</a>.</li>
+<li><strong>Subject areas</strong> use Progress 8 by element (English, maths, EBacc, open) from the KS4 performance tables, averaged over the years DfE published it in 2021/22 to 2024/25. A point of Progress 8 in an element is a grade in each of its slots, so the gap to the look-alikes’ better quarter, times the element’s slots (2, 2, 3, 3), is Attainment 8 points. Slots filled are DfE’s average EBacc and open slots filled. These overlap with value added and with each other; they show where, not how much more.</li>
+<li><strong>Staffing</strong> uses DfE’s School Workforce in England, school level, 2021/22 to 2024/25 (<code>R/36_workforce.R</code>): teacher retention (the share of teachers in post who were in the same school a year later), average days of sickness absence per teacher, and pupils per qualified teacher. Their links with Value Added v2.1 across England are fitted together, so they do not double count, and are beyond intake and absence, which value added already allows for. A piece counts for a group only where its link is clear (|t| ≥ 2). Teaching assistants per teacher and leadership pay were left out because they mostly reflect who a school serves; the share of teachers taking any sickness was left out because it only means something given total days.</li>
+<li><strong>Marginal gains</strong> add attendance (through the absence elasticity) and the staffing pieces (through their joint link), each at the look-alikes’ better quarter. Adding is fair because the staffing links are beyond absence; it is still an association, and part of it runs the other way.</li>
+<li><strong>Schools to talk to</strong> are, for each lever, the three of the 25 schools most like the school that are best on that lever and whose value added for all pupils is at least England’s median, so each is doing well overall, not only on the one thing.</li>
+<li><strong>Limits.</strong> Targets assume next year’s intake is like the last. Value added is an association with what schools do, not a measure of teaching alone, and small cohorts swing.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

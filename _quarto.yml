@@ -19,6 +19,7 @@ project:
     - twins.qmd
     - simulator.qmd
     - independent.qmd
+    - trust_aldridge.qmd
     - areas/*.qmd
     - roadmap.qmd
   resources:
@@ -86,6 +87,10 @@ website:
         text: "Simulator"
       - href: independent.qmd
         text: "Independent schools"
+      - text: "Trusts"
+        menu:
+          - href: trust_aldridge.qmd
+            text: "Aldridge Education"
       - href: roadmap.qmd
         text: Roadmap
     right:

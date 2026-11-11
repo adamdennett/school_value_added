@@ -1,0 +1,340 @@
+---
+title: "Aldridge Education"
+subtitle: "The trust's secondary schools on Value Added v2.1: what they add, attendance, place, how each compares with schools like it, and targets that start from each school's intake."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+suppressPackageStartupMessages(library(data.table))
+TR <- readRDS(here::here("data", "trust_aldridge_education.rds"))
+V <- load_va()
+S <- copy(TR$schools); setorder(S, LANAME, SCHNAME)
+G3 <- c("all", "disadvantaged", "non_disadvantaged"); GL <- GROUP_LABELS[G3]
+short <- function(x) sub(" School$| Academy$| Community Academy$", "", sub("Aldridge Community Academy", "Aldridge", x))
+S[, sname := short(SCHNAME)]
+NM <- setNames(S$sname, S$URN)
+age <- function(lo, hi) sprintf("%d to %d", lo, hi)
+va <- TR$va[, sname := NM[as.character(URN)]]
+tg <- TR$targets[, sname := NM[as.character(URN)]]
+ab <- TR$absence[, sname := NM[as.character(URN)]]
+abs1 <- unique(ab[, .(URN, sname, abs_obs, abs_exp, abs_excess, tw_abs25)])
+n_sig_up <- va[group == "all" & lo > 0, .N]; n_sig_dn <- va[group == "all" & hi < 0, .N]
+CLUSTER <- function(la) fcase(la == "Brighton and Hove", "Brighton and Hove", la == "Blackburn with Darwen", "Darwen", la == "Haringey", "London", default = "Greater Manchester and Cheshire")
+S[, cluster := CLUSTER(LANAME)]
+S[, att8_4 := va[group == "all"][match(S$URN, URN), att8]]
+LV <- copy(TR$levers)[, sname := NM[as.character(URN)]]
+lv_top <- function(u, n = 3) LV[URN == u & kind == "Subject areas" & !is.na(worth) & worth > 0][order(-worth)][seq_len(min(n, .N))]
+LWR <- c(p8_eng = "English", p8_mat = "maths", p8_ebac = "the EBacc subjects", p8_open = "the open subjects")
+MG <- copy(TR$marginal)[, sname := NM[as.character(URN)]]
+WC <- TR$wf_coefs
+```
+
+::: {.callout-important}
+## In short
+
+- **`r nrow(S)` secondary schools** in four places: `r and_list(sprintf("%s (%s)", unique(S$cluster), sapply(unique(S$cluster), function(k) and_list(S[cluster == k, sname]))))`.
+- **Value added.** Over 2021/22 to 2024/25, `r n_sig_up` `r ifelse(n_sig_up == 1, "school adds", "schools add")` clearly more than their intakes predict for all pupils, and `r n_sig_dn` clearly less; the rest are within the margin of error. The strongest are `r and_list(va[group == "all"][order(-va)][1:2, sname])`.
+- **Attendance is the common thread.** Every school's absence is above what its intake predicts, by `r sprintf("%.1f", min(abs1$abs_excess))` to `r sprintf("%.1f", max(abs1$abs_excess))` points. Bringing it down to the level the intake predicts would, on the v2.1 model, be worth about `r sprintf("%.1f", min(ab[group == "disadvantaged", gain_exp]))` to `r sprintf("%.1f", max(ab[group == "disadvantaged", gain_exp]))` Attainment 8 points for disadvantaged pupils.
+- **Targets that start from the intake.** For each school and group the page sets three: keep the value the school already adds, match the better quarter of the ten schools in England most like it, and reach England's top tenth. Each is the model's expected Attainment 8 for the latest intake plus that much value added. See [targets](#sec-targets).
+- **Where the points are, and who to ask.** For each school the page ranks the things it can work on (attendance, English, maths, the EBacc and open subjects, filling the slots) by what matching the better of schools like it would be worth, and names similar schools doing well on each, to talk to. See [levers](#sec-levers).
+- Every figure is from published data. The method is [at the end](#sec-trust-method) and in [the methodology](method.qmd).
+:::
+
+## The schools {#sec-schools}
+
+```{r}
+#| label: fig-trust-map
+#| fig-cap: "The trust's secondary schools, coloured by Value Added v2.1 for all pupils (purple below expectation, green above). Click a school for its figures."
+pal <- leaflet::colorNumeric(c("#762a83", "#c2a5cf", "#f7f7f7", "#a6dba0", "#1b7837"), domain = c(-6, 6))
+pop <- sprintf("<b>%s</b><br>%s<br>Ages %s, %s pupils<br>Attainment 8, four years: %.1f<br>Value added, all pupils: %+.1f (%+.1f to %+.1f)<br>Absence against intake: %+.1f points<br>Ofsted: %s",
+               S$SCHNAME, S$LANAME, age(S$low, S$high), format(S$pupils, big.mark = ","), S$att8_4, S$va_shrunk_all, S$va_lo_all, S$va_hi_all,
+               abs1$abs_excess[match(S$URN, abs1$URN)], coalesce(S$ofsted_combined, "not yet"))
+leaflet::leaflet(S, height = 520, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
+  leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
+  leaflet::addCircleMarkers(~lon, ~lat, radius = 9, color = INK, weight = 1.5, fillColor = ~pal(pmax(pmin(va_shrunk_all, 6), -6)), fillOpacity = 0.95, popup = pop, label = ~sname) |>
+  leaflet::addLabelOnlyMarkers(~lon, ~lat, label = ~sname, labelOptions = leaflet::labelOptions(noHide = TRUE, direction = "right", textOnly = TRUE, offset = c(10, 0), style = list(color = INK, "font-size" = "11px")))
+```
+
+```{r}
+#| label: tbl-trust-schools
+#| tbl-cap: "The schools. Attainment 8 and value added are four-year figures, 2021/22 to 2024/25, against England, with 95% intervals; absence is against what the school's intake predicts, averaged over the same four years (percentage points). FSM is free school meals."
+S[, .(School = SCHNAME, Area = LANAME, Ages = age(low, high), Pupils = format(pupils, big.mark = ","), FSM = sprintf("%.0f%%", fsm), `Attainment 8` = sprintf("%.1f", att8_4),
+      `All pupils` = va_txt(va_shrunk_all, va_lo_all, va_hi_all), Disadvantaged = va_txt(va_shrunk_disadvantaged, va_lo_disadvantaged, va_hi_disadvantaged),
+      `Non-disadv.` = va_txt(va_shrunk_non_disadvantaged, va_lo_non_disadvantaged, va_hi_non_disadvantaged),
+      `Absence vs intake` = sprintf("%+.1f", abs1$abs_excess[match(URN, abs1$URN)]), Ofsted = coalesce(ofsted_combined, "–"))] |>
+  kt(align = "lllrrrrrrrl") |> kableExtra::add_header_above(c(" " = 6, "Value added (Attainment 8 points)" = 3, " " = 2))
+```
+
+`r c("No", "One", "Two", "Three", "Four")[S[low >= 13, .N] + 1]` of the schools take pupils from 13 or 14 (`r and_list(S[low >= 13, sname])`). Their value added is measured the same way, against the KS2 results of the pupils they teach, but they are compared with each other and with schools like them, not with 11 to 16 schools, in [the look-alikes](#sec-twins).
+
+## Value added {#sec-va}
+
+```{r}
+#| label: fig-trust-va
+#| fig-cap: !expr paste("Value Added v2.1 for each school and group, 2021/22 to 2024/25, in Attainment 8 points against England.", CI_NOTE)
+#| fig-height: 5
+va[order(match(URN, S$URN))][, .(row = sname, group = unname(GL[group]), b = va, se = (hi - lo) / 3.92)] |> ci_plot("Attainment 8 points against what the intake predicts")
+```
+
+```{r}
+#| label: fig-trust-years
+#| fig-cap: !expr paste("Value added year by year for each school and group (unshrunk, so single years swing more than the four-year figure). The last point, hollow, is 2025/26.", PROV_NOTE)
+#| fig-height: 6.4
+yy <- TR$years[, `:=`(sname = NM[as.character(URN)], g = factor(GL[group], GL), prov = coalesce(prov, FALSE))]
+ggplot(yy, aes(year, va, colour = g, group = g)) + geom_hline(yintercept = 0, colour = GREY) +
+  geom_line(data = yy[prov == FALSE], linewidth = 0.8) + geom_point(aes(shape = prov), size = 2, fill = "white") +
+  scale_shape_manual(values = c(`FALSE` = 16, `TRUE` = 21), guide = "none") + scale_colour_manual(values = GROUP_COL[GL], name = NULL) +
+  facet_wrap(~sname, ncol = 4) + labs(x = NULL, y = "Value added (Attainment 8 points)") + theme_note() +
+  theme(legend.position = "top", axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+```
+
+```{r}
+#| label: fig-trust-actual-expected
+#| fig-cap: "Attainment 8 for all pupils each year, against what the model expects for that year's intake. Where the purple line is above the grey, the school added value that year."
+#| fig-height: 5.6
+ae <- TR$years[group == "all" & prov == FALSE][, sname := NM[as.character(URN)]]
+ggplot(ae, aes(year, group = 1)) + geom_ribbon(aes(ymin = pmin(obs, exp), ymax = pmax(obs, exp)), fill = PPURPLE) +
+  geom_line(aes(y = exp, colour = "Expected for the intake"), linewidth = 0.8, linetype = "22") + geom_line(aes(y = obs, colour = "Actual"), linewidth = 0.9) +
+  geom_point(aes(y = obs, colour = "Actual"), size = 1.8) + scale_colour_manual(values = c(Actual = BPURPLE, `Expected for the intake` = GREY), name = NULL) +
+  facet_wrap(~sname, ncol = 4) + labs(x = NULL, y = "Attainment 8, all pupils") + theme_note() + theme(legend.position = "top", axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+```
+
+## Value added and attendance {#sec-quadrant}
+
+```{r}
+#| label: fig-trust-quadrant
+#| fig-cap: "Every secondary school in England (grey) on the two questions: across, absence against what the intake predicts (percentage points, right is worse); up, Value Added v2.1 for all pupils. The trust's schools are labelled."
+#| fig-height: 5.6
+E <- TR$eng[group == "all" & !is.na(abs_excess)]; Tq <- merge(S[, .(URN, sname)], E, by = "URN")
+ggplot(E, aes(abs_excess, va)) + geom_hline(yintercept = 0, colour = GREY) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_point(colour = LIGHT, size = 0.9, alpha = 0.7) + geom_point(data = Tq, colour = BPURPLE, size = 3) +
+  ggrepel::geom_text_repel(data = Tq, aes(label = sname), size = 3.2, colour = INK, min.segment.length = 0, box.padding = 0.4) +
+  annotate("text", x = c(-4, max(4, max(Tq$abs_excess))), y = c(9, 9), label = c("Better attendance than the intake predicts", "Worse attendance"), colour = GREY, size = 3, hjust = c(0, 1)) +
+  coord_cartesian(xlim = c(-4.5, max(4.5, max(Tq$abs_excess) + 0.6)), ylim = c(-12, 10)) + labs(x = "Absence against what the intake predicts (points)", y = "Value added, all pupils (Attainment 8 points)") + theme_note()
+```
+
+**Every school sits to the right of the line**: its pupils miss more school than pupils with similar characteristics elsewhere. Several still add value, which says the teaching is doing well despite attendance, not because of it. Absence is part of the model, so value added already allows for it; the [targets](#sec-targets) show what bringing it down would be worth on top.
+
+## Intakes {#sec-intake}
+
+```{r}
+#| label: fig-trust-intake
+#| fig-cap: "The trust's schools (purple) against every secondary school in England (shaded: the middle half of England's schools; line: the median), on the intake characteristics in the v2.1 model."
+#| fig-height: 5
+IV <- c(fsm = "Free school meals (%)", ks2_c = "Prior attainment at KS2 (centred)", eal = "English as an additional language (%)", sen_support = "Special needs support (%)", mobile = "Joined mid-year (%)", l4 = "Adults with degrees nearby (%)")
+W <- as.data.table(va_wide(V))
+long <- rbindlist(lapply(names(IV), function(v) data.table(var = IV[[v]], val = W[[v]], URN = W$URN)))
+lt <- long[URN %in% S$URN][, sname := NM[as.character(URN)]]
+qs <- long[, .(q25 = quantile(val, 0.25, na.rm = TRUE), q50 = median(val, na.rm = TRUE), q75 = quantile(val, 0.75, na.rm = TRUE)), by = var]
+lt[, sname := factor(sname, rev(S$sname))]
+ggplot(lt, aes(val, sname)) + geom_rect(data = qs, aes(xmin = q25, xmax = q75, ymin = -Inf, ymax = Inf), inherit.aes = FALSE, fill = PPURPLE) +
+  geom_vline(data = qs, aes(xintercept = q50), colour = GREY, linewidth = 0.6) + geom_point(colour = BPURPLE, size = 2.6) +
+  facet_wrap(~factor(var, IV), scales = "free_x", ncol = 3, labeller = label_wrap_gen(28)) + labs(x = NULL, y = NULL) + theme_note() + theme(strip.text = element_text(face = "bold", size = 9))
+```
+
+These are the intakes the targets start from. Most of the trust's schools have far more pupils on free school meals than the typical English school, and several have lower prior attainment. Value added already allows for all of this: it is measured against what pupils like these achieve elsewhere.
+
+## What explains the results {#sec-explains}
+
+```{r}
+#| label: fig-trust-decomp
+#| fig-cap: "Why the trust's average Attainment 8 differs from England's, by factor, for all pupils, disadvantaged and non-disadvantaged pupils: each bar is one factor's contribution on the v2.1 model, and they sum to the gap. School is the schools' own value added."
+#| fig-height: 4.8
+fig_decomp(decompose(V, S$URN, "Aldridge Education"), title = "What separates the trust's results from England's")
+```
+
+## Place {#sec-place}
+
+```{r}
+#| label: fig-trust-place
+#| fig-cap: !expr paste("The local authority effect on the v2.1 model for each authority the trust works in. How much more or less pupils there achieve than pupils with the same characteristics elsewhere, in % of Attainment 8.", CI_NOTE)
+#| fig-height: 3.6
+TR$la_effects[, .(row = LANAME, group = unname(GL[group]), b = 100 * effect, se = 100 * se)] |> ci_plot("% of Attainment 8")
+```
+
+Place matters, and it is not in the schools' gift. Where the authority effect is negative, schools there start behind; where it is positive, part of a school's results reflects its area. For Brighton and Hove, the [geographical effects page](bh_effect.qmd) shows the city's effect is largely one of attendance, and [the distance page](distance.qmd#sec-la-journeys) that children in the city's most deprived neighbourhoods face the longest journeys to school of any mostly urban authority in England. Brighton Aldridge Community Academy's catchment, in the north-east of the city, includes some of its most deprived neighbourhoods.
+
+## Targets {#sec-targets}
+
+A target that ignores intake rewards schools with advantaged pupils and punishes the rest. These start from what the v2.1 model expects for each school's own pupils, and add value at three levels:
+
+- **Keep what the school adds:** the latest intake's expected Attainment 8, plus the school's own four-year value added.
+- **Match the better of schools like it:** plus the value added of the upper quartile of the ten schools in England most like it on intake and setting ([below](#sec-twins)), or its own if higher.
+- **Reach England's top tenth:** plus the value added of England's top tenth of schools for that group (`r sprintf("%+.1f", TR$pct[group == "all", p90])` for all pupils), or its own if higher.
+
+```{r}
+#| label: fig-trust-targets
+#| fig-cap: "Attainment 8 for each school and group: the four-year average (black), what the model expects for the latest intake (grey ring), and the three targets (purple, light to dark). The bar spans expected to the top-tenth target. Disadvantaged cohorts are small in some schools, so their figures move more."
+#| fig-height: 7.4
+tl <- tg[, .(sname, g = factor(GL[group], GL), att8, exp_latest, t_own, t_twin, t_top)]
+tl[, sname := factor(sname, rev(S$sname))]
+tp <- melt(tl, id.vars = c("sname", "g", "exp_latest", "t_top"), measure.vars = c("att8", "t_own", "t_twin", "t_top"))
+tp[, variable := factor(variable, c("att8", "t_own", "t_twin", "t_top"), c("Four-year average", "Keep what it adds", "Match the better of schools like it", "England's top tenth"))]
+ggplot(tl, aes(y = sname)) + geom_segment(aes(x = exp_latest, xend = t_top, yend = sname), colour = LIGHT, linewidth = 2.4) +
+  geom_point(aes(x = exp_latest), shape = 21, fill = "white", colour = GREY, size = 3, stroke = 1.1) +
+  geom_point(data = tp, aes(x = value, colour = variable, shape = variable), size = 2.6) +
+  scale_colour_manual(values = c(`Four-year average` = INK, `Keep what it adds` = LPURPLE, `Match the better of schools like it` = MPURPLE, `England's top tenth` = DPURPLE), name = NULL) +
+  scale_shape_manual(values = c(`Four-year average` = 15, `Keep what it adds` = 16, `Match the better of schools like it` = 16, `England's top tenth` = 16), name = NULL) +
+  facet_wrap(~g, ncol = 3) + labs(x = "Attainment 8", y = NULL) + theme_note() + theme(legend.position = "top") + guides(colour = guide_legend(nrow = 2))
+```
+
+```{r}
+#| label: tbl-trust-targets
+#| tbl-cap: "Attainment 8 targets for each school and group, against the four-year average. Expected is for the latest intake (2024/25) at the school's current absence. The year-to-year spread is the standard deviation of the school's own yearly value added: a target within about that much of the expected is inside ordinary variation."
+tg[order(match(URN, S$URN), match(group, G3))][, .(School = sname, Group = unname(GL[group]), `Four-year average` = sprintf("%.1f", att8), `Expected, latest intake` = sprintf("%.1f", exp_latest),
+  `Keep what it adds` = sprintf("%.1f", t_own), `Better of schools like it` = sprintf("%.1f", t_twin), `England's top tenth` = sprintf("%.1f", t_top), `Year-to-year spread` = sprintf("±%.1f", va_sd))] |>
+  kt(align = "llrrrrrr") |> kableExtra::collapse_rows(columns = 1, valign = "top")
+```
+
+**Attendance targets come first.** Expected Attainment 8 is for each school's current absence, which in every case is above what the intake predicts. Bringing absence down raises what can be expected, before any change in teaching.
+
+```{r}
+#| label: fig-trust-absence
+#| fig-cap: "Absence, 2021/22 to 2024/25 on average: actual (purple), what the intake predicts (grey ring), and the best quarter of the ten schools most like it (dark ring). Labels are what bringing absence down to the intake's level would be worth in Attainment 8 for disadvantaged pupils, on the v2.1 model."
+#| fig-height: 3.8
+a1 <- copy(abs1)[, sname := factor(sname, rev(S$sname))]; a1 <- merge(a1, ab[group == "disadvantaged", .(URN, gain_exp)], by = "URN")
+ggplot(a1, aes(y = sname)) + geom_segment(aes(x = abs_exp, xend = abs_obs, yend = sname), colour = LIGHT, linewidth = 2.4) +
+  geom_point(aes(x = abs_exp), shape = 21, fill = "white", colour = GREY, size = 3.2, stroke = 1.1) + geom_point(aes(x = tw_abs25), shape = 21, fill = "white", colour = DPURPLE, size = 3.2, stroke = 1.1) +
+  geom_point(aes(x = abs_obs), colour = BPURPLE, size = 3.2) + geom_text(aes(x = abs_obs, label = sprintf("+%.1f", gain_exp)), hjust = -0.5, size = 3, colour = INK) +
+  scale_x_continuous(limits = c(6, NA)) + labs(x = "Overall absence, % of sessions", y = NULL) + theme_note()
+```
+
+```{r}
+#| label: tbl-trust-absence
+#| tbl-cap: "Absence targets and what they are worth. Absence is overall absence, % of sessions, averaged over 2021/22 to 2024/25. Worth is the rise in Attainment 8 if absence fell to that level, on the v2.1 absence elasticity for each group, at the school's current Attainment 8."
+dcast(ab, URN + sname + abs_obs + abs_exp + tw_abs25 ~ group, value.var = c("gain_exp", "gain_tw"))[order(match(URN, S$URN))][, .(School = sname, Now = sprintf("%.1f", abs_obs),
+  `Intake predicts` = sprintf("%.1f", abs_exp), `Best of schools like it` = sprintf("%.1f", tw_abs25),
+  `All` = sprintf("+%.1f", gain_exp_all), `Disadv.` = sprintf("+%.1f", gain_exp_disadvantaged), `Non-disadv.` = sprintf("+%.1f", gain_exp_non_disadvantaged),
+  `All ` = sprintf("+%.1f", gain_tw_all), `Disadv. ` = sprintf("+%.1f", gain_tw_disadvantaged), `Non-disadv. ` = sprintf("+%.1f", gain_tw_non_disadvantaged))] |>
+  kt(align = "lrrrrrrrrr") |> kableExtra::add_header_above(c(" " = 4, "Worth, at the intake's level" = 3, "Worth, at the best of schools like it" = 3))
+```
+
+**How to use these.** They are ranges for a conversation, not verdicts. A school whose expected and "keep" targets differ by less than its year-to-year spread is doing what it does, and a year above or below says little. The "schools like it" target is the most useful: it is set by real schools with intakes like this one's. Disadvantaged cohorts are small in several schools, so their targets should be read over two or three years.
+
+## Where the points are, and who to ask {#sec-levers}
+
+A target says where to aim; this says where the points are likely to come from. For each school, each of the things below is compared with the ten schools in England most like it, and put into Attainment 8 points as what it would be worth to match the better quarter of them. These are things a school can work on. They are not the only ones, and how to work on them is for the school: the point is to find schools with similar pupils that are doing well on the same thing, and that might be worth a conversation.
+
+- **Attendance**: overall absence, worth Attainment 8 through the v2.1 absence elasticity; persistent absence is shown beside it as part of the same lever.
+- **Subject areas**: Progress 8 in English, maths, the three EBacc slots and the three open slots, averaged over the years DfE published it. A point of Progress 8 is a grade in each slot, so the gap times the slots is Attainment 8 points.
+- **Filling the slots**: how many of the three EBacc and three open slots pupils fill. An empty slot scores nothing, so a gap here is worth looking at before subject progress.
+
+```{r}
+#| label: fig-trust-levers
+#| fig-cap: "For each school, what matching the better quarter of the ten schools most like it would be worth, lever by lever, in Attainment 8 points for all pupils. Levers where the school already does as well are not shown. The gains overlap (better attendance also lifts subject progress), so they should not be added up."
+#| fig-height: 6.4
+lp <- LV[!is.na(worth) & worth > 0][, sname := factor(sname, S$sname)]
+lp[, label := factor(label, rev(c("Attendance: overall absence", "English", "Maths", "EBacc subjects", "Open subjects")))]
+ggplot(lp, aes(worth, label, fill = kind)) + geom_col(width = 0.65) + geom_text(aes(label = sprintf("%.1f", worth)), hjust = -0.2, size = 3, colour = INK) +
+  scale_fill_manual(values = c(Attendance = BPURPLE, `Subject areas` = BLUE), name = NULL) + scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
+  facet_wrap(~sname, ncol = 4) + labs(x = "Attainment 8 points", y = NULL) + theme_note() + theme(legend.position = "top", strip.text = element_text(face = "bold", size = 9))
+```
+
+```{r}
+#| label: fig-trust-slots
+#| fig-cap: "EBacc and open slots filled on average (out of three each), each school (purple) against the ten schools most like it (grey). An unfilled slot scores nothing."
+#| fig-height: 3.4
+sl <- LV[lever %in% c("ebac_fill", "open_fill")][, `:=`(sname = factor(sname, rev(S$sname)), what = ifelse(lever == "ebac_fill", "EBacc slots filled", "Open slots filled"))]
+ggplot(sl, aes(own, sname)) + geom_segment(aes(x = twin_med, xend = twin_better, yend = sname), colour = LIGHT, linewidth = 3) +
+  geom_point(aes(x = twin_med), shape = 21, fill = "white", colour = GREY, size = 2.6) + geom_point(colour = BPURPLE, size = 3) +
+  facet_wrap(~what) + scale_x_continuous(limits = c(NA, 3)) + labs(x = "Slots filled, of 3 (grey ring: look-alikes' median; bar to their better quarter)", y = NULL) + theme_note()
+```
+
+### Marginal gains {#sec-marginal}
+
+No single one of these transforms results. Like the marginal gains British Cycling made famous, the case is that several small improvements, each with evidence behind it, add up. Here attendance is joined by three things about a school's staff that go with its value added across England, beyond what its intake and its pupils' absence already explain: how many teachers stay from one year to the next, how many days teachers lose to sickness, and how many pupils there are for each qualified teacher.
+
+```{r}
+#| label: fig-trust-marginal
+#| fig-cap: "Marginal gains: what matching the better quarter of the ten schools most like it would be worth, piece by piece, for all pupils and for disadvantaged pupils, in Attainment 8 points. Attendance is through the v2.1 absence elasticity; the staffing pieces through their joint link with value added across England, counted for a group only where that link is clear. The total is at the end of each bar."
+#| fig-height: 5.6
+mp <- MG[!is.na(worth) & worth > 0][, `:=`(sname = factor(sname, rev(S$sname)), g = factor(GL[group], GL[1:2]), label = factor(label, rev(c("Attendance: overall absence", "Teacher sickness (days per teacher)", "Teacher retention (% staying a year)", "Pupils per qualified teacher"))))]
+tot <- mp[, .(worth = sum(worth)), by = .(sname, g)]
+ggplot(mp, aes(worth, sname, fill = label)) + geom_col(width = 0.65, colour = "white", linewidth = 0.3) +
+  geom_text(data = tot, aes(worth, sname, label = sprintf("%.1f", worth)), inherit.aes = FALSE, hjust = -0.25, size = 3, colour = INK) +
+  scale_fill_manual(values = c(`Attendance: overall absence` = BPURPLE, `Teacher sickness (days per teacher)` = BLUE, `Teacher retention (% staying a year)` = MPURPLE, `Pupils per qualified teacher` = HERITAGE), name = NULL, breaks = rev(levels(mp$label))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) + facet_wrap(~g) + labs(x = "Attainment 8 points", y = NULL) + theme_note() + theme(legend.position = "top") + guides(fill = guide_legend(nrow = 2))
+```
+
+```{r}
+#| label: tbl-trust-wf-links
+#| tbl-cap: "How each staffing measure goes with Value Added v2.1 across England's secondary schools, 2021/22 to 2024/25, fitted together, beyond intake and absence. Attainment 8 points for each unit, with t values; a dash where the link is not clear for that group. School Workforce in England."
+wl <- dcast(WC[, .(lever, group, v = ifelse(abs(t) >= 2, sprintf("%+.3f (t %.1f)", b, t), sprintf("– (t %.1f)", t)))], lever ~ group, value.var = "v")
+wl[match(c("sick_days", "retention", "ptr"), lever)][, .(Measure = c("Teacher sickness, per day per teacher", "Teacher retention, per percentage point", "Pupils per qualified teacher, per pupil"), `All pupils` = all, Disadvantaged = disadvantaged, `Non-disadvantaged` = non_disadvantaged)] |> kt(align = "lrrr")
+```
+
+These are associations, and the honest reading is modest. A well-run school both keeps its teachers and gets good results, so part of the link runs the other way. But they are consistent across England's schools, they are beyond what the intake explains, and they are things a trust can work on: staff wellbeing and sickness, keeping teachers, and staffing levels. Teacher sickness has the clearest link of the three, for every group.
+
+**First the constraint, then the margins.** Marginal gains, from British Cycling's "aggregation of marginal gains", is a management philosophy more than a theory: many small improvements, none decisive alone, adding up. It has a well-known limit. In operations research, the theory of constraints holds that a system moves at the pace of its tightest bottleneck, and that refining everything else first achieves little (Goldratt and Cox, *The Goal*, 1984); continuous small improvement, or *kaizen*, works best once that bottleneck is being dealt with (Imai, *Kaizen*, 1986). Here the bottleneck is clear. `r { w <- MG[group == "all" & !is.na(worth) & worth > 0, .(top = label[which.max(worth)]), by = URN]; sprintf("For %d of the %d schools", sum(w$top == "Attendance: overall absence"), nrow(S)) }`, attendance is the largest single piece in the chart above, and it sits beside every other lever: pupils who are not in school cannot gain from better teaching, staffing or curriculum. So the order these pages suggest is attendance first, with the staffing and subject gains as the margins that add up around it.
+
+## Schools like these {#sec-twins}
+
+The ten schools in England most like each one, on free school meals, prior attainment, English as an additional language, ethnicity, mobility, sex, special needs, neighbourhood education, size, kind of place, admissions, sixth form, religious character and the age pupils join. Each characteristic is weighted by how much it moves Attainment 8, as on [Find a twin](twins.qmd).
+
+```{r}
+#| label: fig-trust-twins
+#| fig-cap: "Each school (purple) against its ten closest look-alikes (grey), Value Added v2.1 for all pupils against absence, 2021/22 to 2024/25."
+#| fig-height: 6.4
+tw <- copy(TR$twins)[, sname := NM[as.character(URN)]]
+me <- merge(S[, .(URN, sname, va = va_shrunk_all)], abs1[, .(URN, abs_obs)], by = "URN")
+ggplot(tw, aes(abs_obs, va_all)) + geom_hline(yintercept = 0, colour = GREY) + geom_point(colour = GREY, size = 1.8, alpha = 0.8) +
+  geom_point(data = me, aes(abs_obs, va), colour = BPURPLE, size = 3.2) + facet_wrap(~sname, ncol = 4, labeller = label_wrap_gen(22)) +
+  labs(x = "Absence, % of sessions", y = "Value added, all pupils") + theme_note()
+```
+
+## School by school {#sec-by-school}
+
+```{r}
+#| results: asis
+#| echo: false
+for (u in S$URN) {
+  s <- S[URN == u]; t3 <- tg[URN == u]; a <- abs1[URN == u]; tw5 <- TR$twins[URN == u][order(dist)][1:6]
+  cat("\n### ", s$sname, "\n\n", sep = "")
+  cat(sprintf("**%s**, %s. Ages %s, %s pupils, %.0f%% on free school meals. Ofsted: %s.\n\n", s$SCHNAME, s$LANAME, age(s$low, s$high), format(s$pupils, big.mark = ","), s$fsm, coalesce(s$ofsted_combined, "not yet inspected under the current framework")))
+  cat(sprintf("- **Value added, four years:** %s for all pupils, %s for disadvantaged and %s for non-disadvantaged pupils.\n",
+              va_txt(s$va_shrunk_all, s$va_lo_all, s$va_hi_all), va_txt(s$va_shrunk_disadvantaged, s$va_lo_disadvantaged, s$va_hi_disadvantaged), va_txt(s$va_shrunk_non_disadvantaged, s$va_lo_non_disadvantaged, s$va_hi_non_disadvantaged)))
+  cat(sprintf("- **Attendance:** absence %.1f%% against %.1f%% predicted for its intake; the best quarter of schools like it manage %.1f%%.\n", a$abs_obs, a$abs_exp, a$tw_abs25))
+  cat(sprintf("- **Targets, all pupils:** expected %.1f for the latest intake; keep %.1f; schools like it %.1f; England's top tenth %.1f (four-year average %.1f).\n",
+              t3[group == "all", exp_latest], t3[group == "all", t_own], t3[group == "all", t_twin], t3[group == "all", t_top], t3[group == "all", att8]))
+  cat(sprintf("- **Disadvantaged pupils:** expected %.1f; schools like it %.1f; top tenth %.1f.\n\n", t3[group == "disadvantaged", exp_latest], t3[group == "disadvantaged", t_twin], t3[group == "disadvantaged", t_top]))
+  tl3 <- lv_top(u)
+  if (nrow(tl3)) {
+    cat("**Subject areas, and who to ask.** Against the ten schools most like it, the biggest gains in progress are in ", and_list(sprintf("%s (about %.1f points)", LWR[tl3$lever], tl3$worth)), ". Schools with similar pupils that do well on these, and add value overall, might be worth a conversation:\n\n", sep = "")
+    lt3 <- LV[URN == u & (lever %in% tl3$lever | (lever %in% c("ebac_fill", "open_fill") & !is.na(gap) & gap > 0.05))][order(match(lever, c(tl3$lever, "ebac_fill", "open_fill")))]
+    fm <- function(v, x) ifelse(v %in% c("abs_obs", "persistent"), sprintf("%.1f%%", x), ifelse(v %in% c("ebac_fill", "open_fill"), sprintf("%.2f", x), sprintf("%+.2f", x)))
+    cat(as.character(lt3[, .(Lever = label, `This school` = fm(lever, own), `Schools like it` = fm(lever, twin_med), `Their better quarter` = fm(lever, twin_better),
+      `Worth (Att8)` = ifelse(is.na(worth), "–", sprintf("+%.1f", worth)), `Schools to talk to` = ex_names)] |> kt(align = "lrrrrl")))
+    cat("\n\n")
+  }
+  mg1 <- MG[URN == u & group == "all"]; mgd <- MG[URN == u & group == "disadvantaged"]
+  wfe <- TR$wf_examples[URN == u]; abe <- LV[URN == u & lever == "abs_obs", ex_names]
+  fmv <- function(v, x) ifelse(v %in% c("abs_obs", "persistent"), sprintf("%.1f%%", x), ifelse(v == "retention", sprintf("%.0f%%", x), sprintf("%.1f", x)))
+  mt <- rbind(mg1, data.table(lever = "persistent", label = "Attendance: persistent absence (part of attendance)", own = LV[URN == u & lever == "persistent", own], target = LV[URN == u & lever == "persistent", twin_better], worth = NA_real_), fill = TRUE)[order(match(lever, c("abs_obs", "persistent", "sick_days", "retention", "ptr")))][, .(Lever = label, Now = fmv(lever, own), `Schools like it, better quarter` = fmv(lever, target), `Worth, all` = ifelse(is.na(worth) | worth <= 0, "–", sprintf("+%.1f", worth)),
+               `Worth, disadvantaged` = { w <- mgd$worth[match(lever, mgd$lever)]; ifelse(is.na(w) | w <= 0, "–", sprintf("+%.1f", w)) },
+               `Schools to talk to` = ifelse(lever == "abs_obs", abe, ifelse(lever == "persistent", LV[URN == u & lever == "persistent", ex_names], wfe$ex_names[match(lever, wfe$lever)])))]
+  cat(sprintf("**Marginal gains.** Attendance and staffing together could be worth about %.1f Attainment 8 points for all pupils and %.1f for disadvantaged pupils, if the school matched the better quarter of schools like it on each:\n\n",
+              sum(pmax(mg1$worth, 0), na.rm = TRUE), sum(pmax(mgd$worth, 0), na.rm = TRUE)))
+  cat(as.character(mt |> kt(align = "lrrrrl"))); cat("\n\n")
+  cat("Its closest look-alikes:\n\n")
+  cat(as.character(tw5[, .(School = twin_name, Area = twin_la, FSM = sprintf("%.0f%%", fsm), `Value added, all` = sprintf("%+.1f", va_all), `Disadvantaged` = sprintf("%+.1f", va_dis), Absence = sprintf("%.1f", abs_obs))] |> kt(align = "llrrrr")))
+  cat("\n\n")
+}
+```
+
+## How these figures are made {#sec-trust-method}
+
+`R/35_trust_summary.R` writes `data/trust_aldridge_education.rds`; any trust can be run by name.
+
+- **The schools** are the trust's open secondary schools in Get Information About Schools (June 2026). Its primary school has no KS4 results and is not included.
+- **Value added** is [Value Added v2.1](method.qmd): Attainment 8 for each group against what the model expects for its intake, four years pooled and shrunk, with 95% intervals. Yearly figures are unshrunk. 2025/26 is provisional.
+- **Expected Attainment 8** is the model's prediction for the school's pupils in that year, with no school effect: intake, context, absence and place. The latest is 2024/25.
+- **Absence against intake** is from the site's absence model ([what goes with absence](absence_causes.qmd)): each school's overall absence against what its intake predicts, averaged over 2021/22 to 2024/25 (the value-added model's years).
+- **Look-alikes** use the matching of [Find a twin](twins.qmd): a weighted Gower-type distance over the characteristics listed above, each numeric gap in standard deviations capped at three, categories as match or not, weighted by the spread of each characteristic's contribution in a regression of Attainment 8 on all of them. The age pupils join is added here, so that UTCs and studio schools are matched with schools like them.
+- **Targets** are $\hat{A}_{2024/25} + \max(\text{VA}_{\text{own}}, \text{VA}_{\text{level}})$, where $\hat{A}$ is the expected Attainment 8 for the latest intake and the level is the school's own four-year value added, the 75th percentile of its look-alikes' value added, or England's 90th percentile for the group.
+- **What absence is worth** uses the v2.1 elasticity of Attainment 8 on absence for each group, $\varepsilon$: moving from absence $a$ to $a'$ changes Attainment 8 by $A\left[(a'/a)^{\varepsilon} - 1\right]$, as on [the area pages](method.qmd#sec-add-take).
+- **Subject areas** use Progress 8 by element (English, maths, EBacc, open) from the KS4 performance tables, averaged over the years DfE published it in 2021/22 to 2024/25. A point of Progress 8 in an element is a grade in each of its slots, so the gap to the look-alikes' better quarter, times the element's slots (2, 2, 3, 3), is Attainment 8 points. Slots filled are DfE's average EBacc and open slots filled. These overlap with value added and with each other; they show where, not how much more.
+- **Staffing** uses DfE's School Workforce in England, school level, 2021/22 to 2024/25 (`R/36_workforce.R`): teacher retention (the share of teachers in post who were in the same school a year later), average days of sickness absence per teacher, and pupils per qualified teacher. Their links with Value Added v2.1 across England are fitted together, so they do not double count, and are beyond intake and absence, which value added already allows for. A piece counts for a group only where its link is clear (|t| ≥ 2). Teaching assistants per teacher and leadership pay were left out because they mostly reflect who a school serves; the share of teachers taking any sickness was left out because it only means something given total days.
+- **Marginal gains** add attendance (through the absence elasticity) and the staffing pieces (through their joint link), each at the look-alikes' better quarter. Adding is fair because the staffing links are beyond absence; it is still an association, and part of it runs the other way.
+- **Schools to talk to** are, for each lever, the three of the 25 schools most like the school that are best on that lever and whose value added for all pupils is at least England's median, so each is doing well overall, not only on the one thing.
+- **Limits.** Targets assume next year's intake is like the last. Value added is an association with what schools do, not a measure of teaching alone, and small cohorts swing.

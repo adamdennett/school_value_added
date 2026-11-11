@@ -195,6 +195,11 @@ subtitle: "What v2.1 does now, and what comes next."
       Neighbourhood by neighbourhood: the 2024 map lengthened journeys from
       Whitehawk by about three minutes, more for its disadvantaged children,
       while the city average barely moved.
+- [x] **[A trust view: Aldridge Education](trust_aldridge.qmd).** The
+      trust's eight secondary schools on value added, attendance, intake and
+      place, with targets that start from each school's intake, the levers
+      most likely to help (attendance, subject areas, staffing), and similar
+      schools doing well on each to talk to. Any trust can be run by name.
 - [ ] **Rail, Metro and trams.** Timetables beyond the Bus Open Data Service,
       for London and the large conurbations.
 - [ ] **School bells.** Published start times for each school, in place of the
