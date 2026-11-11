@@ -1496,6 +1496,41 @@ $\varepsilon$ is the Value Added v2.1 elasticity of Attainment 8 on absence for 
 
 **The GCSE results themselves do not show it.** Modelled directly, an authority's Attainment 8 for disadvantaged pupils has no clear link with distance once every control is in: `r sprintf("%+.1f", gch("dis", "All 109", "direct"))` points per kilometre, with an interval from `r sprintf("%+.1f", gch("dis", "All 109", "direct") - 1.96 * gch("dis", "All 109", "se_direct"))` to `r sprintf("%+.1f", gch("dis", "All 109", "direct") + 1.96 * gch("dis", "All 109", "se_direct"))`, and `r sprintf("%+.1f", gch("dis", "Without London", "direct"))` outside London. With fewer controls it is negative, but for non-disadvantaged pupils too, which points to the kind of area. Between schools within authorities there is no link with distance either way, for absence or for results. The interval is wide enough to include the chain in most versions, but outside London the chain falls just outside it. So the chain is an "if": *if* the extra absence is caused by the journey, and *if* each point of it costs what it appears to, this is what distance would cost. It is not a measured effect on results, and it may be an overstatement.
 
+**The link does not flatten with distance.** A straight line assumes each extra kilometre matters as much as the last. Fitted instead with distance in bands, outside London, where authorities spread from about 0.7 to 1.6 km, absence is much the same from 0.8 to 1.1 km and then higher, most of all for disadvantaged pupils, and lower in the few authorities under 0.8 km. If anything the link is steeper at the long end, where Brighton and Hove's deprived third sits (`r sprintf("%.1f", GC$bh$km_dep)` km). Attainment 8, modelled directly, shows no matching decline at the long end ([method](method.qmd#sec-gcse-method)).
+
+```{r}
+#| label: fig-bands-ci
+#| fig-cap: !expr paste("Absence by distance band, against authorities at 0.8 to 0.9 km, mostly urban authorities outside London, every control, 2021/22 to 2024/25, the estimates in the table below.", CI_NOTE)
+#| fig-height: 3.4
+BL <- c("Under 0.8", "0.8 to 0.9", "0.9 to 1.0", "1.0 to 1.1", "1.1 to 1.2", "1.2 and over")
+GC$shape_bands[sample == "Without London" & outcome == "overall" & band != "0.8 to 0.9"][order(match(band, BL))][,
+  .(row = sub("and over km", "km and over", paste(band, "km")), group = unname(GRL[group]), b, se)] |> ci_plot("Points of absence against authorities at 0.8 to 0.9 km")
+```
+
+```{r}
+#| label: tbl-bands
+#| tbl-cap: "Absence by the distance from an authority's most deprived third of neighbourhoods to a school, in bands, against authorities at 0.8 to 0.9 km. Mostly urban authorities outside London, secondary, every control, 2021/22 to 2024/25, points of absence with t values."
+bt <- GC$shape_bands[sample == "Without London" & outcome == "overall"]
+bt[, v := ifelse(se == 0, "reference", sprintf("%+.1f (t %.1f)", b, b / se))]
+dcast(bt, band + las ~ group, value.var = "v")[order(match(band, BL))][, .(`Distance band` = sub("and over km", "km and over", paste(band, "km")), Authorities = las, Disadvantaged = dis, `Non-disadvantaged` = non, `All pupils` = all)] |>
+  kt(align = "lrrrr")
+```
+
+::: {.callout-note collapse="true" appearance="simple"}
+## The model behind this table
+
+$$\text{absence}_{a,t} = \sum_{k \ne \text{0.8–0.9}} \beta_k\,\mathbf{1}[\text{km1\_dep}_a \in \text{band}_k] + \boldsymbol{\gamma}'\mathbf{x}_{a,t} + \tau_t + \varepsilon_{a,t}$$
+
+```r
+# R/30_distance_gcse.R: authorities outside London, for each group
+feols(overall ~ i(band, ref = "0.8 to 0.9") + share + urban_share + eth_wb + eth_asian + eth_black + eth_mixed + gor +
+        graduates + bad_health + white_british + social_rent + no_car + deprived + log_density +
+        sen_sup + ehcp + ks2_c + eal + wbri + mobile | tp, data = D, cluster = ~la)
+```
+
+`band` cuts `km1_dep`, the child-weighted straight-line km from the deprived third to the nearest school, at 0.8, 0.9, 1.0, 1.1 and 1.2 km. Each $\beta_k$ is the band's absence against authorities at 0.8 to 0.9 km, with every control. Variables are in [the glossary](method.qmd#sec-model-variables).
+:::
+
 **On that "if", the cost is about the size of what mixing is estimated to gain.** Gorard and Siddiqui ([2019](https://journals.sagepub.com/doi/full/10.1177/2158244018825171)), cited in the debate on mixing intakes in Brighton and Hove, conclude that making schools "as mixed as possible" could improve outcomes by between 0.05 and 0.15 of a standard deviation. That is a standard deviation between *pupils*, in their study of the `r format(GC$gorard$n, big.mark = ",")` pupils who finished GCSEs in 2015. On the Attainment 8 scale it is about `r sprintf("%.1f", GC$gorard$att8[["lo"]])` to `r sprintf("%.1f", GC$gorard$att8[["hi"]])` points for every pupil, or `r sprintf("%.1f", GC$gorard$att8_p8scale[["lo"]])` to `r sprintf("%.1f", GC$gorard$att8_p8scale[["hi"]])` on the narrower spread of progress once prior attainment is known ([method](method.qmd#sec-gcse-method)). They give no calculation for the range, which matches the size of their school composition coefficients, and they are cautious about whether those effects are real or a statistical artefact.
 
 Brighton and Hove's deprived third is `r sprintf("%.2f", GC$bh$km_gap)` km further from a school than the rest of the city. On the chain, that would cost its disadvantaged pupils about `r sprintf("%.1f", -GC$bh$km_gap * gch("dis", "Without London", "chain_va"))` Attainment 8 points: within Gorard and Siddiqui's range, at its lower end. Three cautions apply, beyond the "if":
