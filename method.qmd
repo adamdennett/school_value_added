@@ -1386,6 +1386,29 @@ The v2.1 elasticity is for a school's absence of all pupils, so applying it to a
 
 **The direct check.** Each group's Attainment 8, and Progress 8, regressed on the same distance with the same controls, years and clustering. Between schools, each school's Attainment 8 for each group on the doubling of its nearest children's distance, within authority, with the intake controls of [the school design](#sec-la-routing-method).
 
+```{r}
+#| label: fig-gcse-fitted
+#| fig-cap: "The fitted change in absence (left) and in Attainment 8 (right) for each extra kilometre between an authority's most deprived third of neighbourhoods and a school, with every control, 2021/22 to 2024/25, for each group of pupils. Bands are 95% intervals. On the right, solid lines are the chain through absence and dashed lines the direct estimate; the chain's band reflects its first link only. The dotted line marks Brighton and Hove's gap of 0.42 km. The slopes are those of the table on the distance page; the lines are straight because the models are."
+#| fig-height: 6.4
+gch_m <- GCm$chain[ctrl == "And every control" & sample %in% c("All 109", "Without London")]
+kmx <- seq(0, 1, by = 0.05); GRLm <- c(dis = "Disadvantaged", non = "Non-disadvantaged", all = "All pupils")
+fit_lines <- rbindlist(lapply(seq_len(nrow(gch_m)), function(i) { r <- gch_m[i]
+  rbind(data.table(km = kmx, y = r$b_abs * kmx, se = r$se_abs * kmx, what = "Absence (points)", est = "Fitted"),
+        data.table(km = kmx, y = r$chain_va * kmx, se = r$se_chain_va * kmx, what = "Attainment 8 (points)", est = "Chain through absence"),
+        data.table(km = kmx, y = r$direct * kmx, se = r$se_direct * kmx, what = "Attainment 8 (points)", est = "Direct estimate"))[,
+    `:=`(group = factor(GRLm[[r$group]], names(GROUP_COL)[1:3]), sample = ifelse(r$sample == "All 109", "All 109 authorities", "Outside London"))] }))
+ggplot(fit_lines, aes(km, y, colour = group, fill = group)) +
+  geom_hline(yintercept = 0, colour = GREY, linewidth = 0.4) + geom_vline(xintercept = GCm$bh$km_gap, colour = GREY, linetype = "13") +
+  geom_ribbon(data = fit_lines[est != "Direct estimate"], aes(ymin = y - 1.96 * se, ymax = y + 1.96 * se), alpha = 0.15, colour = NA) +
+  geom_line(aes(linetype = est), linewidth = 0.9) +
+  scale_colour_manual(values = GROUP_COL[1:3], name = NULL) + scale_fill_manual(values = GROUP_COL[1:3], guide = "none") +
+  scale_linetype_manual(values = c(Fitted = "solid", `Chain through absence` = "solid", `Direct estimate` = "22"), breaks = c("Chain through absence", "Direct estimate"), name = NULL) +
+  facet_grid(sample ~ what, scales = "free_y") + labs(x = "Extra straight-line km between the deprived third and a school", y = "Change against no extra distance") +
+  theme_note() + theme(legend.position = "top", legend.box = "vertical")
+```
+
+The chart reads directly off the models. For disadvantaged pupils, each extra kilometre goes with about `r sprintf("%.1f", gch_m[group == "dis" & sample == "Without London", b_abs])` more points of absence outside London, and on the chain about `r sprintf("%.1f", -gch_m[group == "dis" & sample == "Without London", chain_va])` fewer Attainment 8 points; at Brighton and Hove's `r sprintf("%.2f", GCm$bh$km_gap)` km that is `r sprintf("%.1f", GCm$bh$km_gap * gch_m[group == "dis" & sample == "Without London", b_abs])` points of absence and `r sprintf("%.1f", -GCm$bh$km_gap * gch_m[group == "dis" & sample == "Without London", chain_va])` of Attainment 8. The direct estimates are left without bands to keep the chart readable; their intervals, which are wide, are in [the table](distance.qmd#tbl-gcse).
+
 **The mixing estimate on the same scale.** Gorard and Siddiqui (2019) model capped KS4 points (each pupil's best eight GCSEs or equivalents) for the `r format(GCm$gorard$n, big.mark = ",")` pupils who finished KS4 in `r GCm$gorard$cohort`: mean `r GCm$gorard$mean_capped`, standard deviation `r GCm$gorard$sd_capped` between pupils (their Table 1). On that scale a grade is 6 points (C = 40, B = 46), so a grade higher in all eight subjects is 48 points. Attainment 8 counts English and maths twice, ten weights in all, and a grade is one point in each, so a grade higher in all subjects is 10 points. One Attainment 8 point is therefore about `r GCm$gorard$capped_per_att8` capped points, and their standard deviation is about `r sprintf("%.1f", GCm$gorard$sd_att8)` Attainment 8 points. Their 0.05 to 0.15 is then `r sprintf("%.1f", GCm$gorard$att8[["lo"]])` to `r sprintf("%.1f", GCm$gorard$att8[["hi"]])` points. DfE's [2016 key figures](https://dera.ioe.ac.uk/27618/1/Progress_8_key_figures_2016_V1.0.pdf) give the standard deviation of pupils' Progress 8 scores as `r GCm$gorard$p8_sd_2016` a slot, or `r sprintf("%.1f", 10 * GCm$gorard$p8_sd_2016)` Attainment 8 points: the spread left once prior attainment is known. On that narrower scale the range is `r sprintf("%.1f", GCm$gorard$att8_p8scale[["lo"]])` to `r sprintf("%.1f", GCm$gorard$att8_p8scale[["hi"]])`. Their outcome is the raw score, so the first conversion is the right one; the second shows how much it depends on the scale. The 2015 GCSEs were graded A* to G, and today's 9 to 1 scale is not the same, so this is approximate.
 
 Gorard and Siddiqui do not show how the range is derived. It matches the size of their standardised school composition coefficients at the end of KS4, such as `r GCm$gorard$coefs_y11[["School mean points score"]]` for the school's mean points score and `r GCm$gorard$coefs_y11[["Always-FSM segregation for school"]]` for its segregation of always-disadvantaged pupils, which are per standard deviation of the school measure.
