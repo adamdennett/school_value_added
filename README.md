@@ -153,6 +153,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `twins.qmd`, `twins.js` | Find a twin: a school's closest look-alikes in intake and setting (Gower-type distance, in the browser) and the anti-twins that do better on absence, attainment or value added; data from `R/08` |
 | `R/area_helpers.R` | the original area documents' charts, ported |
 | `R/site_helpers.R`, `R/map_js.R` | palette, charts, decomposition, map |
+| `R/explore_js.R`, `R/explore_data.R` | the area explorer (map with measure, period and smoothing controls, trajectory chart, sortable table) and the school data it carries; used by `explore.qmd` and the trust map in `trust_aldridge.qmd` |
 | `data/va_v2.rds`, `data/va_v2_schools.csv` | the results (committed) |
 | `data/value_added_review.rds` | the review's results, from the original project |
 | `docs/` | the built site (GitHub Pages) |

@@ -113,7 +113,7 @@ function(el, x, data) {
   distBox.style.margin = "6px 0 14px";
   el.parentNode.insertBefore(distBox, el.nextSibling);
 
-  var legDiv, leg = L.control({position: "bottomright"});
+  var legDiv, leg = L.control({position: data.legend_pos || "bottomright"});
   leg.onAdd = function() { legDiv = L.DomUtil.create("div"); legDiv.className = "explore-legend"; return legDiv; };
   leg.addTo(map);
 

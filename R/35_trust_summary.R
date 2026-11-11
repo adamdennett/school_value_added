@@ -145,11 +145,19 @@ wf_ex <- rbindlist(lapply(S$URN, function(u) { nb <- near25[URN0 == u]
     ex <- nb[!is.na(get(v)) & va_all >= med_va][order(if (up) -get(v) else get(v))][1:3][!is.na(URN)]
     data.table(URN = u, lever = v, ex_names = paste(sprintf("%s (%s, %s)", ex$SCHNAME, ex$la, sprintf(if (v == "retention") "%.0f%%" else "%.1f", ex[[v]])), collapse = "; ")) })) }))
 
+# ---- Boundaries for the map: the districts the schools are in (ONS, December 2024, ultra generalised)
+lad_names <- unique(na.omit(S$lad))
+lads <- tryCatch({
+  q <- paste0("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2024_Boundaries_UK_BUC/FeatureServer/0/query?where=",
+              utils::URLencode(paste0("LAD24NM IN (", paste0("'", gsub("'", "''", lad_names), "'", collapse = ","), ")"), reserved = TRUE), "&outFields=LAD24CD,LAD24NM&outSR=4326&f=geojson")
+  x <- sf::st_read(q, quiet = TRUE); x$lad <- x$LAD24NM; x$la <- S$LANAME[match(x$lad, S$lad)]; x }, error = function(e) NULL)
+message("Boundaries: ", if (is.null(lads)) "none (download failed)" else paste(nrow(lads), "districts"))
+
 # ---- Place: the authority's effect on the v2.1 model -------------------------------------------------
 la_eff <- as.data.table(V$la)[LANAME %in% S$LANAME & group %in% G3, .(LANAME, group, effect, se, lo, hi, rank, n_la)]
 
 out <- list(built = Sys.Date(), trust = TRUST, schools_open = ts, schools = S, va = va, years = yr, pct = pct, eng = eng, twins = twins, twin_weights = WT,
-            targets = tg, absence = abs_t, la_effects = la_eff, levers = levers, lever_defs = LEV, near25 = near25[, .(URN0, rank, URN, SCHNAME, la, dist, va_all, abs_obs, retention, sick_days, ptr)], marginal = mg, wf_examples = wf_ex, wf_coefs = WF$coefs, prov_note = if (!is.null(pv)) PROV_NOTE else NULL)
+            targets = tg, absence = abs_t, la_effects = la_eff, levers = levers, lever_defs = LEV, near25 = near25[, .(URN0, rank, URN, SCHNAME, la, dist, va_all, abs_obs, retention, sick_days, ptr)], marginal = mg, wf_examples = wf_ex, wf_coefs = WF$coefs, lads = lads, prov_note = if (!is.null(pv)) PROV_NOTE else NULL)
 saveRDS(out, here::here("data", paste0("trust_", SLUG, ".rds"))); message("Saved data/trust_", SLUG, ".rds")
 print(tg[group == "all", .(URN, att8, exp_latest, va, tw75, p90, t_own, t_twin, t_top, va_sd)], digits = 3)
 print(levers[order(URN, -worth)][, .(URN, label, own = round(own, 2), better = round(twin_better, 2), worth = round(worth, 2))]); print(levers[lever == "abs_obs", ex_names][1:2])

@@ -45,15 +45,24 @@ WC <- TR$wf_coefs
 
 ```{r}
 #| label: fig-trust-map
-#| fig-cap: "The trust's secondary schools, coloured by Value Added v2.1 for all pupils (purple below expectation, green above). Click a school for its figures."
-pal <- leaflet::colorNumeric(c("#762a83", "#c2a5cf", "#f7f7f7", "#a6dba0", "#1b7837"), domain = c(-6, 6))
-pop <- sprintf("<b>%s</b><br>%s<br>Ages %s, %s pupils<br>Attainment 8, four years: %.1f<br>Value added, all pupils: %+.1f (%+.1f to %+.1f)<br>Absence against intake: %+.1f points<br>Ofsted: %s",
-               S$SCHNAME, S$LANAME, age(S$low, S$high), format(S$pupils, big.mark = ","), S$att8_4, S$va_shrunk_all, S$va_lo_all, S$va_hi_all,
-               abs1$abs_excess[match(S$URN, abs1$URN)], coalesce(S$ofsted_combined, "not yet"))
-leaflet::leaflet(S, height = 520, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
+#| fig-cap: "The trust's schools in the same explorer as Explore by area. Colour by any measure; choose the period (the four-year figure, shrunk, or a moving average centred on a chosen year over one, three or five years); view the whole trust or one local authority. Below the map, each school's value added year by year, and a table you can sort."
+source(here::here("R", "explore_js.R")); source(here::here("R", "explore_data.R"))
+dat_t <- dat[dat$URN %in% S$URN, ]; dat_t$trust <- "Aldridge Education"
+payload <- list(
+  schools = jsonlite::toJSON(dat_t, dataframe = "rows", na = "null", digits = 6),
+  levels = jsonlite::toJSON(tibble::tibble(key = c("trust", "la"), label = c("Trust", "Local authority")), dataframe = "rows"),
+  measures = jsonlite::toJSON(measures |> dplyr::mutate(cap = unname(colour_caps()[var])), dataframe = "rows", na = "null"),
+  cats = cats_json(CATS)$cats, cats_s = cats_json(CATS)$cats_s,
+  heads = jsonlite::toJSON(lapply(MAP_CAT_HEADS, as.list), auto_unbox = TRUE),
+  none = jsonlite::toJSON(NONE, auto_unbox = TRUE), notes = jsonlite::toJSON(setNames(list(), character(0)), auto_unbox = TRUE),
+  default = jsonlite::toJSON(list(level = "trust", area = "Aldridge Education"), auto_unbox = TRUE),
+  years = jsonlite::toJSON(YEARS), provisional_year = jsonlite::toJSON(prov_year, auto_unbox = TRUE),
+  caps_ma = jsonlite::toJSON(caps_ma, auto_unbox = TRUE), legend_pos = "topright")
+leaflet::leaflet(height = 560, options = leaflet::leafletOptions(scrollWheelZoom = FALSE)) |>
   leaflet::addProviderTiles("Esri.WorldGrayCanvas") |>
-  leaflet::addCircleMarkers(~lon, ~lat, radius = 9, color = INK, weight = 1.5, fillColor = ~pal(pmax(pmin(va_shrunk_all, 6), -6)), fillOpacity = 0.95, popup = pop, label = ~sname) |>
-  leaflet::addLabelOnlyMarkers(~lon, ~lat, label = ~sname, labelOptions = leaflet::labelOptions(noHide = TRUE, direction = "right", textOnly = TRUE, offset = c(10, 0), style = list(color = INK, "font-size" = "11px")))
+  leaflet::addPolygons(data = TR$lads, color = DPURPLE, weight = 1.2, fillOpacity = 0.03, fillColor = DPURPLE, label = ~lad) |>
+  leaflet::setView(-1.5, 52.8, 6) |>
+  htmlwidgets::onRender(EXPLORE_JS, data = payload)
 ```
 
 ```{r}
