@@ -1186,6 +1186,7 @@ The [109-authority analysis](distance.qmd#sec-la-journeys) repeats the routing a
 #| include: false
 library(data.table)
 JLm <- readRDS(here::here("data", "journey_la.rds"))
+source(here::here("R", "route_figs.R"))   # example routes and worked example (R/34)
 PLm <- JLm$places[JLm$places$in_models == TRUE, ]
 ```
 
@@ -1224,6 +1225,29 @@ London ran alone, with a 52 GB Java heap and six threads; other networks used 18
 $$M_T = \frac{\sum_{o \in T} w_o m_o}{\sum_{o \in T} w_o}$$
 
 The gap is $M_T - M_{\text{rest}}$. Two other splits check the result. For children in income-deprived families, each Output Area's children are split by its LSOA's IDACI rate $r_o$, so the weights are $w_o r_o$ and $w_o (1 - r_o)$. For England's most deprived three tenths, $T$ is the LSOAs in IDACI tenths 1 to 3 nationally. Minutes per kilometre is the deprived third's mean minutes divided by its mean straight-line distance.
+
+**A worked example.** To show each step, the figures below follow one journey: from the Whitehawk Output Area used in [the examples on the distance page](distance.qmd#sec-route-examples) (`r WXD$oa21cd`) to its quickest school by walking and bus, `r WXD$school`. Every journey measure is for the quickest school, so this is exactly what the analysis counts for that Output Area. How the example was chosen is [below](#sec-route-examples-method).
+
+```{r}
+#| label: fig-worked-climb
+#| fig-cap: !expr paste("The climb. The walking route from the example Output Area to its quickest school on foot, and the height along it, read from OS Terrain 50 every 25 metres. Metres climbed is the sum of every rise, in each direction.", BASEMAP_CREDIT)
+#| fig-height: 4.4
+fig_worked_climb()
+```
+
+```{r}
+#| label: fig-worked-miss
+#| fig-cap: "Late if missed. For the same Output Area, the time a child would arrive at school for every minute they might leave home from 07:00, by the best journey available, walking and bus. The last departure that arrives by the assumed 08:45 bell is marked; missing it means arriving as late as the next step up."
+#| fig-height: 4
+fig_worked_miss()
+```
+
+```{r}
+#| label: fig-worked-oas
+#| fig-cap: !expr paste("From routes to a measure. Every Output Area in Brighton and Hove, shaded by its walking and bus time to its quickest school, with the most deprived third of neighbourhoods ringed. The authority's figures are the child-weighted means of the two groups, and the gap is their difference. Times over 60 minutes are shaded as 60.", BASEMAP_CREDIT)
+#| fig-height: 5.4
+fig_worked_oas()
+```
 
 **Is Brighton and Hove unusual?** Each measure is ranked across the `r nrow(PLm)` authorities, and across the `r sum(!PLm$london)` outside London. To ask whether the city is unusual *given* its distance, each measure is regressed across authorities on the matching straight-line distance (and density, for changes of bus), and the city's studentised residual is compared with the others'.
 
@@ -1267,9 +1291,29 @@ merge(bc, tt, by = "cat")[match(names(TG), cat)][, .(Group = TG[cat], Tags = DEF
 
 Counts are averaged over the three departures. A journey with no change has none at changes, so the change measure mixes how often children change with how busy the changes are; a model with the share needing two or more buses and the number of buses held constant separates them.
 
+
+```{r}
+#| label: fig-worked-route
+#| fig-cap: !expr paste("Points of interest, for the worked example. Left, the journey at its median departure, with 200 metre circles around the stops where the child boards, changes and gets off. Right, the change of bus close up, with the points of interest that count for it, by group, and the 50 metre band along the walk between the two stops. Open spaces keep their outlines.", BASEMAP_CREDIT, ROUTE_CREDIT)
+#| fig-height: 5.6
+fig_worked_route()
+```
+
+In the example, `r sum(WXD$pois$at_stop)` points of interest lie within 200 metres of one or more of its stops, almost all of them at the change in the city centre, `r sum(WXD$pois$walk_legs)` along its walking legs, and `r sum(WXD$pois$home)` within 400 metres of home. Points mapped as areas count once, at a point inside them, except open spaces.
+
 **Measures and models.** Each authority's deprived third, each IDACI tenth within an authority and each school's nearest children take the child-weighted mean count, as for journey times, and enter the same three designs [above](#sec-la-routing-method), with points of interest near home added as a control in the within-authority design.
 
 **Limits.** OpenStreetMap's coverage of shops and cafés varies from place to place and is usually fuller in cities, so a count partly measures how well a place is mapped. A point of interest is not a reason to stay off school, and nothing here says what children did there.
+
+## Example routes: data and calculations {#sec-route-examples-method}
+
+`R/34_route_examples.R` writes `data/route_examples.rds` for [the example journeys](distance.qmd#sec-route-examples) and the worked example [above](#sec-la-routing-method). Figures are drawn by `R/route_figs.R`.
+
+**Choosing the examples.** By rule, from the journey times of [the routing](#sec-la-routing-method). For Whitehawk, its Output Areas are those in the MSOA the House of Commons Library names Whitehawk; the example is the one whose time to its quickest school is nearest Whitehawk's child-weighted mean, `r sprintf("%.1f", RX$summary[id == "wh_quick", t_mean])` minutes. It is routed to that school and to Dorothy Stringer. For Brighton and Hove, Bristol, Southampton and Plymouth, the example is the Output Area in the city's most deprived third whose time is nearest that third's child-weighted mean, which reproduces the published figures (`r and_list(sprintf("%s %.1f", RX$summary[startsWith(id, "typ_"), city], RX$summary[startsWith(id, "typ_"), t_mean]))` minutes). In both cases only Output Areas whose quickest school is open to all, neither faith nor selective, are eligible, so that the school is one any child could attend.
+
+**Routing.** Each example is routed with r5r's `detailed_itineraries` on the same network and settings as the analysis, leaving every five minutes from 07:45 to 08:15, and the departure with the median total time is kept, so that it is neither a lucky nor an unlucky connection. Times are from leaving home: the analysis's own figure also counts waiting at home for the first bus, so it is a little longer. Bus route numbers are the timetables' own. Climb is measured along each walking leg as [above](#sec-journey-method).
+
+**The worked example.** For the Whitehawk journey to its quickest school, the script also keeps: the walking route to the quickest school on foot from the routing's walking step, with heights every 25 metres; the stops of the median itinerary; the [points of interest](#sec-poi-method) within 450 metres of any of it, flagged by which counts they enter; the time of arrival for every departure minute from 07:00, from `expanded_travel_time_matrix` as in the missed-journey step; and the published missed-journey figures for the Output Area, which the curve reproduces.
 
 ## From absence to GCSE results: data and calculations {#sec-gcse-method}
 

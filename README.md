@@ -57,6 +57,7 @@ Rscript R/30_distance_gcse.R      # from distance to absence to Attainment 8, an
 Rscript R/31_admissions_journeys.R # what Brighton and Hove's admissions changes did, from the school system model's published runs
 Rscript R/32_admissions_proposals.R # the proposals that did not go ahead, run on the published school system model (~1 min)
 Rscript R/33_admissions_neighbourhoods.R # the same runs neighbourhood by neighbourhood: Whitehawk and the others the map moved
+R5R_HEAP=18G Rscript R/34_route_examples.R # example routes for the maps and the methodology's worked example (needs the networks of R/26 and R/27)
 Rscript R/03_area_pages.R    # write the Sussex area pages from templates/area.qmd
 quarto render                # build the site into docs/
 ```
@@ -136,6 +137,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/31_admissions_journeys.R` | what Brighton and Hove's 2024 map and priority 6 did to journeys and mixing, from the published runs of the city's school system model, on the scales of `R/30`; writes `data/admissions_journeys.rds` |
 | `R/32_admissions_proposals.R` | runs the published school system model (code and inputs at a fixed commit) for the council's 2024 proposal and Class Divide's (priority 6 at 30%, with the same cuts), after reproducing its published run of today; writes `data/admissions_proposals.rds` |
 | `R/33_admissions_neighbourhoods.R` | the same model's runs zone by zone: whose journeys the 2024 map and the 2024 proposal changed, grouped by how the map moved each zone and named by House of Commons Library MSOA names; writes `data/admissions_neighbourhoods.rds` |
+| `R/34_route_examples.R` | example journeys chosen by rule (Whitehawk; a typical deprived journey in Brighton and Hove, Bristol, Southampton and Plymouth), routed again with every leg kept, and the methodology's worked example (walking route and heights, stops, points of interest, every departure minute); writes `data/route_examples.rds`, drawn by `R/route_figs.R` |
 | `R/16_parents_not_adults.R` | parents, not adults: neighbourhood education from ONS custom Census tables (qualification by dependent children and age by MSOA; by age by LSOA), against v2.1 for every group, with held-out years, the split between parents and other adults, and London tested separately (`neighbourhood_covariates.qmd`); caches about 1.5 GB of API responses in `data-raw/census2021/ons_custom/` |
 | `R/15_graduate_deprivation.R` | two kinds of deprived neighbourhood: tests whether the deprivation effect is a recent-graduate effect (interaction, by kind of place, early-career measures, deprivation in parts) and value added by kind of neighbourhood (`neighbourhood_covariates.qmd`) |
 | `R/14_v22_candidates.R` | v2.2 candidates: pupils' ethnicity (school White British share each January, from the SPC releases downloaded into `data-raw/ees/spc_all/`) and neighbourhood household deprivation (Census 2021 TS011), against v2.1 for every group, with leave-one-year-out prediction, year-by-year fits and who gains (`v22.qmd`) |

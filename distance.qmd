@@ -121,6 +121,7 @@ anw <- function(col) ang(WH_G, col)
 ans <- function(ch, col) AN$spread[[col]][AN$spread$change == ch]
 anp <- function(ct, col) AN$proposal_groups[[col]][AN$proposal_groups$catchment == ct]
 anw_prop <- function(col) { z <- AN$zones[AN$zones$group == WH_G, ]; if (col == "d_dis") sum(z$d_prop_dis * z$dis_today) / sum(z$dis_today) else sum(z$d_prop * z$children_today) / sum(z$children_today) }
+source(here::here("R", "route_figs.R"))   # example routes (R/34): RX, the figure functions and map credits
 ```
 
 ::: {.callout-important}
@@ -888,6 +889,26 @@ JL$outlier_all[match(OLM, measure)][, .(Measure = label, `Brighton and Hove` = m
 **But the journeys need the most changes.** `r sprintf("%.0f%%", ol("p_two_dep"))` of journeys from its deprived third need two or more buses, against a median of `r sprintf("%.0f%%", ol("p_two_dep", "median"))`, and the next highest is `r ol("p_two_dep", "next_")` (`r sprintf("%.0f%%", ol("p_two_dep", "next_v"))`). That is more than distance and density predict (`r sprintf("%.0f%%", 100 * adj_v("p_two_dep", "km1_dep + log_density", 109, "expected"))`), and only `r strsplit(adj_v("p_two_dep", "km1_dep + log_density", 109, "top"), "; ")[[1]][1]` is further above its prediction. Waiting is the longest too, and so is the climb on the walk home, `r sprintf("%.0f", ol("up_back_dep"))` metres against a median of `r sprintf("%.0f", ol("up_back_dep", "median"))`.
 
 In absolute terms, children in the city's deprived neighbourhoods are `r sprintf("%.1f", ol("t_bus_dep"))` minutes from a school, `r ord(ol("t_bus_dep", "rank"))` longest of the `r nrow(PL)`, behind `r and_list(JL$outlier_all[measure == "t_bus_dep", top])` and Barnsley, and `r sprintf("%.0f%%", ol("over30_dep"))` of them are more than 30 minutes away. The rest of the city is average (`r ord(ol("t_bus_rest", "rank"))`). The earlier work found the same thing among nine places, and it holds among `r nrow(PL)`.
+
+### What these journeys look like {#sec-route-examples}
+
+Averages are hard to picture. @fig-route-examples shows real routes on the same networks, at the same scale: from Whitehawk, to its quickest school and to Dorothy Stringer, where the 2024 map sends more of its children; and, in Brighton and Hove and three comparator cities, a typical journey for a deprived neighbourhood. Each example is chosen by rule, not by eye: the Output Area whose time is nearest the mean for Whitehawk, or for the city's most deprived third, among those whose quickest school is open to all. Each was routed every five minutes from 07:45 to 08:15 and the departure with the median time is shown ([method](method.qmd#sec-route-examples-method)).
+
+```{r}
+#| label: fig-route-examples
+#| fig-cap: !expr paste("Example journeys to school by walking and bus, all at the same scale. Purple lines are buses, with their route numbers, and dashed lines are walking; the dark dot is home and the blue square the school.", BASEMAP_CREDIT, ROUTE_CREDIT)
+#| fig-height: 14
+fig_route_examples()
+```
+
+```{r}
+#| label: fig-route-anatomy
+#| fig-cap: "What each example journey is made of, in minutes from leaving home, with the metres climbed on foot. The tick is the mean time for the group the example stands for (Whitehawk, or the city's most deprived third), which also counts waiting at home for the first bus, so it is a little longer."
+#| fig-height: 3.6
+fig_route_anatomy()
+```
+
+**Elsewhere, a typical deprived neighbourhood's journey is a walk, or a short ride on one bus.** In Bristol, Southampton and Plymouth it takes `r sprintf("%.0f", min(RX$summary$total[startsWith(RX$summary$id, "typ_") & RX$summary$id != "typ_sussex"]))` to `r sprintf("%.0f", max(RX$summary$total[startsWith(RX$summary$id, "typ_") & RX$summary$id != "typ_sussex"]))` minutes, to a school about a kilometre away in a straight line. In Brighton and Hove the typical deprived journey already takes two buses. From Whitehawk it takes two buses across the city, about `r sprintf("%.0f", RX$summary[id == "wh_quick", total])` minutes to the quickest school and `r sprintf("%.0f", RX$summary[id == "wh_ds", total])` to Dorothy Stringer, with `r sprintf("%.0f", RX$summary[id == "wh_ds", climb])` metres to climb on foot on the second. Both Whitehawk journeys change buses in the city centre.
 
 ### Does the journey say more than distance about absence? {#sec-la-time}
 
