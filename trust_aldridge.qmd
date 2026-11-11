@@ -88,13 +88,15 @@ va[order(match(URN, S$URN))][, .(row = sname, group = unname(GL[group]), b = va,
 
 ```{r}
 #| label: fig-trust-years
-#| fig-cap: !expr paste("Value added year by year for each school and group (unshrunk, so single years swing more than the four-year figure). The last point, hollow, is 2025/26.", PROV_NOTE)
+#| fig-cap: !expr paste("Value added year by year for each school and group (unshrunk, so single years swing more than the four-year figure). The dotted line runs on to the last point, hollow, the 2025/26 first release.", PROV_NOTE)
 #| fig-height: 6.4
 yy <- TR$years[, `:=`(sname = NM[as.character(URN)], g = factor(GL[group], GL), prov = coalesce(prov, FALSE))]
 ggplot(yy, aes(year, va, colour = g, group = g)) + geom_hline(yintercept = 0, colour = GREY) +
-  geom_line(data = yy[prov == FALSE], linewidth = 0.8) + geom_point(aes(shape = prov), size = 2, fill = "white") +
+  geom_line(data = yy[prov == FALSE], linewidth = 0.8) +
+  geom_line(data = yy[, if (any(prov)) .SD[year %in% c(max(year[!prov]), year[prov])], by = .(URN, g)], linewidth = 0.8, linetype = "22") +
+  geom_point(aes(shape = prov), size = 2, fill = "white") +
   scale_shape_manual(values = c(`FALSE` = 16, `TRUE` = 21), guide = "none") + scale_colour_manual(values = GROUP_COL[GL], name = NULL) +
-  facet_wrap(~sname, ncol = 4) + labs(x = NULL, y = "Value added (Attainment 8 points)") + theme_note() +
+  facet_wrap(~sname, ncol = 4, labeller = label_wrap_gen(24)) + labs(x = NULL, y = "Value added (Attainment 8 points)") + theme_note() +
   theme(legend.position = "top", axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
 
@@ -106,7 +108,7 @@ ae <- TR$years[group == "all" & prov == FALSE][, sname := NM[as.character(URN)]]
 ggplot(ae, aes(year, group = 1)) + geom_ribbon(aes(ymin = pmin(obs, exp), ymax = pmax(obs, exp)), fill = PPURPLE) +
   geom_line(aes(y = exp, colour = "Expected for the intake"), linewidth = 0.8, linetype = "22") + geom_line(aes(y = obs, colour = "Actual"), linewidth = 0.9) +
   geom_point(aes(y = obs, colour = "Actual"), size = 1.8) + scale_colour_manual(values = c(Actual = BPURPLE, `Expected for the intake` = GREY), name = NULL) +
-  facet_wrap(~sname, ncol = 4) + labs(x = NULL, y = "Attainment 8, all pupils") + theme_note() + theme(legend.position = "top", axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+  facet_wrap(~sname, ncol = 4, labeller = label_wrap_gen(24)) + labs(x = NULL, y = "Attainment 8, all pupils") + theme_note() + theme(legend.position = "top", axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
 
 ## Value added and attendance {#sec-quadrant}
@@ -237,7 +239,7 @@ lp <- LV[!is.na(worth) & worth > 0][, sname := factor(sname, S$sname)]
 lp[, label := factor(label, rev(c("Attendance: overall absence", "English", "Maths", "EBacc subjects", "Open subjects")))]
 ggplot(lp, aes(worth, label, fill = kind)) + geom_col(width = 0.65) + geom_text(aes(label = sprintf("%.1f", worth)), hjust = -0.2, size = 3, colour = INK) +
   scale_fill_manual(values = c(Attendance = BPURPLE, `Subject areas` = BLUE), name = NULL) + scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
-  facet_wrap(~sname, ncol = 4) + labs(x = "Attainment 8 points", y = NULL) + theme_note() + theme(legend.position = "top", strip.text = element_text(face = "bold", size = 9))
+  facet_wrap(~sname, ncol = 4, labeller = label_wrap_gen(24)) + labs(x = "Attainment 8 points", y = NULL) + theme_note() + theme(legend.position = "top", strip.text = element_text(face = "bold", size = 9))
 ```
 
 ```{r}
