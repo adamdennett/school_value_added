@@ -91,8 +91,14 @@ website:
             text: "Pupil numbers and school places"
           - href: finance.qmd
             text: "School finances before closure"
+          - text: "---"
+          - text: "School finances by area"
           - href: finance_areas/brighton_and_hove.qmd
-            text: "Brighton and Hove: school finances"
+            text: "Brighton and Hove"
+          - href: finance_areas/east_sussex.qmd
+            text: "East Sussex and its districts"
+          - href: finance_areas/west_sussex.qmd
+            text: "West Sussex and its districts"
       - href: twins.qmd
         text: "Find a twin"
       - href: simulator.qmd

@@ -25,6 +25,9 @@
 # report none, so the maintained schools carry the clearest reserve series. The years
 # with both sectors are 2016-17 to 2024-25; 2014-15, 2015-16 and 2025-26 are maintained only.
 #
+# Also the Sussex districts' warning-sign counts (from R/43's private list of open schools,
+# counted by district; no school is named or written out).
+#
 # Output: data/area_finance.rds.   Rscript R/44_area_finance.R  (under a minute)
 # ---------------------------------------------------------------------------
 
@@ -69,12 +72,31 @@ bands <- lat[, .(schools = .N), by = .(level, unit, stage, sector, band = cut(re
 spread <- lat[, as.list(quantile(reserve_pct, c(0.1, 0.25, 0.5, 0.75, 0.9))), by = .(level, unit, stage, sector)]
 setnames(spread, c("10%", "25%", "50%", "75%", "90%"), c("p10", "p25", "p50", "p75", "p90"))
 
+# Warning-sign counts for the Sussex districts (counts only). R/43 gives them by authority;
+# here the same open schools (its private list) are placed in districts as above, and the
+# five signs recomputed from the list's columns with R/43's thresholds. Kept from the last
+# build if the private list is not on this machine.
+pv <- here::here("data-raw", "private", "closure_risk_open_schools.csv")
+warn_district <- if (file.exists(pv)) {
+  w <- merge(fread(pv)[, cid := as.integer(URN)], sx[, .(cid, lad)], by = "cid")
+  w[, n_signs := (pupils < ifelse(stage == "Secondary", 600, 100)) + (pupils_chg3 <= -15) + (in_year_pct < -3) +
+      (reserve_pct < 0) + (util < 70)]
+  w[, .(schools = .N, flagged = sum(flag), three_plus = sum(n_signs >= 3)), by = .(area = lad, stage)]
+} else tryCatch(readRDS(here::here("data", "area_finance.rds"))$warn_district, error = function(e) NULL)
+
 units <- unique(rbind(F[, .(level = "Authority", unit = area, parent = region)],
                       F[!is.na(lad), .(level = "District", unit = lad, parent = area)],
                       F[!is.na(region), .(level = "Region", unit = region, parent = "England")]))[, .SD[1], by = .(level, unit)]
 res <- list(stats = stats, bands = bands, spread = spread, units = units, latest = latest, band_labels = BAND_LAB,
-            years = sort(unique(F$year)), both_years = sort(unique(F$year[F$source == "AAR"])), built = Sys.Date())
+            years = sort(unique(F$year)), both_years = sort(unique(F$year[F$source == "AAR"])),
+            warn_district = warn_district, built = Sys.Date())
 saveRDS(res, here::here("data", "area_finance.rds"))
 b <- stats[unit == "Brighton and Hove" & level == "Authority" & stage == "All" & sector == "Maintained" & year == latest[["Maintained"]]]
 message(sprintf("area_finance.rds: %d areas; Brighton and Hove maintained schools %s: %d schools, %.0f%% in deficit, net reserves £%.1fm",
                 uniqueN(stats[, paste(level, unit)]), latest[["Maintained"]], b$schools, b$deficit_pct, b$reserve / 1e6))
+if (!is.null(warn_district)) {   # check: Brighton and Hove as a district should match R/43's authority counts
+  fc <- readRDS(here::here("data", "finance_closures.rds"))$by_area[area == "Brighton and Hove", .(schools = sum(schools), flagged = sum(flagged), three = sum(three_plus))]
+  wd <- warn_district[area == "Brighton and Hove", .(schools = sum(schools), flagged = sum(flagged), three = sum(three_plus))]
+  message(sprintf("warning signs, Brighton and Hove: by district %d/%d/%d, R/43 by authority %d/%d/%d",
+                  wd$schools, wd$flagged, wd$three, fc$schools, fc$flagged, fc$three))
+}
