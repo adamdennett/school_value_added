@@ -1,0 +1,311 @@
+# School finances and closure: the early-warning model {#sec-finance-method}
+
+```{r finance-method-setup}
+#| include: false
+FM <- readRDS(here::here("data", "finance_closures.rds"))   # written by R/43_finance_closures.R
+FMm <- FM$model; FMt <- FM$test
+fm_co <- as_tibble(FMm$coefs) |> rename(zc = z)
+fm_eff <- as_tibble(FM$effects)
+fm_term <- c(log_pupils = "log_pupils", chg3 = "chg3", util_c = "util_c", res = "res", iy = "iy", ipp = "ipp",
+             area_primary_chg = "area_primary_chg", academy = "academyTRUE", secondary = "secondaryTRUE")
+fm_tab <- fm_eff |> mutate(coef_term = fm_term[term]) |>
+  left_join(fm_co, by = c("coef_term" = "term")) |>
+  mutate(b_sd = est * sd, lo_sd = (est - 1.96 * se) * sd, hi_sd = (est + 1.96 * se) * sd)
+fm_r2 <- 1 - FMm$dev / FMm$null_dev
+fm_pc <- function(x, d = 0) sprintf(paste0("%.", d, "f%%"), 100 * x)
+fm_cut <- 100 * FM$now$cut[[1]]
+```
+
+[School finances before closure](finance.qmd) asks whether the schools that
+closed looked different in the years before, and whether open schools look
+like them now. This section sets out how that is done: what is predicted,
+from what, by which model, how it was tested, and how its scores become the
+counts published on the finance and area pages. The code is
+`R/43_finance_closures.R` (the model) and `R/44_area_finance.R` (the area
+pages); every number below is read from what they write.
+
+One rule runs through all of it. **No open school is named.** A score is a
+reason for a conversation about a school's future, not a forecast, and a
+published list could help bring about the closures it describes. Scores for
+individual schools are kept out of the published data; only counts by area
+are shown.
+
+## What is predicted {#sec-finance-method-outcome}
+
+The unit is a **school-year**: one school's finance return for one year. For
+school *s* in year *t*, the outcome is
+
+$$y_{st} = \begin{cases} 1 & \text{if the last year the school taught is } t+1 \text{ or } t+2 \\ 0 & \text{otherwise} \end{cases}$$
+
+so the model asks whether a school closes within the next two years, given
+that year's return. A closure is a state mainstream school that GIAS records
+as closed with no successor, or as merged into another school, as on
+[Pupil numbers and school places](demographics.qmd#sec-demog-data). An
+academy conversion, a change of trust or a change of type is not a closure:
+the school carries on under a new number, and the two numbers are joined (see
+[the data notes](finance.qmd#sec-fin-data)). Returns in or after a school's last
+year are left out, since by then the closure is known.
+
+The model years are `r FMm$years[1]` to `r FMm$years[2]`. They start in
+2017-18 because the three-year change in pupils needs a return three years
+earlier (the maintained-school returns begin in 2014-15), and they stop in
+2023-24 so that every year has two full years of follow-up in GIAS.
+
+```{r}
+#| label: tbl-fm-flow
+#| tbl-cap: "How the model's sample narrows, from every finance return to the school-years the model is fitted on."
+tibble(Step = c("Finance returns for state mainstream schools, 2014-15 to 2025-26, one a school-year",
+                "Open that year (not in or after the last year taught), up to 2023-24",
+                "At least 10 pupils and a positive income",
+                "Every signal present (needs a return three years earlier, a capacity and an area trend)"),
+       `School-years` = format(unname(FMm$flow), big.mark = ",")) |>
+  kt(align = "lr")
+```
+
+That leaves `r format(FMm$n, big.mark = ",")` school-years from
+`r format(FMm$schools, big.mark = ",")` schools, of which
+`r FMm$events` were followed by closure within two years
+(`r FMm$closing_schools` different schools, since a closing school can count
+twice: two years out and one year out). Closure is rare: about
+`r sprintf("%.1f", 1000 * FMm$events / FMm$n)` school-years in 1,000.
+
+## The signals {#sec-finance-method-signals}
+
+Each signal is read from the school's own return for that year, or from its
+area. Percentages are capped, so a handful of odd returns (a school in its
+first or last months, a return with almost no income) cannot steer the fit.
+
+```{r}
+#| label: tbl-fm-signals
+#| tbl-cap: "The signals in the model, how each is measured, and its spread across the model's school-years (one standard deviation, the unit of the effects below)."
+fm_def <- c(log_pupils = "Pupils (full-time equivalent) on the return, logged",
+            chg3 = "Change in pupils since the return three years earlier, %, capped at ±50",
+            util_c = "Pupils as % of GIAS capacity, capped to 20-150",
+            res = "Revenue reserve at year end as % of income, capped at ±40",
+            iy = "Income less expenditure as % of income, capped at ±20",
+            ipp = "Total income / pupils, logged",
+            area_primary_chg = "The authority's change in primary-age pupils, 2018/19 to 2025/26, % (from the census)",
+            academy = "Academy or free school, against maintained",
+            secondary = "Secondary, middle-deemed-secondary or all-through, against primary")
+fm_tab |> transmute(Signal = label, Measure = fm_def[term],
+                    `One SD` = ifelse(per == "per SD", sprintf("%.2f", sd), "yes vs no")) |>
+  kt(align = "llr")
+```
+
+Income per pupil is in cash terms and the model has no year term. Within a
+year that changes nothing, since every school's funding moves together and
+the ranking is left alone. Across years it does: cash rises lift every
+school's income per pupil, and with it, a little, every later score.
+
+## The model {#sec-finance-method-model}
+
+A logistic regression:
+
+$$\text{logit}\,\Pr(y_{st} = 1) = \beta_0 + \beta_1 \log(\text{pupils})_{st} + \beta_2\,\text{chg3}_{st} + \beta_3\,\text{full}_{st} + \beta_4\,\text{reserve}_{st} + \beta_5\,\text{in-year}_{st} + \beta_6 \log(\text{income per pupil})_{st} + \beta_7\,\text{area}_{s} + \beta_8\,\text{academy}_{st} + \beta_9\,\text{secondary}_{s}$$
+
+fitted by maximum likelihood on every school-year from `r FMm$years[1]` to
+`r FMm$years[2]` for the published effects and scores, and on 2017-18 to
+2020-21 alone for the test below.
+
+```r
+glm(y ~ log_pupils + chg3 + util_c + res + iy + ipp + area_primary_chg + academy + secondary,
+    family = binomial, data = mm)
+# `r format(FMm$n, big.mark = ",")` school-years, `r FMm$events` closing within two years
+```
+
+```{r}
+#| label: fig-fm-effects
+#| fig-cap: "Each signal's effect on the log-odds of closing within two years, per standard deviation (or yes against no), with 95% intervals; the top axis gives the same as an odds ratio. Left of zero, less likely to close."
+#| fig-height: 4.4
+#| fig-width: 8.5
+fe <- fm_tab |> mutate(label = factor(label, rev(label)), clear = lo_sd > 0 | hi_sd < 0)
+ggplot(fe, aes(b_sd, label)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo_sd, xmax = hi_sd), colour = DPURPLE, linewidth = 0.8) +
+  geom_point(aes(shape = clear), colour = DPURPLE, size = 2.6, fill = "white", stroke = 1) +
+  scale_shape_manual(values = c(`TRUE` = 19, `FALSE` = 21), guide = "none") +
+  scale_x_continuous(sec.axis = sec_axis(~ exp(.), name = "Odds ratio", breaks = c(0.2, 0.33, 0.5, 0.75, 1, 1.5, 2, 3))) +
+  labs(x = "Change in log-odds of closing within two years", y = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: tbl-fm-coefs
+#| tbl-cap: "The fitted model. The coefficient is per unit of the signal as measured (per percentage point, per log unit, or yes against no); the odds ratio is per standard deviation, as in the chart."
+fm_tab |> transmute(Signal = label,
+                    Coefficient = sprintf("%.4f", est), `Std. error` = sprintf("%.4f", se), z = sprintf("%.1f", zc),
+                    `Odds ratio` = sprintf("%.2f", or), `95% interval` = sprintf("%.2f to %.2f", lo, hi),
+                    Per = ifelse(per == "per SD", "SD", "yes vs no")) |>
+  bind_rows(tibble(Signal = "Intercept", Coefficient = sprintf("%.2f", fm_co$est[1]), `Std. error` = sprintf("%.2f", fm_co$se[1]),
+                   z = sprintf("%.1f", fm_co$zc[1]), `Odds ratio` = "", `95% interval` = "", Per = "")) |>
+  kt(align = "lrrrrrl")
+```
+
+The model cuts the deviance from `r format(round(FMm$null_dev), big.mark = ",")`
+(no signals) to `r format(round(FMm$dev), big.mark = ",")`, a McFadden
+pseudo-R² of `r sprintf("%.2f", fm_r2)`; that is high for a rare event. How to
+read three of the effects:
+
+- **A falling roll is the strongest sign.** Each standard deviation of fall
+  over three years (about `r round(fm_tab$sd[fm_tab$term == "chg3"])` percentage
+  points) multiplies the odds of closing by
+  `r sprintf("%.1f", 1 / fm_tab$or[fm_tab$term == "chg3"])`, with the school's size,
+  fullness and money held fixed.
+- **Academies close far less often** than maintained schools with the same
+  figures (odds ratio `r sprintf("%.2f", fm_tab$or[fm_tab$term == "academy"])`).
+  That is mostly how the system works: an academy in trouble is usually moved
+  to another trust, which is not a closure, while a council closes a
+  maintained school.
+- **More income per pupil goes with more closure**, size for size. Funding
+  follows last year's pupils and protects small schools, so a school whose
+  roll is falling faster than its funding shows high income per pupil.
+
+## How well it works {#sec-finance-method-test}
+
+The test is out of time: the model is fitted on 2017-18 to 2020-21 (2016-17 has no three-year change in pupils, so adds no returns) and scores
+the returns of 2021-22 to 2023-24, which it has not seen. The test years hold
+`r format(FMt$n, big.mark = ",")` returns and `r FMt$closures` that were
+followed by closure within two years.
+
+**Ranking.** The area under the ROC curve (AUC) is the chance that a
+randomly chosen closing school-year is scored above a randomly chosen open
+one, computed from the ranks of the scores *p*:
+
+$$\text{AUC} = \frac{\sum_{i: y_i = 1} r_i - n_1(n_1 + 1)/2}{n_1 n_0}$$
+
+It is `r sprintf("%.2f", FMt$auc)` on the test years, with a 95% interval of
+`r sprintf("%.2f", FMt$auc_ci[1])` to `r sprintf("%.2f", FMt$auc_ci[2])` from 500
+bootstrap samples of schools (resampling whole schools, so a school's years
+stay together). The riskiest 2% of test returns held
+`r FMt$top2[["caught"]]` of the `r FMt$top2[["closures"]]` closures
+(`r fm_pc(FMt$top2[["caught"]] / FMt$top2[["closures"]])`); the riskiest 5% held
+`r fm_pc(FMt$top5[["caught"]] / FMt$top5[["closures"]])`.
+
+**Earlier warning.** In the year before closure the decision may already be
+known and parents leaving can be part of what the model sees. So a second
+test leaves that year out and predicts closure two or three years on. Its
+AUC is `r sprintf("%.2f", FMt$early$auc)`, and the riskiest 5% held
+`r fm_pc(FMt$early$top5[["caught"]] / FMt$early$top5[["closures"]])` of
+`r FMt$early$closures` closures. The warning is there well before the decision.
+
+**Which signals carry it.** Refitting on one kind of signal at a time:
+pupil numbers, fullness and the area trend alone give an AUC of
+`r sprintf("%.2f", FMt$parts[["rolls"]])`; the finance measures alone
+`r sprintf("%.2f", FMt$parts[["finance"]])`; maintained or academy alone
+`r sprintf("%.2f", FMt$parts[["governance"]])`. Rolls and money each carry most
+of the warning, and together do better than either.
+
+**Calibration.** Ranking is not the same as getting the level right.
+
+```{r}
+#| label: fig-fm-calib
+#| fig-cap: "Predicted and observed closure within two years in the test years, 2021-22 to 2023-24, for returns grouped by their score (the model fitted on 2017-18 to 2020-21). Log scale."
+#| fig-height: 3.4
+#| fig-width: 8
+cb <- as_tibble(FMt$calib) |> pivot_longer(c(predicted, observed), names_to = "what", values_to = "pct") |>
+  mutate(what = factor(what, c("observed", "predicted"), c("Observed", "Predicted")))
+ggplot(cb, aes(pct, band)) +
+  geom_line(aes(group = band), colour = LIGHT, linewidth = 1.2) +
+  geom_point(aes(colour = what, shape = what), size = 2.8) +
+  scale_colour_manual(values = c(Observed = DPURPLE, Predicted = BPURPLE), name = NULL) +
+  scale_shape_manual(values = c(Observed = 19, Predicted = 17), name = NULL) +
+  scale_x_log10(labels = function(x) paste0(x, "%")) +
+  labs(x = "% of returns followed by closure within two years", y = "Score band (test returns)") + theme_note(11)
+```
+
+```{r}
+#| label: tbl-fm-calib
+#| tbl-cap: "The same, as numbers."
+as_tibble(FMt$calib) |> transmute(`Score band` = band, Returns = format(returns, big.mark = ","), `Closing within two years` = closing,
+                                  Predicted = sprintf("%.2f%%", predicted), Observed = sprintf("%.2f%%", observed)) |>
+  kt(align = "lrrrr")
+```
+
+The bands are in the right order and the riskiest 2% are close
+(`r sprintf("%.1f", FMt$calib$predicted[6])`% predicted,
+`r sprintf("%.1f", FMt$calib$observed[6])`% observed), but the model fitted on
+the earlier years predicts more closure than happened:
+`r round(sum(FMt$calib$predicted * FMt$calib$returns) / 100)` closures in all
+against `r FMt$closures`, with the gap widest, in proportion, in the low bands.
+Closures were not rarer in the test years (`r sprintf("%.2f", 100 * FMt$base)`%
+of returns, against `r sprintf("%.2f", 100 * (FMm$events - FMt$closures) / (FMm$n - FMt$n))`%
+in the training years). Rather, the same figures went with closure less often
+than before, and cash rises in income per pupil may lift the later scores (see
+above). This is why the site reports where a school stands
+against others (a band, a count) rather than a probability for it.
+
+## From scores to the published counts {#sec-finance-method-counts}
+
+**Scores for open schools.** The model fitted on every year scores each open
+school's latest return (2023-24 or later), where the school has at least 10
+pupils and every signal.
+
+**The band.** The highest-risk band is set from the model's own history: the
+score above which the riskiest 2% of school-years from 2017-18 to 2023-24 fall,
+a predicted `r sprintf("%.1f", fm_cut)`% chance of closing within two years. An
+open school is in the band if its latest score is above that. Of
+`r format(FM$now$schools, big.mark = ",")` open schools scored,
+`r FM$now$flagged` (`r sprintf("%.1f", 100 * FM$now$flagged / FM$now$schools)`%) are.
+
+**The warning signs.** Five plain readings of a school's own return, for
+anyone without the model:
+
+```{r}
+#| label: tbl-fm-signs
+#| tbl-cap: "The five warning signs and their thresholds. A school's count is how many of the five it shows in its latest return."
+tibble(Sign = c("Small", "Falling roll", "In-year deficit", "Reserve below zero", "Under capacity"),
+       Threshold = c("Under 100 pupils (primary) or 600 (secondary)", "Pupils down 15% or more over three years",
+                     "Spending more than income by over 3% of income", "Revenue reserve below zero at year end",
+                     "Under 70% of GIAS capacity")) |> kt(align = "ll")
+```
+
+The thresholds are round numbers near where closing schools part from the
+rest (see [the warning signs](finance.qmd#sec-signs)), not fitted values. A
+primary school showing three of them closed within two years about
+`r sprintf("%.0f", FM$sign_rates$rate[FM$sign_rates$stage == "Primary" & FM$sign_rates$n_signs == 3])`
+times as often as one showing none.
+
+**Counting.** The band and the three-or-more-signs counts are totalled by
+authority in `R/43` and, for the Sussex districts, in `R/44`, which places
+each school in a district by its location and recounts the signs from the same
+list with the same thresholds. The two agree for Brighton and Hove, which is
+both. The list of scored schools is written only to a private folder that is
+never committed.
+
+## The area finance pages {#sec-finance-method-areas}
+
+The [area finance pages](finance_areas/brighton_and_hove.qmd) sum the same
+returns by England, region, authority and Sussex district, for each year,
+phase and sector. A school is in deficit when its revenue reserve is below
+zero; shares and medians are of schools, totals and income per pupil are
+sums over schools. Reserves are shown for maintained schools only, because an
+academy in a trust reports only its share and many report none. Any share,
+median or line needs at least five schools behind it. Authorities are ranked
+among those with ten or more maintained schools; districts among the Sussex
+districts with five or more.
+
+## What the model does not do {#sec-finance-method-limits}
+
+- **It is not causal.** It describes the schools that were closed, by the
+  councils and trusts that closed them. A deficit does not close a school;
+  a council deciding to does.
+- **Its standard errors treat school-years as independent.** A school appears
+  up to seven times, so the intervals on the effects are somewhat too narrow.
+  The test AUC's interval does not have this problem: it resamples schools.
+- **One model for both phases**, with a secondary term. Secondary closures
+  are few (`r FM$n_closers$schools[FM$n_closers$stage == "Secondary"]` since
+  2017-18 against `r FM$n_closers$schools[FM$n_closers$stage == "Primary"]`
+  primary), too few to fit on their own.
+- **No year or place terms** beyond the area's pupil trend. The rate of
+  closure moves with policy and funding from year to year, which is why the
+  levels are a little off in the test.
+- **The area trend looks ahead.** It is one figure per authority, the change
+  in primary-age pupils from 2018/19 to 2025/26, so for the early model years
+  it holds some later information. Refitted without it, the test AUC is
+  `r sprintf("%.3f", FMt$parts[["no_area"]])` against `r sprintf("%.3f", FMt$auc)`,
+  so it adds little to the ranking; a strict forecast would still use the
+  trend to date.
+- **Capacity is GIAS's latest figure**, not the figure each year, and the two
+  kinds of return run on different years (April to March, September to
+  August).
+
+See also [what this cannot tell you](finance.qmd#sec-fin-limits) on the
+finance page.

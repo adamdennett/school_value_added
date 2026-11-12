@@ -33,7 +33,10 @@
 #   the school taught. A return for year t "closes within two years" if the school's last
 #   year is t+1 or t+2; returns in or after the last year are left out of the model.
 #   Model: logistic regression of closing within two years on the measures, fitted on
-#   returns for 2016-17 to 2020-21 and tested on 2021-22 to 2023-24 (AUC, and how many
+#   returns for 2017-18 to 2020-21 (2016-17 has no three-year change in pupils, so adds no
+#   rows) and tested on 2021-22 to 2023-24 (AUC with a bootstrap-by-school interval,
+#   calibration by score band, refits on rolls, finance or governance alone and without
+#   the area trend, and how many
 #   closures the highest-risk 2% and 5% of schools catch).
 #   Current schools: the model applied to each open school's latest return. Only counts
 #   by authority are published; the school-level scores are written to
@@ -187,7 +190,8 @@ part_auc <- function(vars) { f <- glm(reformulate(vars, "y"), family = binomial,
   e <- mm[year %in% TEST]; auc(predict(f, e, type = "response"), e$y) }
 test_res$parts <- c(rolls = part_auc(c("log_pupils", "chg3", "util_c", "area_primary_chg", "secondary")),
                     finance = part_auc(c("res", "iy", "ipp", "secondary")),
-                    governance = part_auc(c("academy", "secondary")))
+                    governance = part_auc(c("academy", "secondary")),
+                no_area = part_auc(setdiff(VARS, "area_primary_chg")))   # without the area trend (which looks ahead)
 # effects per SD (yes/no terms as they are), from the model on every year
 sds <- sapply(VARS, function(v) if (is.logical(mm[[v]])) 1 else sd(mm[[v]]))
 co <- summary(fit_all)$coefficients
@@ -198,6 +202,19 @@ effects <- rbindlist(lapply(VARS, function(v) { b <- co[term_of(v), ]; s <- sds[
              hi = exp((b[["Estimate"]] + 1.96 * b[["Std. Error"]]) * s), z = b[["z value"]]) }))
 model_info <- list(n = nrow(mm), events = sum(mm$y), schools = uniqueN(mm$cid), closing_schools = uniqueN(mm[y == 1, cid]),
                    years = range(mm$year), call = deparse(form), aic = AIC(fit_all))
+# For the methodology section (method.qmd, _method_finance.qmd): the coefficients per unit,
+# how the sample narrows, calibration on the test years, and an interval for the test AUC
+model_info$coefs <- data.table(term = rownames(co), est = co[, 1], se = co[, 2], z = co[, 3], p = co[, 4])
+model_info$flow <- c(returns = nrow(fin), open_to_2324 = nrow(fin[open_yr == TRUE & year <= "2023-24"]),
+                     eligible = nrow(md), complete = nrow(mm))
+model_info$null_dev <- fit_all$null.deviance; model_info$dev <- fit_all$deviance
+test_res$calib <- te[, .(band = cut(frank(p) / .N, c(0, 0.5, 0.8, 0.9, 0.95, 0.98, 1),
+                                    c("Lowest 50%", "50-80%", "80-90%", "90-95%", "95-98%", "Riskiest 2%"), include.lowest = TRUE), p, y)][
+  , .(returns = .N, closing = sum(y), predicted = 100 * mean(p), observed = 100 * mean(y)), by = band][order(band)]
+set.seed(43)   # bootstrap by school, so a school's several years stay together
+ids <- unique(te$cid); te_by <- split(seq_len(nrow(te)), te$cid)
+boot_auc <- replicate(500, { s <- unlist(te_by[as.character(sample(ids, replace = TRUE))], use.names = FALSE); auc(te$p[s], te$y[s]) })
+test_res$auc_ci <- quantile(boot_auc, c(0.025, 0.975))
 # simple warning signs, and how often closing schools showed them
 signs <- function(d) d[, .(small = pupils < ifelse(secondary, 600, 100), falling = chg3 <= -15, deficit_in_year = iy < -3,
                           reserve_neg = res < 0, under_capacity = util_c < 70)]

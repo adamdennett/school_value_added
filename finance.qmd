@@ -143,6 +143,9 @@ Percentages are capped (change in pupils at ±50, capacity 20 to 150, reserve
 glm(y ~ log_pupils + chg3 + util_c + res + iy + ipp + area_primary_chg + academy + secondary,
     family = binomial, data = mm)   # `r format(F$model$n, big.mark = ",")` school-years, `r F$model$events` closing within two years
 ```
+
+The full method (how the sample is built, the coefficients, the tests,
+calibration and limits) is in [the methodology](method.qmd#sec-finance-method).
 :::
 
 The strongest single sign is a falling roll: each standard deviation more of
@@ -157,7 +160,7 @@ lost pupils faster than its funding.
 
 ```{r}
 #| label: tbl-test
-#| tbl-cap: "How well the model picks out closures it was not trained on: fitted on 2016-17 to 2020-21, tested on 2021-22 to 2023-24. AUC is the chance a closing school is ranked above an open one (0.5 is guessing)."
+#| tbl-cap: "How well the model picks out closures it was not trained on: fitted on 2017-18 to 2020-21, tested on 2021-22 to 2023-24. AUC is the chance a closing school is ranked above an open one (0.5 is guessing)."
 tt <- data.table(
   Test = c("Closes within two years", "Closes two or three years on (early)"),
   AUC = sprintf("%.2f", c(TE$auc, TE$early$auc)),

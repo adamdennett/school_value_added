@@ -1493,6 +1493,8 @@ APm <- readRDS(here::here("data", "admissions_proposals.rds"))
 
 {{< include _method_twins.qmd >}}
 
+{{< include _method_finance.qmd >}}
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

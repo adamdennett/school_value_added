@@ -53,6 +53,8 @@ website:
             text: "v2.2 candidates"
           - href: method.qmd#sec-twins-method
             text: "Find a twin: the matching"
+          - href: method.qmd#sec-finance-method
+            text: "School finances: the early-warning model"
       - href: explore.qmd
         text: "Explore by area"
       - text: Sussex

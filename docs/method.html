@@ -182,6 +182,10 @@ window.Quarto = {
     <a class="dropdown-item" href="./method.html#sec-twins-method">
  <span class="dropdown-text">Find a twin: the matching</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./method.html#sec-finance-method">
+ <span class="dropdown-text">School finances: the early-warning model</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -387,6 +391,16 @@ window.Quarto = {
   <li><a href="#sec-twins-example" id="toc-sec-twins-example" class="nav-link" data-scroll-target="#sec-twins-example">A worked example</a></li>
   <li><a href="#sec-twins-checks" id="toc-sec-twins-checks" class="nav-link" data-scroll-target="#sec-twins-checks">Do twins on intake have like results?</a></li>
   <li><a href="#sec-twins-limits" id="toc-sec-twins-limits" class="nav-link" data-scroll-target="#sec-twins-limits">What the matching cannot do</a></li>
+  </ul></li>
+  <li><a href="#sec-finance-method" id="toc-sec-finance-method" class="nav-link" data-scroll-target="#sec-finance-method">School finances and closure: the early-warning model</a>
+  <ul class="collapse">
+  <li><a href="#sec-finance-method-outcome" id="toc-sec-finance-method-outcome" class="nav-link" data-scroll-target="#sec-finance-method-outcome">What is predicted</a></li>
+  <li><a href="#sec-finance-method-signals" id="toc-sec-finance-method-signals" class="nav-link" data-scroll-target="#sec-finance-method-signals">The signals</a></li>
+  <li><a href="#sec-finance-method-model" id="toc-sec-finance-method-model" class="nav-link" data-scroll-target="#sec-finance-method-model">The model</a></li>
+  <li><a href="#sec-finance-method-test" id="toc-sec-finance-method-test" class="nav-link" data-scroll-target="#sec-finance-method-test">How well it works</a></li>
+  <li><a href="#sec-finance-method-counts" id="toc-sec-finance-method-counts" class="nav-link" data-scroll-target="#sec-finance-method-counts">From scores to the published counts</a></li>
+  <li><a href="#sec-finance-method-areas" id="toc-sec-finance-method-areas" class="nav-link" data-scroll-target="#sec-finance-method-areas">The area finance pages</a></li>
+  <li><a href="#sec-finance-method-limits" id="toc-sec-finance-method-limits" class="nav-link" data-scroll-target="#sec-finance-method-limits">What the model does not do</a></li>
   </ul></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul>
@@ -5917,6 +5931,439 @@ Table&nbsp;24: Correlation across schools between a school’s own value and the
 <li><strong>Absence is 2025/26 autumn and spring</strong>, so the set is schools with absence published for those terms.</li>
 </ul>
 <p><strong>In the School Information System.</strong> The app’s Find My Twin tab uses the same schools, characteristics, standard deviations and distance, with three weightings: for results, for overall absence, or equal. It compares twins on value added and Attainment 8 for the pupil group and period chosen in the app, and on absence against expected; its pool and number of twins are sliders.</p>
+</section>
+</section>
+<section id="sec-finance-method" class="level1">
+<h1>School finances and closure: the early-warning model</h1>
+<p><a href="./finance.html">School finances before closure</a> asks whether the schools that closed looked different in the years before, and whether open schools look like them now. This section sets out how that is done: what is predicted, from what, by which model, how it was tested, and how its scores become the counts published on the finance and area pages. The code is <code>R/43_finance_closures.R</code> (the model) and <code>R/44_area_finance.R</code> (the area pages); every number below is read from what they write.</p>
+<p>One rule runs through all of it. <strong>No open school is named.</strong> A score is a reason for a conversation about a school’s future, not a forecast, and a published list could help bring about the closures it describes. Scores for individual schools are kept out of the published data; only counts by area are shown.</p>
+<section id="sec-finance-method-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-outcome">What is predicted</h2>
+<p>The unit is a <strong>school-year</strong>: one school’s finance return for one year. For school <em>s</em> in year <em>t</em>, the outcome is</p>
+<p><span class="math display">\[y_{st} = \begin{cases} 1 &amp; \text{if the last year the school taught is } t+1 \text{ or } t+2 \\ 0 &amp; \text{otherwise} \end{cases}\]</span></p>
+<p>so the model asks whether a school closes within the next two years, given that year’s return. A closure is a state mainstream school that GIAS records as closed with no successor, or as merged into another school, as on <a href="./demographics.html#sec-demog-data">Pupil numbers and school places</a>. An academy conversion, a change of trust or a change of type is not a closure: the school carries on under a new number, and the two numbers are joined (see <a href="./finance.html#sec-fin-data">the data notes</a>). Returns in or after a school’s last year are left out, since by then the closure is known.</p>
+<p>The model years are 2017-18 to 2023-24. They start in 2017-18 because the three-year change in pupils needs a return three years earlier (the maintained-school returns begin in 2014-15), and they stop in 2023-24 so that every year has two full years of follow-up in GIAS.</p>
+<div class="cell">
+<div id="tbl-fm-flow" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fm-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;25: How the model’s sample narrows, from every finance return to the school-years the model is fitted on.
+</figcaption>
+<div aria-describedby="tbl-fm-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Step</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">School-years</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Finance returns for state mainstream schools, 2014-15 to 2025-26, one a school-year</td>
+<td style="text-align: right;">218,416</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Open that year (not in or after the last year taught), up to 2023-24</td>
+<td style="text-align: right;">188,507</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">At least 10 pupils and a positive income</td>
+<td style="text-align: right;">186,790</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Every signal present (needs a return three years earlier, a capacity and an area trend)</td>
+<td style="text-align: right;">126,199</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>That leaves 126,199 school-years from 19,832 schools, of which 371 were followed by closure within two years (203 different schools, since a closing school can count twice: two years out and one year out). Closure is rare: about 2.9 school-years in 1,000.</p>
+</section>
+<section id="sec-finance-method-signals" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-signals">The signals</h2>
+<p>Each signal is read from the school’s own return for that year, or from its area. Percentages are capped, so a handful of odd returns (a school in its first or last months, a return with almost no income) cannot steer the fit.</p>
+<div class="cell">
+<div id="tbl-fm-signals" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fm-signals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;26: The signals in the model, how each is measured, and its spread across the model’s school-years (one standard deviation, the unit of the effects below).
+</figcaption>
+<div aria-describedby="tbl-fm-signals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Signal</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">One SD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: left;">Pupils (full-time equivalent) on the return, logged</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Change in pupils over three years (%)</td>
+<td style="text-align: left;">Change in pupils since the return three years earlier, %, capped at ±50</td>
+<td style="text-align: right;">13.62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pupils as % of capacity</td>
+<td style="text-align: left;">Pupils as % of GIAS capacity, capped to 20-150</td>
+<td style="text-align: right;">15.82</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Revenue reserve, % of income</td>
+<td style="text-align: left;">Revenue reserve at year end as % of income, capped at ±40</td>
+<td style="text-align: right;">9.68</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">In-year balance, % of income</td>
+<td style="text-align: left;">Income less expenditure as % of income, capped at ±20</td>
+<td style="text-align: right;">5.86</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Income per pupil (log)</td>
+<td style="text-align: left;">Total income / pupils, logged</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Area's change in primary-age pupils since 2018/19 (%)</td>
+<td style="text-align: left;">The authority's change in primary-age pupils, 2018/19 to 2025/26, % (from the census)</td>
+<td style="text-align: right;">4.28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Academy</td>
+<td style="text-align: left;">Academy or free school, against maintained</td>
+<td style="text-align: right;">yes vs no</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secondary school</td>
+<td style="text-align: left;">Secondary, middle-deemed-secondary or all-through, against primary</td>
+<td style="text-align: right;">yes vs no</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Income per pupil is in cash terms and the model has no year term. Within a year that changes nothing, since every school’s funding moves together and the ranking is left alone. Across years it does: cash rises lift every school’s income per pupil, and with it, a little, every later score.</p>
+</section>
+<section id="sec-finance-method-model" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-model">The model</h2>
+<p>A logistic regression:</p>
+<p><span class="math display">\[\text{logit}\,\Pr(y_{st} = 1) = \beta_0 + \beta_1 \log(\text{pupils})_{st} + \beta_2\,\text{chg3}_{st} + \beta_3\,\text{full}_{st} + \beta_4\,\text{reserve}_{st} + \beta_5\,\text{in-year}_{st} + \beta_6 \log(\text{income per pupil})_{st} + \beta_7\,\text{area}_{s} + \beta_8\,\text{academy}_{st} + \beta_9\,\text{secondary}_{s}\]</span></p>
+<p>fitted by maximum likelihood on every school-year from 2017-18 to 2023-24 for the published effects and scores, and on 2017-18 to 2020-21 alone for the test below.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(y <span class="sc">~</span> log_pupils <span class="sc">+</span> chg3 <span class="sc">+</span> util_c <span class="sc">+</span> res <span class="sc">+</span> iy <span class="sc">+</span> ipp <span class="sc">+</span> area_primary_chg <span class="sc">+</span> academy <span class="sc">+</span> secondary,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> binomial, <span class="at">data =</span> mm)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 126,199 school-years, 371 closing within two years</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-fm-effects" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fm-effects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-fm-effects-1.png" class="img-fluid figure-img" width="918">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fm-effects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: Each signal’s effect on the log-odds of closing within two years, per standard deviation (or yes against no), with 95% intervals; the top axis gives the same as an odds ratio. Left of zero, less likely to close.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-fm-coefs" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fm-coefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;27: The fitted model. The coefficient is per unit of the signal as measured (per percentage point, per log unit, or yes against no); the odds ratio is per standard deviation, as in the chart.
+</figcaption>
+<div aria-describedby="tbl-fm-coefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Signal</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">z</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Odds ratio</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">95% interval</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Per</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Size (log pupils)</td>
+<td style="text-align: right;">-0.2232</td>
+<td style="text-align: right;">0.0963</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.72 to 0.97</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Change in pupils over three years (%)</td>
+<td style="text-align: right;">-0.0572</td>
+<td style="text-align: right;">0.0045</td>
+<td style="text-align: right;">-12.7</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">0.41 to 0.52</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pupils as % of capacity</td>
+<td style="text-align: right;">-0.0227</td>
+<td style="text-align: right;">0.0037</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.62 to 0.78</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Revenue reserve, % of income</td>
+<td style="text-align: right;">-0.0332</td>
+<td style="text-align: right;">0.0047</td>
+<td style="text-align: right;">-7.1</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.66 to 0.79</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">In-year balance, % of income</td>
+<td style="text-align: right;">-0.0209</td>
+<td style="text-align: right;">0.0090</td>
+<td style="text-align: right;">-2.3</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">0.80 to 0.98</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Income per pupil (log)</td>
+<td style="text-align: right;">0.7042</td>
+<td style="text-align: right;">0.2168</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">1.07 to 1.30</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Area's change in primary-age pupils since 2018/19 (%)</td>
+<td style="text-align: right;">-0.0725</td>
+<td style="text-align: right;">0.0104</td>
+<td style="text-align: right;">-7.0</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.67 to 0.80</td>
+<td style="text-align: left;">SD</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Academy</td>
+<td style="text-align: right;">-1.7411</td>
+<td style="text-align: right;">0.1535</td>
+<td style="text-align: right;">-11.3</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">0.13 to 0.24</td>
+<td style="text-align: left;">yes vs no</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secondary school</td>
+<td style="text-align: right;">0.5200</td>
+<td style="text-align: right;">0.2435</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: right;">1.68</td>
+<td style="text-align: right;">1.04 to 2.71</td>
+<td style="text-align: left;">yes vs no</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Intercept</td>
+<td style="text-align: right;">-9.15</td>
+<td style="text-align: right;">2.13</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The model cuts the deviance from 5,066 (no signals) to 3,768, a McFadden pseudo-R² of 0.26; that is high for a rare event. How to read three of the effects:</p>
+<ul>
+<li><strong>A falling roll is the strongest sign.</strong> Each standard deviation of fall over three years (about 14 percentage points) multiplies the odds of closing by 2.2, with the school’s size, fullness and money held fixed.</li>
+<li><strong>Academies close far less often</strong> than maintained schools with the same figures (odds ratio 0.18). That is mostly how the system works: an academy in trouble is usually moved to another trust, which is not a closure, while a council closes a maintained school.</li>
+<li><strong>More income per pupil goes with more closure</strong>, size for size. Funding follows last year’s pupils and protects small schools, so a school whose roll is falling faster than its funding shows high income per pupil.</li>
+</ul>
+</section>
+<section id="sec-finance-method-test" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-test">How well it works</h2>
+<p>The test is out of time: the model is fitted on 2017-18 to 2020-21 (2016-17 has no three-year change in pupils, so adds no returns) and scores the returns of 2021-22 to 2023-24, which it has not seen. The test years hold 58,221 returns and 190 that were followed by closure within two years.</p>
+<p><strong>Ranking.</strong> The area under the ROC curve (AUC) is the chance that a randomly chosen closing school-year is scored above a randomly chosen open one, computed from the ranks of the scores <em>p</em>:</p>
+<p><span class="math display">\[\text{AUC} = \frac{\sum_{i: y_i = 1} r_i - n_1(n_1 + 1)/2}{n_1 n_0}\]</span></p>
+<p>It is 0.92 on the test years, with a 95% interval of 0.89 to 0.94 from 500 bootstrap samples of schools (resampling whole schools, so a school’s years stay together). The riskiest 2% of test returns held 103 of the 190 closures (54%); the riskiest 5% held 69%.</p>
+<p><strong>Earlier warning.</strong> In the year before closure the decision may already be known and parents leaving can be part of what the model sees. So a second test leaves that year out and predicts closure two or three years on. Its AUC is 0.92, and the riskiest 5% held 65% of 130 closures. The warning is there well before the decision.</p>
+<p><strong>Which signals carry it.</strong> Refitting on one kind of signal at a time: pupil numbers, fullness and the area trend alone give an AUC of 0.88; the finance measures alone 0.86; maintained or academy alone 0.70. Rolls and money each carry most of the warning, and together do better than either.</p>
+<p><strong>Calibration.</strong> Ranking is not the same as getting the level right.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-fm-calib" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fm-calib-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-fm-calib-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fm-calib-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24: Predicted and observed closure within two years in the test years, 2021-22 to 2023-24, for returns grouped by their score (the model fitted on 2017-18 to 2020-21). Log scale.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-fm-calib" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fm-calib-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;28: The same, as numbers.
+</figcaption>
+<div aria-describedby="tbl-fm-calib-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Score band</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Returns</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Closing within two years</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Predicted</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Lowest 50%</td>
+<td style="text-align: right;">29,110</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.05%</td>
+<td style="text-align: right;">0.02%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">50-80%</td>
+<td style="text-align: right;">17,466</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0.25%</td>
+<td style="text-align: right;">0.11%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80-90%</td>
+<td style="text-align: right;">5,822</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0.53%</td>
+<td style="text-align: right;">0.22%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">90-95%</td>
+<td style="text-align: right;">2,911</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.96%</td>
+<td style="text-align: right;">0.69%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">95-98%</td>
+<td style="text-align: right;">1,747</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1.91%</td>
+<td style="text-align: right;">1.60%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Riskiest 2%</td>
+<td style="text-align: right;">1,165</td>
+<td style="text-align: right;">103</td>
+<td style="text-align: right;">10.14%</td>
+<td style="text-align: right;">8.84%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The bands are in the right order and the riskiest 2% are close (10.1% predicted, 8.8% observed), but the model fitted on the earlier years predicts more closure than happened: 269 closures in all against 190, with the gap widest, in proportion, in the low bands. Closures were not rarer in the test years (0.33% of returns, against 0.27% in the training years). Rather, the same figures went with closure less often than before, and cash rises in income per pupil may lift the later scores (see above). This is why the site reports where a school stands against others (a band, a count) rather than a probability for it.</p>
+</section>
+<section id="sec-finance-method-counts" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-counts">From scores to the published counts</h2>
+<p><strong>Scores for open schools.</strong> The model fitted on every year scores each open school’s latest return (2023-24 or later), where the school has at least 10 pupils and every signal.</p>
+<p><strong>The band.</strong> The highest-risk band is set from the model’s own history: the score above which the riskiest 2% of school-years from 2017-18 to 2023-24 fall, a predicted 2.0% chance of closing within two years. An open school is in the band if its latest score is above that. Of 19,427 open schools scored, 865 (4.5%) are.</p>
+<p><strong>The warning signs.</strong> Five plain readings of a school’s own return, for anyone without the model:</p>
+<div class="cell">
+<div id="tbl-fm-signs" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fm-signs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;29: The five warning signs and their thresholds. A school’s count is how many of the five it shows in its latest return.
+</figcaption>
+<div aria-describedby="tbl-fm-signs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Sign</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Small</td>
+<td style="text-align: left;">Under 100 pupils (primary) or 600 (secondary)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Falling roll</td>
+<td style="text-align: left;">Pupils down 15% or more over three years</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">In-year deficit</td>
+<td style="text-align: left;">Spending more than income by over 3% of income</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reserve below zero</td>
+<td style="text-align: left;">Revenue reserve below zero at year end</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Under capacity</td>
+<td style="text-align: left;">Under 70% of GIAS capacity</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The thresholds are round numbers near where closing schools part from the rest (see <a href="./finance.html#sec-signs">the warning signs</a>), not fitted values. A primary school showing three of them closed within two years about 3 times as often as one showing none.</p>
+<p><strong>Counting.</strong> The band and the three-or-more-signs counts are totalled by authority in <code>R/43</code> and, for the Sussex districts, in <code>R/44</code>, which places each school in a district by its location and recounts the signs from the same list with the same thresholds. The two agree for Brighton and Hove, which is both. The list of scored schools is written only to a private folder that is never committed.</p>
+</section>
+<section id="sec-finance-method-areas" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-areas">The area finance pages</h2>
+<p>The <a href="./finance_areas/brighton_and_hove.html">area finance pages</a> sum the same returns by England, region, authority and Sussex district, for each year, phase and sector. A school is in deficit when its revenue reserve is below zero; shares and medians are of schools, totals and income per pupil are sums over schools. Reserves are shown for maintained schools only, because an academy in a trust reports only its share and many report none. Any share, median or line needs at least five schools behind it. Authorities are ranked among those with ten or more maintained schools; districts among the Sussex districts with five or more.</p>
+</section>
+<section id="sec-finance-method-limits" class="level2">
+<h2 class="anchored" data-anchor-id="sec-finance-method-limits">What the model does not do</h2>
+<ul>
+<li><strong>It is not causal.</strong> It describes the schools that were closed, by the councils and trusts that closed them. A deficit does not close a school; a council deciding to does.</li>
+<li><strong>Its standard errors treat school-years as independent.</strong> A school appears up to seven times, so the intervals on the effects are somewhat too narrow. The test AUC’s interval does not have this problem: it resamples schools.</li>
+<li><strong>One model for both phases</strong>, with a secondary term. Secondary closures are few (37 since 2017-18 against 241 primary), too few to fit on their own.</li>
+<li><strong>No year or place terms</strong> beyond the area’s pupil trend. The rate of closure moves with policy and funding from year to year, which is why the levels are a little off in the test.</li>
+<li><strong>The area trend looks ahead.</strong> It is one figure per authority, the change in primary-age pupils from 2018/19 to 2025/26, so for the early model years it holds some later information. Refitted without it, the test AUC is 0.919 against 0.919, so it adds little to the ranking; a strict forecast would still use the trend to date.</li>
+<li><strong>Capacity is GIAS’s latest figure</strong>, not the figure each year, and the two kinds of return run on different years (April to March, September to August).</li>
+</ul>
+<p>See also <a href="./finance.html#sec-fin-limits">what this cannot tell you</a> on the finance page.</p>
 </section>
 </section>
 <section id="data" class="level1">
