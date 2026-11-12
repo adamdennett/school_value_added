@@ -17,9 +17,9 @@ mod_obs_ui <- function(id) {
     card(full_screen = TRUE, card_header("Value added in the area against England", class = "sis-ch"), plotOutput(ns("dist"), height = 260)))
 }
 
-mod_obs_server <- function(id, ctx, sel) {
+mod_obs_server <- function(id, ctx, sel, place) {
   moduleServer(id, function(input, output, session) {
-    area_picker_server(input, session)
+    area_picker_server(input, session, place)
     dd <- reactive({
       M <- ctx()$M |> mutate(hl = if (input$level == "eng") TRUE else (!is.na(.data[[input$level]]) & .data[[input$level]] == input$area))
       M

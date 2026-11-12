@@ -78,9 +78,14 @@ mod_travel_ui <- function(id) {
           uiOutput(ns("national")))))))
 }
 
-mod_travel_server <- function(id, ctx, sel) {
+mod_travel_server <- function(id, ctx, sel, place) {
   moduleServer(id, function(input, output, session) {
-    observeEvent(sel(), { la <- SCH$la[SCH$URN == sel()]; if (length(la) && la != input$la) updateSelectizeInput(session, "la", selected = la) }, once = TRUE)
+    # The shared place: an authority, or a district's own authority, is shown here. Choosing an
+    # authority here makes it the shared place, unless the shared place is already in it (a district)
+    observeEvent(list(place$level, place$area), { la <- place_la(place$level, place$area)
+      if (!is.null(la) && !identical(la, input$la)) updateSelectizeInput(session, "la", selected = la) }, ignoreInit = TRUE)
+    observeEvent(input$la, { req(input$la %in% SCH$la)
+      if (!identical(place_la(place$level, place$area), input$la)) { place$level <- "la"; place$area <- input$la } }, ignoreInit = TRUE)
     md <- reactive(as.list(TRAVEL_MEASURES[TRAVEL_MEASURES$key == input$measure, ]))
     output$map_head <- renderText(md()$label)
     output$map <- renderLeaflet(base_map(-1.6, 52.9, 6))

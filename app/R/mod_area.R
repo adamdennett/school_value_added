@@ -22,9 +22,9 @@ mod_area_ui <- function(id) {
     card(card_header("All the schools", class = "sis-ch"), DTOutput(ns("table"))))
 }
 
-mod_area_server <- function(id, ctx, sel, go) {
+mod_area_server <- function(id, ctx, sel, go, place) {
   moduleServer(id, function(input, output, session) {
-    area_picker_server(input, session)
+    area_picker_server(input, session, place, levels = LEVELS[-1])
     A <- reactive({ req(area_ok(input$level, input$area)); in_area(ctx()$M, input$level, input$area) })
     nm <- reactive(paste0(input$area, " (", tolower(LEVEL_LAB[[input$level]]), ")"))
 

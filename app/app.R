@@ -72,12 +72,14 @@ server <- function(input, output, session) {
   sel <- reactiveVal(SCH$URN[SCH$name == "Dorothy Stringer School"][1] %||% SCH$URN[1])
   go <- function(tab) nav_select("nav", tab, session = session)
 
-  mod_finder_server("finder", ctx, sel, go)
+  # One place chosen anywhere (an area type and an area) is the place in every tab that has one
+  place <- reactiveValues(level = "la", area = DEFAULT_AREA[["la"]])
+  mod_finder_server("finder", ctx, sel, go, place)
   mod_twin_server("twin", ctx, sel, go)
-  mod_obs_server("obs", ctx, sel)
-  mod_sim_server("sim", ctx, sel)
-  mod_area_server("area", ctx, sel, go)
-  mod_travel_server("travel", ctx, sel)
+  mod_obs_server("obs", ctx, sel, place)
+  mod_sim_server("sim", ctx, sel, place)
+  mod_area_server("area", ctx, sel, go, place)
+  mod_travel_server("travel", ctx, sel, place)
 }
 
 shinyApp(ui, server)

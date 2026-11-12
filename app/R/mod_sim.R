@@ -64,7 +64,7 @@ mod_sim_ui <- function(id) {
       radioButtons(ns("mode"), "Simulate", c("One school" = "school", "Every school in an area" = "area"), inline = TRUE),
       conditionalPanel(sprintf("input['%s'] == 'school'", ns("mode")),
         selectizeInput(ns("school"), "School", choices = NULL, options = list(placeholder = "Type a name..."))),
-      conditionalPanel(sprintf("input['%s'] == 'area'", ns("mode")), area_picker_ui(ns, level = "lad"),
+      conditionalPanel(sprintf("input['%s'] == 'area'", ns("mode")), area_picker_ui(ns, level = "la"),
         selectInput(ns("abs_mode"), "Absence scenario", c("Change every school's absence by" = "shift", "Cut every school's absence by a share" = "pct",
                                                            "Bring schools above England's average down to it" = "toEng")),
         conditionalPanel(sprintf("input['%s'] == 'pct'", ns("abs_mode")), sliderInput(ns("abs_pct"), "Cut absence by (%)", 0, 50, 0, step = 1)),
@@ -92,9 +92,9 @@ mod_sim_ui <- function(id) {
         "Absence is the lever schools and councils can most affect; the intake levers ask what the model expects if a school's pupils were different, as an admissions change might make them."))))
 }
 
-mod_sim_server <- function(id, ctx, sel) {
+mod_sim_server <- function(id, ctx, sel, place) {
   moduleServer(id, function(input, output, session) {
-    area_picker_server(input, session)
+    area_picker_server(input, session, place)
     ch <- setNames(SIM_S$URN, school_label(SIM_S))[order(SIM_S$name)]
     updateSelectizeInput(session, "school", choices = ch, selected = isolate(sel()), server = TRUE)
     observeEvent(input$school, { u <- as.integer(input$school); if (!is.na(u) && !identical(u, sel())) sel(u) }, ignoreInit = TRUE)

@@ -2950,7 +2950,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "779772fda8d78f934a11ad6fda506fc8"
+      "checksum": "baaf8e89eba8c4e1afd898c98ecc4072"
     },
     "data/app_data.rds": {
       "checksum": "6ffd993e1d7006f9d2dbf4d9b9569b64"
@@ -2959,28 +2959,28 @@
       "checksum": "6c4412517cf25f570b64e6d4643460c8"
     },
     "R/00_setup.R": {
-      "checksum": "ff7b0b02dcae856f83b6c1db68843838"
+      "checksum": "15d5d9b3db45bbf41c42ef116c880ba4"
     },
     "R/mod_about.R": {
       "checksum": "ea51229121d71ec642c7e1211ec6664d"
     },
     "R/mod_area.R": {
-      "checksum": "44950c761dfc586dc10e6e4ccce67f8a"
+      "checksum": "0bba065019442349c1b6806bf0cf6171"
     },
     "R/mod_finder.R": {
-      "checksum": "dbedd66651fafa9fd9dac2b63b133616"
+      "checksum": "5aa8c8acf7c9b3df1859e50b3728ecaf"
     },
     "R/mod_future.R": {
       "checksum": "0b54b678bbc4af74a28bc62721b852df"
     },
     "R/mod_obs.R": {
-      "checksum": "e82437cf388d935384d944be8a8b56c3"
+      "checksum": "4ea18f5ab920bc5f311a494b20fdab5a"
     },
     "R/mod_sim.R": {
-      "checksum": "5c29d17ba8a18e92178c614cad5c9724"
+      "checksum": "976aa9992b149340b2473be65fb1e170"
     },
     "R/mod_travel.R": {
-      "checksum": "211b324c9ab1bb3a477d42b2c006f529"
+      "checksum": "ac2ee579640a40173b84328d43c80a53"
     },
     "R/mod_twin.R": {
       "checksum": "ffa81260c838f4c54fa06293d2335847"

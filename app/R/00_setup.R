@@ -107,11 +107,37 @@ area_picker_ui <- function(ns, level = "la", levels = LEVELS, label = "Area") {
   tagList(selectInput(ns("level"), "Area type", levels, selected = level),
           selectizeInput(ns("area"), label, choices = area_choices(level), selected = DEFAULT_AREA[[level]]))
 }
-area_picker_server <- function(input, session) {
+# `place` is the session's shared choice (reactiveValues level, area): a choice made in any
+# tab's picker is written to it, and every other tab's picker follows it. A tab whose picker
+# lacks a level (Area Overview has no "England") keeps its own choice until one it has comes.
+area_picker_server <- function(input, session, place = NULL, levels = LEVELS) {
+  # a new level: its areas, keeping the shared area when the shared level is this one
   observeEvent(input$level, {
-    ch <- area_choices(input$level); sel <- if (DEFAULT_AREA[[input$level]] %in% ch) DEFAULT_AREA[[input$level]] else ch[1]
+    ch <- AREA_CHOICES[[input$level]]
+    sel <- if (!is.null(place) && identical(place$level, input$level) && place$area %in% ch) place$area
+           else if (DEFAULT_AREA[[input$level]] %in% ch) DEFAULT_AREA[[input$level]] else ch[1]
     updateSelectizeInput(session, "area", choices = ch, selected = sel)
   }, ignoreInit = TRUE)
+  if (is.null(place)) return(invisible())
+  # this tab -> everywhere (only once the level and area agree, so never half a change)
+  observeEvent(list(input$level, input$area), {
+    req(area_ok(input$level, input$area))
+    if (!identical(place$level, input$level) || !identical(place$area, input$area)) {
+      place$level <- input$level; place$area <- input$area }
+  }, ignoreInit = TRUE)
+  # everywhere -> this tab
+  observeEvent(list(place$level, place$area), {
+    lv <- place$level; ar <- place$area
+    if (!(lv %in% levels)) return()
+    if (!identical(input$level, lv)) updateSelectInput(session, "level", selected = lv)   # its observer above sets the area
+    else if (!identical(input$area, ar)) updateSelectizeInput(session, "area", selected = ar)
+  }, ignoreInit = TRUE)
+}
+# The local authority a shared place sits in, if it is one authority (a district's own), else NULL
+place_la <- function(level, area) {
+  if (identical(level, "la")) return(area)
+  if (identical(level, "lad")) { la <- unique(SCH$la[SCH$lad == area]); if (length(la) == 1) return(la) }
+  NULL
 }
 school_label <- function(s) paste0(s$name, " (", ifelse(s$lad == s$la, s$la, paste0(s$lad, ", ", s$la)), ")")
 SCHOOL_CHOICES <- setNames(SCH$URN, school_label(SCH))[order(SCH$name)]

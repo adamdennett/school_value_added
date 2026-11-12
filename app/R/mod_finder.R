@@ -24,9 +24,9 @@ mod_finder_ui <- function(id) {
     uiOutput(ns("travel")))
 }
 
-mod_finder_server <- function(id, ctx, sel, go) {
+mod_finder_server <- function(id, ctx, sel, go, place) {
   moduleServer(id, function(input, output, session) {
-    area_picker_server(input, session)
+    area_picker_server(input, session, place)
     pool <- reactive({ req(area_ok(input$level, input$area)); in_area(SCH, input$level, input$area) })
     observeEvent(pool(), {
       p <- pool(); ch <- setNames(p$URN, school_label(p))[order(p$name)]

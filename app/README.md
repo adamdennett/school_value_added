@@ -22,7 +22,10 @@ findings are on the [School Value Added site](https://adamdennett.github.io/scho
 | Travel and Distance | `R/mod_travel.R` | distance and journey times, deprived third against the rest; the national walking routes as they arrive |
 | Coming next | `R/mod_future.R` | placeholders for v2.1 (places and pupil cohorts) and v2.2 (primary, post-16) |
 
-The bar under the title (pupils, period, year, window) applies to every tab.
+The bar under the title (pupils, period, year, window) applies to every tab, and so do the
+chosen school and the chosen place: an area type and area picked in the Finder, Observed vs
+Predicted, Simulator or Area Overview is picked in all of them, and Travel and Distance follows
+its local authority (`place` in app.R, `area_picker_server()` in R/00_setup.R).
 `R/00_setup.R` loads the data and holds the shared helpers (Shiny sources `R/` in
 alphabetical order, so it runs first): the period logic (`metrics()`), area filters,
 colour scales and the base map (Esri's light grey canvas).
