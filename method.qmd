@@ -1491,6 +1491,8 @@ APm <- readRDS(here::here("data", "admissions_proposals.rds"))
 
 **Limits.** Zones hold a few children a year each, as the model places them, so single zones are not reported on their own. The model's children are spread over schools in proportion to its probabilities, so a zone's journey is an average over where its children might go. Applying a link measured across authorities to one neighbourhood is an extrapolation.
 
+{{< include _method_twins.qmd >}}
+
 # Data
 
 Every school's v2.0 value added, for every group, with intervals and the

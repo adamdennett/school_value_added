@@ -113,7 +113,7 @@ norm_w <- function(s) round(pmax(s / mean(s), 0.05), 3)
 fits <- list(att8 = contrib(td$att8), absence = contrib(log(td$overall + 0.1)))
 twins <- list(schools = td, num = MNUM, cat = MCAT,
               weights = lapply(fits, function(f) norm_w(f$sd)), r2 = sapply(fits, `[[`, "r2"),
-              labels = c(fsm = "Disadvantaged (FSM6) %", ks2 = "KS2 prior attainment", eal = "EAL %",
+              labels = c(fsm = "Free school meals %", ks2 = "KS2 prior attainment", eal = "EAL %",
                          wbri = "White British %", mobile = "Mobility %", girls = "Girls %", sen = "SEN support %",
                          ehcp = "EHC plans %", semh = "SEMH needs %", l4z = "Neighbourhood education",
                          size = "Size (log pupils)", place = "Kind of place", adm = "Admissions",

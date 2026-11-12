@@ -26,7 +26,8 @@ mod_twin_ui <- function(id) {
     accordion(open = FALSE, accordion_panel("How the matching is weighted", plotOutput(ns("weights"), height = 330),
       note("Each characteristic's weight is the standard deviation of its fitted contribution in a regression of the measure on all fifteen (log absence for absence), scaled to average one; no weight is below 0.05. ",
            "The characteristics explain ", round(100 * D$twins$r2[["att8"]]), "% of Attainment 8 and ", round(100 * D$twins$r2[["absence"]]),
-           "% of log absence between schools. A twin that does better is a reason to ask what it does differently, not proof that copying it would work."))))
+           "% of log absence between schools. A twin that does better is a reason to ask what it does differently, not proof that copying it would work. ",
+           tags$a(href = paste0(SITE, "/method.html#sec-twins-method"), target = "_blank", "The full method, with a worked example"), "."))))
 }
 
 mod_twin_server <- function(id, ctx, sel, go) {
@@ -101,7 +102,7 @@ mod_twin_server <- function(id, ctx, sel, go) {
 
     output$table <- renderDT({
       r <- found(); d <- bind_rows(r$f |> mutate(sim = NA), r$list)
-      t <- d |> transmute(School = name, Authority = la, Similarity = round(sim), `FSM6 %` = round(fsm, 1), KS2 = round(ks2, 1),
+      t <- d |> transmute(School = name, Authority = la, Similarity = round(sim), `FSM %` = round(fsm, 1), KS2 = round(ks2, 1),
                           `EAL %` = round(eal, 1), `SEN support %` = round(sen, 1), Pupils = pupils,
                           `Attainment 8` = round(att8_now, 1), Expected = round(exp_now, 1), `Value added` = round(va_now, 1),
                           `Absence against expected` = round(abs_excess, 1))

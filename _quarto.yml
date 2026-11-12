@@ -48,6 +48,8 @@ website:
             text: "Value Added v2.1"
           - href: v22.qmd
             text: "v2.2 candidates"
+          - href: method.qmd#sec-twins-method
+            text: "Find a twin: the matching"
       - href: explore.qmd
         text: "Explore by area"
       - text: Sussex

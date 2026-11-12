@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -142,6 +177,10 @@ window.Quarto = {
         <li>
     <a class="dropdown-item" href="./v22.html">
  <span class="dropdown-text">v2.2 candidates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./method.html#sec-twins-method">
+ <span class="dropdown-text">Find a twin: the matching</span></a>
   </li>  
     </ul>
   </li>
@@ -309,6 +348,16 @@ window.Quarto = {
   <li><a href="#sec-admissions-method" id="toc-sec-admissions-method" class="nav-link" data-scroll-target="#sec-admissions-method">What the admissions changes did: data and calculations</a></li>
   <li><a href="#sec-proposals-method" id="toc-sec-proposals-method" class="nav-link" data-scroll-target="#sec-proposals-method">The proposals that did not go ahead: data and calculations</a></li>
   <li><a href="#sec-neighbourhoods-method" id="toc-sec-neighbourhoods-method" class="nav-link" data-scroll-target="#sec-neighbourhoods-method">Whose journeys changed: data and calculations</a></li>
+  </ul></li>
+  <li><a href="#sec-twins-method" id="toc-sec-twins-method" class="nav-link" data-scroll-target="#sec-twins-method">Find a twin: how the matching works</a>
+  <ul class="collapse">
+  <li><a href="#sec-twins-data" id="toc-sec-twins-data" class="nav-link" data-scroll-target="#sec-twins-data">The characteristics</a></li>
+  <li><a href="#sec-twins-distance" id="toc-sec-twins-distance" class="nav-link" data-scroll-target="#sec-twins-distance">The distance</a></li>
+  <li><a href="#sec-twins-weights" id="toc-sec-twins-weights" class="nav-link" data-scroll-target="#sec-twins-weights">The weights</a></li>
+  <li><a href="#sec-twins-choose" id="toc-sec-twins-choose" class="nav-link" data-scroll-target="#sec-twins-choose">Choosing the twins</a></li>
+  <li><a href="#sec-twins-example" id="toc-sec-twins-example" class="nav-link" data-scroll-target="#sec-twins-example">A worked example</a></li>
+  <li><a href="#sec-twins-checks" id="toc-sec-twins-checks" class="nav-link" data-scroll-target="#sec-twins-checks">Do twins on intake have like results?</a></li>
+  <li><a href="#sec-twins-limits" id="toc-sec-twins-limits" class="nav-link" data-scroll-target="#sec-twins-limits">What the matching cannot do</a></li>
   </ul></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul>
@@ -5397,6 +5446,448 @@ Figure&nbsp;21: The shape of the link, with every control, 2021/22 to 2024/25. D
 <p><strong>Zones.</strong> The model’s origins are zones: Census LSOAs, or where a catchment boundary crosses an LSOA, the parts on either side. Each zone’s catchment on each map comes from the model’s own designs, so a zone is grouped by how the 2024 map moved it: out of Longhill’s catchment into Stringer and Varndean’s, the other way, other changes, or unchanged. Zones are named by the <a href="https://houseofcommonslibrary.github.io/msoanames/">House of Commons Library’s MSOA names</a> (version 2.2), through the ONS 2021 LSOA to MSOA lookup.</p>
 <p><strong>Measures.</strong> For each zone and run: the children the model places (a year’s applicants), its modelled disadvantaged children (as for <a href="#sec-admissions-method">the city figures</a>), the mean walking and bus minutes to the school offered at the city’s schools for all of them and for the disadvantaged children, and the shares offered Longhill and Dorothy Stringer or Varndean. Groups take means weighted by children, or by disadvantaged children for their journeys. Whitehawk’s cost in Attainment 8 points is costed <a href="#sec-admissions-method">as above</a>, from its disadvantaged children’s change in minutes.</p>
 <p><strong>Limits.</strong> Zones hold a few children a year each, as the model places them, so single zones are not reported on their own. The model’s children are spread over schools in proportion to its probabilities, so a zone’s journey is an average over where its children might go. Applying a link measured across authorities to one neighbourhood is an extrapolation.</p>
+</section>
+</section>
+<section id="sec-twins-method" class="level1">
+<h1>Find a twin: how the matching works</h1>
+<p><a href="./twins.html">Find a twin</a>, the <a href="./simulator.html">School Information System</a>’s Find My Twin tab, and the trust pages all start from the same idea. Describe every state-funded secondary school by its intake and setting. Measure how far apart two schools are on those characteristics. Then show the schools nearest to a chosen school, its <em>twins</em>, beside it. Results and attendance are never used to choose twins, only to compare them once chosen, so a twin is a school facing a similar task, not one getting similar results. This section sets out the data, the distance, the weights and a worked example, and checks how far matching on intake brings like results. The code is <code>R/twins_data.R</code> (data and weights, shared by the page and this section) and <code>twins.js</code> (the matching in the browser); the app repeats it in <code>app/R/mod_twin.R</code>.</p>
+<section id="sec-twins-data" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-data">The characteristics</h2>
+<p>There are 3147 schools with every characteristic and 2025/26 absence (the set the <a href="./absence_causes.html">absence models</a> use). Each is described by fifteen characteristics in four groups, each of which the page lets you switch off:</p>
+<div class="cell">
+<div id="tbl-twins-vars" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twins-vars-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;22: The fifteen matching characteristics: what each is, where it comes from, and its spread across schools (the standard deviation that scales its gaps).
+</figcaption>
+<div aria-describedby="tbl-twins-vars-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Group</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Characteristic</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Definition</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Source</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Type</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SD across schools</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Pupils</td>
+<td style="text-align: left;">Free school meals</td>
+<td style="text-align: left;">% of pupils known to be eligible for free school meals</td>
+<td style="text-align: left;">School census, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">14.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pupils</td>
+<td style="text-align: left;">KS2 prior attainment</td>
+<td style="text-align: left;">Mean KS2 scaled score of the KS4 cohort, minus 100</td>
+<td style="text-align: left;">KS4 performance tables (latest model year)</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">2.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pupils</td>
+<td style="text-align: left;">English as an additional language</td>
+<td style="text-align: left;">% whose first language is known or believed to be other than English</td>
+<td style="text-align: left;">School census, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">17.89</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pupils</td>
+<td style="text-align: left;">White British</td>
+<td style="text-align: left;">% of pupils of White British ethnic origin</td>
+<td style="text-align: left;">School census, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">28.97</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pupils</td>
+<td style="text-align: left;">Joined mid-phase</td>
+<td style="text-align: left;">% of the KS4 cohort who joined mid-phase</td>
+<td style="text-align: left;">KS4 performance tables (latest model year)</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">3.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pupils</td>
+<td style="text-align: left;">Girls</td>
+<td style="text-align: left;">% of pupils who are girls</td>
+<td style="text-align: left;">School census, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">16.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Needs</td>
+<td style="text-align: left;">SEN support</td>
+<td style="text-align: left;">% of pupils on SEN support</td>
+<td style="text-align: left;">SEN in England, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">5.84</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Needs</td>
+<td style="text-align: left;">EHC plans</td>
+<td style="text-align: left;">% of pupils with an EHC plan</td>
+<td style="text-align: left;">SEN in England, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">2.11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Needs</td>
+<td style="text-align: left;">Social, emotional and mental health need</td>
+<td style="text-align: left;">% with social, emotional and mental health as their primary need (support or plan)</td>
+<td style="text-align: left;">SEN in England, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">2.71</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood and place</td>
+<td style="text-align: left;">Neighbourhood education</td>
+<td style="text-align: left;">Adults with level 4+ qualifications, standardised</td>
+<td style="text-align: left;">Census 2021 (TS067), 150 nearest Output Areas</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbourhood and place</td>
+<td style="text-align: left;">Rural or urban</td>
+<td style="text-align: left;">Urban near a major town or city; urban further from one; rural</td>
+<td style="text-align: left;">School census (2021 rural-urban classification)</td>
+<td style="text-align: center;">Category</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The school</td>
+<td style="text-align: left;">Size</td>
+<td style="text-align: left;">Pupils on roll (log)</td>
+<td style="text-align: left;">School census, January 2026</td>
+<td style="text-align: center;">Measured</td>
+<td style="text-align: right;">0.41</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The school</td>
+<td style="text-align: left;">Admissions</td>
+<td style="text-align: left;">Selective; non-selective; non-selective in a highly selective area</td>
+<td style="text-align: left;">KS4 performance tables (latest model year)</td>
+<td style="text-align: center;">Category</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The school</td>
+<td style="text-align: left;">Sixth form</td>
+<td style="text-align: left;">Has a sixth form, or 11-16</td>
+<td style="text-align: left;">KS4 performance tables (oldest age taught, latest model year)</td>
+<td style="text-align: center;">Category</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The school</td>
+<td style="text-align: left;">Religious character</td>
+<td style="text-align: left;">Has a religious character, or not</td>
+<td style="text-align: left;">School census, January 2026</td>
+<td style="text-align: center;">Category</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The census and SEN figures are the school’s own, from January 2026, the nearest in time to the 2025/26 absence they are compared with. KS2 prior attainment, mobility, neighbourhood education and admissions are the Value Added v2.1 inputs for the school’s latest model year (<code>R/01_inputs.R</code>; see <a href="#sec-full-spec">the variables</a>). A school that changed URN is matched on either number. Free school meals here is current eligibility from the census, not the FSM6 (ever in six years) measure the value-added model uses, so the twins’ figures can differ a little from the school’s other pages.</p>
+</section>
+<section id="sec-twins-distance" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-distance">The distance</h2>
+<p>For two schools <em>a</em> and <em>b</em>, each characteristic <em>k</em> gives a gap between 0 (the same) and 1 (as different as it can count):</p>
+<p><span class="math display">\[
+g_k(a,b) = \begin{cases}
+\min\!\left(\dfrac{|x_{ak} - x_{bk}|}{3\,s_k},\ 1\right) &amp; \text{a measured characteristic, } s_k \text{ its standard deviation across schools}\\[1.2ex]
+0 \text{ if } x_{ak} = x_{bk},\ 1 \text{ otherwise} &amp; \text{a category}
+\end{cases}
+\]</span></p>
+<p>The distance is the weighted average of the gaps, over the characteristics both schools have, and similarity is its complement as a percentage:</p>
+<p><span class="math display">\[
+D(a,b) = \frac{\sum_k w_k\, g_k(a,b)}{\sum_k w_k}, \qquad \text{similarity} = 100\,\big(1 - D(a,b)\big).
+\]</span></p>
+<p>This is a form of Gower’s distance, as in the original project’s twin finder, with one change: a measured gap is scaled by the standard deviation rather than the range. The range is set by the two most extreme schools in England, so a single outlier would squash every other gap. Capping at three standard deviations means a gap that large counts as a complete mismatch, the same as a different category, and no one characteristic can dominate.</p>
+</section>
+<section id="sec-twins-weights" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-weights">The weights</h2>
+<p>With equal weights, a match on religious character counts as much as a match on prior attainment. But characteristics matter very differently for results and for absence, so by default each is weighted by how much it moves the measure being compared. For each measure <em>y</em> (Attainment 8, or the log of a kind of absence), one ordinary least-squares regression across schools on all fifteen characteristics:</p>
+<p><span class="math display">\[
+y_s = \beta_0 + \sum_{k} \beta_k\, x_{sk} + \varepsilon_s ,
+\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> fsm <span class="sc">+</span> ks2 <span class="sc">+</span> eal <span class="sc">+</span> wbri <span class="sc">+</span> mobile <span class="sc">+</span> girls <span class="sc">+</span> sen <span class="sc">+</span> ehcp <span class="sc">+</span> semh <span class="sc">+</span> l4z <span class="sc">+</span> size <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>          place <span class="sc">+</span> adm <span class="sc">+</span> sixth <span class="sc">+</span> faith, <span class="at">data =</span> d)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>w_raw <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">predict</span>(m, <span class="at">type =</span> <span class="st">"terms"</span>), <span class="dv">2</span>, sd)   <span class="co"># SD across schools of each fitted part</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">pmax</span>(w_raw <span class="sc">/</span> <span class="fu">mean</span>(w_raw), <span class="fl">0.05</span>)                <span class="co"># average one; nothing quite ignored</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The weight of a characteristic is the standard deviation, across schools, of its fitted part of the measure (<span class="math inline">\(\hat\beta_k x_{sk}\)</span>, or the sum of a category’s terms). So a characteristic counts for a lot if it both moves the measure strongly and varies a lot between schools. The weights are scaled to average one, with a floor of 0.05. The regression is only a ruler for importance: it is not used to predict anything, and its coefficients are not reported as effects. Value added and the Attainment 8 of each group take the Attainment 8 weights, because value added is what is left once intake is allowed for, so twins for it should match on what drives results. The combined measure (absence and value added together) averages the overall absence and Attainment 8 weights.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-twins-weights" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-twins-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="method_files/figure-html/fig-twins-weights-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twins-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: Matching weights for results and for three kinds of absence (average one). A dashed line marks equal weighting. The R² under each panel’s title is how much of the measure the fifteen characteristics explain between schools.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For results, prior attainment carries by far the most weight (3.8), then disadvantage, admissions (a selective school differs most) and neighbourhood education. For overall absence the White British share, disadvantage and prior attainment lead, then mobility and social, emotional and mental health need, while neighbourhood education and size count for little. For unauthorised absence, disadvantage dominates (4.3). The full table of weights for every measure, including illness and severe absence, is on <a href="./twins.html#sec-how">the page</a>.</p>
+</section>
+<section id="sec-twins-choose" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-choose">Choosing the twins</h2>
+<p>Every other school’s similarity to the chosen school is worked out, within England, the same region, or everywhere outside the school’s own authority.</p>
+<ul>
+<li><strong>Closest twins</strong> are the most similar schools.</li>
+<li><strong>Anti-twins</strong> (“look-alikes doing better”) come from a pool of the 25, 50 or 100 most similar schools: those that do better than the chosen school on the measure (lower absence, higher Attainment 8 or value added), ordered by how much better. The pool keeps them similar; the ordering picks out the biggest differences among similar schools.</li>
+</ul>
+<p>Across England, the median school’s closest twin (results weights) has a similarity of 94; nine in ten schools have a twin above 90.</p>
+</section>
+<section id="sec-twins-example" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-example">A worked example</h2>
+<div class="cell">
+<div id="tbl-twins-example" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twins-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;23: How similar Varndean School is to Dorothy Stringer School, with the results weights: each characteristic, its gap, and its weighted part of the distance.
+</figcaption>
+<div aria-describedby="tbl-twins-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Characteristic</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Dorothy Stringer School</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Varndean School</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gap (SDs)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gap counted, g</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Weight, w</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">w × g</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Free school meals</td>
+<td style="text-align: left;">26.7</td>
+<td style="text-align: left;">23.0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">1.95</td>
+<td style="text-align: right;">0.164</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KS2 prior attainment</td>
+<td style="text-align: left;">5.5</td>
+<td style="text-align: left;">5.6</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">3.83</td>
+<td style="text-align: right;">0.047</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">English as an additional language</td>
+<td style="text-align: left;">11.6</td>
+<td style="text-align: left;">8.9</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.015</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">White British</td>
+<td style="text-align: left;">63.7</td>
+<td style="text-align: left;">68.9</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">1.41</td>
+<td style="text-align: right;">0.084</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Joined mid-phase</td>
+<td style="text-align: left;">4.8</td>
+<td style="text-align: left;">3.3</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.129</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">0.155</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Girls</td>
+<td style="text-align: left;">46.1</td>
+<td style="text-align: left;">49.7</td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.074</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.027</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SEN support</td>
+<td style="text-align: left;">14.8</td>
+<td style="text-align: left;">29.5</td>
+<td style="text-align: right;">2.52</td>
+<td style="text-align: right;">0.839</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.047</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EHC plans</td>
+<td style="text-align: left;">3.6</td>
+<td style="text-align: left;">6.7</td>
+<td style="text-align: right;">1.43</td>
+<td style="text-align: right;">0.478</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.071</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Social, emotional and mental health need</td>
+<td style="text-align: left;">5.0</td>
+<td style="text-align: left;">8.1</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">0.381</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">0.235</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood education</td>
+<td style="text-align: left;">1.71 SD (50% level 4+)</td>
+<td style="text-align: left;">1.48 SD (48% level 4+)</td>
+<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">0.077</td>
+<td style="text-align: right;">1.45</td>
+<td style="text-align: right;">0.112</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Size</td>
+<td style="text-align: left;">1,626</td>
+<td style="text-align: left;">1,488</td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.072</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.045</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rural or urban</td>
+<td style="text-align: left;">Urban, near a major town or city</td>
+<td style="text-align: left;">Urban, near a major town or city</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Admissions</td>
+<td style="text-align: left;">Non-selective</td>
+<td style="text-align: left;">Non-selective</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sixth form</td>
+<td style="text-align: left;">11-16</td>
+<td style="text-align: left;">11-16</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Religious character</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Total</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><strong>15.00</strong></td>
+<td style="text-align: right;"><strong>1.002</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The closest twin of Dorothy Stringer School (Brighton and Hove) across England, matched for results, is Varndean School (Brighton and Hove). Taking one row: a measured characteristic’s gap is the difference divided by its standard deviation, then by three, and capped at one; a category’s gap is 0 or 1. Each gap is multiplied by its weight. The weighted gaps sum to 1.002 and the weights to 15.00, so the distance is 1.002 / 15.00 = 0.067 and the similarity is 100 × (1 − 0.067) = <strong>93.3</strong>. With equal weights the same pair is 85.0 similar, and Varndean School is 125th closest rather than first: the weights reward matching on what drives results.</p>
+</section>
+<section id="sec-twins-checks" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-checks">Do twins on intake have like results?</h2>
+<p>If the matching works, a school’s twins should have results and absence like its own, even though neither was used to choose them. For every school, the mean of its ten closest twins in England is set against the school’s own value:</p>
+<div class="cell">
+<div id="tbl-twins-checks" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twins-checks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;24: Correlation across schools between a school’s own value and the mean of its ten closest twins (England). Ten schools drawn at random give a correlation near zero.
+</figcaption>
+<div aria-describedby="tbl-twins-checks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Measure</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Twins chosen with</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Correlation with own value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Attainment 8</td>
+<td style="text-align: left;">Weighted for results</td>
+<td style="text-align: right;">0.90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Attainment 8</td>
+<td style="text-align: left;">Equal</td>
+<td style="text-align: right;">0.89</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Overall absence (log)</td>
+<td style="text-align: left;">Weighted for overall absence</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Overall absence (log)</td>
+<td style="text-align: left;">Equal</td>
+<td style="text-align: right;">0.73</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Ten random schools give 0.01 for Attainment 8. Twins chosen on intake alone track a school’s results closely, a little more so with the results weights than with equal weights; absence is harder to predict from intake, as its lower R² says, so twins’ absence is a looser guide. The weights matter more for <em>which</em> schools come out as twins (in the example above, the closest twin for results is only the 125th closest with equal weights) than for how alike the twins are on average. What the twins do not share is what is left: the part of a school’s results or absence its intake does not account for, which is where a comparison with a twin is useful.</p>
+</section>
+<section id="sec-twins-limits" class="level2">
+<h2 class="anchored" data-anchor-id="sec-twins-limits">What the matching cannot do</h2>
+<ul>
+<li><strong>Similar is not identical.</strong> Twins can differ in what the data do not see: pupils’ health, the community, buildings, staffing, history.</li>
+<li><strong>A better twin is a question, not an answer.</strong> An anti-twin that does much better is a reason to ask what it does differently, not proof that copying it would work, and some of the difference will be chance.</li>
+<li><strong>One point in time.</strong> The characteristics are January 2026 (and the latest model year); a school whose intake is changing fast may match different schools next year.</li>
+<li><strong>Absence is 2025/26 autumn and spring</strong>, so the set is schools with absence published for those terms.</li>
+</ul>
+<p><strong>In the School Information System.</strong> The app’s Find My Twin tab uses the same schools, characteristics, standard deviations and distance, with three weightings: for results, for overall absence, or equal. It compares twins on value added and Attainment 8 for the pupil group and period chosen in the app, and on absence against expected; its pool and number of twins are sliders.</p>
 </section>
 </section>
 <section id="data" class="level1">

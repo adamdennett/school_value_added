@@ -1,0 +1,287 @@
+# Find a twin: how the matching works {#sec-twins-method}
+
+```{r twins-method-setup}
+#| include: false
+source(here::here("R", "twins_data.R"))   # d, MNUM, MCAT, W, W_R2: exactly what twins.qmd uses
+TW_LAB <- c(fsm = "Free school meals", ks2 = "KS2 prior attainment", eal = "English as an additional language",
+            wbri = "White British", mobile = "Joined mid-phase", girls = "Girls", sen = "SEN support",
+            ehcp = "EHC plans", semh = "Social, emotional and mental health need", l4z = "Neighbourhood education",
+            size = "Size", place = "Rural or urban", adm = "Admissions", sixth = "Sixth form", faith = "Religious character")
+TW_VARS <- c(MNUM, MCAT)
+TW_SD <- sapply(MNUM, function(v) sd(d[[v]], na.rm = TRUE))
+# The distance of every school from school i, as on the page (twins.js)
+tw_dist <- function(i, wt) {
+  tot <- 0; den <- 0
+  for (v in MNUM) { g <- pmin(abs(d[[v]] - d[[v]][i]) / TW_SD[[v]] / 3, 1); ok <- !is.na(g)
+    tot <- tot + ifelse(ok, wt[[v]] * g, 0); den <- den + ifelse(ok, wt[[v]], 0) }
+  for (v in MCAT) { g <- as.numeric(d[[v]] != d[[v]][i]); ok <- !is.na(g)
+    tot <- tot + ifelse(ok, wt[[v]] * g, 0); den <- den + ifelse(ok, wt[[v]], 0) }
+  out <- tot / den; out[i] <- NA; out
+}
+W_EQ <- setNames(as.list(rep(1, length(TW_VARS))), TW_VARS)
+
+# ---- worked example: Dorothy Stringer and its closest twin on the results weights ----
+ex_i <- which(d$n == "Dorothy Stringer School")[1]
+ex_d <- tw_dist(ex_i, W$att8); ex_j <- which.min(ex_d)
+ex_show <- function(v, i) { x <- d[[v]][i]
+  if (v == "size") return(format(round(exp(x)), big.mark = ","))
+  if (v == "l4z") return(sprintf("%.2f SD (%.0f%% level 4+)", x, d$l4[i]))
+  if (is.numeric(x)) return(sprintf("%.1f", x)); as.character(x) }
+ex <- tibble(v = TW_VARS) |>
+  mutate(Characteristic = TW_LAB[v],
+         a = sapply(v, ex_show, i = ex_i), b = sapply(v, ex_show, i = ex_j),
+         gap_sd = sapply(v, function(k) if (k %in% MNUM) abs(d[[k]][ex_i] - d[[k]][ex_j]) / TW_SD[[k]] else NA_real_),
+         g = sapply(v, function(k) if (k %in% MNUM) min(abs(d[[k]][ex_i] - d[[k]][ex_j]) / TW_SD[[k]] / 3, 1)
+                                    else as.numeric(d[[k]][ex_i] != d[[k]][ex_j])),
+         w = unlist(W$att8[v]), part = w * g)
+ex_dist <- sum(ex$part) / sum(ex$w)
+ex_eq <- 100 * (1 - tw_dist(ex_i, W_EQ)[ex_j])
+ex_rank_eq <- rank(tw_dist(ex_i, W_EQ), na.last = "keep")[ex_j]
+
+# ---- checks: do twins on intake have like results? -----------------------------
+# For every school, the mean of its ten closest twins (England) against its own value
+set.seed(20261112)
+check <- function(wt, y, n = 10) {
+  nb <- sapply(seq_len(nrow(d)), function(i) { di <- tw_dist(i, wt); mean(y[order(di)[seq_len(n)]], na.rm = TRUE) })
+  rnd <- sapply(seq_len(nrow(d)), function(i) mean(y[sample(setdiff(seq_len(nrow(d)), i), n)], na.rm = TRUE))
+  c(twins = cor(y, nb, use = "complete.obs"), random = cor(y, rnd, use = "complete.obs"))
+}
+labs_y <- c(att8 = "Attainment 8", overall = "Overall absence (log)")
+chk <- bind_rows(
+  tibble(measure = labs_y[["att8"]], weights = c("Weighted for results", "Equal"),
+         r = c(check(W$att8, d$att8)[["twins"]], check(W_EQ, d$att8)[["twins"]])),
+  tibble(measure = labs_y[["overall"]], weights = c("Weighted for overall absence", "Equal"),
+         r = c(check(W$overall, log(d$overall + 0.1))[["twins"]], check(W_EQ, log(d$overall + 0.1))[["twins"]])))
+rnd_att8 <- check(W_EQ, d$att8)[["random"]]
+closest_sim <- 100 * (1 - sapply(seq_len(nrow(d)), function(i) min(tw_dist(i, W$att8), na.rm = TRUE)))
+```
+
+[Find a twin](twins.qmd), the [School Information System](simulator.qmd)'s
+Find My Twin tab, and the trust pages all start from the same idea. Describe
+every state-funded secondary school by its intake and setting. Measure how
+far apart two schools are on those characteristics. Then show the schools
+nearest to a chosen school, its *twins*, beside it. Results and attendance
+are never used to choose twins, only to compare them once chosen, so a twin
+is a school facing a similar task, not one getting similar results. This
+section sets out the data, the distance, the weights and a worked example,
+and checks how far matching on intake brings like results. The code is
+`R/twins_data.R` (data and weights, shared by the page and this section) and
+`twins.js` (the matching in the browser); the app repeats it in
+`app/R/mod_twin.R`.
+
+## The characteristics {#sec-twins-data}
+
+There are `r nrow(d)` schools with every characteristic and 2025/26 absence
+(the set the [absence models](absence_causes.qmd) use). Each is described by
+fifteen characteristics in four groups, each of which the page lets you
+switch off:
+
+```{r}
+#| label: tbl-twins-vars
+#| tbl-cap: "The fifteen matching characteristics: what each is, where it comes from, and its spread across schools (the standard deviation that scales its gaps)."
+src <- c(fsm = "School census, January 2026", ks2 = "KS4 performance tables (latest model year)",
+         eal = "School census, January 2026", wbri = "School census, January 2026",
+         mobile = "KS4 performance tables (latest model year)", girls = "School census, January 2026",
+         sen = "SEN in England, January 2026", ehcp = "SEN in England, January 2026",
+         semh = "SEN in England, January 2026", l4z = "Census 2021 (TS067), 150 nearest Output Areas",
+         size = "School census, January 2026", place = "School census (2021 rural-urban classification)",
+         adm = "KS4 performance tables (latest model year)", sixth = "KS4 performance tables (oldest age taught, latest model year)",
+         faith = "School census, January 2026")
+what <- c(fsm = "% of pupils known to be eligible for free school meals",
+          ks2 = "Mean KS2 scaled score of the KS4 cohort, minus 100",
+          eal = "% whose first language is known or believed to be other than English",
+          wbri = "% of pupils of White British ethnic origin", mobile = "% of the KS4 cohort who joined mid-phase",
+          girls = "% of pupils who are girls", sen = "% of pupils on SEN support", ehcp = "% of pupils with an EHC plan",
+          semh = "% with social, emotional and mental health as their primary need (support or plan)",
+          l4z = "Adults with level 4+ qualifications, standardised", size = "Pupils on roll (log)",
+          place = "Urban near a major town or city; urban further from one; rural",
+          adm = "Selective; non-selective; non-selective in a highly selective area",
+          sixth = "Has a sixth form, or 11-16", faith = "Has a religious character, or not")
+tibble(v = TW_VARS) |>
+  transmute(Group = c(rep("Pupils", 6), rep("Needs", 3), "Neighbourhood and place", "The school", "Neighbourhood and place", rep("The school", 3)),
+            Characteristic = TW_LAB[v], Definition = what[v], Source = src[v],
+            Type = ifelse(v %in% MNUM, "Measured", "Category"),
+            `SD across schools` = ifelse(v %in% MNUM, sprintf("%.2f", TW_SD[v]), "")) |>
+  arrange(factor(Group, c("Pupils", "Needs", "Neighbourhood and place", "The school"))) |>
+  kt(align = "llllcr")
+```
+
+The census and SEN figures are the school's own, from January 2026, the
+nearest in time to the 2025/26 absence they are compared with. KS2 prior
+attainment, mobility, neighbourhood education and admissions are the Value
+Added v2.1 inputs for the school's latest model year (`R/01_inputs.R`; see
+[the variables](#sec-full-spec)). A school that changed URN is matched on
+either number. Free school meals here is current eligibility from the
+census, not the FSM6 (ever in six years) measure the value-added model
+uses, so the twins' figures can differ a little from the school's other
+pages.
+
+## The distance {#sec-twins-distance}
+
+For two schools *a* and *b*, each characteristic *k* gives a gap between 0
+(the same) and 1 (as different as it can count):
+
+$$
+g_k(a,b) = \begin{cases}
+\min\!\left(\dfrac{|x_{ak} - x_{bk}|}{3\,s_k},\ 1\right) & \text{a measured characteristic, } s_k \text{ its standard deviation across schools}\\[1.2ex]
+0 \text{ if } x_{ak} = x_{bk},\ 1 \text{ otherwise} & \text{a category}
+\end{cases}
+$$
+
+The distance is the weighted average of the gaps, over the characteristics
+both schools have, and similarity is its complement as a percentage:
+
+$$
+D(a,b) = \frac{\sum_k w_k\, g_k(a,b)}{\sum_k w_k}, \qquad \text{similarity} = 100\,\big(1 - D(a,b)\big).
+$$
+
+This is a form of Gower's distance, as in the original project's twin
+finder, with one change: a measured gap is scaled by the standard deviation
+rather than the range. The range is set by the two most extreme schools in
+England, so a single outlier would squash every other gap. Capping at three
+standard deviations means a gap that large counts as a complete mismatch,
+the same as a different category, and no one characteristic can dominate.
+
+## The weights {#sec-twins-weights}
+
+With equal weights, a match on religious character counts as much as a
+match on prior attainment. But characteristics matter very differently for
+results and for absence, so by default each is weighted by how much it moves
+the measure being compared. For each measure *y* (Attainment 8, or the log
+of a kind of absence), one ordinary least-squares regression across schools
+on all fifteen characteristics:
+
+$$
+y_s = \beta_0 + \sum_{k} \beta_k\, x_{sk} + \varepsilon_s ,
+$$
+
+```r
+m <- lm(y ~ fsm + ks2 + eal + wbri + mobile + girls + sen + ehcp + semh + l4z + size +
+          place + adm + sixth + faith, data = d)
+w_raw <- apply(predict(m, type = "terms"), 2, sd)   # SD across schools of each fitted part
+w <- pmax(w_raw / mean(w_raw), 0.05)                # average one; nothing quite ignored
+```
+
+The weight of a characteristic is the standard deviation, across schools, of
+its fitted part of the measure ($\hat\beta_k x_{sk}$, or the sum of a
+category's terms). So a characteristic counts for a lot if it both moves the
+measure strongly and varies a lot between schools. The weights are scaled to
+average one, with a floor of 0.05. The regression is only a ruler for
+importance: it is not used to predict anything, and its coefficients are not
+reported as effects. Value added and the Attainment 8 of each group take the
+Attainment 8 weights, because value added is what is left once intake is
+allowed for, so twins for it should match on what drives results. The
+combined measure (absence and value added together) averages the overall
+absence and Attainment 8 weights.
+
+```{r}
+#| label: fig-twins-weights
+#| fig-cap: "Matching weights for results and for three kinds of absence (average one). A dashed line marks equal weighting. The R² under each panel's title is how much of the measure the fifteen characteristics explain between schools."
+#| fig-height: 6.2
+wl <- c(att8 = "Results (Att8, value added)", overall = "Overall absence", unauth = "Unauthorised absence",
+        persistent = "Persistent absence")
+wd <- bind_rows(lapply(names(wl), function(o) tibble(measure = sprintf("%s\nR² %.0f%%", wl[[o]], 100 * W_R2[[o]]),
+                                                      v = TW_VARS, w = unlist(W[[o]][TW_VARS])))) |>
+  mutate(lab = factor(TW_LAB[v], rev(TW_LAB[TW_VARS])), measure = factor(measure, unique(measure)))
+ggplot(wd, aes(w, lab)) + geom_vline(xintercept = 1, linetype = "dashed", colour = GREY) +
+  geom_segment(aes(x = 0, xend = w, yend = lab), colour = LPURPLE, linewidth = 1.2) +
+  geom_point(colour = DPURPLE, size = 2.4) + facet_wrap(~measure, nrow = 1) +
+  labs(x = "Weight", y = NULL) + theme_note(11)
+```
+
+For results, prior attainment carries by far the most weight
+(`r sprintf("%.1f", W$att8$ks2)`), then disadvantage, admissions (a
+selective school differs most) and neighbourhood education. For overall
+absence the White British share, disadvantage and prior attainment lead,
+then mobility and social, emotional and mental health need, while
+neighbourhood education and size count for little. For unauthorised
+absence, disadvantage dominates (`r sprintf("%.1f", W$unauth$fsm)`). The full table of weights for every measure,
+including illness and severe absence, is on [the page](twins.qmd#sec-how).
+
+## Choosing the twins {#sec-twins-choose}
+
+Every other school's similarity to the chosen school is worked out, within
+England, the same region, or everywhere outside the school's own authority.
+
+- **Closest twins** are the most similar schools.
+- **Anti-twins** ("look-alikes doing better") come from a pool of the 25, 50
+  or 100 most similar schools: those that do better than the chosen school
+  on the measure (lower absence, higher Attainment 8 or value added),
+  ordered by how much better. The pool keeps them similar; the ordering
+  picks out the biggest differences among similar schools.
+
+Across England, the median school's closest twin (results weights) has a
+similarity of `r pts(median(closest_sim), 0)`; nine in ten schools have a
+twin above `r pts(quantile(closest_sim, 0.1), 0)`.
+
+## A worked example {#sec-twins-example}
+
+```{r}
+#| label: tbl-twins-example
+#| tbl-cap: !expr 'paste0("How similar ", d$n[ex_j], " is to ", d$n[ex_i], ", with the results weights: each characteristic, its gap, and its weighted part of the distance.")'
+ex |> transmute(Characteristic, !!d$n[ex_i] := a, !!d$n[ex_j] := b,
+                `Gap (SDs)` = ifelse(is.na(gap_sd), "", sprintf("%.2f", gap_sd)),
+                `Gap counted, g` = sprintf("%.3f", g), `Weight, w` = sprintf("%.2f", w), `w × g` = sprintf("%.3f", part)) |>
+  bind_rows(tibble(Characteristic = "<b>Total</b>", `Weight, w` = sprintf("<b>%.2f</b>", sum(ex$w)),
+                   `w × g` = sprintf("<b>%.3f</b>", sum(ex$part)))) |>
+  mutate(across(everything(), ~ coalesce(.x, ""))) |>
+  kt(escape = FALSE, align = "lllrrrr")
+```
+
+The closest twin of `r d$n[ex_i]` (`r d$la[ex_i]`) across England, matched
+for results, is `r d$n[ex_j]` (`r d$la[ex_j]`). Taking one row: a measured
+characteristic's gap is the difference divided by its standard deviation,
+then by three, and capped at one; a category's gap is 0 or 1. Each gap is
+multiplied by its weight. The weighted gaps sum to `r sprintf("%.3f", sum(ex$part))`
+and the weights to `r sprintf("%.2f", sum(ex$w))`, so the distance is
+`r sprintf("%.3f", sum(ex$part))` / `r sprintf("%.2f", sum(ex$w))` =
+`r sprintf("%.3f", ex_dist)` and the similarity is 100 × (1 −
+`r sprintf("%.3f", ex_dist)`) = **`r pts(100 * (1 - ex_dist), 1)`**. With
+equal weights the same pair is `r pts(ex_eq, 1)` similar, and
+`r d$n[ex_j]` is `r ord(ex_rank_eq)` closest rather than first: the weights
+reward matching on what drives results.
+
+## Do twins on intake have like results? {#sec-twins-checks}
+
+If the matching works, a school's twins should have results and absence
+like its own, even though neither was used to choose them. For every
+school, the mean of its ten closest twins in England is set against the
+school's own value:
+
+```{r}
+#| label: tbl-twins-checks
+#| tbl-cap: "Correlation across schools between a school's own value and the mean of its ten closest twins (England). Ten schools drawn at random give a correlation near zero."
+chk |> transmute(Measure = measure, `Twins chosen with` = weights, `Correlation with own value` = sprintf("%.2f", r)) |>
+  kt(align = "llr")
+```
+
+Ten random schools give `r sprintf("%.2f", rnd_att8)` for Attainment 8. Twins
+chosen on intake alone track a school's results closely, a little more so
+with the results weights than with equal weights; absence is harder to
+predict from intake, as its lower R² says, so twins' absence is a looser
+guide. The weights matter more for *which* schools come out as twins (in
+the example above, the closest twin for results is only the
+`r ord(ex_rank_eq)` closest with equal weights) than for how alike the
+twins are on average. What the twins do not share is what is left: the part of a
+school's results or absence its intake does not account for, which is where
+a comparison with a twin is useful.
+
+## What the matching cannot do {#sec-twins-limits}
+
+- **Similar is not identical.** Twins can differ in what the data do not
+  see: pupils' health, the community, buildings, staffing, history.
+- **A better twin is a question, not an answer.** An anti-twin that does
+  much better is a reason to ask what it does differently, not proof that
+  copying it would work, and some of the difference will be chance.
+- **One point in time.** The characteristics are January 2026 (and the
+  latest model year); a school whose intake is changing fast may match
+  different schools next year.
+- **Absence is 2025/26 autumn and spring**, so the set is schools with
+  absence published for those terms.
+
+**In the School Information System.** The app's Find My Twin tab uses the
+same schools, characteristics, standard deviations and distance, with three
+weightings: for results, for overall absence, or equal. It compares twins on
+value added and Attainment 8 for the pupil group and period chosen in the
+app, and on absence against expected; its pool and number of twins are
+sliders.

@@ -2953,7 +2953,7 @@
       "checksum": "779772fda8d78f934a11ad6fda506fc8"
     },
     "data/app_data.rds": {
-      "checksum": "093230bc30d820f6d4df821736fa8ebf"
+      "checksum": "6ffd993e1d7006f9d2dbf4d9b9569b64"
     },
     "data/travel_national.rds": {
       "checksum": "6c4412517cf25f570b64e6d4643460c8"
@@ -2983,7 +2983,7 @@
       "checksum": "211b324c9ab1bb3a477d42b2c006f529"
     },
     "R/mod_twin.R": {
-      "checksum": "5e7a19b530099997134846b4287ba8f7"
+      "checksum": "ffa81260c838f4c54fa06293d2335847"
     },
     "README.md": {
       "checksum": "18df0cbcce68d0b2fa0eeb35a3a13301"
