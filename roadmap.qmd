@@ -64,6 +64,21 @@ subtitle: "What v2.1 does now, and what comes next."
       school), all five groups at once with the disadvantage gap, each
       lever's contribution, and an area mode that applies a change to every
       school in a district, authority, region or England.
+- [x] **School Information System v2.0 (Shiny).** The v1.0 policy simulator
+      app rebuilt on v2.1, for Posit Connect Cloud (`app/`): Attainment 8 and
+      value added side by side for all, disadvantaged and non-disadvantaged
+      pupils; four years, single years or moving averages; regions,
+      combined authorities, authorities, districts and trusts; absence
+      against expected; a school finder, twins, observed against predicted,
+      the simulator, an area overview, and travel and distance with the
+      national walking routes as they arrive. To replace this site's
+      simulator page once it is published.
+- [ ] **School Information System v2.1: places and pupil cohorts.** Each
+      authority's demographic picture and the cohorts coming through its
+      schools (placeholder in the app).
+- [ ] **School Information System v2.2: primary and post-16.** The same view
+      for primary schools, then sixth forms and colleges (placeholders in
+      the app).
 - [ ] **Adding a new year.** When DfE publishes a new year's KS4 results,
       add it to `YEAR_CONFIG` in `pipeline/helpers.R`, run
       `R/00_fetch_data.R`, then the build steps. The v2.1 model takes its

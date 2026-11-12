@@ -103,6 +103,25 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
    final or provisional), then `Rscript R/00_fetch_data.R`.
 2. Rerun the build steps above. v2.1 takes its years from the data;
    nothing in the model is tied to a year.
+3. Rebuild the app's data (below) and push.
+
+## The School Information System (Shiny app)
+
+`app/` is the School Information System v2.0, a Shiny version of the
+original v1.0 policy simulator app (`school_attainment_tool/app`) rebuilt
+on Value Added v2.1. It is deployed on Posit Connect Cloud from this
+repository's `app/` folder, so every push to `main` that touches `app/`
+redeploys it. It reads one bundle, `app/data/app_data.rds`, so it never
+needs `data/`:
+
+```
+Rscript R/40_app_data.R                  # the app's data, from the files the site builds
+Rscript R/41_app_travel_national.R       # optional: national walking routes by school, from ../school_active_travel
+Rscript -e 'rsconnect::writeManifest("app")'   # only if packages or app files were added
+Rscript -e 'shiny::runApp("app")'        # run it locally
+```
+
+`app/README.md` describes the tabs and the code.
 
 ## Files
 
@@ -150,6 +169,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 | `R/11_oac_neighbourhoods.R` | neighbourhood types: the 2021/2 Output Area Classification (download from data.geods.ac.uk into `data-raw/oac2021/`) profiled over each school's 150 nearest OAs at three tiers, tested against results and value added out of sample, and against local authority effects (`neighbourhood_types.qmd`) |
 | `R/10_independent.R` | independent schools: GIAS, census and SEN coverage, KS4 Attainment 8 against KS5 A level results, a reduced specification tested on state schools, and DfE's A level value added by sector (`independent.qmd`); fetches the 2024/25 KS5 and vaqual files if missing |
 | `simulator.qmd`, `simulator.js` | Policy simulator v2.0: the v2.1 coefficients applied in the browser to a school's latest result, or every school in an area, with absence and intake as levers |
+| `app/`, `R/40_app_data.R`, `R/41_app_travel_national.R` | the School Information System v2.0 (Shiny, Posit Connect Cloud) and the scripts that build its data: `app_data.rds` (schools, value added and Attainment 8 by year and over four years, absence against intake, authority effects, the simulator's and twins' data, distance and journeys) and `travel_national.rds` (walking catchments from the national routing, partial until it finishes) |
 | `twins.qmd`, `twins.js` | Find a twin: a school's closest look-alikes in intake and setting (Gower-type distance, in the browser) and the anti-twins that do better on absence, attainment or value added; data from `R/08` |
 | `R/area_helpers.R` | the original area documents' charts, ported |
 | `R/site_helpers.R`, `R/map_js.R` | palette, charts, decomposition, map |

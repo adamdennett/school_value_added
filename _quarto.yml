@@ -23,7 +23,7 @@ project:
     - areas/*.qmd
     - roadmap.qmd
   resources:
-    - fonts/
+    - /fonts/*
     - .nojekyll
     - twins.js
     - simulator.js

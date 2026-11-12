@@ -1,0 +1,68 @@
+/* School Information System v2.0: the current UCL palette, led by its lighter purples,
+   as on the School Value Added site (theme.scss) */
+@font-face { font-family: "UCL Sans"; src: url("fonts/UCLSans-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "UCL Sans"; src: url("fonts/UCLSans-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "UCL Sans"; src: url("fonts/UCLSans-Italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+
+:root { --sis-dark: #361a54; --sis-bright: #993bff; --sis-mid: #ba82ff; --sis-light: #ddbdff; --sis-pale: #eedeff; --sis-grey: #6b6680; --sis-up: #1b7837; --sis-down: #762a83; }
+
+.navbar { border-bottom: 3px solid var(--sis-light); }
+.navbar .nav-link { font-weight: 600; }
+.sis-title { font-weight: 700; color: var(--sis-dark); }
+.sis-title small { font-size: .7em; margin-left: .4em; padding: 1px 6px; border-radius: 6px; background: var(--sis-light); color: var(--sis-dark); vertical-align: middle; }
+
+/* the bar of shared choices under the title */
+.sis-bar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 18px; padding: 8px 18px 2px; background: #f8f5fc; border-bottom: 1px solid #e3dcef; }
+.sis-ctl { display: flex; flex-direction: column; }
+.sis-ctl label { font-size: 12px; font-weight: 700; color: var(--sis-grey); margin-bottom: 1px; text-transform: uppercase; letter-spacing: .03em; }
+.sis-ctl .form-group, .sis-ctl .shiny-input-container { margin-bottom: 6px; }
+.sis-bar-note { font-size: 13px; color: var(--sis-dark); padding-bottom: 12px; flex: 1 1 240px; }
+
+.card { border-color: #e3dcef; }
+.sis-ch { background: var(--sis-pale); color: var(--sis-dark); font-weight: 700; }
+.sis-note, .card-footer.sis-note { font-size: 12.5px; color: var(--sis-grey); }
+.card-footer.sis-note { background: #fcfbfe; }
+.sis-sub { color: var(--sis-grey); font-size: .92em; }
+.sis-small { font-size: 12.5px; color: var(--sis-grey); margin: 10px 0 24px; }
+.sis-where { color: var(--sis-grey); margin-bottom: 8px; }
+.sis-list { padding-left: 1.1rem; }
+.sis-h6 { text-transform: uppercase; letter-spacing: .04em; font-size: 12px; color: var(--sis-grey); margin: 12px 0 4px; }
+.sis-lever .form-group { margin-bottom: 4px; }
+
+/* headline numbers */
+.sis-kpis { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 10px; }
+.sis-kpi { flex: 1 1 130px; background: #f8f5fc; border: 1px solid #e3dcef; border-left: 4px solid var(--sis-mid); border-radius: 8px; padding: 8px 10px; }
+.sis-kpi.up { border-left-color: var(--sis-up); } .sis-kpi.down { border-left-color: var(--sis-down); }
+.sis-kpi-l { font-size: 12px; color: var(--sis-grey); font-weight: 600; }
+.sis-kpi-v { font-size: 24px; font-weight: 700; color: var(--sis-dark); line-height: 1.15; }
+.sis-kpi-s { font-size: 12px; color: var(--sis-grey); }
+.sis-facts th { width: 32%; color: var(--sis-grey); font-weight: 600; font-size: 13px; }
+.sis-facts td { font-size: 13.5px; }
+.sis-vb .value-box-title { font-weight: 600; }
+.sis-vb .value-box-value { color: var(--sis-dark); }
+.bslib-value-box.bg-light { background: var(--sis-pale) !important; border-color: var(--sis-light) !important; }
+.sis-national { border-top: 1px dashed #d3cde0; margin-top: 10px; padding-top: 10px; }
+
+/* about page */
+.sis-hero { background: linear-gradient(135deg, var(--sis-pale) 0%, var(--sis-light) 100%); padding: 2.4rem 2rem 1.8rem; margin: 0 0 1.4rem; text-align: center; }
+.sis-hero h1 { font-weight: 700; color: var(--sis-dark); font-size: 2.3rem; margin-bottom: .4rem; }
+.sis-hero-sub { font-size: 1.15rem; color: #4b3866; max-width: 820px; margin: 0 auto .8rem; }
+.sis-hero-credit { font-size: .95rem; color: #4b3866; }
+.sis-hero-logos { display: flex; gap: 28px; justify-content: center; align-items: center; margin-top: 14px; }
+.sis-about { max-width: 980px; }
+.sis-about .card { margin-bottom: 14px; }
+.sis-about h4 { font-size: 1.15rem; }
+.sis-caution { border-left: 4px solid var(--sis-mid); }
+.sis-future-head { margin: 1.4rem 0 1rem; }
+.sis-badge { display: inline-block; background: var(--sis-dark); color: #fff; font-weight: 700; border-radius: 6px; padding: 2px 10px; font-size: 14px; }
+.sis-travel-text { padding: 0 1rem 1rem; }
+.sis-footer { font-size: 12px; color: var(--sis-grey); text-align: center; padding: 14px; border-top: 1px solid #e3dcef; margin-top: 18px; background: var(--sis-pale); }
+
+table.table { font-size: 13.5px; }
+.table thead th { background: var(--sis-pale); color: var(--sis-dark); }
+.leaflet-container { background: #f2f1f5; }
+
+/* keep the tabs on one line on laptop screens */
+.navbar .nav-link { font-size: 14.5px; padding-left: .55rem !important; padding-right: .55rem !important; }
+@media (max-width: 1700px) { .navbar .nav-link > i, .navbar .nav-link > svg { display: none; } }
+.navbar-brand { margin-right: .6rem; }
