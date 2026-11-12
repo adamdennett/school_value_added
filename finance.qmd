@@ -1,0 +1,328 @@
+---
+title: "School finances before closure"
+subtitle: "What happened to the pupil numbers and finances of state schools in the years before they closed, and what that says about early warning for others."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+suppressPackageStartupMessages({ library(data.table); library(leaflet) })
+F <- readRDS(here::here("data", "finance_closures.rds"))
+DEM <- readRDS(here::here("data", "demographics.rds"))
+PRO <- F$profile; BEN <- F$benchmark; TE <- F$test; EFF <- F$effects
+pm <- function(st, v, kk, col = "median") PRO[stage == st & measure == v & k == kk][[col]]
+bm <- function(st, v) BEN[stage == st & measure == v, median]
+nc <- function(st) F$n_closers[stage == st, schools]
+def_open <- F$deficit_all[, .(d = mean(deficit)), by = stage]
+dk <- function(st, kk) F$deficit_k[stage == st & k == kk, deficit]
+sr <- F$sign_rates
+sr_at <- function(st, n) sr[stage == st & n_signs == n, rate]
+cap <- function(x) paste0(toupper(substr(x, 1, 1)), substring(x, 2))
+K_LAB <- c(`-6` = "6 years\nbefore", `-5` = "5", `-4` = "4", `-3` = "3", `-2` = "2", `-1` = "1 year\nbefore", `0` = "Last\nyear")
+fin_years <- range(F$years)
+```
+
+::: {.callout-note appearance="simple"}
+## In short
+
+- **Rolls fall first, and furthest.** Of the `r nc("Primary")` state primary
+  schools that closed or merged from 2017/18 on, the typical one had lost
+  `r pts(abs(pm("Primary", "pupils_chg3", -4)), 0)`% of its pupils over three
+  years four years before it closed, and `r pts(abs(pm("Primary", "pupils_chg3", -1)), 0)`%
+  by the year before, when it was `r pts(pm("Primary", "util", -1), 0)`% full
+  against `r pts(bm("Primary", "util"), 0)`% for schools that stayed open.
+- **The money follows.** Their reserves and in-year balances were close to
+  other schools' six years out and weakened as the end neared: in the year
+  before closing, `r pts(dk("Primary", -1), 0)`% were in deficit, against
+  about `r pts(def_open[stage == "Primary", d], 0)`% of open primary schools in
+  a typical year. Income per pupil rose, because a shrinking school keeps its
+  fixed costs and lump sums.
+- **There is early warning in schools' own returns.** A simple model of
+  pupils, capacity and finances, trained on closures up to 2020/21, picked
+  out the schools that closed later: the riskiest 5% of returns included
+  `r round(100 * TE$early$top5[["caught"]] / TE$early$top5[["closures"]])`% of
+  the returns from schools that closed two or three years on. Rolls carry most of the
+  warning; finances add to it.
+- **No open school is named here.** The page counts schools showing the
+  warning signs by authority. A published list could itself push a school
+  towards closure, as parents and staff read it.
+:::
+
+Every state mainstream school that closed with no successor, or merged
+into another, from 2017/18 to 2025/26 (from
+[Pupil numbers and school places](demographics.qmd#sec-demog-data)) is
+followed back through its finance returns: maintained schools' Consistent
+Financial Reporting (CFR) from `r fin_years[1]` and academies' accounts
+returns (AAR) from 2016-17, to `r fin_years[2]`. A school that became an
+academy before it closed is followed through both. Each school's figures are
+set against all the state schools of its stage still open that year. That is
+`r nc("Primary")` primary and `r nc("Secondary")` secondary schools; most of
+what follows is about primary schools, where nearly all closures are.
+
+## The years before closure {#sec-before}
+
+```{r}
+#| label: fig-before
+#| fig-cap: "Primary schools that closed or merged from 2017/18: the median school (line) and the middle half (band) in each year before closure, against the median open primary school (dashed). Pupils are full-time equivalents from the finance returns; capacity is GIAS's."
+#| fig-height: 7
+v6 <- c("pupils", "pupils_chg3", "util", "reserve_pct", "in_year_pct", "income_pp")
+d <- PRO[stage == "Primary" & measure %in% v6][, lab := factor(F$measures[measure], F$measures[v6])]
+b <- BEN[stage == "Primary" & measure %in% v6][, lab := factor(F$measures[measure], F$measures[v6])]
+ggplot(d, aes(k, median)) + geom_ribbon(aes(ymin = q1, ymax = q3), fill = LPURPLE, alpha = 0.6) +
+  geom_hline(data = b, aes(yintercept = median), linetype = "dashed", colour = GREY) +
+  geom_line(colour = DPURPLE, linewidth = 1.1) + geom_point(colour = DPURPLE, size = 1.8) +
+  facet_wrap(~lab, scales = "free_y", ncol = 3) + scale_x_continuous(breaks = -6:0, labels = K_LAB) +
+  labs(x = NULL, y = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: fig-percentile
+#| fig-cap: "The same schools as percentiles among all open primary schools that year (50 = the middle). Below 50: smaller, emptier, falling faster, or with less in reserve than most schools."
+#| fig-height: 4.4
+pp <- PRO[stage == "Primary" & measure %in% v6 & !is.na(p_median)][, lab := factor(F$measures[measure], F$measures[v6])]
+ggplot(pp, aes(k, p_median, colour = lab)) + geom_hline(yintercept = 50, colour = GREY) +
+  geom_line(linewidth = 1) + geom_point(size = 1.8) +
+  scale_colour_manual(values = c(DPURPLE, BPURPLE, MPURPLE, BLUE, "#5aae61", GREY)) +
+  scale_x_continuous(breaks = -6:-1, labels = K_LAB[1:6]) + scale_y_continuous(limits = c(0, 100)) +
+  labs(x = NULL, y = "Median percentile", colour = NULL) + theme_note(11) + guides(colour = guide_legend(ncol = 2))
+```
+
+The order matters. Six years before closure the schools that went on to
+close were already smaller than most (median percentile
+`r pts(pm("Primary", "pupils", -6, "p_median"), 0)`) and had begun to lose
+pupils; their finances were near the middle. Rolls kept falling and capacity
+emptying, year on year; reserves and in-year balances slipped only in the
+last two or three years. A school's finances, in other words, mostly record
+what its rolls have already done: by the time the deficit shows, the
+pupils have gone.
+
+```{r}
+#| label: fig-deficit
+#| fig-cap: "Share of closing primary and secondary schools with a negative revenue reserve, in each year before closure, against the share of open schools in an average year (dashed)."
+#| fig-height: 3.8
+dd <- F$deficit_k[k <= 0]
+ggplot(dd, aes(k, deficit)) + geom_col(fill = MPURPLE, width = 0.7) +
+  geom_hline(data = def_open, aes(yintercept = d), linetype = "dashed", colour = GREY) +
+  facet_wrap(~stage) + scale_x_continuous(breaks = -6:0, labels = K_LAB) +
+  labs(x = NULL, y = "% in deficit") + theme_note(11)
+```
+
+Secondary closures are few (`r nc("Secondary")` since 2017/18) and more varied,
+but show the same order: rolls first, then money.
+
+## Which signals warn, and how early {#sec-model}
+
+A logistic regression asks, for every school-year from 2017-18 to 2023-24,
+whether the school closed within the next two years, given that year's
+return. Each signal's effect is shown per standard deviation (or yes against
+no), holding the others fixed.
+
+```{r}
+#| label: fig-effects
+#| fig-cap: "Odds of closing within two years, per standard deviation of each signal (or yes against no), with 95% intervals. Below 1, less likely to close; solid points are clear of 1."
+#| fig-height: 4.6
+e <- EFF[, .(label = factor(label, rev(label)), or, lo, hi, clear = lo > 1 | hi < 1, per)]
+ggplot(e, aes(or, label)) + geom_vline(xintercept = 1, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), colour = DPURPLE, linewidth = 0.8) +
+  geom_point(aes(shape = clear), colour = DPURPLE, size = 2.6, fill = "white", stroke = 1) +
+  scale_shape_manual(values = c(`TRUE` = 19, `FALSE` = 21), guide = "none") +
+  scale_x_log10(breaks = c(0.1, 0.25, 0.5, 1, 2)) + labs(x = "Odds ratio (log scale)", y = NULL) + theme_note(11)
+```
+
+::: {.callout-note collapse="true"}
+## The model behind this chart
+
+$$\text{logit}\,\Pr(\text{closes within two years})_{st} = \beta_0 + \sum_j \beta_j x_{jst}$$
+
+for school *s* in year *t*, with the signals $x_j$ as in the chart (a school
+three years old or more, with at least 10 pupils and a return with income).
+Percentages are capped (change in pupils at ±50, capacity 20 to 150, reserve
+±40, in-year balance ±20) so that a few odd returns cannot steer it.
+
+```r
+glm(y ~ log_pupils + chg3 + util_c + res + iy + ipp + area_primary_chg + academy + secondary,
+    family = binomial, data = mm)   # `r format(F$model$n, big.mark = ",")` school-years, `r F$model$events` closing within two years
+```
+:::
+
+The strongest single sign is a falling roll: each standard deviation more of
+fall over three years more than doubles the odds. An emptier school, a
+smaller reserve, an in-year deficit, a small school and an area whose primary
+population is falling all add. Academies are much less likely to close than
+maintained schools with the same figures. That is partly how the system
+works rather than how the schools are doing: a struggling academy is more
+often moved to another trust than closed. Income per pupil goes the other
+way because, size for size, a school with more per pupil is one that has
+lost pupils faster than its funding.
+
+```{r}
+#| label: tbl-test
+#| tbl-cap: "How well the model picks out closures it was not trained on: fitted on 2016-17 to 2020-21, tested on 2021-22 to 2023-24. AUC is the chance a closing school is ranked above an open one (0.5 is guessing)."
+tt <- data.table(
+  Test = c("Closes within two years", "Closes two or three years on (early)"),
+  AUC = sprintf("%.2f", c(TE$auc, TE$early$auc)),
+  `Closing in test years` = c(TE$top2[["closures"]], TE$early$top2[["closures"]]),
+  `Caught in riskiest 2%` = sprintf("%d (%.0f%%)", c(TE$top2[["caught"]], TE$early$top2[["caught"]]),
+                                     100 * c(TE$top2[["caught"]] / TE$top2[["closures"]], TE$early$top2[["caught"]] / TE$early$top2[["closures"]])),
+  `Caught in riskiest 5%` = sprintf("%d (%.0f%%)", c(TE$top5[["caught"]], TE$early$top5[["caught"]]),
+                                     100 * c(TE$top5[["caught"]] / TE$top5[["closures"]], TE$early$top5[["caught"]] / TE$early$top5[["closures"]])))
+kt(tt, align = "lrrrr")
+```
+
+Pupil numbers and capacity alone give an AUC of `r sprintf("%.2f", TE$parts[["rolls"]])`
+on the test years; the finance measures alone
+`r sprintf("%.2f", TE$parts[["finance"]])`; maintained or academy alone
+`r sprintf("%.2f", TE$parts[["governance"]])`. Both kinds of signal carry
+warning, and together they do better than either. Even so, most schools the
+model flags do not close in the next few years: closure is rare (about
+`r pts(100 * TE$base, 1)` in 100 school-years), and many schools with the same
+figures carry on, merge their classes, federate or find pupils.
+
+## Simple warning signs {#sec-signs}
+
+For governors and councils, five signs that can be read straight from a
+school's own returns:
+
+```{r}
+#| label: tbl-signs
+#| tbl-cap: "Five warning signs, how often closing schools showed them in the two years before closure, and how often other schools did."
+sl <- c(small = "Small (under 100 pupils, primary; under 600, secondary)", falling = "Pupils down 15% or more over three years",
+        deficit_in_year = "In-year deficit of more than 3% of income", reserve_neg = "Revenue reserve below zero",
+        under_capacity = "Under 70% full")
+dcast(F$sign_share, sign ~ stage, value.var = c("closing", "open"))[, .(Sign = sl[sign],
+  `Primary, closing` = sprintf("%.0f%%", closing_Primary), `Primary, other` = sprintf("%.0f%%", open_Primary),
+  `Secondary, closing` = sprintf("%.0f%%", closing_Secondary), `Secondary, other` = sprintf("%.0f%%", open_Secondary))] |>
+  kt(align = "lrrrr")
+```
+
+```{r}
+#| label: fig-signs
+#| fig-cap: "How many of the five signs a school showed in a year, and the share of such school-years followed by closure within two years, 2017-18 to 2023-24 (4 = four or five signs)."
+#| fig-height: 3.6
+ggplot(sr, aes(factor(n_signs), rate)) + geom_col(fill = DPURPLE, width = 0.65) +
+  geom_text(aes(label = sprintf("%.1f%%", rate)), vjust = -0.4, size = 3.4, colour = INK) +
+  facet_wrap(~stage) + labs(x = "Warning signs", y = "% closing within two years") + theme_note(11) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+```
+
+A primary school with none of the signs closed within two years in
+`r pts(sr_at("Primary", 0), 1)` cases in 100; with three,
+`r pts(sr_at("Primary", 3), 1)`; with four or five,
+`r pts(sr_at("Primary", 4), 1)`. The signs pick out a school that needs a
+conversation about its future, not one that will close.
+
+## Where the warning signs are now {#sec-now}
+
+```{r}
+#| include: false
+BA <- F$by_area[, .(schools = sum(schools), flagged = sum(flagged), three_plus = sum(three_plus)), by = area][
+  , `:=`(pct_flag = 100 * flagged / schools, pct_three = 100 * three_plus / schools)]
+NOW <- F$now
+```
+
+Applied to each open school's latest return (`r paste(range(names(NOW$years)), collapse = " to ")`), the
+model puts `r format(NOW$flagged, big.mark = ",")` of
+`r format(NOW$schools, big.mark = ",")` schools
+(`r pts(100 * NOW$flagged / NOW$schools, 1)`%) in the band that, over the
+last seven years, held the riskiest 2% of school-years. That share is higher
+than 2% because rolls are falling now in more places than they were. The map
+counts them by authority.
+
+```{r}
+#| label: fig-now-map
+#| fig-cap: "Open state schools whose latest return is in the highest-risk band (the riskiest 2% of school-years since 2017-18), as a share of the authority's schools with a return. No school is named."
+b <- merge(DEM$bounds, BA, by = "area")
+pal <- colorNumeric(c("#f7f7f7", "#e7d4e8", "#c2a5cf", "#9970ab", "#762a83"), c(0, max(15, ceiling(max(b$pct_flag, na.rm = TRUE)))))
+leaflet(height = 560, options = leafletOptions(scrollWheelZoom = FALSE)) |>
+  addProviderTiles("Esri.WorldGrayCanvas") |> setView(-1.6, 52.8, 6) |>
+  addPolygons(data = b, fillColor = ~pal(pct_flag), fillOpacity = 0.85, color = "white", weight = 0.6,
+              popup = ~sprintf("<b>%s</b><br>%d of %d schools in the highest-risk band (%.1f%%)<br>%d with three or more warning signs",
+                               area, flagged, schools, pct_flag, three_plus)) |>
+  addLegend("bottomright", pal = pal, values = c(0, max(15, ceiling(max(b$pct_flag, na.rm = TRUE)))), title = "% of schools",
+            labFormat = labelFormat(suffix = "%"), opacity = 0.9)
+```
+
+```{r}
+#| label: tbl-now
+DT::datatable(BA[order(-pct_flag), .(Area = area, Schools = schools, `Highest-risk band` = flagged, `%` = round(pct_flag, 1),
+                                     `Three or more signs` = three_plus, `% ` = round(pct_three, 1))],
+              rownames = FALSE, options = list(pageLength = 15, scrollX = TRUE),
+              caption = "Open state mainstream schools with a recent return, by authority: how many are in the highest-risk band, and how many show three or more of the five warning signs. No school is named.")
+```
+
+## Sussex: the schools that closed {#sec-fin-sussex}
+
+The closed schools can be named. Each of these Sussex primary schools'
+last years:
+
+```{r}
+#| label: fig-sussex-closed
+#| fig-cap: "Sussex primary schools that closed or merged from 2019/20: pupils as a share of capacity, and revenue reserve as a share of income, in the years before closure."
+#| fig-height: 6.6
+ex <- F$examples[stage == "Primary"][, lab := paste0(stringr::str_wrap(name, 30), "\n(", area, ", ", tolower(event), " ", yl(last_year), ")")]
+exl <- melt(ex, id.vars = c("lab", "k"), measure.vars = c("util", "reserve_pct"))
+exl[, variable := factor(variable, c("util", "reserve_pct"), c("Pupils as % of capacity", "Revenue reserve, % of income"))]
+ggplot(exl[!is.na(value)], aes(k, value, colour = variable)) + geom_hline(yintercept = 0, colour = LIGHT) +
+  geom_line(linewidth = 0.9) + geom_point(size = 1.4) + facet_wrap(~lab, ncol = 4) +
+  scale_colour_manual(values = c(DPURPLE, BPURPLE)) + scale_x_continuous(breaks = c(-6, -3, 0)) +
+  labs(x = "Years before closure (0 = last year)", y = NULL, colour = NULL) + theme_note(9)
+```
+
+## What this cannot tell you {#sec-fin-limits}
+
+- **Closure is a decision, not a measurement.** Councils, dioceses and
+  trusts close schools for many reasons: falling rolls and money, but also
+  buildings, standards, reorganisation (infant and junior schools merging)
+  and local politics. The model describes the schools that were closed, not
+  the ones that should have been.
+- **The last year is partly the decision itself.** Once closure is proposed,
+  parents move children and rolls fall faster, which is why the early test
+  (two or three years ahead) matters more than the headline one.
+- **Academies and maintained schools differ.** Academies rarely close: they
+  are moved to another trust. In a multi-academy trust an academy's reserve
+  is its own share, and the trust's central reserve can carry it.
+- **The returns differ in timing and coverage.** CFR years run April to
+  March, AAR years September to August; some schools miss a year; capacity is
+  GIAS's latest figure, not the figure each year.
+- **A warning is not a forecast for one school.** Most schools showing the
+  signs do not close in the next few years. That is why no open school is
+  named here.
+
+## Data and calculations {#sec-fin-data}
+
+**Finances.** DfE's [Financial Benchmarking and Insights
+Tool](https://financial-benchmarking-and-insights-tool.education.gov.uk/data-sources)
+files: CFR full data workbooks for local authority maintained schools,
+financial years 2014-15 to 2025-26, and AAR downloads for academies,
+2016-17 to 2024-25. From each return: pupils (full-time equivalent, including
+dual registrations where given), total income, total expenditure (as DfE
+defines them in each year), staff costs and the revenue reserve. The in-year
+balance is income minus expenditure. Central services rows of multi-academy
+trusts are left out. A CFR year (April to March) is labelled with the
+academic year it mostly falls in.
+
+**One school, several numbers.** A school's earlier URNs are joined to its
+latest through GIAS's one-to-one predecessor links (academy conversion, a
+change of type), not through mergers. Where a year has two returns (a
+part-year CFR and an AAR around conversion), the one with the larger income
+is kept.
+
+**Measures.** Change in pupils over three years; pupils as a percentage of
+capacity (GIAS's latest recorded capacity); revenue reserve and in-year
+balance as percentages of income; income per pupil; staff costs as a
+percentage of expenditure. Percentiles are among the state mainstream
+schools of the same stage still open that year.
+
+**Closures.** As on [Pupil numbers and school places](demographics.qmd#sec-demog-data):
+state mainstream schools closed with no successor or merged, from GIAS, with
+the last academic year taught. A return for year *t* counts as "closing within
+two years" if the school's last year is *t*+1 or *t*+2; returns in or after the
+last year are left out. The early test uses *t*+2 or *t*+3 and leaves out the
+year before closure.
+
+**Current schools.** Each open school's latest return (2023-24 or later), with
+the model fitted on every year. The highest-risk band is the predicted risk
+above which the riskiest 2% of school-years from 2017-18 to 2023-24 fall.
+School-level scores are kept out of the published data.
+
+The code is `R/43_finance_closures.R`, which writes `data/finance_closures.rds`.

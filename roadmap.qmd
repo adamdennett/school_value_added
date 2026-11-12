@@ -79,10 +79,15 @@ subtitle: "What v2.1 does now, and what comes next."
       consistent decline or growth, the cohorts in school rolled forward to
       Year 7 in 2032/33, and every state mainstream school opened, closed or
       merged since 2015/16 on a map.
-- [ ] **Closures and finance: an early warning.** School-level rolls
-      (census 2019/20 onwards) and finances (CFR from 2014/15, academies'
-      AAR from 2016/17) in the years before each closure, against schools
-      that stayed open: what, if anything, gives early warning.
+- [x] **[School finances before closure](finance.qmd).** Every state
+      school that closed or merged since 2017/18 followed through its
+      finance returns (CFR from 2014-15, academies' AAR from 2016-17):
+      rolls fall first, money follows; a model of closure within two (and
+      two to three) years tested on later years; five simple warning signs;
+      and counts of open schools showing them by authority, with no open
+      school named.
+- [ ] **Into the School Information System.** Pupil numbers and cohorts by
+      area, and the warning-sign counts, as tabs in the app (v2.1).
 - [ ] **School Information System v2.1: places and pupil cohorts.** Each
       authority's demographic picture and the cohorts coming through its
       schools (placeholder in the app).

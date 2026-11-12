@@ -101,6 +101,23 @@ cd ../../.. && Rscript R/42_demographics.R && quarto render demographics.qmd
 When DfE publishes the next census (each June), update the data set id from the EES
 API (`/publications/a91d9e05-be82-474c-85ae-4913158406d0/data-sets`) and rerun.
 
+## School finances before closure
+
+`finance.qmd` reads `data/finance_closures.rds`, built by `R/43_finance_closures.R`. It needs
+the finance workbooks from DfE's Financial Benchmarking and Insights Tool:
+
+```
+mkdir -p data-raw/finance && cd data-raw/finance
+B=https://financial-benchmarking-and-insights-tool.education.gov.uk/files
+for y in 2014-15 2015-16 2016-17 2017-18 2018-19 2019-20 2020-21 2021-22 2022-23 2023-24 2024-25 2025-26; do curl -sL -o cfr_$y.xlsx "$B/CFR_${y}_Full_Data_Workbook.xlsx"; done
+for y in 2016-17 2017-18 2018-19 2019-20 2020-21 2021-22 2022-23 2023-24 2024-25; do curl -sL -o aar_$y.xlsx "$B/AAR_${y}_download.xlsx"; done
+cd ../.. && Rscript R/43_finance_closures.R && quarto render finance.qmd
+```
+
+No open school is named on the site. The model's school-level scores are written to
+`data-raw/private/closure_risk_open_schools.csv`, which is not committed; share it only
+privately.
+
 ## Ofsted, monthly
 
 `.github/workflows/refresh-ofsted.yml` runs on the 20th of each month (and
@@ -181,6 +198,7 @@ Rscript -e 'shiny::runApp("app")'        # run it locally
 | `R/35_trust_summary.R` | one trust's secondary schools (by GIAS trust name): value added and expected Attainment 8 by year, absence against intake, place effects, ten national look-alikes, levers (attendance, subject areas, slots, staffing) with schools to talk to, and intake-aware targets; writes `data/trust_<slug>.rds` for `trust_aldridge.qmd` |
 | `R/36_workforce.R` | School Workforce in England, school level, 2021/22 to 2024/25: teacher retention, sickness days, pupils per qualified teacher and others, and their joint link with Value Added v2.1; writes `data/workforce_levers.rds` |
 | `R/42_demographics.R` | pupil numbers by year group, every local authority, 2015/16 to 2025/26 (school census), trend classes, the cohorts in school rolled forward to Year 7 in 2032/33, and state mainstream schools opened, closed and merged from GIAS; writes `data/demographics.rds` for `demographics.qmd` |
+| `R/43_finance_closures.R` | school finances (DfE CFR 2014-15 to 2025-26 and AAR 2016-17 to 2024-25, downloaded from the Financial Benchmarking and Insights Tool into `data-raw/finance/`) joined to every state mainstream school through its predecessor URNs; the years before closure, a logistic model of closure within two years tested on later years, warning signs, and counts by authority; writes `data/finance_closures.rds` for `finance.qmd`. School-level scores for open schools go only to `data-raw/private/` (not committed) |
 | `R/16_parents_not_adults.R` | parents, not adults: neighbourhood education from ONS custom Census tables (qualification by dependent children and age by MSOA; by age by LSOA), against v2.1 for every group, with held-out years, the split between parents and other adults, and London tested separately (`neighbourhood_covariates.qmd`); caches about 1.5 GB of API responses in `data-raw/census2021/ons_custom/` |
 | `R/15_graduate_deprivation.R` | two kinds of deprived neighbourhood: tests whether the deprivation effect is a recent-graduate effect (interaction, by kind of place, early-career measures, deprivation in parts) and value added by kind of neighbourhood (`neighbourhood_covariates.qmd`) |
 | `R/14_v22_candidates.R` | v2.2 candidates: pupils' ethnicity (school White British share each January, from the SPC releases downloaded into `data-raw/ees/spc_all/`) and neighbourhood household deprivation (Census 2021 TS011), against v2.1 for every group, with leave-one-year-out prediction, year-by-year fits and who gains (`v22.qmd`) |

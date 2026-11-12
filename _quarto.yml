@@ -14,6 +14,7 @@ project:
     - neighbourhood_covariates.qmd
     - distance.qmd
     - demographics.qmd
+    - finance.qmd
     - v22.qmd
     - absence_causes.qmd
     - absence_change.qmd
@@ -87,6 +88,8 @@ website:
         menu:
           - href: demographics.qmd
             text: "Pupil numbers and school places"
+          - href: finance.qmd
+            text: "School finances before closure"
       - href: twins.qmd
         text: "Find a twin"
       - href: simulator.qmd
