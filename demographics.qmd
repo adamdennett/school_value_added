@@ -1,0 +1,321 @@
+---
+title: "Pupil numbers and school places"
+subtitle: "Where primary and secondary rolls are growing or falling, what the cohorts already in school mean for secondary schools, and where state schools have opened and closed."
+---
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+suppressPackageStartupMessages({ library(data.table); library(leaflet) })
+D <- readRDS(here::here("data", "demographics.rds"))
+YG <- D$yeargroups; TR <- D$trend; EV <- D$events; PR <- D$proj
+LA <- TR[level == "Local authority"]
+eng <- TR[area == "England"]
+y0 <- yl(D$t0); y1 <- yl(max(D$years)); yfirst <- yl(min(D$years))
+nat <- YG[area == "England"][order(year)]
+cls_n <- table(LA$primary_class)
+sec_cls_n <- table(LA$secondary_class)
+falling <- cls_n[["Consistent decline"]] + cls_n[["Decline"]]
+# closures and openings by trend class, primary schools
+pr <- LA[, .(areas = .N, schools = sum(primary_open, na.rm = TRUE), closed = sum(Primary_Closed, na.rm = TRUE),
+             merged = sum(Primary_Merged, na.rm = TRUE), opened = sum(Primary_Opened, na.rm = TRUE)), by = primary_class][order(primary_class)]
+pr[, `:=`(gone_rate = 100 * (closed + merged) / schools, open_rate = 100 * opened / schools)]
+rate <- function(cl, v) pr[[v]][pr$primary_class == cl]
+y7_falls <- LA[order(y7_chg_2032)]
+ev_n <- EV[, .N, by = .(event, stage)]
+evn <- function(e, s) ev_n[event == e & stage == s, N]
+dfe <- D$dfe_check
+dfe_chg <- if (!is.null(dfe)) 100 * (dfe$pupils[dfe$model_year == 2030] / dfe$pupils[dfe$model_year == 2025] - 1) else NA
+our_chg <- 100 * (PR[area == "England" & year == "2029-30", secondary] / nat[year == "2024-25", secondary] - 1)
+# areas: change in primary-age pupils against primary schools closed or merged per 100 open
+sc <- LA[primary_open > 0, .(area, chg = primary_chg, gone = 100 * (Primary_Closed + Primary_Merged) / primary_open,
+                             london = region == "London")]
+fit <- lm(gone ~ chg, data = sc)
+fit_nl <- lm(gone ~ chg, data = sc[london == FALSE])   # outside London
+CLS_COL <- c("Consistent decline" = "#762a83", "Decline" = "#c2a5cf", "Stable" = "#d9d9e3", "Growth" = "#a6dba0", "Consistent growth" = "#1b7837")
+```
+
+::: {.callout-note appearance="simple"}
+## In short
+
+- **Primary rolls are falling almost everywhere.** England's primary-age pupils
+  (Reception to Year 6) peaked in `r yl(eng$primary_peak_year)` and are
+  `r pts(abs(eng$primary_from_peak), 1)`% down by `r y1`. Since `r y0`,
+  `r cls_n[["Consistent decline"]]` of `r nrow(LA)` areas have fallen in nearly
+  every year and by 5% or more, and `r cls_n[["Decline"]]` more by 3% or more; only
+  `r cls_n[["Growth"]] + cls_n[["Consistent growth"]]` have grown.
+- **The fall reaches secondary schools next.** The cohorts already in primary
+  school mean England's Year 7 intake will be about
+  `r pts(abs(eng$y7_chg_2032), 0)`% smaller in 2032/33 than in `r y1`, with no
+  assumption about births at all, and much more in some places: in
+  `r sum(LA$y7_chg_2032 <= -15, na.rm = TRUE)` areas by 15% or more.
+- **Closures have followed falling rolls in London, less so elsewhere.** Since
+  2015/16, `r evn("Closed", "Primary")` state primary schools have closed with
+  no successor and `r evn("Merged", "Primary")` have merged, and
+  `r evn("Opened", "Primary")` genuinely new ones opened. In areas in consistent
+  decline, `r pts(rate("Consistent decline", "gone_rate"), 1)` have closed or
+  merged for every 100 open now, twice the rate in stable areas
+  (`r pts(rate("Stable", "gone_rate"), 1)`). But that is mostly inner London;
+  elsewhere most falling areas have closed few schools so far and carry
+  surplus places instead.
+:::
+
+## England: the wave passing through {#sec-wave}
+
+The large cohorts born around 2010 to 2012 have moved out of primary school and
+are now in secondary school; smaller cohorts follow them. Each cohort in
+school in January 2026 can be rolled forward a year at a time, using each
+area's recent movement between year groups, so the next seven years of Year 7
+intakes are already largely known.
+
+```{r}
+#| label: fig-wave
+#| fig-cap: "State-funded primary and secondary schools in England: pupils of primary age (Reception to Year 6) and secondary age (Years 7 to 11), January censuses, then the cohorts in school rolled forward (dashed). Diamonds are DfE's own national projection (ages 11 to 15), for comparison."
+#| fig-height: 4.6
+w <- rbind(nat[, .(year, `Primary age (R-Y6)` = primary, `Secondary age (Y7-11)` = secondary, kind = "Census")] |>
+             melt(id.vars = c("year", "kind"), variable.name = "group", value.name = "pupils"),
+           PR[area == "England" & !is.na(secondary), .(year, group = "Secondary age (Y7-11)", pupils = secondary, kind = "Rolled forward")])
+w <- rbind(w, w[kind == "Census" & year == max(D$years) & group == "Secondary age (Y7-11)"][, kind := "Rolled forward"])
+w[, x := as.integer(substr(year, 1, 4))]
+dd <- if (!is.null(dfe)) dfe[model_year >= 2016, .(x = model_year - 1, pupils, group = "Secondary age (Y7-11)")] else NULL
+p <- ggplot(w, aes(x, pupils / 1e6, colour = group, linetype = kind)) + geom_line(linewidth = 1.1) +
+  geom_point(data = w[kind == "Census"], size = 1.8) +
+  scale_colour_manual(values = c("Primary age (R-Y6)" = BPURPLE, "Secondary age (Y7-11)" = DPURPLE)) +
+  scale_linetype_manual(values = c(Census = "solid", `Rolled forward` = "dashed")) +
+  scale_x_continuous(breaks = seq(2015, 2030, 3), labels = function(x) paste0(x, "/", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "Pupils (millions)", colour = NULL, linetype = NULL) + theme_note()
+if (!is.null(dd)) p <- p + geom_point(data = dd, aes(x, pupils / 1e6), inherit.aes = FALSE, shape = 5, colour = GREY, size = 2)
+p
+```
+
+Rolled forward this way, England's secondary-age pupils fall by
+`r pts(abs(our_chg), 1)`% between 2024/25 and 2029/30; DfE's national
+projection, made separately from the same censuses and from population
+estimates, gives `r pts(abs(dfe_chg), 1)`%. The two agree closely, which is a
+check on the method used for every area below.
+
+## Where rolls are growing and falling {#sec-map}
+
+Each local authority is classed by the path of its primary-age pupils since
+`r y0` (seven year-on-year changes): **consistent decline** if they fell in at
+least six of the seven years and by 5% or more in all, **decline** if they fell
+by 3% or more, **growth** and **consistent growth** the same upwards, and
+**stable** otherwise. Three reorganised councils are combined so that their
+series run unbroken (see [the data](#sec-demog-data)). The map also shows
+every state mainstream school that has opened, closed or merged since
+2015/16; switch layers with the control at the top right.
+
+```{r}
+#| label: fig-demog-map
+#| column: page
+#| fig-cap: "Primary-age pupils, change since 2018/19, by local authority, and the coming change in Year 7 intakes. Points: state mainstream schools opened (green), closed with no successor (purple) and merged (pale purple) since 2015/16. Click an area or a school for details."
+b <- merge(D$bounds, LA, by = "area")
+cap <- 20
+PRGN9 <- c("#762a83", "#9970ab", "#c2a5cf", "#e7d4e8", "#f7f7f7", "#d9f0d3", "#a6dba0", "#5aae61", "#1b7837")   # ColorBrewer PRGn, as on the site's maps
+pal_p <- colorNumeric(PRGN9, c(-cap, cap))
+cl <- function(v) pmax(pmin(v, cap), -cap)
+lab <- sprintf("<b>%s</b><br>Primary age, %s to %s: %+.1f%% (%s)<br>Secondary age: %+.1f%% (%s)<br>Year 7 intake by 2032/33: %+.1f%%<br>Primary schools since 2015/16: %d closed, %d merged, %d opened",
+               b$area, y0, y1, b$primary_chg, b$primary_class, b$secondary_chg, b$secondary_class, b$y7_chg_2032,
+               as.integer(b$Primary_Closed), as.integer(b$Primary_Merged), as.integer(b$Primary_Opened))
+ev <- EV[!is.na(lat)]
+ev_col <- c(Opened = "#1b7837", Closed = "#762a83", Merged = "#c2a5cf")
+ev_lab <- sprintf("<b>%s</b><br>%s, %s %s<br>%s%s", ev$name, ev$area, tolower(ev$event), yl(ev$year), ev$stage,
+                  ifelse(is.na(ev$pupils), "", paste0(", ", ev$pupils, " pupils on its last record")))
+leaflet(height = 680, options = leafletOptions(scrollWheelZoom = FALSE)) |>
+  addProviderTiles("Esri.WorldGrayCanvas") |> setView(-1.6, 52.8, 6) |>
+  addPolygons(data = b, fillColor = ~pal_p(cl(primary_chg)), fillOpacity = 0.8, color = "white", weight = 0.6,
+              popup = lab, group = "Primary-age change since 2018/19") |>
+  addPolygons(data = b, fillColor = ~pal_p(cl(y7_chg_2032)), fillOpacity = 0.8, color = "white", weight = 0.6,
+              popup = lab, group = "Year 7 intake, 2025/26 to 2032/33") |>
+  addCircleMarkers(data = ev[event == "Closed"], lng = ~lon, lat = ~lat, radius = 2.8, color = "white", weight = 0.8,
+                   fillColor = ev_col[["Closed"]], fillOpacity = 0.95, popup = ev_lab[ev$event == "Closed"], group = "Closed") |>
+  addCircleMarkers(data = ev[event == "Merged"], lng = ~lon, lat = ~lat, radius = 2.8, color = "#762a83", weight = 0.8,
+                   fillColor = ev_col[["Merged"]], fillOpacity = 0.95, popup = ev_lab[ev$event == "Merged"], group = "Merged") |>
+  addCircleMarkers(data = ev[event == "Opened"], lng = ~lon, lat = ~lat, radius = 2.8, color = "white", weight = 0.8,
+                   fillColor = ev_col[["Opened"]], fillOpacity = 0.95, popup = ev_lab[ev$event == "Opened"], group = "Opened") |>
+  addLegend("bottomright", pal = pal_p, values = c(-cap, cap), title = "% change", labFormat = labelFormat(suffix = "%"), opacity = 0.9) |>
+  addLegend("bottomleft", colors = unname(ev_col), labels = c("Opened", "Closed (no successor)", "Merged"), title = "Schools since 2015/16", opacity = 0.95) |>
+  addLayersControl(baseGroups = c("Primary-age change since 2018/19", "Year 7 intake, 2025/26 to 2032/33"),
+                   overlayGroups = c("Closed", "Merged", "Opened"), options = layersControlOptions(collapsed = FALSE))
+```
+
+Colours are capped at ±`r cap`%. The fall is steepest in inner London:
+`r and_list(head(LA[order(primary_chg), area], 5))` have lost
+`r pts(abs(max(head(LA[order(primary_chg), primary_chg], 5))), 0)`% to
+`r pts(abs(min(LA$primary_chg)), 0)`% of their primary-age pupils since `r y0`,
+`r sum(LA[region == "London", primary_class] == "Consistent decline")` of
+London's `r sum(LA$region == "London")` boroughs are in consistent decline. Across
+England, Reception classes have fallen faster than primary schools as a whole
+(`r pts(abs(eng$reception_chg), 1)`% since `r y0`), so the fall has further to run. The areas still growing are
+`r and_list(LA[primary_chg >= 3][order(-primary_chg), area])`.
+
+## Closures and falling rolls {#sec-closures}
+
+```{r}
+#| label: tbl-class-closures
+#| tbl-cap: "Local authorities by the path of their primary-age pupils since 2018/19, and state primary schools closed, merged and opened from 2015/16 to 2025/26, per 100 primary schools open now."
+pr[, .(`Primary-age pupils since 2018/19` = primary_class, Areas = areas, `Primary schools open` = schools,
+       Closed = closed, Merged = merged, Opened = opened,
+       `Closed or merged per 100` = sprintf("%.1f", gone_rate), `Opened per 100` = sprintf("%.1f", open_rate))] |>
+  kt(align = "lrrrrrrr")
+```
+
+```{r}
+#| label: fig-closure-scatter
+#| fig-cap: "Each local authority: change in primary-age pupils since 2018/19 against state primary schools closed or merged since 2015/16, per 100 open now. London boroughs in dark purple. The line is a least-squares fit."
+#| fig-height: 5
+ggplot(sc, aes(chg, gone)) + geom_vline(xintercept = 0, colour = LIGHT) +
+  geom_smooth(method = "lm", formula = y ~ x, colour = GREY, fill = PPURPLE, linewidth = 0.7) +
+  geom_point(aes(colour = london), size = 2.2, alpha = 0.85) +
+  ggrepel::geom_text_repel(data = sc[gone >= 8 | chg <= -15 | chg >= 4], aes(label = area), size = 3, colour = INK, max.overlaps = 20) +
+  scale_colour_manual(values = c(`TRUE` = DPURPLE, `FALSE` = MPURPLE), labels = c(`TRUE` = "London", `FALSE` = "Elsewhere")) +
+  labs(x = paste0("Primary-age pupils, % change ", y0, " to ", y1), y = "Primary schools closed or merged per 100", colour = NULL) +
+  theme_note()
+```
+
+Across authorities, each further 10% fall in primary-age pupils goes with about
+`r pts(10 * -coef(fit)[["chg"]], 1)` more closures or mergers per 100 primary
+schools (t = `r pts(-summary(fit)$coefficients["chg", "t value"], 1)`). London
+carries almost all of this: outside London the slope is
+`r pts(10 * -coef(fit_nl)[["chg"]], 1)` per 10% (t =
+`r pts(-summary(fit_nl)$coefficients["chg", "t value"], 1)`), with Brighton and
+Hove, the Isle of Wight and Bracknell Forest among the areas that have closed
+most for their size. Closing a
+school is slow, contested and local, so most falling areas have so far closed
+few, and empty places are carried as surplus instead: the closures so far are
+the start, not the measure, of the adjustment.
+
+::: {.callout-note collapse="true"}
+## The model behind this chart
+
+$$\text{closed or merged per 100}_a = \beta_0 + \beta_1\,\text{\% change in primary-age pupils}_a + \varepsilon_a$$
+
+```r
+lm(gone ~ chg, data = sc)   # one row per local authority (n = `r nrow(sc)`)
+```
+
+An association across areas, not a forecast for any one school.
+:::
+
+## Troubles ahead for secondary schools {#sec-secondary}
+
+Secondary rolls are still near their peak in most places, because the large
+cohorts are in Years 7 to 11 now. The primary cohorts behind them decide what
+comes next.
+
+```{r}
+#| label: fig-y7
+#| fig-cap: "The 20 local authorities whose Year 7 intake falls most between 2025/26 and 2032/33, from the cohorts now in primary school rolled forward, and England."
+#| fig-height: 6
+t20 <- rbind(LA[order(y7_chg_2032)][1:20], eng, fill = TRUE)
+t20[, area := factor(area, rev(area))]
+ggplot(t20, aes(y7_chg_2032, area)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_segment(aes(x = 0, xend = y7_chg_2032, yend = area), colour = LPURPLE, linewidth = 1.3) +
+  geom_point(aes(colour = area == "England"), size = 2.8) +
+  scale_colour_manual(values = c(`TRUE` = INK, `FALSE` = DPURPLE), guide = "none") +
+  labs(x = "Year 7 intake, % change 2025/26 to 2032/33", y = NULL) + theme_note()
+```
+
+In `r sum(LA$y7_chg_2032 <= -15, na.rm = TRUE)` areas Year 7 shrinks by 15% or
+more by 2032/33, and in `r sum(LA$y7_chg_2032 <= -10, na.rm = TRUE)` by 10% or
+more. For secondary schools funded largely per pupil, that is the scale of the
+financial pressure to come; a later page will look at schools' finances in the
+years before closure.
+
+## Sussex {#sec-demog-sussex}
+
+```{r}
+#| label: fig-sussex-demog
+#| fig-cap: "Brighton and Hove, East Sussex and West Sussex: pupils in Reception, Year 6 and Year 7 each January, then Year 7 rolled forward (dashed), as an index (2015/16 = 100)."
+#| fig-height: 4.4
+sx <- c("Brighton and Hove", "East Sussex", "West Sussex")
+s1 <- YG[area %in% sx, .(area, year, Reception = R, `Year 6` = Y6, `Year 7` = Y7)] |> melt(id.vars = c("area", "year"))
+s2 <- PR[area %in% sx, .(area, year, variable = "Year 7", value = Y7)][, kind := "Rolled forward"]
+s1[, kind := "Census"]; s <- rbind(s1, s2)
+s[, idx := 100 * value / value[year == min(D$years) & kind == "Census"][1], by = .(area, variable)]
+s <- rbind(s, s[kind == "Census" & variable == "Year 7" & year == max(D$years)][, kind := "Rolled forward"])
+s[, x := as.integer(substr(year, 1, 4))]
+ggplot(s, aes(x, idx, colour = variable, linetype = kind)) + geom_hline(yintercept = 100, colour = LIGHT) + geom_line(linewidth = 1) +
+  facet_wrap(~area) + scale_colour_manual(values = c(Reception = MPURPLE, `Year 6` = BPURPLE, `Year 7` = DPURPLE)) +
+  scale_linetype_manual(values = c(Census = "solid", `Rolled forward` = "dashed")) +
+  scale_x_continuous(breaks = c(2015, 2020, 2025, 2030), labels = function(x) paste0(x, "/", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "Index, 2015/16 = 100", colour = NULL, linetype = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: tbl-sussex-events
+#| tbl-cap: "State mainstream schools in Brighton and Hove, East Sussex and West Sussex that opened, closed or merged, 2015/16 to 2025/26, with pupils on their last GIAS record."
+EV[area %in% sx][order(area, year, event)][, .(Area = area, School = name, Stage = stage, What = event, Year = yl(year),
+                                                Pupils = ifelse(is.na(pupils), "", format(pupils)), Reason = reason)] |>
+  kt(align = "lllllrl")
+```
+
+## Every area {#sec-demog-table}
+
+```{r}
+#| label: tbl-demog-all
+DT::datatable(LA[order(area), .(Area = area, Region = region, `Primary class` = primary_class, `Primary %` = round(primary_chg, 1),
+                                `Reception %` = round(reception_chg, 1), `Primary peak` = yl(primary_peak_year),
+                                `Secondary class` = secondary_class, `Secondary %` = round(secondary_chg, 1),
+                                `Year 7 to 2032/33 %` = round(y7_chg_2032, 1), `Secondary age to 2030/31 %` = round(sec_chg_2030, 1),
+                                `Primary closed` = Primary_Closed, `Primary merged` = Primary_Merged, `Primary opened` = Primary_Opened,
+                                `Secondary closed` = Secondary_Closed, `Secondary opened` = Secondary_Opened)],
+              rownames = FALSE, filter = "top", extensions = "Buttons",
+              options = list(pageLength = 15, scrollX = TRUE, dom = "Bfrtip", buttons = c("csv")),
+              caption = paste0("Every local authority: % changes are ", y0, " to ", y1, " unless marked; schools opened, closed and merged from 2015/16."))
+```
+
+## Data and calculations {#sec-demog-data}
+
+**Pupils.** DfE, *Schools, pupils and their characteristics* 2025/26, data
+set "School characteristics by year, sex and attendance pattern": headcounts by
+national curriculum year group, January censuses 2015/16 to 2025/26, for every
+local authority, taking the rows for all schools of each phase (every other
+breakdown "Total"). Pupils are counted by year group across state-funded
+primary and secondary schools together, so middle schools fall where their
+pupils' ages put them. *Primary age* is Reception to Year 6 and *secondary
+age* Years 7 to 11; nursery classes and sixth forms are left out because they
+follow provision rather than births. The Isles of Scilly (one school) are left
+out.
+
+**Areas.** Local authorities as in the census, with three reorganisations
+combined so that each series runs unbroken: Bournemouth, Poole and Dorset with
+Bournemouth, Christchurch and Poole (2019) as *Dorset and BCP*; North and West
+Northamptonshire (2021) as *Northamptonshire*; Cumberland and Westmorland and
+Furness (2023) as *Cumbria*. Code changes with the same area (North Yorkshire,
+Somerset, Buckinghamshire, Northumberland, Gateshead) are joined by name.
+
+**Trend classes.** From `r y0` to `r y1`, seven year-on-year changes. Consistent
+decline: fell in at least six of the seven years and by 5% or more overall;
+decline: fell by 3% or more; consistent growth and growth the same upwards;
+stable otherwise. The cut-offs are a judgement; the table above gives every
+area's change so readers can draw their own.
+
+**Rolling cohorts forward.** For each area and each step from one year group
+to the next (Reception to Year 1, ..., Year 10 to Year 11), the progression
+ratio is the pupils in the older year group one year on divided by the pupils
+in the younger year group, summed over the last three transitions (into
+2023/24, 2024/25 and 2025/26). Each cohort in school in January 2026 is moved
+up a year at a time by these ratios. The ratios carry on recent moves into and
+out of the area, into independent and special schools, and between primary and
+secondary schools across authority boundaries, as they have been; they do not
+use births, migration forecasts or housing. Year 7 is known this way to
+2032/33 (from this year's Reception class) and secondary age (Years 7 to 11)
+to 2030/31. England's result agrees with DfE's national pupil projections
+(2025, principal, ages 11 to 15 in state secondary schools).
+
+**Schools opened and closed.** Get Information about Schools, all
+establishments and links, 10 June 2026 (`pipeline/07_gias.R`). State-funded
+mainstream schools: primary, middle, secondary and all-through phases in the
+academy, free school and maintained groups, without special, alternative
+provision, nursery, 16-19, studio schools or UTCs. *Opened*: opened from August
+2015 with no predecessor in the GIAS links, and not an academy conversion,
+fresh start, amalgamation or split, so these are new schools, mostly free
+schools and new local authority provision. *Closed*: closed from September 2015
+with no successor; *merged*: closed into another school (amalgamation),
+following the closure classification in `pipeline/07_gias.R`, which separates
+real closures from academy conversions and other URN changes. A school that
+closed on 31 August 2024 last taught in 2023/24. Pupils are the number on the
+school's last GIAS record. Rates are per 100 such schools open in June 2026.
+
+The code is `R/42_demographics.R`, which writes `data/demographics.rds`.

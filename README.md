@@ -84,6 +84,23 @@ fixed snapshot in `data/lookups/v1_published.csv`.
 `R/site_helpers.R` holds the palette, charts, decomposition and map used by
 every page.
 
+## Pupil numbers and school places
+
+`demographics.qmd` reads `data/demographics.rds`, built by `R/42_demographics.R` from
+DfE's school census (pupils by year group, every local authority, 2015/16 to 2025/26)
+and GIAS. The census data set is large (900 MB unpacked), so it is fetched once and cut
+to the all-schools rows:
+
+```
+mkdir -p data-raw/ees/spc_2526 && cd data-raw/ees/spc_2526
+curl -L -o yeargroup.csv.gz "https://api.education.gov.uk/statistics/v1/data-sets/019e7403-0e46-7122-9bc2-3252d775517c/csv"
+zcat yeargroup.csv.gz | awk -F'","' 'NR==1 || ($3 != "Parliamentary constituency" && $13=="Total" && $15=="Total" && $16=="Total" && $17=="Total" && $18=="Total" && $19=="Total" && $20=="Total" && $21=="Total")' > yeargroup_totals.csv
+cd ../../.. && Rscript R/42_demographics.R && quarto render demographics.qmd
+```
+
+When DfE publishes the next census (each June), update the data set id from the EES
+API (`/publications/a91d9e05-be82-474c-85ae-4913158406d0/data-sets`) and rerun.
+
 ## Ofsted, monthly
 
 `.github/workflows/refresh-ofsted.yml` runs on the 20th of each month (and
@@ -163,6 +180,7 @@ Rscript -e 'shiny::runApp("app")'        # run it locally
 | `R/34_route_examples.R` | example journeys chosen by rule (Whitehawk; a typical deprived journey in Brighton and Hove, Bristol, Southampton and Plymouth), routed again with every leg kept, and the methodology's worked example (walking route and heights, stops, points of interest, every departure minute); writes `data/route_examples.rds`, drawn by `R/route_figs.R` |
 | `R/35_trust_summary.R` | one trust's secondary schools (by GIAS trust name): value added and expected Attainment 8 by year, absence against intake, place effects, ten national look-alikes, levers (attendance, subject areas, slots, staffing) with schools to talk to, and intake-aware targets; writes `data/trust_<slug>.rds` for `trust_aldridge.qmd` |
 | `R/36_workforce.R` | School Workforce in England, school level, 2021/22 to 2024/25: teacher retention, sickness days, pupils per qualified teacher and others, and their joint link with Value Added v2.1; writes `data/workforce_levers.rds` |
+| `R/42_demographics.R` | pupil numbers by year group, every local authority, 2015/16 to 2025/26 (school census), trend classes, the cohorts in school rolled forward to Year 7 in 2032/33, and state mainstream schools opened, closed and merged from GIAS; writes `data/demographics.rds` for `demographics.qmd` |
 | `R/16_parents_not_adults.R` | parents, not adults: neighbourhood education from ONS custom Census tables (qualification by dependent children and age by MSOA; by age by LSOA), against v2.1 for every group, with held-out years, the split between parents and other adults, and London tested separately (`neighbourhood_covariates.qmd`); caches about 1.5 GB of API responses in `data-raw/census2021/ons_custom/` |
 | `R/15_graduate_deprivation.R` | two kinds of deprived neighbourhood: tests whether the deprivation effect is a recent-graduate effect (interaction, by kind of place, early-career measures, deprivation in parts) and value added by kind of neighbourhood (`neighbourhood_covariates.qmd`) |
 | `R/14_v22_candidates.R` | v2.2 candidates: pupils' ethnicity (school White British share each January, from the SPC releases downloaded into `data-raw/ees/spc_all/`) and neighbourhood household deprivation (Census 2021 TS011), against v2.1 for every group, with leave-one-year-out prediction, year-by-year fits and who gains (`v22.qmd`) |

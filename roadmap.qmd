@@ -74,6 +74,15 @@ subtitle: "What v2.1 does now, and what comes next."
       the simulator, an area overview, and travel and distance with the
       national walking routes as they arrive. It replaces the site's
       in-browser simulator.
+- [x] **[Pupil numbers and school places](demographics.qmd).** Pupils by
+      year group in every local authority since 2015/16, which areas are in
+      consistent decline or growth, the cohorts in school rolled forward to
+      Year 7 in 2032/33, and every state mainstream school opened, closed or
+      merged since 2015/16 on a map.
+- [ ] **Closures and finance: an early warning.** School-level rolls
+      (census 2019/20 onwards) and finances (CFR from 2014/15, academies'
+      AAR from 2016/17) in the years before each closure, against schools
+      that stayed open: what, if anything, gives early warning.
 - [ ] **School Information System v2.1: places and pupil cohorts.** Each
       authority's demographic picture and the cohorts coming through its
       schools (placeholder in the app).

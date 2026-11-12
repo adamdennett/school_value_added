@@ -13,6 +13,7 @@ project:
     - neighbourhood_types.qmd
     - neighbourhood_covariates.qmd
     - distance.qmd
+    - demographics.qmd
     - v22.qmd
     - absence_causes.qmd
     - absence_change.qmd
@@ -82,6 +83,10 @@ website:
             text: "What goes with absence"
           - href: absence_change.qmd
             text: "How absence changes"
+      - text: "Pupils and places"
+        menu:
+          - href: demographics.qmd
+            text: "Pupil numbers and school places"
       - href: twins.qmd
         text: "Find a twin"
       - href: simulator.qmd

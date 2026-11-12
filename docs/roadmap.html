@@ -189,6 +189,17 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pupils-and-places" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pupils and places</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pupils-and-places">    
+        <li>
+    <a class="dropdown-item" href="./demographics.html">
+ <span class="dropdown-text">Pupil numbers and school places</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./twins.html"> 
 <span class="menu-text">Find a twin</span></a>
@@ -304,6 +315,8 @@ ul.task-list li input[type="checkbox"] {
 <ul class="task-list">
 <li><label><input type="checkbox" checked=""><strong>Policy simulator v2.0.</strong> The Pull the Right Lever simulator rebuilt on the v2.1 models: absence and the intake terms as levers (with admissions and sixth form for one school), all five groups at once with the disadvantage gap, each lever’s contribution, and an area mode that applies a change to every school in an area. First in the browser, now part of the School Information System below.</label></li>
 <li><label><input type="checkbox" checked=""><strong><a href="./simulator.html">School Information System v2.0</a> (Shiny).</strong> The v1.0 policy simulator app rebuilt on v2.1, on Posit Connect Cloud (<code>app/</code>): Attainment 8 and value added side by side for all, disadvantaged and non-disadvantaged pupils; four years, single years or moving averages; regions, combined authorities, authorities, districts and trusts; absence against expected; a school finder, twins, observed against predicted, the simulator, an area overview, and travel and distance with the national walking routes as they arrive. It replaces the site’s in-browser simulator.</label></li>
+<li><label><input type="checkbox" checked=""><strong><a href="./demographics.html">Pupil numbers and school places</a>.</strong> Pupils by year group in every local authority since 2015/16, which areas are in consistent decline or growth, the cohorts in school rolled forward to Year 7 in 2032/33, and every state mainstream school opened, closed or merged since 2015/16 on a map.</label></li>
+<li><label><input type="checkbox"><strong>Closures and finance: an early warning.</strong> School-level rolls (census 2019/20 onwards) and finances (CFR from 2014/15, academies’ AAR from 2016/17) in the years before each closure, against schools that stayed open: what, if anything, gives early warning.</label></li>
 <li><label><input type="checkbox"><strong>School Information System v2.1: places and pupil cohorts.</strong> Each authority’s demographic picture and the cohorts coming through its schools (placeholder in the app).</label></li>
 <li><label><input type="checkbox"><strong>School Information System v2.2: primary and post-16.</strong> The same view for primary schools, then sixth forms and colleges (placeholders in the app).</label></li>
 <li><label><input type="checkbox"><strong>Adding a new year.</strong> When DfE publishes a new year’s KS4 results, add it to <code>YEAR_CONFIG</code> in <code>pipeline/helpers.R</code>, run <code>R/00_fetch_data.R</code>, then the build steps. The v2.1 model takes its years from the data, and no longer needs the workforce file, which was the slowest to arrive. See the README.</label></li>
