@@ -15,6 +15,7 @@ project:
     - distance.qmd
     - demographics.qmd
     - finance.qmd
+    - finance_areas/*.qmd
     - v22.qmd
     - absence_causes.qmd
     - absence_change.qmd
@@ -90,6 +91,8 @@ website:
             text: "Pupil numbers and school places"
           - href: finance.qmd
             text: "School finances before closure"
+          - href: finance_areas/brighton_and_hove.qmd
+            text: "Brighton and Hove: school finances"
       - href: twins.qmd
         text: "Find a twin"
       - href: simulator.qmd

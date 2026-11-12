@@ -1,0 +1,189 @@
+---
+title: "Brighton and Hove: school finances"
+subtitle: "Reserves, in-year balances, income and the spread of schools' finances in Brighton and Hove's state primary and secondary schools, against England, the region and the rest of Sussex."
+---
+
+<!-- Generated from templates/finance_area.qmd by R/45_finance_pages.R: edit the template, not this file. -->
+
+```{r setup}
+#| include: false
+source(here::here("R", "site_helpers.R"))
+suppressPackageStartupMessages(library(data.table))
+AREA <- "Brighton and Hove"; LEVEL <- "Authority"
+A <- readRDS(here::here("data", "area_finance.rds"))
+S <- A$stats; U <- A$units
+REGION <- U[level == "Authority" & unit == (if (LEVEL == "District") U[level == "District" & unit == AREA, parent] else AREA), parent]
+PARENT <- if (LEVEL == "District") U[level == "District" & unit == AREA, parent] else NA
+SUSSEX <- c("Brighton and Hove", "East Sussex", "West Sussex")
+COMP <- unique(na.omit(c(if (LEVEL == "District") PARENT, setdiff(SUSSEX, c(AREA, PARENT)))))
+LAT_M <- A$latest[["Maintained"]]; LAT_A <- A$latest[["Academy"]]
+sel <- function(u, l) S[unit == u & level == l]
+area <- sel(AREA, LEVEL); eng <- sel("England", "England"); reg <- sel(REGION, "Region")
+cmp <- rbindlist(lapply(COMP, function(u) sel(u, "Authority")))
+lines <- rbind(area[, who := AREA], eng[, who := "England"], reg[, who := REGION], cmp[, who := unit])
+lines[, who := factor(who, unique(c(AREA, "England", REGION, COMP)))]
+WHO_COL <- setNames(c(DPURPLE, INK, GREY, BPURPLE, BLUE, MPURPLE)[seq_along(levels(lines$who))], levels(lines$who))
+WHO_LT <- setNames(c("solid", "dashed", "dotted", rep("solid", 3))[seq_along(levels(lines$who))], levels(lines$who))
+g <- function(d, st, sec, yr, v) d[stage == st & sector == sec & year == yr][[v]]
+m_now <- function(v, st = "All", d = area) g(d, st, "Maintained", LAT_M, v)
+rank_def <- S[level == "Authority" & stage == "All" & sector == "Maintained" & year == LAT_M & schools >= 10][
+  order(-deficit_pct)][, r := seq_len(.N)]
+n_auth <- nrow(rank_def); my_rank <- rank_def[unit == AREA, r]
+yr_x <- function(y) as.integer(substr(y, 1, 4))
+FC <- tryCatch(readRDS(here::here("data", "finance_closures.rds")), error = function(e) NULL)
+DEM <- tryCatch(readRDS(here::here("data", "demographics.rds")), error = function(e) NULL)
+dem <- if (!is.null(DEM) && LEVEL == "Authority") DEM$trend[level == "Local authority" & area == AREA] else NULL
+peak_def <- area[stage == "All" & sector == "Maintained"][which.max(deficit_pct)]
+pr <- S[level == "Authority" & stage == "All" & sector == "Maintained" & year == peak_def$year & schools >= 10][order(-deficit_pct)][, r := seq_len(.N)]
+rk_txt <- function(r, n, tail = "") if (r == 1) paste0("the highest of ", n, " authorities", tail) else paste0(ord(r), " highest of ", n, " authorities", tail)
+peak_rank <- if (LEVEL == "Authority" && AREA %in% pr$unit) rk_txt(pr[unit == AREA, r], nrow(pr), " that year") else
+  paste0("against ", pts(eng[stage == "All" & sector == "Maintained" & year == peak_def$year, deficit_pct], 0), "% in England")
+```
+
+::: {.callout-note appearance="simple"}
+## In short
+
+- **`r pts(m_now("deficit_pct"), 0)`% of Brighton and Hove's maintained schools were in
+  deficit** (a negative revenue reserve) in `r LAT_M`, against
+  `r pts(m_now("deficit_pct", d = eng), 0)`% across England and
+  `r pts(m_now("deficit_pct", d = reg), 0)`% in the `r REGION`.
+  `r if (length(my_rank)) paste0("That is ", rk_txt(my_rank, n_auth), ".") else ""`
+  The peak was `r pts(peak_def$deficit_pct, 0)`% in `r peak_def$year`,
+  `r peak_rank`.
+- **Together, its maintained schools hold
+  `r ifelse(m_now("reserve") < 0, "a net deficit of", "net reserves of")`
+  £`r pts(abs(m_now("reserve")) / 1e6, 1)`m**, against net reserves of
+  £`r pts(area[stage == "All" & sector == "Maintained" & year == "2021-22", reserve] / 1e6, 1)`m
+  in 2021-22. The typical maintained school's reserve is
+  `r pts(m_now("med_reserve"), 1)`% of a year's income (England
+  `r pts(m_now("med_reserve", d = eng), 1)`%).
+- **Income per pupil** in its schools was
+  `r pts(100 * g(area, "All", "All", LAT_A, "income_pp") / g(eng, "All", "All", LAT_A, "income_pp"), 0)`%
+  of England's in `r LAT_A` (all state mainstream schools).
+`r if (!is.null(dem) && nrow(dem)) paste0("- **Rolls are falling.** Primary-age pupils are ", pts(abs(dem$primary_chg), 0), "% down since ", yl(DEM$t0), ", and the Year 7 intake will be about ", pts(abs(dem$y7_chg_2032), 0), "% smaller by 2032/33 (see [Pupil numbers and school places](../demographics.qmd)). Most school funding follows pupils.") else ""`
+:::
+
+These pages describe Brighton and Hove's schools as a whole, from DfE's published
+finance returns. As on [School finances before closure](../finance.qmd), no
+open school is named. Maintained schools report every year from 2014-15 to
+2025-26 (Consistent Financial Reporting, April to March); academies from 2016-17
+to 2024-25 (Academy Accounts Returns, September to August). An academy in a
+multi-academy trust reports only its own share of reserves, without the trust's
+central reserve, and some trusts report none, so **the reserve series below
+are for maintained schools** unless marked.
+
+```{r}
+#| label: tbl-schools
+#| tbl-cap: !expr paste0("State mainstream schools in ", AREA, " with a finance return, by phase and sector, in the latest year of each (maintained ", LAT_M, ", academies ", LAT_A, ").")
+tb <- rbind(area[sector == "Maintained" & year == LAT_M & stage != "All"], area[sector == "Academy" & year == LAT_A & stage != "All"])
+tb[, .(Phase = stage, Sector = sector, Year = year, Schools = schools, Pupils = format(round(pupils), big.mark = ","),
+       `In deficit` = ifelse(sector == "Academy", "see note", paste0(round(deficit_pct), "%")),
+       `Median reserve, % of income` = ifelse(sector == "Academy", "see note", sprintf("%.1f", med_reserve)),
+       `Income per pupil` = paste0("£", format(round(income_pp), big.mark = ",")))] |> kt(align = "lllrrrrr")
+```
+
+## Schools in deficit {#sec-deficit}
+
+```{r}
+#| label: fig-deficit
+#| fig-cap: !expr paste0("Share of maintained schools with a negative revenue reserve each year, ", AREA, " against England, the ", REGION, " and the rest of Sussex. ", AREA, " has ", g(area, "Secondary", "Maintained", LAT_M, "schools"), " maintained secondary schools, so each moves its secondary line by about ", round(100 / g(area, "Secondary", "Maintained", LAT_M, "schools")), " points.")
+#| fig-height: 4.6
+d <- lines[sector == "Maintained" & stage %in% c("All", "Primary", "Secondary")][, stage := factor(stage, c("All", "Primary", "Secondary"), c("All schools", "Primary", "Secondary"))]
+ggplot(d, aes(yr_x(year), deficit_pct, colour = who, linetype = who)) + geom_line(linewidth = 1) +
+  geom_point(data = d[who == AREA], size = 1.8) + facet_wrap(~stage) +
+  scale_colour_manual(values = WHO_COL) + scale_linetype_manual(values = WHO_LT) +
+  scale_x_continuous(breaks = c(2015, 2019, 2023), labels = function(x) paste0(x, "-", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "% of maintained schools in deficit", colour = NULL, linetype = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: fig-total
+#| fig-cap: !expr paste0(AREA, "'s maintained schools together, the sum of their revenue reserves at year end and of their in-year balances (income less spending), £ million.")
+#| fig-height: 3.8
+tt <- area[stage == "All" & sector == "Maintained", .(x = yr_x(year), `Revenue reserves` = reserve / 1e6, `In-year balance` = in_year / 1e6)] |>
+  melt(id.vars = "x")
+ggplot(tt, aes(x, value, fill = value < 0)) + geom_col(width = 0.7) + geom_hline(yintercept = 0, colour = GREY) +
+  facet_wrap(~variable, scales = "free_y") + scale_fill_manual(values = c(`TRUE` = BPURPLE, `FALSE` = DPURPLE), guide = "none") +
+  scale_x_continuous(breaks = c(2015, 2019, 2023), labels = function(x) paste0(x, "-", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "£ million") + theme_note(11)
+```
+
+## How much they hold {#sec-reserves}
+
+```{r}
+#| label: fig-median
+#| fig-cap: "The typical (median) maintained school's revenue reserve and in-year balance, as a share of its income."
+#| fig-height: 4.2
+d <- lines[sector == "Maintained" & stage == "All", .(x = yr_x(year), who, `Revenue reserve` = med_reserve, `In-year balance` = med_in_year)] |>
+  melt(id.vars = c("x", "who"))
+ggplot(d, aes(x, value, colour = who, linetype = who)) + geom_hline(yintercept = 0, colour = LIGHT) + geom_line(linewidth = 1) +
+  facet_wrap(~variable, scales = "free_y") + scale_colour_manual(values = WHO_COL) + scale_linetype_manual(values = WHO_LT) +
+  scale_x_continuous(breaks = c(2015, 2019, 2023), labels = function(x) paste0(x, "-", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "% of income", colour = NULL, linetype = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: tbl-bands
+#| tbl-cap: !expr paste0("How maintained schools' revenue reserves are spread in ", LAT_M, ", as the number of schools in each band of reserve as a share of income in ", AREA, ", and the share of England's schools in each band.")
+B <- A$bands[sector == "Maintained" & stage %in% c("Primary", "Secondary")]
+ba <- B[unit == AREA & level == LEVEL] |> dcast(band ~ stage, value.var = "schools", fill = 0)
+be <- B[unit == "England"][, pct := 100 * schools / sum(schools), by = stage] |> dcast(band ~ stage, value.var = "pct", fill = 0)
+out <- merge(data.table(band = factor(A$band_labels, A$band_labels)), ba, by = "band", all.x = TRUE) |>
+  merge(be, by = "band", all.x = TRUE, suffixes = c("", "_eng"))
+for (v in names(out)[-1]) set(out, which(is.na(out[[v]])), v, 0)
+out[, .(`Reserve, % of income` = band, `Primary schools` = Primary, `England primary` = sprintf("%.0f%%", Primary_eng),
+        `Secondary schools` = if ("Secondary" %in% names(out)) Secondary else 0,
+        `England secondary` = if ("Secondary_eng" %in% names(out)) sprintf("%.0f%%", Secondary_eng) else "")] |>
+  kt(align = "lrrrr")
+```
+
+## Income and spending {#sec-income}
+
+```{r}
+#| label: fig-income
+#| fig-cap: !expr paste0("Income per pupil in ", AREA, "'s state mainstream schools (both sectors, 2016-17 to ", LAT_A, ") as a percentage of England's, by phase; and staff costs as a share of spending.")
+#| fig-height: 4.2
+ie <- eng[sector == "All" & year %in% A$both_years, .(year, stage, ipp_eng = income_pp)]
+d <- merge(lines[sector == "All" & year %in% A$both_years & who != "England"], ie, by = c("year", "stage"))[
+  , .(x = yr_x(year), who, stage, rel = 100 * income_pp / ipp_eng)][stage %in% c("Primary", "Secondary")]
+p1 <- ggplot(d, aes(x, rel, colour = who, linetype = who)) + geom_hline(yintercept = 100, colour = GREY) + geom_line(linewidth = 1) +
+  facet_wrap(~stage) + scale_colour_manual(values = WHO_COL) + scale_linetype_manual(values = WHO_LT) +
+  scale_x_continuous(breaks = c(2016, 2020, 2024), labels = function(x) paste0(x, "-", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "Income per pupil, England = 100", colour = NULL, linetype = NULL) + theme_note(11)
+p1
+```
+
+```{r}
+#| label: fig-staff
+#| fig-cap: "Staff costs as a share of all spending, maintained schools."
+#| fig-height: 3.6
+d <- lines[sector == "Maintained" & stage == "All", .(x = yr_x(year), who, staff_pct)]
+ggplot(d, aes(x, staff_pct, colour = who, linetype = who)) + geom_line(linewidth = 1) +
+  scale_colour_manual(values = WHO_COL) + scale_linetype_manual(values = WHO_LT) +
+  scale_x_continuous(breaks = c(2015, 2019, 2023), labels = function(x) paste0(x, "-", substr(x + 1, 3, 4))) +
+  labs(x = NULL, y = "% of spending on staff", colour = NULL, linetype = NULL) + theme_note(11)
+```
+
+## Warning signs {#sec-warning}
+
+```{r}
+#| include: false
+wa <- if (!is.null(FC) && LEVEL == "Authority") FC$by_area[area == AREA, .(schools = sum(schools), flagged = sum(flagged), three = sum(three_plus))] else NULL
+```
+
+`r if (!is.null(wa) && nrow(wa) && wa$schools > 0) paste0("Of ", AREA, "'s ", wa$schools, " open schools with a recent return, ", wa$flagged, " (", pts(100 * wa$flagged / wa$schools, 0), "%) are in the band that held the riskiest 2% of school-years nationally since 2017-18, on the [early-warning model](../finance.qmd#sec-model), and ", wa$three, " show three or more of the [five warning signs](../finance.qmd#sec-signs) (England: ", pts(100 * FC$now$flagged / FC$now$schools, 1), "% in that band). These are counts, not a list: a warning is a reason for a conversation about a school's future, not a forecast, and no school is named.") else "District counts of the warning signs will follow; see the authority page and [School finances before closure](../finance.qmd)."`
+
+## Data and notes {#sec-area-fin-data}
+
+DfE's [Financial Benchmarking and Insights
+Tool](https://financial-benchmarking-and-insights-tool.education.gov.uk/data-sources)
+files, as on [School finances before closure](../finance.qmd#sec-fin-data):
+Consistent Financial Reporting for maintained schools (financial years 2014-15 to
+2025-26) and Academy Accounts Returns for academies (2016-17 to 2024-25), for state
+mainstream primary, middle, secondary and all-through schools. A school is in deficit
+when its revenue reserve at year end is below zero; the in-year balance is total income
+less total expenditure. Sums are over the schools with a return that year; medians and
+shares are of schools, not pupils. Income per pupil is the area's total income over its
+total pupils (full-time equivalent). Figures are in cash terms; comparing with England
+each year removes inflation. `r if (LEVEL == "District") "Schools are placed in a district by their location (GIAS easting and northing, ONS district boundaries)." else ""`
+Built by `R/44_area_finance.R` (data/area_finance.rds) and `R/45_finance_pages.R`.

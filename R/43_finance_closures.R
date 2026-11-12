@@ -111,7 +111,7 @@ NOT_MAIN <- c("Academy 16-19 converter", "Academy 16 to 19 sponsor led", "Academ
               "Academy special converter", "Academy special sponsor led", "Free schools special")
 main <- G[phase %in% MAIN_PHASE & type_group %in% c("Academies", "Free Schools", "Local authority maintained schools") & !establishment_type %in% NOT_MAIN]
 area_of <- function(la) ifelse(la %in% names(DEM$combine), DEM$combine[la], la)
-ident <- main[, .(cid = as.integer(urn), name = establishment_name, la = la_name, area = area_of(la_name), status,
+ident <- main[, .(cid = as.integer(urn), name = establishment_name, la = la_name, area = area_of(la_name), region = gor, status, easting, northing,
                   stage = fifelse(phase %in% c("Primary", "Middle deemed primary"), "Primary", "Secondary"),
                   capacity = school_capacity, academy = type_group != "Local authority maintained schools")]
 fin <- merge(fin, ident, by = "cid")
@@ -236,5 +236,9 @@ res <- list(read_log = read_log, measures = MEAS, profile = profile, benchmark =
             sign_rates = sign_rates, sign_share = sign_share, by_area = by_area, now = now_summary, examples = examples,
             years = YEARS, built = Sys.Date())
 saveRDS(res, here::here("data", "finance_closures.rds"))
+# The school-year panel, for the area finance pages (R/44): local only (data/cache is not committed)
+saveRDS(fin[, .(cid, name, la, area, region, stage, academy, status, easting, northing, year, source, mat, trust, pupils, income,
+                expenditure, in_year, reserve, staff, capacity, util, pupils_chg3, reserve_pct, in_year_pct, income_pp,
+                staff_pct, deficit, last_year, k)], here::here("data", "cache", "finance_panel.rds"))
 message(sprintf("finance_closures.rds: %d returns, %d school-years in the model (%d closing within two years); test AUC %.2f; %d of %d open schools in the top-2%% band",
                 nrow(fin), nrow(mm), sum(mm$y), test_res$auc, sum(lt$flag), nrow(lt)))

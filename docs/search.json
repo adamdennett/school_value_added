@@ -1489,5 +1489,47 @@
     "title": "School finances before closure",
     "section": "Data and calculations",
     "text": "Data and calculations\nFinances. DfE’s Financial Benchmarking and Insights Tool files: CFR full data workbooks for local authority maintained schools, financial years 2014-15 to 2025-26, and AAR downloads for academies, 2016-17 to 2024-25. From each return: pupils (full-time equivalent, including dual registrations where given), total income, total expenditure (as DfE defines them in each year), staff costs and the revenue reserve. The in-year balance is income minus expenditure. Central services rows of multi-academy trusts are left out. A CFR year (April to March) is labelled with the academic year it mostly falls in.\nOne school, several numbers. A school’s earlier URNs are joined to its latest through GIAS’s one-to-one predecessor links (academy conversion, a change of type), not through mergers. Where a year has two returns (a part-year CFR and an AAR around conversion), the one with the larger income is kept.\nMeasures. Change in pupils over three years; pupils as a percentage of capacity (GIAS’s latest recorded capacity); revenue reserve and in-year balance as percentages of income; income per pupil; staff costs as a percentage of expenditure. Percentiles are among the state mainstream schools of the same stage still open that year.\nClosures. As on Pupil numbers and school places: state mainstream schools closed with no successor or merged, from GIAS, with the last academic year taught. A return for year t counts as “closing within two years” if the school’s last year is t+1 or t+2; returns in or after the last year are left out. The early test uses t+2 or t+3 and leaves out the year before closure.\nCurrent schools. Each open school’s latest return (2023-24 or later), with the model fitted on every year. The highest-risk band is the predicted risk above which the riskiest 2% of school-years from 2017-18 to 2023-24 fall. School-level scores are kept out of the published data.\nThe code is R/43_finance_closures.R, which writes data/finance_closures.rds."
+  },
+  {
+    "objectID": "finance_areas/brighton_and_hove.html",
+    "href": "finance_areas/brighton_and_hove.html",
+    "title": "Brighton and Hove: school finances",
+    "section": "",
+    "text": "NoteIn short\n\n\n\n\n45% of Brighton and Hove’s maintained schools were in deficit (a negative revenue reserve) in 2025-26, against 21% across England and 17% in the South East. That is 9th highest of 129 authorities. The peak was 58% in 2024-25, the highest of 129 authorities that year.\nTogether, its maintained schools hold a net deficit of £3.0m, against net reserves of £7.8m in 2021-22. The typical maintained school’s reserve is 0.2% of a year’s income (England 5.6%).\nIncome per pupil in its schools was 95% of England’s in 2024-25 (all state mainstream schools).\nRolls are falling. Primary-age pupils are 14% down since 2018/19, and the Year 7 intake will be about 20% smaller by 2032/33 (see Pupil numbers and school places). Most school funding follows pupils.\nThese pages describe Brighton and Hove’s schools as a whole, from DfE’s published finance returns. As on School finances before closure, no open school is named. Maintained schools report every year from 2014-15 to 2025-26 (Consistent Financial Reporting, April to March); academies from 2016-17 to 2024-25 (Academy Accounts Returns, September to August). An academy in a multi-academy trust reports only its own share of reserves, without the trust’s central reserve, and some trusts report none, so the reserve series below are for maintained schools unless marked.\nTable 1: State mainstream schools in Brighton and Hove with a finance return, by phase and sector, in the latest year of each (maintained 2025-26, academies 2024-25).\n\n\n\n\n\n\nPhase\nSector\nYear\nSchools\nPupils\nIn deficit\nMedian reserve, % of income\nIncome per pupil\n\n\n\n\nPrimary\nMaintained\n2025-26\n40\n13,872\n48%\n0.1\n£7,019\n\n\nSecondary\nMaintained\n2025-26\n7\n10,092\n29%\n2.5\n£8,392\n\n\nSecondary\nAcademy\n2024-25\n3\n2,658\nsee note\nsee note\n£8,509\n\n\nPrimary\nAcademy\n2024-25\n7\n2,378\nsee note\nsee note\n£7,484"
+  },
+  {
+    "objectID": "finance_areas/brighton_and_hove.html#sec-deficit",
+    "href": "finance_areas/brighton_and_hove.html#sec-deficit",
+    "title": "Brighton and Hove: school finances",
+    "section": "Schools in deficit",
+    "text": "Schools in deficit\n\n\n\n\n\n\n\n\nFigure 1: Share of maintained schools with a negative revenue reserve each year, Brighton and Hove against England, the South East and the rest of Sussex. Brighton and Hove has 7 maintained secondary schools, so each moves its secondary line by about 14 points.\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: Brighton and Hove’s maintained schools together, the sum of their revenue reserves at year end and of their in-year balances (income less spending), £ million."
+  },
+  {
+    "objectID": "finance_areas/brighton_and_hove.html#sec-reserves",
+    "href": "finance_areas/brighton_and_hove.html#sec-reserves",
+    "title": "Brighton and Hove: school finances",
+    "section": "How much they hold",
+    "text": "How much they hold\n\n\n\n\n\n\n\n\nFigure 3: The typical (median) maintained school’s revenue reserve and in-year balance, as a share of its income.\n\n\n\n\n\n\n\n\n\nTable 2: How maintained schools’ revenue reserves are spread in 2025-26, as the number of schools in each band of reserve as a share of income in Brighton and Hove, and the share of England’s schools in each band.\n\n\n\n\n\n\nReserve, % of income\nPrimary schools\nEngland primary\nSecondary schools\nEngland secondary\n\n\n\n\nBelow -10%\n5\n6%\n1\n7%\n\n\n-10% to -5%\n4\n4%\n1\n5%\n\n\n-5% to 0%\n10\n10%\n0\n10%\n\n\n0% to 5%\n18\n26%\n4\n31%\n\n\n5% to 10%\n2\n27%\n1\n25%\n\n\n10% to 20%\n1\n21%\n0\n17%\n\n\nOver 20%\n0\n6%\n0\n6%"
+  },
+  {
+    "objectID": "finance_areas/brighton_and_hove.html#sec-income",
+    "href": "finance_areas/brighton_and_hove.html#sec-income",
+    "title": "Brighton and Hove: school finances",
+    "section": "Income and spending",
+    "text": "Income and spending\n\n\n\n\n\n\n\n\nFigure 4: Income per pupil in Brighton and Hove’s state mainstream schools (both sectors, 2016-17 to 2024-25) as a percentage of England’s, by phase; and staff costs as a share of spending.\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 5: Staff costs as a share of all spending, maintained schools."
+  },
+  {
+    "objectID": "finance_areas/brighton_and_hove.html#sec-warning",
+    "href": "finance_areas/brighton_and_hove.html#sec-warning",
+    "title": "Brighton and Hove: school finances",
+    "section": "Warning signs",
+    "text": "Warning signs\nOf Brighton and Hove’s 55 open schools with a recent return, 8 (15%) are in the band that held the riskiest 2% of school-years nationally since 2017-18, on the early-warning model, and 5 show three or more of the five warning signs (England: 4.5% in that band). These are counts, not a list: a warning is a reason for a conversation about a school’s future, not a forecast, and no school is named."
+  },
+  {
+    "objectID": "finance_areas/brighton_and_hove.html#sec-area-fin-data",
+    "href": "finance_areas/brighton_and_hove.html#sec-area-fin-data",
+    "title": "Brighton and Hove: school finances",
+    "section": "Data and notes",
+    "text": "Data and notes\nDfE’s Financial Benchmarking and Insights Tool files, as on School finances before closure: Consistent Financial Reporting for maintained schools (financial years 2014-15 to 2025-26) and Academy Accounts Returns for academies (2016-17 to 2024-25), for state mainstream primary, middle, secondary and all-through schools. A school is in deficit when its revenue reserve at year end is below zero; the in-year balance is total income less total expenditure. Sums are over the schools with a return that year; medians and shares are of schools, not pupils. Income per pupil is the area’s total income over its total pupils (full-time equivalent). Figures are in cash terms; comparing with England each year removes inflation. Built by R/44_area_finance.R (data/area_finance.rds) and R/45_finance_pages.R."
   }
 ]
