@@ -58,21 +58,22 @@ subtitle: "What v2.1 does now, and what comes next."
 
 ## Next
 
-- [x] **[Policy simulator v2.0](simulator.qmd).** The Pull the Right Lever
-      simulator rebuilt on the v2.1 models, in the browser: absence and the
+- [x] **Policy simulator v2.0.** The Pull the Right Lever
+      simulator rebuilt on the v2.1 models: absence and the
       intake terms as levers (with admissions and sixth form for one
       school), all five groups at once with the disadvantage gap, each
       lever's contribution, and an area mode that applies a change to every
-      school in a district, authority, region or England.
-- [x] **School Information System v2.0 (Shiny).** The v1.0 policy simulator
-      app rebuilt on v2.1, for Posit Connect Cloud (`app/`): Attainment 8 and
+      school in an area. First in the browser, now part of the School
+      Information System below.
+- [x] **[School Information System v2.0](simulator.qmd) (Shiny).** The v1.0 policy simulator
+      app rebuilt on v2.1, on Posit Connect Cloud (`app/`): Attainment 8 and
       value added side by side for all, disadvantaged and non-disadvantaged
       pupils; four years, single years or moving averages; regions,
       combined authorities, authorities, districts and trusts; absence
       against expected; a school finder, twins, observed against predicted,
       the simulator, an area overview, and travel and distance with the
-      national walking routes as they arrive. To replace this site's
-      simulator page once it is published.
+      national walking routes as they arrive. It replaces the site's
+      in-browser simulator.
 - [ ] **School Information System v2.1: places and pupil cohorts.** Each
       authority's demographic picture and the cohorts coming through its
       schools (placeholder in the app).

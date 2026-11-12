@@ -15,7 +15,7 @@
 #   absence     absence against intake, year by year and over four years (place_absence.rds,
 #               R/04: log absence on the v2 intake terms with year and region effects)
 #   la_effects  each authority's effect on results, by group (geography.rds, R/12)
-#   sim         the simulator's schools and coefficients (as simulator.qmd)
+#   sim         the simulator's schools and coefficients (as the old browser simulator)
 #   twins       the matching characteristics and weights (as twins.qmd)
 #   travel      straight-line distance by authority and district (R/18), journeys on
 #               real networks in 109 mostly urban authorities (R/27-R/29), climb (R/25)
@@ -74,7 +74,7 @@ la_effects <- G$la |> transmute(la = LANAME, group, pct = round(pct, 2), lo = ro
 bounds <- G$bounds |> st_transform(27700) |> st_simplify(dTolerance = 150, preserveTopology = TRUE) |>
   st_transform(4326) |> rename(la = LANAME)
 
-# ---- simulator: as simulator.qmd ------------------------------------------------
+# ---- simulator: each school's latest model year ------------------------------------------------
 res <- V$school_years |> inner_join(lat_in |> select(URN, year_label), by = c("URN", "year_label")) |>
   select(URN, group, obs) |>
   pivot_wider(names_from = group, values_from = obs, names_glue = "a_{group}", values_fn = mean)

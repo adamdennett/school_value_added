@@ -26,7 +26,6 @@ project:
     - /fonts/*
     - .nojekyll
     - twins.js
-    - simulator.js
     - data/va_v2_schools.csv
     - data/va_2526_provisional.csv
 
@@ -84,7 +83,7 @@ website:
       - href: twins.qmd
         text: "Find a twin"
       - href: simulator.qmd
-        text: "Simulator"
+        text: "Information system"
       - href: independent.qmd
         text: "Independent schools"
       - text: "Trusts"
