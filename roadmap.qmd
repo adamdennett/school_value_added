@@ -115,8 +115,11 @@ subtitle: "What v2.1 does now, and what comes next."
       0.98 children per woman (2025), the 2nd lowest of 292 districts. Neither
       the fall since 2015 nor the low level follows affordability: neighbouring
       Lewes, Mid Sussex and Wealden have the same house price to earnings ratio
-      but fertility of 1.45 to 1.58 (`R/49`). Next: the Census make-up of the
-      city and families moving out by age.
+      but fertility of 1.45 to 1.58 (`R/49`). Births, not families moving out,
+      drive most of the city's fall in primary pupils (`R/50`), while in inner
+      London migration matters as much. Next: write this up, and test whether
+      women's education (Census Level 4+) explains low fertility better than
+      housing costs.
 - [ ] **School Information System v2.2: primary and post-16.** The same view
       for primary schools, then sixth forms and colleges (placeholders in
       the app).

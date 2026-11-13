@@ -95,3 +95,18 @@ Change in pupils from 2018/19 to 2025/26, split exactly into log points (×100):
   - for Reception, births go with 87% of the differences in change;
   - for primary as a whole, births and migration go with about half each;
   - for Year 7, migration goes with 49%.
+
+## To do next (logged 13 November 2026)
+
+1. **Write up R/50 on the demographics page.**
+   - A short section after "Births, fertility and the cost of housing", with the two charts in `writeup/figures/pupil_change_*.png`.
+   - England, London, Brighton and Hove, and the shares across authorities.
+   - Caveats: modelled migration in the ONS mid-year estimates (method change from mid-2022); migration and state-school share trade off.
+2. **Test education against fertility.** Lower fertility has long gone with more highly educated women.
+   - **Measure:** % of women aged about 25–44 with Level 4+ qualifications, from Census 2021. Use highest qualification by sex and age (an RM table) if available, else TS067 for all adults. The Level 4 measure used before in this project is TS067 by Output Area.
+   - **Models:**
+     - total fertility rate (2021, or 2023–25) on female Level 4+;
+     - add the house price to earnings ratio, the student share, the private-renting share and the share of mothers born outside the UK;
+     - see whether education absorbs Brighton and Hove's −0.44 gap and the university-city pattern.
+   - **Change over time:** Census 2011 against 2021 change in female Level 4+ against the change in fertility.
+   - **Also:** age-specific rates under 30 against graduate share, as a postponement test.
