@@ -58,6 +58,14 @@ CLS_COL <- c("Consistent decline" = "#762a83", "Decline" = "#c2a5cf", "Stable" =
   (`r pts(rate("Stable", "gone_rate"), 1)`). But that is mostly inner London;
   elsewhere most falling areas have closed few schools so far and carry
   surplus places instead.
+- **Fertility has fallen, and housing costs explain little of it.** England's
+  total fertility rate fell from 1.83 in 2013 to 1.39 in 2025, and Brighton and
+  Hove's to 0.98.
+  - The fall is mostly among women in their twenties.
+  - The lowest-fertility places are university cities, whatever their house
+    prices.
+  - Fertility fell about as much where housing became less affordable as where
+    it did not ([see below](#sec-fertility)).
 :::
 
 ## England: the wave passing through {#sec-wave}
@@ -222,6 +230,164 @@ more. For secondary schools funded largely per pupil, that is the scale of the
 financial pressure to come; a later page will look at schools' finances in the
 years before closure.
 
+## Births, fertility and the cost of housing {#sec-fertility}
+
+```{r}
+#| include: false
+FA <- readRDS(here::here("data", "bh_fertility_affordability.rds"))
+fe <- FA$A[name == "England" & from == 2013]; fb <- FA$A[name == "Brighton and Hove" & from == 2013]
+DC <- FA$D_chg; bhd <- DC[name == "Brighton and Hove"]
+nb <- DC[name %in% c("Lewes", "Mid Sussex", "Wealden")]
+pan <- FA$D_panel
+eng_ser <- FA$tfr_series[name == "England"][order(year)]
+```
+
+The sections above roll forward children already born. Behind them is a fall
+in births, and the question is why.
+
+- **England:** births fell `r pts(abs(fe$births), 0)`% from 2013 to 2025, even
+  though the number of women aged 15 to 44 rose `r pts(fe$women_15_44, 0)`%.
+  Births per woman fell faster than women grew.
+- **Total fertility rate:** from `r fe$tfr_from` to `r fe$tfr_to` children per
+  woman.
+- **Brighton and Hove:** from `r fb$tfr_from` to `r fb$tfr_to`, the 2nd lowest
+  of `r FA$n_districts` districts.
+
+Councillors and commentators often put this down to the cost of living and of
+housing. The data on where and when fertility fell give that view only weak
+support.
+
+```{r}
+#| label: fig-asfr
+#| fig-cap: "Age-specific fertility rates, England and Brighton and Hove, 2013 to 2025: births per 1,000 women in each age group. ONS birth rates by local authority (Nomis NM_207_1)."
+#| fig-height: 4.4
+B <- FA$B[age != "Under 20"]
+B[, name := factor(name, c("England", "Brighton and Hove"))]
+ggplot(B, aes(year, rate, colour = age)) + geom_line(linewidth = 1) + geom_point(size = 1) +
+  facet_wrap(~name) + scale_colour_manual(values = c("20-24" = "#d9c2f5", "25-29" = "#a774f0", "30-34" = "#7a2fd6", "35-39" = "#4d1a8c", "40-44" = "#1f0a36")) +
+  scale_x_continuous(breaks = c(2013, 2017, 2021, 2025)) +
+  labs(x = NULL, y = "Births per 1,000 women", colour = "Age of mother") + theme_note(11)
+```
+
+**The fall is in the twenties.** From 2013 to 2025, England's fertility at ages
+20 to 24 fell by `r pts(abs(FA$B_chg[name == "England" & age == "20-24", chg]), 0)`%
+and at 25 to 29 by `r pts(abs(FA$B_chg[name == "England" & age == "25-29", chg]), 0)`%.
+At 35 to 39 it fell by `r pts(abs(FA$B_chg[name == "England" & age == "35-39", chg]), 0)`%,
+and at 40 to 44 it did not fall at all. Women are having children later, and
+fewer of them.
+
+- **Brighton and Hove has the same pattern, more strongly.** In 2025 its rate at
+  20 to 24 was a quarter of England's, and at 25 to 29 under half.
+- **At 35 to 39 it is higher than England's.**
+- **Mothers' standardised mean age** was `r fb$mean_age_to` against England's
+  `r fe$mean_age_to`.
+
+```{r}
+#| label: fig-tfr-low
+#| fig-cap: "The 20 districts with the lowest total fertility rate, 2023 to 2025 (average of the three years), and their ratio of median house price to median residence-based earnings. ONS birth rates (Nomis NM_207_1); ONS housing affordability, table 5c."
+#| fig-height: 5.6
+low <- DC[order(tfr_1)][1:20]
+low[, name := factor(name, rev(name))]
+ggplot(low, aes(tfr_1, name)) + geom_vline(xintercept = tail(eng_ser$tfr, 1), colour = GREY, linetype = "dashed") +
+  geom_segment(aes(x = 0.8, xend = tfr_1, yend = name), colour = LPURPLE, linewidth = 1.2) +
+  geom_point(aes(colour = name == "Brighton and Hove"), size = 2.8) +
+  geom_text(aes(label = sprintf("ratio %.1f", ratio_1)), hjust = -0.25, size = 3.1, colour = GREY) +
+  scale_colour_manual(values = c(`TRUE` = BPURPLE, `FALSE` = DPURPLE), guide = "none") +
+  scale_x_continuous(limits = c(0.8, 1.42)) +
+  annotate("text", x = tail(eng_ser$tfr, 1), y = 0.6, label = "England 2025", hjust = 1.05, size = 3.1, colour = GREY) +
+  labs(x = "Total fertility rate (children per woman), 2023 to 2025", y = NULL) + theme_note(11)
+```
+
+**The lowest-fertility places are university cities and inner London**, whatever
+their house prices.
+
+- The list includes Cambridge, Brighton and Hove, Norwich, York, Exeter and
+  Oxford.
+- **Norwich**, with a house price to earnings ratio of only
+  `r sprintf("%.1f", DC[name == "Norwich", ratio_1])`, has fertility of
+  `r sprintf("%.2f", DC[name == "Norwich", tfr_1])`.
+- **Brighton and Hove's neighbours** Lewes, Mid Sussex and Wealden face almost
+  the same ratio (`r sprintf("%.1f", min(nb$ratio_1))` to `r sprintf("%.1f", max(nb$ratio_1))`,
+  against `r sprintf("%.1f", bhd$ratio_1)`), but have fertility of
+  `r sprintf("%.2f", min(nb$tfr_1))` to `r sprintf("%.2f", max(nb$tfr_1))`.
+
+That points to **who lives where at family-forming ages** more than to prices:
+students and young single adults in the cities, and couples moving out to have
+children.
+
+```{r}
+#| label: fig-afford
+#| fig-cap: "Each district in England. Left, total fertility rate against the house price to earnings ratio (log scale), 2023 to 2025. Right, the change in each from 2013-15 to 2023-25. Brighton and Hove and three neighbours are labelled. Lines are least-squares fits."
+#| fig-height: 4.8
+lab <- DC[name %in% c("Brighton and Hove", "Lewes", "Mid Sussex", "Wealden")]
+p1 <- ggplot(DC, aes(ratio_1, tfr_1)) + geom_point(colour = LPURPLE, alpha = 0.8, size = 1.5) +
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, colour = GREY, linewidth = 0.7) +
+  geom_point(data = lab, colour = DPURPLE, size = 2.6) + ggrepel::geom_text_repel(data = lab, aes(label = name), colour = DPURPLE, size = 3, min.segment.length = 0, box.padding = 0.5, seed = 49) +
+  scale_x_log10() + labs(x = "House price to earnings ratio, 2023-25", y = "Total fertility rate, 2023-25") + theme_note(10)
+p2 <- ggplot(DC, aes(pct_ratio, pct_tfr)) + geom_point(colour = LPURPLE, alpha = 0.8, size = 1.5) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, colour = GREY, linewidth = 0.7) +
+  geom_point(data = lab, colour = DPURPLE, size = 2.6) + ggrepel::geom_text_repel(data = lab, aes(label = name), colour = DPURPLE, size = 3, min.segment.length = 0, box.padding = 0.5, seed = 49) +
+  labs(x = "Change in ratio, 2013-15 to 2023-25 (%)", y = "Change in fertility rate (%)") + theme_note(10)
+patchwork::wrap_plots(p1, p2, nrow = 1)
+```
+
+**Affordability explains little of either picture.**
+
+- **Levels:** across districts, the house price to earnings ratio accounts for
+  `r pts(100 * FA$r2_lvl, 0)`% of the differences in fertility in 2023 to 2025.
+  Brighton and Hove sits `r sprintf("%.2f", abs(bhd$resid_lvl))` children per
+  woman below what its ratio predicts, the 2nd largest gap.
+- **Change:** fertility fell about as much where housing became less affordable
+  as where it did not (R² = `r sprintf("%.3f", FA$r2_chg)`).
+- **Over time within each district**, against the national trend:
+  - affordability in the same year has no detectable effect;
+  - affordability three years earlier comes out with the opposite sign to the
+    cost-of-living story. That more likely reflects who moves where than any
+    effect of prices.
+
+Housing costs may well shape *where* families live. These data do not show that
+they set *how many* children are born.
+
+::: {.callout-note collapse="true"}
+## The models behind this section
+
+Within districts over time, with district and year effects, so that only each
+district's own change against the national trend counts (`r pan$districts`
+districts, `r pan$years[1]` to `r pan$years[2]`):
+
+$$\text{TFR}_{dt} = \alpha_d + \gamma_t + \beta_1 \log(\text{ratio}_{dt}) + \beta_2 \log(\text{ratio}_{d,t-3}) + \varepsilon_{dt}$$
+
+```r
+lm(tfr ~ lr + lr_lag3_full + factor(code) + factor(year), data = P)
+```
+
+- Same year: β₁ = `r sprintf("%.3f", pan$both["lr", 1])` (s.e. `r sprintf("%.3f", pan$both["lr", 2])`).
+- Three years earlier: β₂ = `r sprintf("%.3f", pan$both["lr_lag3_full", 1])` (s.e. `r sprintf("%.3f", pan$both["lr_lag3_full", 2])`).
+
+A doubling of the ratio is a change of 0.69 in its log.
+
+Change across districts, 2013-15 to 2023-25:
+
+```r
+lm(d_tfr ~ d_lr, data = D_chg)    # R² = `r sprintf("%.3f", FA$r2_chg)`
+lm(tfr_1 ~ log(ratio_1), data = D_chg)   # levels, R² = `r sprintf("%.3f", FA$r2_lvl)`
+```
+
+Associations across places, not effects on any one family. The total fertility
+rate is a period measure for whoever lives in a district that year. Where young
+adults move in to study or work and leave before having children, it is low
+without any change in what any woman eventually does.
+:::
+
+**Still to do (on the [roadmap](roadmap.qmd)):**
+
+- the Census make-up of each district: students, graduates, renting and shared
+  houses, single-person households, partnership, and mothers born outside the
+  UK;
+- moves by age between districts: under-fives and adults in their thirties
+  leaving the cities;
+- house prices by small area (ONS, MSOA) within Brighton and Hove.
+
 ## Sussex {#sec-demog-sussex}
 
 ```{r}
@@ -277,6 +443,22 @@ pupils' ages put them. *Primary age* is Reception to Year 6 and *secondary
 age* Years 7 to 11; nursery classes and sixth forms are left out because they
 follow provision rather than births. The Isles of Scilly (one school) are left
 out.
+
+**Fertility and housing** (`R/49_bh_fertility_affordability.R`).
+
+- **Fertility:** ONS *Live births in England and Wales: birth rates down to
+  local authority areas* (Nomis NM_207_1), districts and unitary authorities
+  (April 2023 boundaries), 2013 to 2025. It covers births, the general and total
+  fertility rates, age-specific rates and the standardised mean age of mother.
+  - Women aged 15 to 44 are births divided by the general fertility rate.
+  - The three-year averages (2013-15 and 2023-25) smooth single years in small
+    districts.
+- **Affordability:** ONS *House price to residence-based earnings ratio*,
+  2025 release, table 5c. This is the median house price (year ending
+  September) over the median full-time annual earnings of residents (ASHE), by
+  district, 2002 to 2025.
+- **The joined panel:** `r FA$n_districts` districts are in both sources for
+  the change comparison, and `r pan$districts` in the panel.
 
 **Areas.** Local authorities as in the census, with three reorganisations
 combined so that each series runs unbroken: Bournemouth, Poole and Dorset with
