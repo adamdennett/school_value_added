@@ -270,3 +270,17 @@ Writes `data/closure_extras.rds` (aggregates and coefficients only) |
 cd data-raw/ons && f=birthrates_lad_2013_2025_nomis_NM_207_1.csv; rm -f $f
 for y in $(seq 2013 2025); do curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_207_1.data.csv?geography=TYPE424,2092957699&time=$y&select=date_name,geography_name,geography_code,measure_name,obs_value" > t.csv; if [ $y -eq 2013 ]; then cat t.csv > $f; else tail -n +2 t.csv >> $f; fi; done; rm t.csv
 ```
+
+## Pupils: births against migration (R/50)
+
+`R/50_pupils_births_migration.R` splits the change in pupils in each authority exactly into three parts:
+- births of the cohorts;
+- net migration of those children since birth;
+- the share of the area's children in its state mainstream schools.
+
+It covers Reception, primary and Year 7 from 2018/19 to 2025/26, and secondary from 2019/20 to 2025/26. It uses ONS mid-year estimates by single year of age (Nomis NM_2002_1) and the R/42 census year groups. It writes `data/pupils_births_migration.rds` and two charts in `writeup/figures/`. The population download (one year at a time):
+
+```
+cd data-raw/ons && f=mye_age0_15_utla_2004_2025_nomis_NM_2002_1.csv; rm -f $f; ages=$(seq -s, 101 116)
+for y in $(seq 2004 2025); do curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_2002_1.data.csv?geography=TYPE423,2092957699&time=$y&gender=0&c_age=$ages&measures=20100&select=date_name,geography_name,geography_code,c_age_name,obs_value" > t.csv; if [ $y -eq 2004 ]; then cat t.csv > $f; else tail -n +2 t.csv >> $f; fi; done; rm t.csv
+```
