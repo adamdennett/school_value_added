@@ -134,6 +134,8 @@ format:
     fig-height: 5.5
     fig-dpi: 108
     link-external-newwindow: true
+    include-in-header: _gtm_head.html
+    include-before-body: _gtm_body.html
 
 execute:
   echo: false
