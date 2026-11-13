@@ -284,18 +284,29 @@ fewer of them.
 
 ```{r}
 #| label: fig-tfr-low
-#| fig-cap: "The 20 districts with the lowest total fertility rate, 2023 to 2025 (average of the three years), and their ratio of median house price to median residence-based earnings. ONS birth rates (Nomis NM_207_1); ONS housing affordability, table 5c."
-#| fig-height: 5.6
+#| fig-cap: "The 20 districts with the lowest total fertility rate, 2023 to 2025 (average of the three years; left), and the same districts' ratio of median house price to median residence-based earnings (right). Dashed lines are England. London boroughs in grey. ONS birth rates (Nomis NM_207_1); ONS housing affordability, table 5c."
+#| fig-height: 5.8
 low <- DC[order(tfr_1)][1:20]
 low[, name := factor(name, rev(name))]
-ggplot(low, aes(tfr_1, name)) + geom_vline(xintercept = tail(eng_ser$tfr, 1), colour = GREY, linetype = "dashed") +
-  geom_segment(aes(x = 0.8, xend = tfr_1, yend = name), colour = LPURPLE, linewidth = 1.2) +
-  geom_point(aes(colour = name == "Brighton and Hove"), size = 2.8) +
-  geom_text(aes(label = sprintf("ratio %.1f", ratio_1)), hjust = -0.25, size = 3.1, colour = GREY) +
-  scale_colour_manual(values = c(`TRUE` = BPURPLE, `FALSE` = DPURPLE), guide = "none") +
-  scale_x_continuous(limits = c(0.8, 1.42)) +
-  annotate("text", x = tail(eng_ser$tfr, 1), y = 0.6, label = "England 2025", hjust = 1.05, size = 3.1, colour = GREY) +
-  labs(x = "Total fertility rate (children per woman), 2023 to 2025", y = NULL) + theme_note(11)
+low[, where := fifelse(substr(code, 1, 3) == "E09", "London borough", fifelse(name == "Brighton and Hove", "Brighton and Hove", "Elsewhere"))]
+eng_ratio <- FA$C[name == "England" & year %in% 2023:2025, mean(ratio)]
+eng_tfr <- FA$tfr_series[name == "England" & year %in% 2023:2025, mean(tfr)]
+WCOL <- c("Brighton and Hove" = BPURPLE, "Elsewhere" = DPURPLE, "London borough" = GREY)
+pa <- ggplot(low, aes(tfr_1, name)) + geom_vline(xintercept = eng_tfr, colour = GREY, linetype = "dashed") +
+  geom_segment(aes(x = 0, xend = tfr_1, yend = name, colour = where), linewidth = 1.1, alpha = 0.35) +
+  geom_point(aes(colour = where), size = 2.8) +
+  annotate("text", x = eng_tfr, y = 20.6, label = sprintf("England %.2f", eng_tfr), hjust = 1.05, size = 3, colour = GREY) +
+  scale_colour_manual(values = WCOL, guide = "none") + scale_x_continuous(limits = c(0, 1.5), expand = expansion(mult = c(0, 0.02))) +
+  coord_cartesian(clip = "off") +
+  labs(x = "Total fertility rate (children per woman)", y = NULL) + theme_note(11)
+pb <- ggplot(low, aes(ratio_1, name, fill = where)) + geom_col(width = 0.65) +
+  geom_vline(xintercept = eng_ratio, colour = INK, linetype = "dashed") +
+  annotate("text", x = eng_ratio, y = 20.6, label = sprintf("England %.1f", eng_ratio), hjust = -0.05, size = 3, colour = INK) +
+  scale_fill_manual(values = WCOL, name = NULL) + scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  coord_cartesian(clip = "off") +
+  labs(x = "House price to earnings ratio", y = NULL) + theme_note(11) +
+  theme(axis.text.y = element_blank(), legend.position = "bottom")
+patchwork::wrap_plots(pa, pb, nrow = 1, widths = c(1.15, 1)) + patchwork::plot_layout(guides = "collect") & theme(legend.position = "bottom")
 ```
 
 **The lowest-fertility places are university cities and inner London**, whatever
