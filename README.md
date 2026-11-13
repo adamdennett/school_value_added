@@ -118,6 +118,33 @@ No open school is named on the site. The model's school-level scores are written
 `data-raw/private/closure_risk_open_schools.csv`, which is not committed; share it only
 privately.
 
+## Follow-up to the Commons Library briefing on falling rolls (R/47, R/48)
+
+The briefing (House of Commons Library, *Declining pupil numbers in England*, CBP-12207,
+September 2026) led to two checks.
+- `R/47_briefing_checks.R` scores local authorities' pupil forecasts against the
+  January 2026 census, and our cohort roll-forward on the same test. It compares DfE's July
+  2026 national projections, and extends the roll-forward with births.
+- `R/48_closure_extras.R` adds free school meals, SEN and Ofsted to the closure model.
+
+They need these downloads in `data-raw/` (not committed):
+
+```
+# DfE school capacity 2024/25 (authorities' forecasts) and national pupil projections 2026
+cd data-raw/ees && mkdir -p school_capacity_2425 npp_2026
+curl -L https://content.explore-education-statistics.service.gov.uk/api/releases/960750dd-6ed7-4e32-a9df-3cc9132bb1a4/files -o school_capacity_2425/all.zip && (cd school_capacity_2425 && unzip -o all.zip)
+curl -L https://content.explore-education-statistics.service.gov.uk/api/releases/46ea1775-0174-4fb9-a045-e2a615f9764b/files -o npp_2026/all.zip && (cd npp_2026 && unzip -o all.zip)
+# SEN in England, school level, 2019/20 to 2024/25 (release ids in order)
+mkdir -p sen_all && i=0; for r in 521fba4e-dfb7-4e1e-9ca7-d0c7b9880732 0a424edd-2bc7-45aa-a45e-5ae6dc4f23ab daf8d64d-ce21-4f21-c28c-08da3ee963bf 77bc898f-948d-4080-b092-3ebc3eb1e0a5 94886eb8-ba0e-45bc-a3a7-08dc65d0f8b2 0ca90382-e848-4074-8406-b0db7a03a7f7; do y=$((2019+i)); curl -L https://content.explore-education-statistics.service.gov.uk/api/releases/$r/files -o sen_all/sen_$y-$(printf %02d $(((y+1)%100))).zip; i=$((i+1)); done
+# ONS births by county/unitary authority, 2013 to 2025 (Nomis NM_206_1)
+mkdir -p ../ons && curl "https://www.nomisweb.co.uk/api/v01/dataset/NM_206_1.data.csv?geography=TYPE423,TYPE480,2092957699&time=2013-2025&select=date_name,geography_name,geography_code,geography_type,obs_value" -o ../ons/births_la_2013_2025_nomis_NM_206_1.csv
+# Ofsted year-end outcomes, as at 31 August 2018 to 2023: from each gov.uk page
+#   /government/statistics/state-funded-schools-inspections-and-outcomes-as-at-31-august-YYYY
+#   the CSV "State_funded_schools_inspections_and_outcomes_as_at_31_August_YYYY.csv",
+#   saved as data-raw/ofsted/ofsted_as_at_31_aug_YYYY.csv
+cd ../.. && Rscript R/47_briefing_checks.R && Rscript R/48_closure_extras.R
+```
+
 ## Ofsted, monthly
 
 `.github/workflows/refresh-ofsted.yml` runs on the 20th of each month (and
@@ -209,6 +236,20 @@ Rscript -e 'shiny::runApp("app")'        # run it locally
 | `R/11_oac_neighbourhoods.R` | neighbourhood types: the 2021/2 Output Area Classification (download from data.geods.ac.uk into `data-raw/oac2021/`) profiled over each school's 150 nearest OAs at three tiers, tested against results and value added out of sample, and against local authority effects (`neighbourhood_types.qmd`) |
 | `R/10_independent.R` | independent schools: GIAS, census and SEN coverage, KS4 Attainment 8 against KS5 A level results, a reduced specification tested on state schools, and DfE's A level value added by sector (`independent.qmd`); fetches the 2024/25 KS5 and vaqual files if missing |
 | `simulator.qmd` | the School Information System page: the Shiny app embedded from Posit Connect Cloud, and how its simulator works (it replaced the in-browser `simulator.js`) |
+| `R/47_briefing_checks.R` | pupil forecasts compared:
+- local authorities' forecasts (DfE school capacity 2024/25), scored against the January 2026 census by authority, beside this project's cohort roll-forward rerun from January 2025;
+- DfE's national pupil projections (July 2026) against the roll-forward;
+- Reception projected from ONS births by authority (births ratio over three years), so primary runs to 2029/30 and Year 7 to 2036/37;
+- authorities' forecasts for 2029/30 and 2031/32 against ours.
+
+Writes `data/briefing_checks.rds` |
+| `R/48_closure_extras.R` | R/43's closure model (rebuilt from the cached panel) with free school meals (school census), SEN (EHC plan or SEN support; SEN in England) and the latest Ofsted grade as at 31 August before the year, for 2019-20 to 2023-24. It reports:
+- a likelihood-ratio test on identical rows;
+- the test AUC (fitted 2019-20 to 2021-22, tested 2022-23 and 2023-24);
+- closing schools against those staying open;
+- a London robustness check.
+
+Writes `data/closure_extras.rds` (aggregates and coefficients only) |
 | `app/`, `R/40_app_data.R`, `R/41_app_travel_national.R`, `R/46_app_v21_data.R` | the School Information System v2.1 (Shiny, Posit Connect Cloud) and the scripts that build its data: `app_data.rds` (schools, value added and Attainment 8 by year and over four years, absence against intake, authority effects, the simulator's and twins' data, distance and journeys), `travel_national.rds` (walking catchments for every state secondary from the national routing, complete) and `v21.rds` (pupils by year group, the Year 7 roll-forward, openings and closures, finance aggregates and warning-sign counts; aggregates only) |
 | `twins.qmd`, `twins.js` | Find a twin: a school's closest look-alikes in intake and setting (Gower-type distance, in the browser) and the anti-twins that do better on absence, attainment or value added; data from `R/08` |
 | `R/area_helpers.R` | the original area documents' charts, ported |
