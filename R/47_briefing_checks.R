@@ -18,6 +18,9 @@
 #     2029/30 and Year 7 to 2036/37.
 #  D. Looking ahead: the authorities' forecasts for 2029/30 (and Year 7 to 2031/32)
 #     against our projections from January 2026.
+#  E. London: the boroughs' forecasts as London Councils reports them (January 2026:
+#     Reception -2.5%, Year 7 -3.8%, 2025/26 to 2029/30, forecast to forecast), against
+#     the January 2026 census and our roll-forward from it.
 #
 # Sources (all published):
 #   Census year groups: as R/42 (data-raw/ees/spc_2526/yeargroup_totals.csv), state-funded
@@ -193,7 +196,23 @@ bh <- list(errors = errs[area == "Brighton and Hove"], ahead = la_ahead[area == 
            births = births_chg[area == "Brighton and Hove"], ours = ours26[area == "Brighton and Hove", .(year, R, primary, Y7, sec)],
            forecast = fc[area == "Brighton and Hove", .(year, R, primary, Y7, sec)], census = actual[area == "Brighton and Hove", .(year, R, primary, Y7, sec)])
 
-res <- list(A_summary = A_summary, A_england = A_england, A_errors = errs, base_chk = base_chk,
+# ---- E. London: the boroughs' forecasts against the census and ours -----------------------
+# London Councils (Managing school rolls and maintaining educational standards in London,
+# January 2026) reports the boroughs' SCAP forecasts as Reception -2.5% and Year 7 -3.8%
+# from 2025/26 to 2029/30, measured forecast to forecast. Here the same forecasts are set
+# against the January 2026 census, and our roll-forward from that census.
+lon <- unique(as.data.table(DEM$trend)[region == "London" & level == "Local authority" & area != "City of London", area])
+lon_sum <- function(d, yr) d[area %in% lon & year == yr, .(R = sum(R), Y7 = sum(Y7))]
+london <- rbind(cbind(what = "Census 2025/26", lon_sum(actual, "2025-26")),
+                cbind(what = "Boroughs' forecast for 2025/26", lon_sum(fc, "2025-26")),
+                cbind(what = "Boroughs' forecast for 2029/30", lon_sum(fc, "2029-30")),
+                cbind(what = "Roll-forward for 2029/30", lon_sum(ours26, "2029-30")))
+london_chg <- data.table(measure = c("Boroughs' forecast to forecast, 2025/26 to 2029/30", "Boroughs' 2029/30 forecast against the 2025/26 census",
+                                     "Roll-forward from the 2025/26 census", "Boroughs' 2025/26 forecast against the census"),
+  R = 100 * c(london$R[3] / london$R[2], london$R[3] / london$R[1], london$R[4] / london$R[1], london$R[2] / london$R[1]) - 100,
+  Y7 = 100 * c(london$Y7[3] / london$Y7[2], london$Y7[3] / london$Y7[1], london$Y7[4] / london$Y7[1], london$Y7[2] / london$Y7[1]) - 100)
+
+res <- list(london = london, london_chg = london_chg, A_summary = A_summary, A_england = A_england, A_errors = errs, base_chk = base_chk,
             B_compare = B_compare, B_headline = B_headline, dfe = dfe,
             births_eng = births_eng, births_chg = births_chg, br_now = br_now, ours26 = ours26,
             D_summary = D_summary, eng_ahead = eng_ahead, la_ahead = la_ahead, bh = bh, built = Sys.Date())
@@ -207,3 +226,4 @@ cat("\n== B. England: census, our roll-forward and DfE (July 2026)\n"); print(B_
 cat("\n== D. Authorities' forecasts against ours\n"); print(D_summary, digits = 3); print(eng_ahead, digits = 4)
 cat("\n== Brighton and Hove\n"); print(bh, digits = 4)
 cat("\n== Births, England\n"); print(births_eng)
+cat("\n== E. London (32 boroughs, not the City)\n"); print(london); print(london_chg, digits = 3)
