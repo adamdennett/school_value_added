@@ -36,6 +36,7 @@ website:
   title: "School Value Added"
   site-url: "https://adamdennett.github.io/school_value_added"
   repo-url: "https://github.com/adamdennett/school_value_added"
+  google-analytics: "G-T2KKJ631SH"
   page-navigation: true
   navbar:
     background: "#eedeff"
@@ -134,8 +135,6 @@ format:
     fig-height: 5.5
     fig-dpi: 108
     link-external-newwindow: true
-    include-in-header: _gtm_head.html
-    include-before-body: _gtm_body.html
 
 execute:
   echo: false
