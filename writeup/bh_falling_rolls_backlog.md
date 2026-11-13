@@ -80,3 +80,18 @@ Figures: `writeup/figures/bh_tfr_affordability_over_time.png`, `writeup/figures/
    - That bears directly on which schools lose pupils: Brunswick (central Hove) against Coldean (edge of the city, near the universities).
 
 All from published ONS, Land Registry or ONS price statistics, and Census data; no pupil-level records.
+
+## Step 4, first pass: births against migration (13 November 2026, `R/50_pupils_births_migration.R`)
+
+Change in pupils from 2018/19 to 2025/26, split exactly into log points (×100): births + net migration of those children since birth + state-school share.
+- **Brighton and Hove, primary:** −14.7 = births −18.6, migration +2.5, state-school share +1.4. Almost all of the fall is births.
+  - About 8–10% of each Brighton cohort is gone by primary age: 0.90 to 0.92 of births are still resident, against England's 1.01 to 1.05.
+  - That net loss is long-standing, not new. It explains the low level, not the fall.
+- **Brighton and Hove, Reception:** −22.8 = births −28.5, migration +13.3, state-school share −7.6. The last two partly offset and may reflect ONS's revised migration estimates from mid-2022, so read them together (+5.7).
+- **Brighton and Hove, Year 7:** −7.1 = births −4.4, migration −5.1, state-school share +2.5.
+- **England, primary:** −5.5 = births −6.9, migration +3.5, state-school share −2.1.
+- **London, median borough, primary:** −12.4 = births −6.0, migration −6.0. Half the fall is families leaving; in Hackney (−15.0) and Tower Hamlets (−14.1), migration is most of it.
+- **Across authorities:**
+  - for Reception, births go with 87% of the differences in change;
+  - for primary as a whole, births and migration go with about half each;
+  - for Year 7, migration goes with 49%.
