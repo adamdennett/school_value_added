@@ -86,11 +86,16 @@ subtitle: "What v2.1 does now, and what comes next."
       two to three) years tested on later years; five simple warning signs;
       and counts of open schools showing them by authority, with no open
       school named.
-- [ ] **Into the School Information System.** Pupil numbers and cohorts by
-      area, and the warning-sign counts, as tabs in the app (v2.1).
-- [ ] **School Information System v2.1: places and pupil cohorts.** Each
-      authority's demographic picture and the cohorts coming through its
-      schools (placeholder in the app).
+- [x] **[School Information System v2.1](simulator.qmd).** Two new tabs:
+      Pupils and Places (pupils by year group, the Year 7 roll-forward,
+      openings and closures, for any authority, region or England) and
+      School Finances (deficits, reserves, income per pupil and warning-sign
+      counts, by authority, region and Sussex district, no school named);
+      and walking catchments for every state secondary now that the national
+      routing is complete (`R/46_app_v21_data.R`).
+- [ ] **Still to come on places:** school capacity and surplus places
+      (SCAP), and how each school's intake is changing, beside its value
+      added.
 - [ ] **School Information System v2.2: primary and post-16.** The same view
       for primary schools, then sixth forms and colleges (placeholders in
       the app).

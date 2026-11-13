@@ -5,9 +5,9 @@
 #   - journeys on real networks (walking, and walking and bus at 08:00) in 109 mostly
 #     urban authorities (R/26-R/29, distance.qmd#sec-la-journeys)
 #   - climb on the walk to school (R/25_climb.R)
-# What is coming: national walking and cycling routes from every Output Area to every
+# Also: national walking and cycling routes from every Output Area to every
 # school within 120 minutes' walk (the school_active_travel project), summarised by
-# school in data/travel_national.rds by R/41_app_travel_national.R as it completes.
+# school in data/travel_national.rds by R/41_app_travel_national.R (complete since 13 November 2026).
 
 TRAVEL_MEASURES <- tibble::tribble(
   ~key, ~src, ~label, ~unit, ~dp, ~good,
@@ -34,15 +34,15 @@ LAD_LA <- SCH |> distinct(lad, la) |> mutate(k = lad_key(lad))
 
 national_travel_card <- function(tn) {
   div(class = "sis-national",
-    h6(icon("person-walking"), " National walking routes (early results)"),
+    h6(icon("person-walking"), if (TN$coverage$las >= TN$coverage$las_total) " National walking routes" else " National walking routes (early results)"),
     div(class = "sis-kpis",
       div(class = "sis-kpi", div(class = "sis-kpi-l", "Children 10-14 for whom it is the quickest walk"), div(class = "sis-kpi-v", format(round(tn$kids), big.mark = ","))),
       div(class = "sis-kpi", div(class = "sis-kpi-l", "Their median walk"), div(class = "sis-kpi-v", paste(f1(tn$walk_med), "min"))),
       div(class = "sis-kpi", div(class = "sis-kpi-l", "Within a 20-minute walk"), div(class = "sis-kpi-v", paste0(f1(tn$within20, 0), "%"))),
       div(class = "sis-kpi", div(class = "sis-kpi-l", "Median climb to school"), div(class = "sis-kpi-v", paste(f1(tn$climb_med, 0), "m"))),
       div(class = "sis-kpi", div(class = "sis-kpi-l", "Quiet-street cycle route under 15 min"), div(class = "sis-kpi-v", paste0(f1(tn$lts2_15, 0), "%")))),
-    note("From the national routing of every Output Area to every school within 120 minutes' walk (r5r on OpenStreetMap, OS Terrain 50 heights), so far for ",
-         TN$coverage$las, " of ", TN$coverage$las_total, " districts. The children are those in Output Areas whose quickest walk to a state secondary is this school; ",
+    note("From the national routing of every Output Area to every school within 120 minutes' walk (r5r on OpenStreetMap, OS Terrain 50 heights), ",
+         if (TN$coverage$las >= TN$coverage$las_total) "for all of England. " else paste0("so far for ", TN$coverage$las, " of ", TN$coverage$las_total, " districts. "), "The children are those in Output Areas whose quickest walk to a state secondary is this school; ",
          "a stand-in for the real intake."))
 }
 
@@ -149,7 +149,8 @@ mod_travel_server <- function(id, ctx, sel, place) {
       if (is.null(TN)) return(note("Not yet in the app. Routing started in November 2026 and the first authorities (London north of the Thames, Brighton and Hove) are done; school summaries will appear here as authorities finish."))
       cv <- TN$coverage; s <- TN$schools |> inner_join(SCH |> select(URN, name, la), by = "URN") |> filter(la == input$la)
       tagList(
-        p(HTML(paste0("<b>", cv$las, "</b> of ", cv$las_total, " local authority districts fully routed so far (", format(cv$pairs, big.mark = ","), " walking routes to state secondary schools from the Output Areas routed so far), as of ", format(cv$built, "%d %B %Y"), "."))),
+        p(HTML(if (cv$las >= cv$las_total) paste0("All ", cv$las_total, " local authority districts routed: ", format(cv$pairs, big.mark = ","), " walking routes to state secondary schools, built ", format(cv$built, "%d %B %Y"), ".") else
+          paste0("<b>", cv$las, "</b> of ", cv$las_total, " local authority districts fully routed so far (", format(cv$pairs, big.mark = ","), " walking routes to state secondary schools from the Output Areas routed so far), as of ", format(cv$built, "%d %B %Y"), "."))),
         if (nrow(s)) tagList(h6("Schools in ", input$la),
           tableOutput(session$ns("national_tab"))) else note("Not yet routed for ", input$la, "."))
     })

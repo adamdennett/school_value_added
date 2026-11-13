@@ -2950,7 +2950,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "baaf8e89eba8c4e1afd898c98ecc4072"
+      "checksum": "39f646ea7bc866838de81bb20c42181f"
     },
     "data/app_data.rds": {
       "checksum": "6ffd993e1d7006f9d2dbf4d9b9569b64"
@@ -2958,41 +2958,53 @@
     "data/travel_national.rds": {
       "checksum": "a3317ddd7ec4fa2356f672ef252339d8"
     },
+    "data/v21.rds": {
+      "checksum": "1d42e060d0f7ccd7d90dbb836a049c46"
+    },
     "R/00_setup.R": {
-      "checksum": "15d5d9b3db45bbf41c42ef116c880ba4"
+      "checksum": "73ff44459c84955f2b3f115832090157"
+    },
+    "R/01_v21.R": {
+      "checksum": "a70001b022a163efc5004932445cb1c8"
     },
     "R/mod_about.R": {
-      "checksum": "ea51229121d71ec642c7e1211ec6664d"
+      "checksum": "c635c399e7f3c807f43b47e8566a607a"
     },
     "R/mod_area.R": {
       "checksum": "0bba065019442349c1b6806bf0cf6171"
+    },
+    "R/mod_finance.R": {
+      "checksum": "77b7032c9d0f4725361c95e9dc56d443"
     },
     "R/mod_finder.R": {
       "checksum": "5aa8c8acf7c9b3df1859e50b3728ecaf"
     },
     "R/mod_future.R": {
-      "checksum": "0b54b678bbc4af74a28bc62721b852df"
+      "checksum": "dd1c7eb04b113e37b99873a1bd3cff18"
     },
     "R/mod_obs.R": {
       "checksum": "4ea18f5ab920bc5f311a494b20fdab5a"
+    },
+    "R/mod_pupils.R": {
+      "checksum": "169a9aa99da85695c17740fadbff74e4"
     },
     "R/mod_sim.R": {
       "checksum": "976aa9992b149340b2473be65fb1e170"
     },
     "R/mod_travel.R": {
-      "checksum": "ac2ee579640a40173b84328d43c80a53"
+      "checksum": "3fde8aa622e3aa139d450f8e9547e6d6"
     },
     "R/mod_twin.R": {
       "checksum": "ffa81260c838f4c54fa06293d2335847"
     },
     "README.md": {
-      "checksum": "dac80321b3c21b234afc507c03f63053"
+      "checksum": "74041ab2ddf42c4b4421690304cd39d2"
     },
     "www/ai4ci_logo.svg": {
       "checksum": "6b6a1eae655b5c4bff92ccc8a48fa7e4"
     },
     "www/custom.css": {
-      "checksum": "23299545531dacc1f02a0112d9bb524c"
+      "checksum": "48f7f103864b88b3156ae08c9ba07e79"
     },
     "www/fonts/UCLSans-Bold.otf": {
       "checksum": "4ace7ec11f4da7ed9bb5c447931aa427"

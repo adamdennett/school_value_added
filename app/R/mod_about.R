@@ -1,4 +1,4 @@
-# mod_about.R - The About tab: what the system is, what is new in v2.0, and what comes next
+# mod_about.R - The About tab: what the system is, what is new in v2.1 and v2.0, and what comes next
 
 about_ui <- function() {
   s <- D$model$summary; r2 <- setNames(round(100 * s$r2_conditional), s$group)
@@ -11,7 +11,7 @@ about_ui <- function() {
   tagList(
     div(class = "sis-hero",
         h1("School Information System"),
-        P(class = "sis-hero-sub", "Version 2.0, on Value Added ", VA_VERSION,
+        P(class = "sis-hero-sub", "Version ", sub("^v", "", VERSION), ", on Value Added ", VA_VERSION,
           ": how every state secondary school in England is doing, against what its intake would lead us to expect."),
         P(class = "sis-hero-credit", "Designed by ", B("Prof Adam Dennett"), " · Bartlett Centre for Advanced Spatial Analysis, UCL · ",
           A("https://ai4ci.ac.uk/", "UKRI AI for Collective Intelligence Research Hub"), " · with assistance from Claude"),
@@ -27,7 +27,18 @@ about_ui <- function() {
           " what schools with the same intake achieve across England."),
         P("It also shows how each school's ", B("absence"), " compares with what its intake would predict,",
           " finds the schools most like any school, simulates what the model expects if absence or intake changed,",
-          " and starts to bring in what we are learning about ", B("journeys to school"), "."))),
+          " brings in what we are learning about ", B("journeys to school"), ", and sets each area's schools against its",
+          " changing ", B("pupil numbers"), " and its ", B("school finances"), "."))),
+      card(card_body(
+        h4(icon("star"), " New in version 2.1"),
+        tags$ul(
+          L(B("Pupils and Places: "), "pupils by year group in every authority and region since 2015/16, the Year 7 intakes",
+            " already on their way to 2032/33, and the state schools opened and closed since 2015/16."),
+          L(B("School Finances: "), "the share of maintained schools and academies in deficit, reserves and income per pupil,",
+            " by authority, region and Sussex district, against England; and how many open schools show the warning signs",
+            " that came before closures. Counts only: no school is named."),
+          L(B("National walking routes: "), "the Travel tab now has walking catchments for every state secondary in England,",
+            " from routing every Output Area to every school within 120 minutes' walk.")))),
       card(card_body(
         h4(icon("star"), " New in version 2.0"),
         tags$ul(
@@ -66,8 +77,10 @@ about_ui <- function() {
             tab_row("braille", "Observed vs Predicted", "Every school's Attainment 8 against what its intake predicts, and its absence against expected; an area or a school highlighted."),
             tab_row("sliders", "Policy Simulator", "What the model expects if a school's (or every school in an area's) absence or intake were different, for every group of pupils."),
             tab_row("map", "Area Overview", "A region, combined authority, local authority, district or trust: its schools on a map and in a table, and the area against others."),
-            tab_row("person-walking", "Travel and Distance", "Distance and journey times to school, deprived neighbourhoods against the rest; the national walking and cycling routes as they arrive."),
-            tab_row("compass", "Coming next", "Plans for v2.1 (places and pupil cohorts) and v2.2 (primary and post-16)."))))),
+            tab_row("person-walking", "Travel and Distance", "Distance and journey times to school, deprived neighbourhoods against the rest; and walking catchments for every state secondary from the national routing."),
+            tab_row("children", "Pupils and Places", "Pupils by year group since 2015/16, the Year 7 intakes to 2032/33, and schools opened and closed, for an authority, region or England."),
+            tab_row("sterling-sign", "School Finances", "Deficits, reserves and income per pupil against England, and counts of schools showing the warning signs that came before closures."),
+            tab_row("compass", "Coming next", "Plans for v2.2: primary schools and post-16."))))),
       card(card_body(
         h4(icon("rocket"), " Getting started"),
         tags$ol(
@@ -82,7 +95,7 @@ about_ui <- function() {
           " model, not guaranteed effects of a policy. Use it alongside professional judgement."),
         p(D$model$prov_note))),
       div(class = "sis-small text-center",
-          "Data: DfE school performance tables and absence statistics, GIAS, ONS Census 2021, Ofsted (to ",
+          "Data: DfE school performance tables, absence statistics, school census and finance returns (CFR and AAR), GIAS, ONS Census 2021, OpenStreetMap, Ofsted (to ",
           format(D$model$ofsted_as_at, "%d %B %Y"), "). App data built ", format(D$built, "%d %B %Y"), ".")
     )
   )

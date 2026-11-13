@@ -1,4 +1,4 @@
-# app.R - School Information System v2.0
+# app.R - School Information System v2.1
 # ---------------------------------------------------------------------------
 # A Shiny version of the v1.0 School Attainment Policy Simulator, rebuilt on Value
 # Added v2.1 (https://adamdennett.github.io/school_value_added). Deployed on Posit
@@ -34,7 +34,7 @@ controls <- div(
 
 ui <- page_navbar(
   id = "nav", title = tags$span(class = "sis-title", "School Information System", tags$small(VERSION)),
-  window_title = "School Information System v2.0", theme = theme, fillable = FALSE,
+  window_title = paste("School Information System", VERSION), theme = theme, fillable = FALSE,
   navbar_options = navbar_options(bg = PPURPLE, theme = "light", collapsible = TRUE),
   header = tagList(tags$head(tags$link(rel = "stylesheet", href = "custom.css")), controls),
   nav_panel("About", value = "about", icon = icon("house"), about_ui()),
@@ -44,8 +44,9 @@ ui <- page_navbar(
   nav_panel("Policy Simulator", value = "sim", icon = icon("sliders"), mod_sim_ui("sim")),
   nav_panel("Area Overview", value = "area", icon = icon("map"), mod_area_ui("area")),
   nav_panel("Travel and Distance", value = "travel", icon = icon("person-walking"), mod_travel_ui("travel")),
+  nav_panel("Pupils and Places", value = "pupils", icon = icon("children"), mod_pupils_ui("pupils")),
+  nav_panel("School Finances", value = "finance", icon = icon("sterling-sign"), mod_finance_ui("finance")),
   nav_menu("Coming next", icon = icon("compass"),
-           nav_panel("v2.1: Places and cohorts", value = "v21", future_cohorts_ui()),
            nav_panel("v2.2: Primary schools", value = "v22p", future_primary_ui()),
            nav_panel("v2.2: Post-16", value = "v22s", future_post16_ui())),
   nav_spacer(),
@@ -80,6 +81,8 @@ server <- function(input, output, session) {
   mod_sim_server("sim", ctx, sel, place)
   mod_area_server("area", ctx, sel, go, place)
   mod_travel_server("travel", ctx, sel, place)
+  mod_pupils_server("pupils", ctx, place)
+  mod_finance_server("finance", ctx, place)
 }
 
 shinyApp(ui, server)

@@ -1,6 +1,6 @@
 ---
 title: "School Information System"
-subtitle: "Version 2.0, on Value Added v2.1: a school finder, twins, observed against predicted, the policy simulator, area overviews, and travel and distance, in one app."
+subtitle: "Version 2.1, on Value Added v2.1: a school finder, twins, observed against predicted, the policy simulator, area overviews, travel and distance, pupil numbers and school finances, in one app."
 toc: false
 page-layout: full
 ---
@@ -33,8 +33,15 @@ school in England. Its tabs:
   area's, absence or intake were different (how it works is below).
 - **Area Overview:** a region, combined or mayoral authority, local
   authority, district or academy trust.
-- **Travel and Distance:** distance and journey times to school, and the
-  national walking routes as they are completed.
+- **Travel and Distance:** distance and journey times to school, and
+  walking catchments for every state secondary from the national routing.
+- **Pupils and Places** (new in 2.1): pupils by year group since 2015/16,
+  the Year 7 intakes to 2032/33, and schools opened and closed, for an
+  authority, a region or England ([the method](demographics.qmd)).
+- **School Finances** (new in 2.1): deficits, reserves and income per pupil
+  against England, by authority, region and Sussex district, and counts of
+  open schools showing the warning signs that came before closures, with
+  no school named ([the method](finance.qmd)).
 
 <p><a class="btn btn-primary" href="`r APP`" target="_blank">Open the School Information System in a new window</a></p>
 

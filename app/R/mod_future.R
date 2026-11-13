@@ -1,4 +1,4 @@
-# mod_future.R - Placeholders for the sections planned for v2.1 and v2.2 of the system.
+# mod_future.R - Placeholders for the sections planned for v2.2 of the system.
 # Each says what the section will show and what it needs; none shows data yet.
 
 future_page <- function(version, title, lead, will, needs, status) {
@@ -11,19 +11,6 @@ future_page <- function(version, title, lead, will, needs, status) {
     note("A placeholder: the analysis behind this section has not been done yet. ",
          tags$a(href = paste0(SITE, "/roadmap.html"), target = "_blank", "The project roadmap"), " has the wider plan."))
 }
-
-future_cohorts_ui <- function() future_page("v2.1", "Places and pupil cohorts",
-  "Each local authority's demographic picture, and how the cohorts coming through its schools are changing.",
-  will = list("Children by single year of age in each authority and district, from the Census and mid-year estimates, and the size of the cohorts reaching Year 7 in coming years",
-              "Falling or rising rolls set against school places and surplus capacity",
-              "How the intake is changing: disadvantage, EAL, SEN and prior attainment, year by year",
-              "Neighbourhood context for each school's catchment: deprivation, qualifications and car access",
-              "Links to the value-added and absence figures, so a school's results can be read against its changing intake"),
-  needs = list("ONS mid-year population estimates and Census 2021 age by Output Area (in hand from the travel work)",
-               "DfE school capacity (SCAP) returns and pupil projections",
-               "Schools, pupils and their characteristics, by school and year (DfE, published)",
-               "An agreed method for projecting each school's intake"),
-  status = "Planned. The Census age counts by Output Area are already assembled for the national routing; the projections are not started.")
 
 future_primary_ui <- function() future_page("v2.2", "Primary schools",
   "The same view for primary schools: KS2 results against what intake predicts, and absence against expected.",

@@ -35,6 +35,7 @@ source(here::here("R", "00_config.R"))
 suppressPackageStartupMessages({ library(data.table); library(sf) })
 F <- readRDS(here::here("data", "cache", "finance_panel.rds"))
 F <- F[!is.na(income) & income > 0 & !is.na(pupils) & pupils > 0]
+F[, area := sub("^Pre-LGR [0-9]+ ", "", area)]       # GIAS files closed schools of reorganised councils as "Pre-LGR 2021 Northamptonshire"
 
 # Sussex districts from coordinates
 lads <- st_transform(readRDS(here::here("data", "sussex_lads.rds")), 27700)

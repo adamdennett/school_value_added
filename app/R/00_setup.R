@@ -1,4 +1,4 @@
-# 00_setup.R - School Information System v2.0: data, settings and shared helpers
+# 00_setup.R - School Information System v2.1: data, settings and shared helpers
 # ---------------------------------------------------------------------------
 # Runs once when the app starts (Shiny sources R/ in alphabetical order, so this comes first). Everything the app shows comes from one bundle,
 # data/app_data.rds, written by R/40_app_data.R in the school_value_added project
@@ -15,10 +15,10 @@ D <- readRDS("data/app_data.rds")
 SCH <- D$schools
 
 # Optional: the national walking and cycling routes summarised by school, from the
-# school_active_travel project (R/41_app_travel_national.R). Partial until that run ends.
+# school_active_travel project (R/41_app_travel_national.R). Complete since 13 November 2026.
 TN <- if (file.exists("data/travel_national.rds")) readRDS("data/travel_national.rds") else NULL
 
-VERSION <- "v2.0"
+VERSION <- "v2.1"
 VA_VERSION <- D$model$version                     # the value-added model, v2.1
 SITE <- "https://adamdennett.github.io/school_value_added"
 
