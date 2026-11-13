@@ -96,6 +96,27 @@ subtitle: "What v2.1 does now, and what comes next."
 - [ ] **Still to come on places:** school capacity and surplus places
       (SCAP), and how each school's intake is changing, beside its value
       added.
+- [ ] **Do schools push up house prices? A national test.** It is often said that
+      homes near the most popular schools cost 20 to 25% more. Tan and Dennett
+      found in Brighton (81,652 sales, 2000 to 2019) that, once the home and its
+      neighbourhood are accounted for, a good school nearby adds only a few per
+      cent, and that the 2008 admissions lottery made no difference.
+    - **The national version:** every sale in England, with its floor area and
+      rooms from Chris Beech's fast
+      [Price Paid to EPC linkage](https://github.com/chris-beech-housing/Land-Registry-PPD-EPC-price-per-square-metre),
+      after Chi et al.
+    - **Linked to schools** by walking time through the national routing, and to
+      each school's Ofsted grade, value added and popularity at the date of sale.
+    - **Tests:** the raw premium first, then with neighbourhood effects, then
+      changes in Ofsted grade or value added over time.
+    - **For the first time at this scale:** whether buyers pay for value added
+      or for intake.
+- [ ] **Brighton and Hove: why are numbers falling?** Fertility in the city is
+      0.98 children per woman (2025), the 2nd lowest of 292 districts. Neither
+      the fall since 2015 nor the low level follows affordability: neighbouring
+      Lewes, Mid Sussex and Wealden have the same house price to earnings ratio
+      but fertility of 1.45 to 1.58 (`R/49`). Next: the Census make-up of the
+      city and families moving out by age.
 - [ ] **School Information System v2.2: primary and post-16.** The same view
       for primary schools, then sixth forms and colleges (placeholders in
       the app).
