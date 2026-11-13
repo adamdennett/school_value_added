@@ -110,3 +110,16 @@ Change in pupils from 2018/19 to 2025/26, split exactly into log points (×100):
      - see whether education absorbs Brighton and Hove's −0.44 gap and the university-city pattern.
    - **Change over time:** Census 2011 against 2021 change in female Level 4+ against the change in fertility.
    - **Also:** age-specific rates under 30 against graduate share, as a postponement test.
+
+## Education, quick first pass (13 November 2026, `R/51_fertility_education_quick.R`)
+
+Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts, against fertility in 2023–25.
+- **Education explains more than housing:** Level 4+ alone explains 23% of the variation in fertility across districts, against 7% for the house price to earnings ratio, and 25% together.
+  - Each 10 points more Level 4+ goes with 0.12 fewer children per woman.
+  - Once education is in the model, the affordability term turns positive (+0.10 per log unit, p = 0.02).
+- **It does not explain the fall:** the change in fertility since 2013–15 is unrelated to Level 4+ (R² = 0.006).
+- **Brighton and Hove:** Level 4+ 44.5%, 31st highest of 292. Allowing for education shrinks its gap below prediction only from −0.44 to −0.39.
+  - Mid Sussex (38.7%) and Lewes (34.8%) sit on or above the line.
+  - The university cities (Cambridge, Norwich, York, Exeter, Oxford) remain 0.26–0.40 below it, so something beyond adult education remains: students in the population, young singles and age structure.
+- **Next:** women aged 25–44 by sex and age; the student share; partnership; private renting; mothers born abroad.
+- Chart: `writeup/figures/tfr_vs_level4_quick.png`.
