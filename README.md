@@ -258,3 +258,15 @@ Writes `data/closure_extras.rds` (aggregates and coefficients only) |
 | `data/va_v2.rds`, `data/va_v2_schools.csv` | the results (committed) |
 | `data/value_added_review.rds` | the review's results, from the original project |
 | `docs/` | the built site (GitHub Pages) |
+
+## Brighton and Hove: fertility against affordability (R/49)
+
+`R/49_bh_fertility_affordability.R` is step 1–2 of `writeup/bh_falling_rolls_backlog.md`.
+- It sets ONS fertility rates (Nomis NM_207_1, districts, 2013–2025) against ONS house price to residence-based earnings ratios (table 5c, 2002–2025).
+- It writes `data/bh_fertility_affordability.rds` and two charts in `writeup/figures/`.
+- Downloads (not committed): the affordability workbook, saved as `data-raw/ons/affordability/aff2ratioofhousepricetoresidencebasedearnings.xlsx`, and the Nomis rates, fetched one year at a time because Nomis caps a query at 25,000 rows:
+
+```
+cd data-raw/ons && f=birthrates_lad_2013_2025_nomis_NM_207_1.csv; rm -f $f
+for y in $(seq 2013 2025); do curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_207_1.data.csv?geography=TYPE424,2092957699&time=$y&select=date_name,geography_name,geography_code,measure_name,obs_value" > t.csv; if [ $y -eq 2013 ]; then cat t.csv > $f; else tail -n +2 t.csv >> $f; fi; done; rm t.csv
+```
