@@ -39,7 +39,7 @@ Is affordability behind Brighton and Hove's very low fertility and falling rolls
    - private renting and HMOs;
    - one-person households;
    - adults living with parents;
-   - lesbian, gay and bisexual share (Brighton and Hove is the highest in England outside London);
+   - lesbian, gay and bisexual share (Brighton and Hove is among the highest in England; check the exact rank);
    - partnership and marriage;
    - mothers born outside the UK.
    - Compare with similar places: Bristol, Oxford, Cambridge, Exeter, York, Norwich, Bath, Reading.
