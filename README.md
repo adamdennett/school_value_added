@@ -302,3 +302,14 @@ for p in "NM_2072_1 ts054_tenure" "NM_2024_1 ts004_cob" "NM_2022_1 ts002_partner
 curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_2084_1.data.csv?date=latest&geography=TYPE424&measures=20301&select=geography_code,geography_name,c2021_hiqual_8_name,obs_value" -o ts067_lad_pct_nomis_NM_2084_1.csv
 curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_623_1.data.csv?date=latest&geography=TYPE464&rural_urban=0&measures=20301&select=geography_code,geography_name,cell_name,obs_value" -o ks501ew_2011_lad_nomis_NM_623_1.csv
 ```
+
+## Children moving: within the UK against from abroad (R/53)
+
+`R/53_child_migration.R` reads ONS's MYEB2 components of change.
+- **Measures:** net internal and international migration of children aged 0–10 and adults aged 30–39, per 1,000, by district and year from mid-2012 to mid-2025.
+- **Output:** `data/child_migration.rds` and `writeup/figures/child_migration_rates.png`.
+- **Download** (into `data-raw/ons/myeb/`, not committed):
+
+```
+curl -L "https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/populationestimatesforukenglandandwalesscotlandandnorthernireland/mid2011tomid2025/myebtablesuk20112025.xlsx" -o data-raw/ons/myeb/myebtablesuk20112025.xlsx
+```

@@ -561,6 +561,55 @@ grows with age.**
 The longer children have been in school, the more families moving reshapes the
 numbers.
 
+**Within the UK, or from abroad?** ONS's components of population change split
+each district's migration of children into moves within the UK and across its
+borders.
+
+```{r}
+#| include: false
+CM <- readRDS(here::here("data", "child_migration.rds"))
+cmk <- CM$key
+ck <- function(n, g, v) cmk[name == n & group == g][[v]]
+C10 <- "Children 0-10"; A30 <- "Adults 30-39"
+```
+
+```{r}
+#| label: fig-child-migration
+#| fig-cap: "Net migration of children aged 0 to 10 each year, per 1,000 children of those ages, within the UK and from abroad: Brighton and Hove, Hackney and England. Dashed: ONS revised its international migration methods from mid-2022. ONS mid-year estimates, components of change (MYEB2)."
+#| fig-height: 3.8
+fg <- melt(CM$W[name %in% c("England", "Brighton and Hove", "Hackney") & group == C10, .(name, year, `Within the UK` = internal_rate, `From abroad` = international_rate)],
+           id.vars = c("name", "year"), variable.name = "flow", value.name = "rate")
+fg[, name := factor(name, c("Brighton and Hove", "Hackney", "England"))]
+ggplot(fg, aes(year, rate, colour = flow)) + geom_hline(yintercept = 0, colour = GREY) + geom_line(linewidth = 1) + geom_point(size = 1.2) +
+  geom_vline(xintercept = 2021.5, colour = LIGHT, linetype = "dashed") + facet_wrap(~name) +
+  scale_colour_manual(values = c(`Within the UK` = DPURPLE, `From abroad` = BPURPLE), name = NULL) +
+  scale_x_continuous(breaks = c(2013, 2017, 2021, 2025)) +
+  labs(x = "Year to mid-year", y = "Net migration per 1,000 children") + theme_note(11) + theme(legend.position = "top")
+```
+
+- **Brighton and Hove** loses children to the rest of the UK every year.
+  - About `r pts(abs(ck("Brighton and Hove", C10, "internal_2013_2018")), 0)` per 1,000
+    children a year in 2013-18, and `r pts(abs(ck("Brighton and Hove", C10, "internal_2019_2025")), 0)`
+    in 2019-25.
+  - The outflow has eased, not grown, while net arrivals from abroad rose from
+    `r pts(ck("Brighton and Hove", C10, "international_2013_2018"), 1)` to
+    `r pts(ck("Brighton and Hove", C10, "international_2019_2025"), 1)`.
+  - Families leaving is a steady feature of the city, not the cause of its
+    falling rolls.
+- **They go next door.** Lewes, Mid Sussex and Wealden gain
+  `r pts(ck("Lewes", C10, "internal_2019_2025"), 0)` to
+  `r pts(ck("Wealden", C10, "internal_2019_2025"), 0)` children per 1,000 a year
+  from the rest of the UK. They also gain adults aged 30 to 39, while Brighton
+  and Hove loses them (`r pts(ck("Brighton and Hove", A30, "internal_2019_2025"), 0)`
+  per 1,000).
+- **Inner London is different: its outflows have grown.**
+  - **Hackney's children:** from `r pts(ck("Hackney", C10, "internal_2013_2018"), 0)`
+    to `r pts(ck("Hackney", C10, "internal_2019_2025"), 0)` per 1,000 a year.
+  - **Its adults aged 30 to 39:** from `r pts(ck("Hackney", A30, "internal_2013_2018"), 0)`
+    to `r pts(ck("Hackney", A30, "internal_2019_2025"), 0)`.
+  - Lambeth and Southwark are similar. That is where families leaving drives
+    the fall in rolls.
+
 ::: {.callout-note collapse="true"}
 ## How the split is made
 
@@ -672,6 +721,13 @@ district:
 **Births and migration** (`R/50_pupils_births_migration.R`): ONS mid-year
 population estimates by single year of age (Nomis NM_2002_1), mid-2004 to
 mid-2025.
+
+**Within the UK or from abroad** (`R/53_child_migration.R`): ONS mid-year
+estimates, detailed time series mid-2011 to mid-2025, table MYEB2. It gives
+components of change by district, sex and single year of age. The net internal
+and international flows of children aged 0 to 10, and of adults aged 30 to 39,
+are taken per 1,000 of those ages at the start of each year. ONS revised its
+international migration methods from mid-2022.
 
 **Areas.** Local authorities as in the census, with three reorganisations
 combined so that each series runs unbroken: Bournemouth, Poole and Dorset with
