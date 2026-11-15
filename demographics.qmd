@@ -66,6 +66,14 @@ CLS_COL <- c("Consistent decline" = "#762a83", "Decline" = "#c2a5cf", "Stable" =
     prices.
   - Fertility fell about as much where housing became less affordable as where
     it did not ([see below](#sec-fertility)).
+- **Within Brighton and Hove, the shortfall of young children is in the
+  centre.**
+  - Brunswick, the North Laine, Hove Central and Coldean have about a third of
+    England's ratio of under-fives to adults aged 20 to 44. The edges of the
+    city are at or above England's.
+  - Neighbourhood make-up accounts for almost all of the city's gap: many adults
+    in their early twenties, graduates, few married couples and private renting
+    ([see below](#sec-within-city)).
 :::
 
 ## England: the wave passing through {#sec-wave}
@@ -632,6 +640,143 @@ Caveats:
 - Migration and the state-school share partly trade off (residence against
   school location), so read them together where they pull apart.
 - The City of London (a few hundred children) is left out.
+:::
+
+## Where in the city? {#sec-within-city}
+
+```{r}
+#| include: false
+MC <- readRDS(here::here("data", "msoa_children.rds"))
+mcb <- MC$bh; mcg <- MC$gap; mcp <- MC$parts; mcc <- MC$coefs
+mpart <- function(v) mcp[var == v, part]
+mb <- function(h, v) mcb[hcl == h][[v]]
+```
+
+The Census counts young children in every neighbourhood. That shows where in
+Brighton and Hove the shortfall sits, and what goes with it across England's
+`r format(MC$n[["all"]], big.mark = ",")` neighbourhoods (MSOAs, of about
+8,000 people each).
+
+**The measure:** children aged 0 to 4 per 1,000 residents aged 20 to 44. The
+Census does not publish women by age for these areas, so this ratio stands in
+for a fertility rate.
+
+- **Brighton and Hove's neighbourhoods average `r pts(mcg$bh_mean, 0)`,
+  against `r pts(mcg$eng_mean, 0)` across England's.**
+- **The shortfall is in the centre:**
+  - North Laine and the Lanes, `r pts(mb("North Laine & the Lanes", "ratio"), 0)`;
+  - Brunswick, `r pts(mb("Brunswick", "ratio"), 0)`;
+  - Coldean and Moulsecoomb North, `r pts(mb("Coldean & Moulsecoomb North", "ratio"), 0)`;
+  - Hove Central, `r pts(mb("Hove Central", "ratio"), 0)`.
+- **The edges of the city are at or above England's average:** Portslade by Sea
+  `r pts(mb("Portslade by Sea", "ratio"), 0)`, Mile Oak `r pts(mb("Mile Oak", "ratio"), 0)`,
+  Hangleton North `r pts(mb("Hangleton North", "ratio"), 0)`.
+- **The two primary schools in the November 2026 admissions proposals are in two of the
+  lowest four:** Brunswick Primary (central Hove) and Coldean Primary.
+
+```{r}
+#| label: fig-msoa-map
+#| fig-cap: "Children aged 0 to 4 per 1,000 residents aged 20 to 44, Brighton and Hove MSOAs, Census 2021 (ONS TS007a). Boundaries: ONS MSOA 2021 (OGL). Names: House of Commons Library."
+knitr::include_graphics("writeup/figures/msoa_children_brighton_map.png")
+```
+
+```{r}
+#| label: fig-msoa-drivers
+#| fig-cap: "Children 0 to 4 per 1,000 residents aged 20 to 44, England's MSOAs: the change with one standard deviation more of each measure, all six in one model, across England and within the same local authority, with 95% intervals. Census 2021 (ONS TS002, TS004, TS007a, TS054, TS062, TS067)."
+#| fig-height: 4
+mlab <- c(level4 = "Level 4+ qualifications", students = "Full-time students", young = "Aged 20-24, of 20-44",
+          married = "Married or civil partnership", privrent = "Private renting", abroad = "Born outside the UK")
+mc2 <- mcc[model %in% c("national", "within_la")][, `:=`(lab = factor(mlab[var], rev(mlab)),
+                                                       model = factor(model, c("national", "within_la"), c("Across England", "Within the same local authority")))]
+ggplot(mc2, aes(b, lab, colour = model)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge2(width = 0.5, reverse = TRUE), linewidth = 1.1) +
+  geom_point(position = position_dodge2(width = 0.5, reverse = TRUE), size = 2.6) +
+  scale_colour_manual(values = c(`Across England` = MPURPLE, `Within the same local authority` = DPURPLE), name = NULL) +
+  labs(x = "Children 0-4 per 1,000 aged 20-44, per standard deviation", y = NULL) + theme_note(11) + theme(legend.position = "top")
+```
+
+```{r}
+#| label: tbl-msoa-drivers
+#| tbl-cap: "Change in children 0 to 4 per 1,000 residents aged 20 to 44 per standard deviation of each measure, with 95% interval; all six measures together."
+knitr::kable(dcast(mc2[, cell := sprintf("%+.1f (%+.1f to %+.1f)", b, lo, hi)], lab ~ model, value.var = "cell")[order(-as.integer(lab))],
+      col.names = c("Measure", "Across England", "Within the same local authority"))
+```
+
+**The same story as across districts, neighbourhood by neighbourhood.**
+
+- **What goes with fewer young children:** a large share of adults aged 20 to
+  24, more graduates, fewer married couples and more private renting. Together
+  these account for `r pts(100 * MC$r2[["national"]], 0)`% of the differences
+  between neighbourhoods. They account for `r pts(100 * MC$r2[["within_la"]], 0)`%
+  within the same local authority.
+- **Students:** once the share of adults aged 20 to 24 is allowed for, more
+  full-time students goes with *more* young children, not fewer. That is the
+  20-somethings who are not students (young workers and sharers) going with
+  fewer children.
+- **House prices add little:**
+  - **Added to the model,** prices change the ratio by `r sprintf("%+.1f", mcc[model == "with_price" & var == "lprice", b])`
+    per standard deviation across England, and `r sprintf("%+.1f", mcc[model == "with_price_within_la" & var == "lprice", b])`
+    within the same authority.
+  - **The sample:** prices are only available for the `r format(MC$n[["with_price"]], big.mark = ",")` MSOAs whose codes did not change in 2021.
+  - **On their own,** prices account for `r pts(100 * MC$one_at_a_time[var == "lprice", r2], 0)`% of the differences.
+
+**Brighton and Hove's whole shortfall is its make-up.**
+
+- **The gap:** its neighbourhoods average `r pts(abs(mcg$gap), 0)` fewer young
+  children per 1,000 adults than England's. The model accounts for
+  `r pts(abs(mcg$explained), 0)` of them.
+- **The parts:**
+  - many adults in their early twenties (`r sprintf("%+.0f", mpart("young"))`);
+  - graduates (`r sprintf("%+.0f", mpart("level4"))`);
+  - few married couples (`r sprintf("%+.0f", mpart("married"))`);
+  - private renting (`r sprintf("%+.0f", mpart("privrent"))`);
+  - offset by students (`r sprintf("%+.0f", mpart("students"))`).
+
+**Within the city, the centre has even fewer young children than its make-up predicts.**
+
+- **The largest gaps below prediction:**
+  - Coldean and Moulsecoomb North (`r sprintf("%+.0f", mb("Coldean & Moulsecoomb North", "resid"))`), where `r pts(mb("Coldean & Moulsecoomb North", "students"), 0)`% of adults are full-time students, around the universities;
+  - Kemptown (`r sprintf("%+.0f", mb("Kemptown", "resid"))`);
+  - King Alfred (`r sprintf("%+.0f", mb("King Alfred", "resid"))`);
+  - Hove Central (`r sprintf("%+.0f", mb("Hove Central", "resid"))`);
+  - Brunswick (`r sprintf("%+.0f", mb("Brunswick", "resid"))`).
+- **Above prediction:** Fiveways, Portslade by Sea, Hanover and Elm Grove.
+
+```{r}
+#| label: tbl-msoa-bh
+#| tbl-cap: "Brighton and Hove MSOAs: children 0 to 4 per 1,000 residents aged 20 to 44, what the national model predicts from each neighbourhood's make-up, and some of that make-up (Census 2021)."
+knitr::kable(mcb[order(ratio), .(Neighbourhood = hcl, Actual = round(ratio), Predicted = round(pred), Difference = sprintf("%+.0f", resid),
+                          `Level 4+ %` = round(level4), `Students %` = round(students), `Private renting %` = round(privrent), `Married %` = round(married))])
+```
+
+::: {.callout-note collapse="true"}
+## The model behind this section
+
+$$\text{ratio}_m = \beta_0 + \sum_k \beta_k z(x_{km}) \;[+\, \alpha_{\text{LA}(m)}] + \varepsilon_m$$
+
+The ratio is children 0 to 4 per 1,000 residents aged 20 to 44. The measures $x_k$ are:
+- Level 4+ qualifications (TS067);
+- full-time students (TS062);
+- residents aged 20 to 24 as a share of those 20 to 44 (TS007a);
+- married or in a civil partnership (TS002);
+- private renting households (TS054);
+- born outside the UK (TS004).
+
+Each is standardised across England's MSOAs. The within-authority model adds
+local authority fixed effects.
+
+```r
+feols(ratio ~ level4_z + students_z + young_z + married_z + privrent_z + abroad_z | la, data = D)   # R/54
+```
+
+- **House prices:** ONS House Price Statistics for Small Areas (median price
+  paid, the four years ending December 2019 to 2022). These use 2011 MSOA
+  codes, so MSOAs whose codes changed in 2021 have no price. Price is added in
+  a separate model on the rest.
+- **Ages:** using residents aged 25 to 44, leaving out the 20 to 24s, gives the
+  same pattern (R² `r sprintf("%.2f", MC$r2[["national_25_44"]])`).
+- **The ratio is not a fertility rate.** It counts young children living in an
+  area, so families who move out before their children reach school age lower it.
 :::
 
 ## Sussex {#sec-demog-sussex}
