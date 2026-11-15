@@ -123,3 +123,18 @@ Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts
   - The university cities (Cambridge, Norwich, York, Exeter, Oxford) remain 0.26–0.40 below it, so something beyond adult education remains: students in the population, young singles and age structure.
 - **Next:** women aged 25–44 by sex and age; the student share; partnership; private renting; mothers born abroad.
 - Chart: `writeup/figures/tfr_vs_level4_quick.png`.
+
+## Done 15 November 2026
+
+- **1.1:** R/50 is written up on the demographics page (#sec-births-migration). Commit ffe0d1c.
+- **1.2:** R/52, what goes with low fertility (#sec-fertility-drivers). Commit 50ae47a.
+  - **Across 288 districts:** women 25–44 with Level 4+ alone explain R² 0.27, against 0.07 for house prices. The full model (education, women 20–24 share, married, private renting, born abroad, prices) reaches R² 0.67.
+  - **Brighton and Hove:** −0.49 against the average district, fully explained (residual +0.01).
+    - education −0.13; young population −0.13; few married −0.14 (274th of 288);
+    - private renting −0.10; prices −0.06; born abroad +0.05.
+  - **Housing (renting plus prices)** is about a third of the gap.
+  - **The 2011–21 rise in Level 4+** is unrelated to the fall in fertility (R² 0.004).
+- **Still to do:**
+  - moves within the UK against from abroad, by age;
+  - within the city (MSOA prices, children per woman by Output Area);
+  - a model of the fall itself (2013–25) with time-varying measures.
