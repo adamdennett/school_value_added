@@ -74,6 +74,12 @@ CLS_COL <- c("Consistent decline" = "#762a83", "Decline" = "#c2a5cf", "Stable" =
   - Neighbourhood make-up accounts for almost all of the city's gap: many adults
     in their early twenties, graduates, few married couples and private renting
     ([see below](#sec-within-city)).
+- **The fall itself is national.**
+  - Nothing that changed locally explains why some places fell more:
+    affordability, young women's share, or women aged 25 to 39 moving in or out.
+  - Brighton and Hove fell about as much as the average district.
+  - Unusually, its births at 30 and over fell as much as those under 30
+    ([see below](#sec-fertility-fall)).
 :::
 
 ## England: the wave passing through {#sec-wave}
@@ -777,6 +783,122 @@ feols(ratio ~ level4_z + students_z + young_z + married_z + privrent_z + abroad_
   same pattern (R² `r sprintf("%.2f", MC$r2[["national_25_44"]])`).
 - **The ratio is not a fertility rate.** It counts young children living in an
   area, so families who move out before their children reach school age lower it.
+:::
+
+## Why did fertility fall? {#sec-fertility-fall}
+
+```{r}
+#| include: false
+FF <- readRDS(here::here("data", "fertility_fall.rds"))
+fu <- FF$u30; fpc <- FF$panel; fbl <- FF$bh_ld
+fuv <- function(n, v) fu[name == n][[v]]
+```
+
+The sections above explain why fertility is *low* in some places: who lives
+there. This one asks why it *fell* between 2013–15 and 2023–25.
+
+**First, by mother's age.**
+
+- **England:** of the fall of `r sprintf("%.2f", abs(fuv("England", "total")))`
+  children per woman, `r sprintf("%.2f", abs(fuv("England", "under30")))` came
+  from mothers under 30 and `r sprintf("%.2f", abs(fuv("England", "over30")))`
+  from those 30 and over. In `r pts(100 * FF$share_under30_larger, 0)`% of
+  districts, most of the fall was under 30. That is consistent with births being
+  put off, not only forgone.
+- **Brighton and Hove is unusual:** its fall of `r sprintf("%.2f", abs(fuv("Brighton and Hove", "total")))`
+  splits evenly, `r sprintf("%.2f", abs(fuv("Brighton and Hove", "under30")))`
+  under 30 and `r sprintf("%.2f", abs(fuv("Brighton and Hove", "over30")))` at
+  30 and over.
+  - Births at 30 to 39 fell too, the ages at which the city's women used to have
+    most of their children.
+  - Cambridge and Oxford look the same.
+  - So in these cities, later births have not made up for fewer early ones.
+
+```{r}
+#| label: fig-fall-age
+#| fig-cap: "Change in the total fertility rate, 2013-15 to 2023-25, by mother's age: 5 x the change in each age group's birth rate per 1,000 women. ONS birth rates by local authority (Nomis NM_207_1)."
+#| fig-height: 4.6
+AG <- FF$age[name %in% c("Brighton and Hove", "England", "Cambridge", "Oxford", "Lewes", "Mid Sussex")]
+AG[, name := factor(name, c("Brighton and Hove", "England", "Cambridge", "Oxford", "Lewes", "Mid Sussex"))]
+ggplot(AG, aes(age_lab, part)) + geom_hline(yintercept = 0, colour = GREY) + geom_col(width = 0.7, fill = DPURPLE) + facet_wrap(~name, nrow = 2) +
+  labs(x = "Mother's age", y = "Change in children per woman") + theme_note(10)
+```
+
+```{r}
+#| label: tbl-fall-age
+#| tbl-cap: "Change in the total fertility rate, 2013-15 to 2023-25, from mothers under 30 and 30 and over."
+knitr::kable(fu[order(total), .(Area = name, `TFR 2013-15` = sprintf("%.2f", tfr0), `TFR 2023-25` = sprintf("%.2f", tfr1),
+                                `From under 30` = sprintf("%+.2f", under30), `From 30 and over` = sprintf("%+.2f", over30), Total = sprintf("%+.2f", total))])
+```
+
+**Second, does anything that changed locally explain why some places fell
+more?** No.
+
+- **The national fall:** the fall common to all districts, the year effects,
+  reached `r sprintf("%.2f", FF$year_fe[year == 2025, fe])` children per woman
+  by 2025.
+- **Local measures:** this model, with district and year fixed effects, tests
+  four measures that change each year:
+  - house prices against earnings;
+  - the share of women aged 20 to 24;
+  - net moves of women aged 25 to 39 within the UK;
+  - net moves of women aged 25 to 39 from abroad.
+
+  Together they explain `r pts(100 * fpc[model == "all", wr2[1]], 1)`% of what
+  is left.
+- **House prices:** affordability in the same year has no effect
+  (`r sprintf("%+.3f", fpc[model == "all" & term == "lr", b])` per log unit).
+  Three years earlier, it has a *positive* sign, which points to sorting
+  rather than cause.
+- **Long differences:** across `r FF$n_ld` districts, the change in fertility
+  is barely related to the change in any of the four measures (R²
+  `r sprintf("%.2f", FF$ld_r2)`).
+- **Brighton and Hove:** its fall, `r sprintf("%.2f", fbl$d_tfr)`, is close to
+  both the average district's (`r sprintf("%.2f", FF$mean_d_tfr)`) and what its
+  own changes predict (`r sprintf("%.2f", fbl$pred)`).
+
+```{r}
+#| label: fig-fall-panel
+#| fig-cap: "Total fertility rate, 2013 to 2025, within districts (district and year fixed effects): change with each measure, all four together, with 95% intervals. ONS birth rates; ONS housing affordability (table 5c); ONS mid-year estimates (MYEB2)."
+#| fig-height: 3.2
+plab <- c(lr = "House price to earnings (log), same year", young = "Women 20-24, % of 15-44", internal = "Women 25-39 moving within the UK, per 1,000",
+          intl = "Women 25-39 from abroad, per 1,000")
+PP <- fpc[model == "all"][, lab := factor(plab[term], rev(plab))]
+ggplot(PP, aes(b, lab)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), colour = MPURPLE, linewidth = 1.2) + geom_point(colour = DPURPLE, size = 2.8) +
+  labs(x = "Children per woman, per unit of each measure", y = NULL) + theme_note(10)
+```
+
+```{r}
+#| label: tbl-fall-panel
+#| tbl-cap: "Within-district model of the total fertility rate, 2013 to 2025: coefficients with 95% intervals."
+knitr::kable(fpc[, .(Model = c(prices = "Prices only", all = "All four", all_lag = "All four, prices 3 years earlier")[model], Measure = c(plab, lr_lag3 = "House price to earnings (log), 3 years earlier")[term],
+                     Estimate = sprintf("%+.4f (%+.4f to %+.4f)", b, lo, hi), `Within R²` = sprintf("%.3f", wr2), `District-years` = n)])
+```
+
+**The fall is national.** Brighton and Hove's fertility fell about as much as
+everywhere else's. Its low *level* comes from who lives there. Where its fall
+differs is in its shape: births at 30 and over fell too.
+
+::: {.callout-note collapse="true"}
+## The models behind this section
+
+$$\text{TFR} = \frac{5}{1000}\sum_a f_a \quad\Rightarrow\quad \Delta\text{TFR} = \sum_a \frac{5}{1000}\Delta f_a$$
+
+$f_a$ is the birth rate per 1,000 women in five-year age group $a$, averaged over
+2013–15 and 2023–25.
+
+$$\text{TFR}_{dt} = \beta_1 \log\text{ratio}_{dt} + \beta_2\,\text{young}_{dt} + \beta_3\,\text{internal}_{dt} + \beta_4\,\text{international}_{dt} + \alpha_d + \tau_t + \varepsilon_{dt}$$
+
+```r
+feols(tfr ~ lr + young + internal + intl | code + year, data = Pn, cluster = ~code)   # R/55
+lm(d_tfr ~ d_lr + d_young + d_internal + d_intl, data = LD)                          # long differences
+```
+
+- **Migration rates** are net moves of women aged 25 to 39 in the year to
+  mid-year, per 1,000 such women a year earlier (ONS MYEB2).
+- **The revision:** ONS revised its international migration methods from
+  mid-2022.
 :::
 
 ## Sussex {#sec-demog-sussex}
