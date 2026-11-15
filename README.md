@@ -284,3 +284,21 @@ It covers Reception, primary and Year 7 from 2018/19 to 2025/26, and secondary f
 cd data-raw/ons && f=mye_age0_15_utla_2004_2025_nomis_NM_2002_1.csv; rm -f $f; ages=$(seq -s, 101 116)
 for y in $(seq 2004 2025); do curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_2002_1.data.csv?geography=TYPE423,2092957699&time=$y&gender=0&c_age=$ages&measures=20100&select=date_name,geography_name,geography_code,c_age_name,obs_value" > t.csv; if [ $y -eq 2004 ]; then cat t.csv > $f; else tail -n +2 t.csv >> $f; fi; done; rm t.csv
 ```
+
+## What goes with low fertility (R/52)
+
+`R/52_fertility_drivers.R` models fertility (TFR 2023–25, from R/49) across districts.
+- **Predictors:** women aged 25–44 with Level 4+, women aged 20–24 as a share of women 15–44, partnership, private renting, born abroad, and the house price to earnings ratio.
+- **Brighton and Hove's gap:** split into each of those parts.
+- **Change:** the 2011 to 2021 change in Level 4+ against the change in fertility.
+- **Output:** `data/fertility_drivers.rds`.
+- **Downloads** (in `data-raw/census2021/`, not committed):
+
+```
+# women by qualification, sex and age, ONS Census 2021 API (custom table, lower-tier authorities)
+curl "https://api.beta.ons.gov.uk/v1/population-types/UR/census-observations?area-type=ltla&dimensions=highest_qualification,sex,resident_age_18b" -o hiqual_sex_age18b_ltla_ons_api.json
+# Census 2021 TS002, TS054, TS004 and TS067, and 2011 KS501EW, from Nomis (districts)
+for p in "NM_2072_1 ts054_tenure" "NM_2024_1 ts004_cob" "NM_2022_1 ts002_partnership"; do set -- $p; curl -s "https://www.nomisweb.co.uk/api/v01/dataset/$1.data.csv?date=latest&geography=TYPE424&measures=20100,20301" -o ${2}_lad_nomis_$1.csv; done
+curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_2084_1.data.csv?date=latest&geography=TYPE424&measures=20301&select=geography_code,geography_name,c2021_hiqual_8_name,obs_value" -o ts067_lad_pct_nomis_NM_2084_1.csv
+curl -s "https://www.nomisweb.co.uk/api/v01/dataset/NM_623_1.data.csv?date=latest&geography=TYPE464&rural_urban=0&measures=20301&select=geography_code,geography_name,cell_name,obs_value" -o ks501ew_2011_lad_nomis_NM_623_1.csv
+```

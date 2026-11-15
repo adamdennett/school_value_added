@@ -356,8 +356,9 @@ patchwork::wrap_plots(p1, p2, nrow = 1)
     cost-of-living story. That more likely reflects who moves where than any
     effect of prices.
 
-Housing costs may well shape *where* families live. These data do not show that
-they set *how many* children are born.
+On their own, house prices say little about how many children are born. Once
+who lives where is allowed for, prices and private renting play a modest part,
+smaller than education or partnership ([below](#sec-fertility-drivers)).
 
 ::: {.callout-note collapse="true"}
 ## The models behind this section
@@ -389,6 +390,96 @@ rate is a period measure for whoever lives in a district that year. Where young
 adults move in to study or work and leave before having children, it is low
 without any change in what any woman eventually does.
 :::
+
+## What goes with low fertility? {#sec-fertility-drivers}
+
+```{r}
+#| include: false
+FD <- readRDS(here::here("data", "fertility_drivers.rds"))
+fdr <- FD$r2; fbp <- FD$bh_parts; fco <- FD$coefs
+part <- function(v) fbp[term == v, contribution]
+```
+
+Housing costs explain little of the differences in fertility between places;
+who lives there explains much more.
+- **Women's education:** the share of women aged 25 to 44 with a degree or
+  other Level 4+ qualification alone accounts for `r pts(100 * fdr[["education"]], 0)`% of
+  the differences in fertility across `r FD$n` districts. House prices alone
+  account for `r pts(100 * fdr[["affordability"]], 0)`%.
+- **Census make-up:** add the share of women of childbearing age who are 20 to
+  24 (largely students), partnership, private renting and the share born
+  abroad, and the model accounts for `r pts(100 * fdr[["full"]], 0)`%.
+- **Housing still counts once make-up is allowed for:** higher house prices and
+  more private renting both go with lower fertility, but less than education or
+  partnership.
+
+```{r}
+#| label: fig-fert-drivers
+#| fig-cap: "Total fertility rate, 2023-25, across districts in England: the change with one standard deviation more of each measure, all six in one model, with 95% intervals. Census 2021 (ONS and Nomis: qualifications by sex and age, TS002, TS054, TS004); ONS housing affordability; ONS birth rates."
+#| fig-height: 4
+fco[, label := factor(label, fco[order(est), label])]
+ggplot(fco, aes(est, label)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), colour = MPURPLE, linewidth = 1.2) +
+  geom_point(colour = DPURPLE, size = 3) +
+  labs(x = "Children per woman, per standard deviation", y = NULL) + theme_note(11)
+```
+
+::: {.callout-note collapse="true"}
+## The model behind this chart
+
+$$\text{TFR}_d = \beta_0 + \beta_1 z(\text{women 25-44 Level 4+})_d + \beta_2 z(\text{women 20-24 share})_d + \beta_3 z(\text{married})_d + \beta_4 z(\text{private renting})_d + \beta_5 z(\text{born abroad})_d + \beta_6 z(\log \text{ratio})_d + \varepsilon_d$$
+
+```r
+lm(tfr ~ fem_l4 + young + married + private_rent + born_abroad + log_ratio, data = Z)   # R/52; z = standardised
+```
+
+- n = `r FD$n` districts, R² = `r sprintf("%.2f", fdr[["full"]])`.
+- R² lost by dropping each measure in turn:
+  - women's Level 4+ `r sprintf("%.3f", fco[term == "fem_l4", unique_r2])`;
+  - born abroad `r sprintf("%.3f", fco[term == "born_abroad", unique_r2])`;
+  - women 20 to 24 `r sprintf("%.3f", fco[term == "young", unique_r2])`;
+  - married `r sprintf("%.3f", fco[term == "married", unique_r2])`;
+  - house prices `r sprintf("%.3f", fco[term == "log_ratio", unique_r2])`;
+  - private renting `r sprintf("%.3f", fco[term == "private_rent", unique_r2])`.
+- Four districts reorganised since the Census (Cumberland, Westmorland and Furness, North Yorkshire, Somerset) are left out.
+
+Associations across places, not causes:
+- Partnership and renting are partly part of the same life stage as not yet
+  having children.
+- The fertility rate is a period measure for whoever lives in a district.
+:::
+
+```{r}
+#| label: fig-bh-parts
+#| fig-cap: "Brighton and Hove's total fertility rate, 2023-25, against the average district: the part that goes with each measure in the model above (coefficient x Brighton and Hove's standardised value). The parts add to the model's prediction; the residual is shown as text."
+#| fig-height: 3.6
+fbp[, label := factor(label, fbp[order(contribution), label])]
+ggplot(fbp, aes(contribution, label)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_col(aes(fill = contribution < 0), width = 0.6) +
+  scale_fill_manual(values = c(`TRUE` = DPURPLE, `FALSE` = MPURPLE), guide = "none") +
+  labs(x = "Children per woman, against the average district", y = NULL) + theme_note(11)
+```
+
+**Brighton and Hove is not a puzzle once its make-up is allowed for.**
+- **The gap:** its fertility is `r sprintf("%.2f", abs(FD$bh_gap))` children per
+  woman below the average district. The model accounts for all of it (residual
+  `r sprintf("%+.2f", FD$bh_res[["full"]])`, against `r sprintf("%.2f", FD$bh_res[["affordability"]])`
+  with house prices alone).
+- **The parts, in roughly equal measure:**
+  - highly educated women (`r sprintf("%.2f", part("fem_l4"))`);
+  - a young, largely student population (`r sprintf("%.2f", part("young"))`);
+  - few people married or in civil partnerships
+    (`r sprintf("%.2f", part("married"))`, `r FD$bh_ranks[["married"]]`th of
+    `r FD$n`);
+  - private renting (`r sprintf("%.2f", part("private_rent"))`);
+  - house prices themselves (`r sprintf("%.2f", part("log_ratio"))`).
+- **Housing, through renting and prices together,** is about a third of the gap.
+
+**Education explains where fertility is low, not why it fell.** The rise in
+adults with Level 4+ from 2011 to 2021 is unrelated to the fall in fertility
+since 2013-15 across `r FD$change$n` districts (R² =
+`r sprintf("%.3f", FD$change$r2)`). The fall is a national shift, as it is
+for housing.
 
 ## Fewer births, or families moving away? {#sec-births-migration}
 
@@ -565,6 +656,22 @@ out.
   district, 2002 to 2025.
 - **The joined panel:** `r FA$n_districts` districts are in both sources for
   the change comparison, and `r pan$districts` in the panel.
+
+**What goes with low fertility** (`R/52_fertility_drivers.R`). Census 2021, by
+district:
+- **Women's qualifications by age:** a custom table from ONS's Census 2021 API,
+  highest qualification × sex × age (18 bands). This gives the % of women aged
+  25 to 44 with Level 4+, and women aged 20 to 24 as % of women 15 to 44.
+- **Partnership:** TS002, % of residents 16+ married or in a civil partnership.
+- **Tenure:** TS054, % of households renting privately.
+- **Country of birth:** TS004, % of residents born outside the UK.
+- **Change over time:** Level 4+ among all residents 16+ in 2011 (KS501EW) and
+  2021 (TS067).
+- Downloads and commands are in the README.
+
+**Births and migration** (`R/50_pupils_births_migration.R`): ONS mid-year
+population estimates by single year of age (Nomis NM_2002_1), mid-2004 to
+mid-2025.
 
 **Areas.** Local authorities as in the census, with three reorganisations
 combined so that each series runs unbroken: Bournemouth, Poole and Dorset with
