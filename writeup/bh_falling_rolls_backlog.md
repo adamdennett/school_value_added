@@ -143,3 +143,8 @@ Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts
   - **Neighbours:** Lewes, Mid Sussex and Wealden gain +17 to +30 per 1,000 internally.
   - **Hackney:** −33 to −44, with adults 30–39 going from −25 to −51; outflows are growing in inner London.
   - **On the demographics page** under #sec-births-migration.
+- **Paused 15 Nov (switched to the house-prices pipeline):** the within-city step, nationally at MSOA level.
+  - **Downloaded** (data-raw/census2021/*_msoa_pct_nomis.csv): Census TS067, TS054, TS004 and TS002 at MSOA (Nomis TYPE152, paged with recordoffset).
+  - **Downloaded:** ONS HPSSA dataset 2 (median price by MSOA, 1995–2023) in data-raw/ons/hpssa/.
+  - **Still needed:** women by age and children 0–4 by MSOA. The ONS API refuses the whole country in one request; use Nomis TS009 (sex by single year of age) paged, or the ONS API area by area.
+  - **Then:** model children 0–4 per 1,000 women 15–44 by MSOA on log price, Level 4+, the young share, renting, partnership and birthplace, with district fixed effects (within-city), and map Brighton and Hove.
