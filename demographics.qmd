@@ -277,7 +277,10 @@ in births, and the question is why.
 
 Councillors and commentators often put this down to the cost of living and of
 housing. The data on where and when fertility fell give that view only weak
-support.
+support. A short [note for the council](bh_births_note.qmd) summarises this and
+the sections below for Brighton and Hove. What homes near good schools cost is
+on the separate [House prices near good schools](https://adamdennett.github.io/school_house_prices/)
+site.
 
 ```{r}
 #| label: fig-asfr

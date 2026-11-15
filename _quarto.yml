@@ -14,6 +14,7 @@ project:
     - neighbourhood_covariates.qmd
     - distance.qmd
     - demographics.qmd
+    - bh_births_note.qmd
     - finance.qmd
     - finance_areas/*.qmd
     - v22.qmd
@@ -92,6 +93,10 @@ website:
         menu:
           - href: demographics.qmd
             text: "Pupil numbers and school places"
+          - href: bh_births_note.qmd
+            text: "Brighton and Hove: why so few young children (note)"
+          - href: "https://adamdennett.github.io/school_house_prices/"
+            text: "House prices near good schools (separate site)"
           - href: finance.qmd
             text: "School finances before closure"
           - text: "---"
