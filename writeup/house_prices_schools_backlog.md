@@ -109,3 +109,15 @@ Steps 1 to 4 are done (R/09 to R/12). Findings are in `school_house_prices/repor
 - actual catchment boundaries where councils publish them (start with Brighton and Hove);
 - school measures as at the date of sale (KS4 by year);
 - decide whether a public page goes on the School Value Added site.
+
+## Progress (15 November 2026, evening)
+
+- **R/13, barriers:** dropping walking-time lines that follow major roads, rivers or railways changes nothing (+0.67% against +0.64%). Rail comes from the Network Rail station list in `E:\rail`, with OpenStreetMap as a cross-check.
+- **R/14, EPC controls:**
+  - the control ladder shows the EPC detail barely moves within-LSOA estimates (Attainment 8 +0.81% with no controls, +0.66% with every field);
+  - repeat sales (554k properties): nearest secondary Outstanding +0.55%.
+- **R/15, Brighton and Hove real catchments:**
+  - no jump at the boundary;
+  - boundary-by-boundary premiums follow neighbourhoods;
+  - the 2025 redraw is suggestive at most.
+- **Next:** KS4 results at the date of sale; more real catchments if other councils publish them; decide on a public page.
