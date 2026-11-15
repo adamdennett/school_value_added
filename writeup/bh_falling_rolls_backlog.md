@@ -1,6 +1,6 @@
 # Brighton and Hove: why are numbers falling? (backlog)
 
-Logged 13 November 2026. Not started.
+Logged 13 November 2026. Answered 15 November 2026 (R/49 to R/57); council note in writeup/bh_falling_births_note.md.
 
 ## The trigger
 
@@ -164,3 +164,18 @@ Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts
   - **Brighton and Hove's fall** (−0.41) is about average (−0.39) and as predicted (−0.38).
 - **The question is answered:** low level = who lives there; fall = national; housing a minor part of both.
 - **Possible next:** a write-up note for the council conversation; an OA-level version; links to school-level intake forecasts.
+
+## Done 15 November 2026 (evening)
+
+- **Council note:** `writeup/bh_falling_births_note.md` (and `.html`), published data only. The same summary is a section in the write-up guide (Claude Doc), "Brighton and Hove: why births are low, and why they fell". The Google Doc copy of the guide has not been updated.
+- **R/56, Output Areas** (#sec-oa):
+  - 22% of the city's 936 OAs have fewer than 60 under-fives per 1,000 aged 20–44, against 5% in England.
+  - The same make-up matters within MSOAs: young adults −20, private renting −11, Level 4 −11 per standard deviation.
+  - The model accounts for 36 of the city's 47-point OA gap.
+- **R/57, school intakes** (#sec-intakes):
+  - **Method:** each OA goes to its nearest state primary (straight line). The home-area ratio is set against the change in Reception, January 2020 to January 2026.
+  - **England:** no link within the same authority (+0.3 points per SD, −0.2 to +0.8; 2023–26 −0.5).
+  - **Brighton and Hove:** correlation −0.06.
+  - **Council planning-area forecasts** (SCAP 2024/25) leave the emptiest places by 2029/30 in the outer areas: Deans 63%, West Blatchington 59%, Portslade 43%. The central areas are at 23–32%.
+  - **Correction to the note:** the earlier draft's "central primaries will feel it first" is replaced by "don't read the map as a list of schools to shrink".
+  - **Named school table:** `data-raw/private/bh_primary_intakes.csv`, not committed or published. Only Brunswick and Coldean are named, since the council has already named them.
