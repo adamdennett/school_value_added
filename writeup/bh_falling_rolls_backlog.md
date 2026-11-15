@@ -138,3 +138,8 @@ Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts
   - moves within the UK against from abroad, by age;
   - within the city (MSOA prices, children per woman by Output Area);
   - a model of the fall itself (2013–25) with time-varying measures.
+- **R/53, within the UK against from abroad (ae8e345):**
+  - **Brighton and Hove, children 0–10:** net internal −16 per 1,000 a year (2013–18) and −12 (2019–25); international +3.6 and +7.4.
+  - **Neighbours:** Lewes, Mid Sussex and Wealden gain +17 to +30 per 1,000 internally.
+  - **Hackney:** −33 to −44, with adults 30–39 going from −25 to −51; outflows are growing in inner London.
+  - **On the demographics page** under #sec-births-migration.
