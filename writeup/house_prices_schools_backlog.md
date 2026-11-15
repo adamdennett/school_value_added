@@ -57,3 +57,24 @@ Logged 13 November 2026. Not started; Adam wants to do this.
 - A paper extending Tan and Dennett nationally.
 - A site page (School Value Added) and possibly a tab in the School Information System.
 - The linked sales and school file, where licences allow.
+
+## Progress (15 November 2026)
+
+Code is in the private repo `school_house_prices` (R/01 to R/08).
+
+- **Panel built.**
+  - 24,618,450 sales matched to an EPC (83% of transactions).
+  - 6,401,832 sales from September 2018 to September 2026, with Ofsted at the date of sale, walking minutes to Outstanding schools, value added, Attainment 8, and popularity (first preferences per place).
+- **Steps 2 and 3 done** (R/06; 5.18m sales). The raw premiums are the councillor's order of magnitude: an Outstanding secondary within 10 minutes' walk +37%; nearest secondary Outstanding +32%; top 10% Attainment 8 +22%. They shrink like for like:
+  - for the same kind of home (district effects): +2.7%, +5.2% and +4.1%;
+  - for the same home within the same LSOA: +0.6%, +1.0% and +0.9%.
+  - A top 10% value-added school: −11% raw, −4% like for like, 0 within LSOA.
+  - **Buyers pay for intake (raw results), not value added**: step 4(c) is answered at first pass.
+- **The source of the 20 to 25% figure is not found.** Industry studies give 12–18% (Lloyds, Knight Frank, HouseSimple, Rightmove primary 18%), all unadjusted area comparisons.
+- **New key reference.** Greaves, E. and Venturin, A. (2026) *Re-examining the property price premium around 'better' schools*. IZA DP 18750, June 2026.
+  - England, secondary schools, boundary discontinuity design.
+  - Average premium about 2.5%; about 6.5% where the quality gap across the boundary is in the top quartile; weak or absent elsewhere.
+  - "Escaping the bottom" ≈ "reaching the top".
+  - Value added has no independent pricing power.
+  - The premium needs attainment and an affluent intake together.
+  - Our within-LSOA results agree. Next is to add their "gap" heterogeneity with our walking-time nearest pairs.
