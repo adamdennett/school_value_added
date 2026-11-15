@@ -149,3 +149,18 @@ Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts
   - **Still needed:** women by age and children 0–4 by MSOA. The ONS API refuses the whole country in one request; use Nomis TS009 (sex by single year of age) paged, or the ONS API area by area.
   - **Then:** model children 0–4 per 1,000 women 15–44 by MSOA on log price, Level 4+, the young share, renting, partnership and birthplace, with district fixed effects (within-city), and map Brighton and Hove.
   - **The women-by-age route:** TS009 isn't published at MSOA on Nomis (districts only). Use children 0–4 per 1,000 residents aged 20–44 (both sexes) from TS007a by OA (`data-raw/census2021/census2021-ts007a.zip`), aggregated to MSOA via `msoa21cd` in `school_active_travel/data/out/origins.parquet`. Or call the ONS API in chunks of MSOA codes.
+
+## Done 15 November 2026 (afternoon)
+
+- **R/54, within the city** (demographics page #sec-within-city): children 0–4 per 1,000 residents 20–44, Census 2021, 6,856 MSOAs.
+  - **Brighton and Hove** MSOAs average 122 against England's 172.
+  - **The lowest:** North Laine 47, Brunswick 47, Coldean & Moulsecoomb North 54, Hove Central 57. Brunswick and Coldean are the two primaries in the November 2026 PAN proposals.
+  - **The national model** (young share, Level 4+, married, renting, students, born abroad): R² 0.57 (0.50 within local authorities). Prices add little; HPSSA uses 2011 MSOA codes, so price is a separate check.
+  - **Brighton and Hove's gap** of −50 is 46 explained: young −25, Level 4+ −16, married −12, renting −6, students +14.
+  - **Below prediction:** Coldean (students), Kemptown, King Alfred, Hove Central, Brunswick.
+- **R/55, the fall** (#sec-fertility-fall):
+  - **By age:** England's fall is mostly under 30 (−0.29 of −0.40; true in 97% of districts). Brighton and Hove's splits evenly (−0.21 under 30, −0.20 at 30+), as do Cambridge and Oxford.
+  - **Within-district panel 2013–25:** affordability, young share and migration of women 25–39 explain 0.5% beyond year effects. Long differences R² 0.04.
+  - **Brighton and Hove's fall** (−0.41) is about average (−0.39) and as predicted (−0.38).
+- **The question is answered:** low level = who lives there; fall = national; housing a minor part of both.
+- **Possible next:** a write-up note for the council conversation; an OA-level version; links to school-level intake forecasts.
