@@ -148,3 +148,4 @@ Census 2021 Level 4+ share for all adults (not yet women 25–44), 292 districts
   - **Downloaded:** ONS HPSSA dataset 2 (median price by MSOA, 1995–2023) in data-raw/ons/hpssa/.
   - **Still needed:** women by age and children 0–4 by MSOA. The ONS API refuses the whole country in one request; use Nomis TS009 (sex by single year of age) paged, or the ONS API area by area.
   - **Then:** model children 0–4 per 1,000 women 15–44 by MSOA on log price, Level 4+, the young share, renting, partnership and birthplace, with district fixed effects (within-city), and map Brighton and Hove.
+  - **The women-by-age route:** TS009 isn't published at MSOA on Nomis (districts only). Use children 0–4 per 1,000 residents aged 20–44 (both sexes) from TS007a by OA (`data-raw/census2021/census2021-ts007a.zip`), aggregated to MSOA via `msoa21cd` in `school_active_travel/data/out/origins.parquet`. Or call the ONS API in chunks of MSOA codes.
