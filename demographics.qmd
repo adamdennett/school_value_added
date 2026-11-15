@@ -390,14 +390,109 @@ adults move in to study or work and leave before having children, it is low
 without any change in what any woman eventually does.
 :::
 
-**Still to do (on the [roadmap](roadmap.qmd)):**
+## Fewer births, or families moving away? {#sec-births-migration}
 
-- the Census make-up of each district: students, graduates, renting and shared
-  houses, single-person households, partnership, and mothers born outside the
-  UK;
-- moves by age between districts: under-fives and adults in their thirties
-  leaving the cities;
-- house prices by small area (ONS, MSOA) within Brighton and Hove.
+```{r}
+#| include: false
+BM <- readRDS(here::here("data", "pupils_births_migration.rds"))
+BX <- BM$X; VS <- BM$var_share
+PRI <- "Primary (Reception to Year 6)"
+bx <- function(a, g = PRI) BX[area == a & group == g]
+e_p <- bx("England"); b_p <- bx("Brighton and Hove"); b_7 <- bx("Brighton and Hove", "Year 7")
+lon_p <- BM$by_region[group == PRI & region == "London"]
+vs <- function(g, v) VS[group == g][[v]]
+```
+
+Pupils in an area are the children born there, adjusted for those who have
+moved in or out since, and for the share who go to its state mainstream
+schools. Split this way, the change in pupils from 2018/19 to 2025/26 shows how
+much is births and how much is families moving.
+- **England:** primary pupils fell by `r pts(abs(e_p$total), 1)` log points
+  (×100).
+  - Births alone would have cut them by `r pts(abs(e_p$births), 1)`.
+  - Net migration of children *into* England added `r pts(e_p$migration, 1)`.
+  - A smaller share in state mainstream schools took off
+    `r pts(abs(e_p$schooling), 1)`: more in special schools, home education and
+    independent schools.
+- **Brighton and Hove:** the fall (`r pts(abs(b_p$total), 1)`) is almost all
+  births (`r pts(b_p$births, 1)`). Migration (`r sprintf("%+.1f", b_p$migration)`)
+  and the state-school share (`r sprintf("%+.1f", b_p$schooling)`) slightly
+  offset it.
+  - The city does lose children. Only about `r pts(100 * b_p$retain_2, 0)`% of
+    each birth cohort is still living there at primary age, against England's
+    `r pts(100 * e_p$retain_2, 0)`%.
+  - But that loss is long-standing, so it explains the low level, not the
+    fall.
+  - At Year 7 the two are closer: births `r pts(b_7$births, 1)`, migration
+    `r pts(b_7$migration, 1)`.
+- **London:** in the median borough, primary pupils fell
+  `r pts(abs(lon_p$total), 1)`: births `r pts(lon_p$births, 1)` and migration
+  `r pts(lon_p$migration, 1)`, half and half. In Hackney and Tower Hamlets,
+  families leaving is most of it.
+
+```{r}
+#| label: fig-births-migration
+#| fig-cap: "Change in primary pupils (Reception to Year 6), 2018/19 to 2025/26, split into births, net migration of those children since birth, and the share in state mainstream schools; log points x 100, so the parts add to the total (diamond). England and selected areas. ONS mid-year population estimates (Nomis NM_2002_1); DfE school census."
+#| fig-height: 5.2
+pick <- c("England", "Brighton and Hove", "Westminster", "Camden", "Southwark", "Lambeth", "Hackney", "Bristol, City of",
+          "Cambridgeshire", "East Sussex", "West Sussex", "Kent", "Surrey")
+f <- melt(BX[group == PRI & area %in% pick, .(area, total, Births = births, Migration = migration, `State-school share` = schooling)],
+          id.vars = c("area", "total"), variable.name = "part", value.name = "pp")
+f[, area := factor(area, BX[group == PRI & area %in% pick][order(-total), area])]
+ggplot(f, aes(pp, area, fill = part)) + geom_col(width = 0.7) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_point(data = unique(f[, .(area, total)]), aes(total, area), inherit.aes = FALSE, shape = 23, size = 2.6, fill = "white", colour = INK) +
+  scale_fill_manual(values = c(Births = DPURPLE, Migration = BPURPLE, `State-school share` = LIGHT), name = NULL) +
+  labs(x = "Change in primary pupils, 2018/19 to 2025/26 (log points x 100)", y = NULL) + theme_note(11) + theme(legend.position = "top")
+```
+
+```{r}
+#| label: fig-births-migration-scatter
+#| fig-cap: "Every local authority: the births and migration parts of the change in primary pupils, 2018/19 to 2025/26 (log points x 100). London boroughs in purple. ONS mid-year population estimates; DfE school census."
+#| fig-height: 5
+sc2 <- BX[group == PRI & area != "England"]
+lab2 <- sc2[area %in% c("Brighton and Hove", "Westminster", "Camden", "Southwark", "Lambeth", "Hackney", "Tower Hamlets", "Havering")]
+ggplot(sc2, aes(births, migration, colour = region == "London")) + geom_hline(yintercept = 0, colour = LIGHT) + geom_vline(xintercept = 0, colour = LIGHT) +
+  geom_point(alpha = 0.8, size = 2) +
+  ggrepel::geom_text_repel(data = lab2, aes(label = area), colour = DPURPLE, size = 3.1, seed = 50, box.padding = 0.5, min.segment.length = 0) +
+  scale_colour_manual(values = c(`TRUE` = BPURPLE, `FALSE` = "#9e9eb0"), labels = c(`TRUE` = "London", `FALSE` = "Elsewhere"), name = NULL) +
+  labs(x = "Births part", y = "Migration part") + theme_note(11) + theme(legend.position = "top")
+```
+
+**Across authorities, births matter most at the start of school and migration
+grows with age.**
+- **Reception:** births go with `r pts(100 * vs("Reception", "births"), 0)`% of
+  the differences between authorities in the change in intakes.
+- **Primary as a whole:** births go with `r pts(100 * vs(PRI, "births"), 0)`%
+  and migration with `r pts(100 * vs(PRI, "migration"), 0)`%. These shares
+  overlap because the parts are correlated.
+- **Year 7:** migration goes with `r pts(100 * vs("Year 7", "migration"), 0)`%.
+
+The longer children have been in school, the more families moving reshapes the
+numbers.
+
+::: {.callout-note collapse="true"}
+## How the split is made
+
+$$\log\frac{\text{pupils}_2}{\text{pupils}_1} = \underbrace{\log\frac{B_2}{B_1}}_{\text{births}} + \underbrace{\log\frac{C_2/B_2}{C_1/B_1}}_{\text{migration}} + \underbrace{\log\frac{\text{pupils}_2/C_2}{\text{pupils}_1/C_1}}_{\text{state-school share}}$$
+
+$B$ is the cohorts' births: the ONS mid-year estimate at age 0 in the year each
+cohort was born. $C$ is those cohorts' children living in the area now.
+School year group $g$ is taken as age $g+4$ at mid-year (most of a Reception
+cohort is 4 on 30 June before it starts). The shares across authorities are
+$\text{cov}(\text{part}, \text{total}) / \text{var}(\text{total})$, which add
+to one.
+
+```r
+source("R/50_pupils_births_migration.R")   # writes data/pupils_births_migration.rds
+```
+
+Caveats:
+- The migration part rests on ONS's modelled migration estimates, revised from
+  mid-2022.
+- Migration and the state-school share partly trade off (residence against
+  school location), so read them together where they pull apart.
+- The City of London (a few hundred children) is left out.
+:::
 
 ## Sussex {#sec-demog-sussex}
 
