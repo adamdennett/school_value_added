@@ -22,6 +22,7 @@ That matters for planning. Housing policy is unlikely to bring births back at a 
   House prices and private renting together account for about a third of Brighton and Hove's gap with England.
 - **The fall since 2013 is national.** Brighton and Hove fell by 0.41 children per woman, England's typical district by 0.39. Where housing became less affordable, fertility fell no more than where it did not.
 - **The shortfall is in the centre of the city**, including the neighbourhoods around Brunswick and Coldean primaries. The edges of the city have as many young children as England's average.
+- **But few young children nearby does not predict which schools lose pupils.** Across England and within the city, schools in low-child areas have not lost intake faster. The council's own forecasts leave the emptiest places in the outer planning areas.
 
 ### 1. The level: who lives here
 
@@ -60,6 +61,7 @@ That matters for planning. Housing policy is unlikely to bring births back at a 
 
 - **What explains the gap:** across England's neighbourhoods, the same make-up explains 46 of the city's 50-point gap. Many adults in their early twenties, graduates, few married couples and private renting all count; once those are allowed for, a large student population offsets part of it.
 - **The two primaries in the proposals:** Brunswick Primary and Coldean Primary sit in two of the four neighbourhoods with the fewest young children.
+- **Street by street:** 22% of the city's 936 Output Areas (about 130 households each) have fewer than 60 under-fives per 1,000 adults aged 20–44, against 5% across England. The same make-up matters even between streets in the same neighbourhood.
 
 ### 3. The fall: national, with a local twist
 
@@ -83,12 +85,32 @@ That matters for planning. Housing policy is unlikely to bring births back at a 
 - **The city does lose children:** about 92% of each birth cohort is still living there at primary age, against 105% for England, where children arrive from abroad. That loss is long-standing, so it explains the low level, not the fall.
 - **Births have levelled** at about 2,100 a year since 2022, from 2,952 in 2015.
 
+### 5. Few young children nearby does not mean a falling intake
+
+**The method:** we gave each Output Area to its nearest state primary (its *home area*), and compared the ratio of young children there with the change in the school's Reception class.
+
+- **Across England,** primaries in low-child areas have not lost Reception pupils faster than others in the same authority. From January 2020 to January 2026 the difference is +0.3 points per standard deviation (−0.2 to +0.8), across 13,774 schools.
+- **Across the city's 44 primaries,** there is no link either (correlation −0.06).
+- **Brunswick and Coldean** have home areas among the lowest in the city (70 and 48). Their Reception classes fell from 116 to 50 and from 41 to 24. Brunswick's fall partly follows the council's own cuts to its admission number in 2023 and 2025. Other schools with low-child home areas have held their intakes, because they draw pupils from further away.
+- **The council's own forecasts point the same way.** Its 2024/25 return to DfE forecasts Reception to 2029/30 by planning area. It leaves the most unfilled places in the outer areas, which have plenty of young children:
+
+| Planning area | Under-fives per 1,000 aged 20–44 | Reception 2024/25 | Forecast 2029/30 | Unfilled places 2029/30 |
+| --- | --- | --- | --- | --- |
+| City North | 77 | 139 | 144 | 32% |
+| City East | 88 | 419 | 347 | 23% |
+| Central City | 90 | 444 | 365 | 31% |
+| Central Hove | 114 | 613 | 487 | 28% |
+| The Deans | 165 | 223 | 101 | 63% |
+| Patcham | 171 | 122 | 101 | 32% |
+| Portslade | 180 | 206 | 152 | 43% |
+| West Blatchington and North Hangleton | 187 | 67 | 47 | 59% |
+
 ### What this means for planning
 
 1. **Plan on births staying near today's level.** Nothing in the data suggests a local rebound. On today's cohorts, Year 7 falls by a fifth by 2032/33, and by about a quarter by 2036/37.
 2. **Housing policy is worth doing for its own sake, but don't count on it to refill places.** Neighbours with the same prices have half as many children again per woman. Housing explains about a third of the city's gap and none of its fall.
-3. **Family homes in the centre may matter more than overall affordability.** The low ratios are where private renting, young adults and small homes concentrate. That points to the mix of homes in the central neighbourhoods more than to prices across the city.
-4. **Expect the central primaries to feel the fall first and hardest.** The neighbourhood pattern is a guide to where intake reductions will keep coming up.
+3. **Family homes in the centre may matter more than overall affordability.** The low ratios are where private renting and young adults concentrate. That points to the mix of homes in the central neighbourhoods more than to prices across the city.
+4. **Don't read the neighbourhood map as a list of schools to shrink.** Few young children nearby shows where demand is thin, not which schools will lose pupils next. Parents' preferences, admission numbers and the planning-area forecasts matter more. On the council's own forecasts, the emptiest places by 2029/30 are in the outer planning areas.
 
 ### Caveats
 
@@ -105,4 +127,5 @@ That matters for planning. Housing policy is unlikely to bring births back at a 
 - DfE *Schools, pupils and their characteristics*, 2018/19–2025/26.
 - House of Commons Library MSOA names.
 - Brighton and Hove News, 13 November 2026, "Pupil intakes to be cut at two more schools".
-- Ours: the [demographics page](https://adamdennett.github.io/school_value_added/demographics.html) (sections on fertility, Where in the city? and Why did fertility fall?); `R/49`–`R/55` in the school_value_added repository.
+- DfE *School capacity* 2024/25 (local authority forecasts and place planning estimates); DfE school census, school level, January 2020 to January 2026; DfE Get Information about Schools.
+- Ours: the [demographics page](https://adamdennett.github.io/school_value_added/demographics.html) (sections on fertility, Where in the city?, Street by street, Why did fertility fall? and From neighbourhoods to school intakes); `R/49`–`R/57` in the school_value_added repository.

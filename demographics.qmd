@@ -74,6 +74,14 @@ CLS_COL <- c("Consistent decline" = "#762a83", "Decline" = "#c2a5cf", "Stable" =
   - Neighbourhood make-up accounts for almost all of the city's gap: many adults
     in their early twenties, graduates, few married couples and private renting
     ([see below](#sec-within-city)).
+  - Street by street, a fifth of the city's Output Areas have fewer than 60
+    under-fives per 1,000 adults aged 20 to 44, against one in twenty across
+    England ([see below](#sec-oa)).
+- **But few young children nearby does not tell you which schools lose pupils.**
+  Across England, primaries in low-child areas have not lost Reception pupils
+  faster than others in the same authority. Brighton and Hove's own forecasts
+  leave the most empty places in its outer planning areas, not the centre
+  ([see below](#sec-intakes)).
 - **The fall itself is national.**
   - Nothing that changed locally explains why some places fell more:
     affordability, young women's share, or women aged 25 to 39 moving in or out.
@@ -785,6 +793,103 @@ feols(ratio ~ level4_z + students_z + young_z + married_z + privrent_z + abroad_
   area, so families who move out before their children reach school age lower it.
 :::
 
+## Street by street {#sec-oa}
+
+```{r}
+#| include: false
+OC <- readRDS(here::here("data", "oa_children.rds"))
+ocg <- OC$gap; ocp <- OC$parts; ocd <- OC$dist
+opart <- function(v) ocp[var == v, part]
+od <- function(a, b) ocd[area == a & band == b, pct]
+```
+
+Output Areas, of about 130 households each, are the finest areas the Census
+publishes. At this scale the same pattern holds, and it sharpens.
+
+- **A fifth of the city's Output Areas have very few young children.**
+  `r pts(od("Brighton and Hove", "Under 60"), 0)`% of Brighton and Hove's OAs
+  have fewer than 60 children aged 0 to 4 per 1,000 residents aged 20 to 44.
+  Across England the figure is `r pts(od("England", "Under 60"), 0)`%.
+- **The city overall:** `r pts(ocg$bh_ratio, 0)` young children per 1,000
+  adults aged 20 to 44, against `r pts(ocg$eng_ratio, 0)` for England.
+- **Low-child streets are found across the centre, not only in a few
+  neighbourhoods.** In the central MSOAs even the higher OAs are below England's
+  average. In Brunswick, nine in ten OAs have fewer than
+  `r pts(OC$spread[hcl == "Brunswick", p90], 0)` young children per 1,000 adults aged 20 to 44.
+- **The same make-up matters within neighbourhoods.** Comparing OAs within the
+  same MSOA, more adults in their early twenties, more private renting and more
+  graduates still go with fewer young children. Who lives on each street
+  matters, not only which part of the city it is in.
+- **OA ratios are noisy.** The model accounts for
+  `r pts(100 * OC$r2[["national"]], 0)`% of the differences between England's
+  OAs (MSOAs: `r pts(100 * MC$r2[["national"]], 0)`%). Single OAs hold few
+  children, and ONS adds small random adjustments to OA counts for
+  confidentiality.
+
+```{r}
+#| label: fig-oa-map
+#| fig-cap: "Children aged 0 to 4 per 1,000 residents aged 20 to 44, Brighton and Hove Output Areas, Census 2021 (ONS TS007a). White lines: MSOAs. Grey: fewer than 30 residents aged 20 to 44. Boundaries: ONS OA 2021 (OGL). School locations: DfE Get Information about Schools."
+knitr::include_graphics("writeup/figures/oa_children_brighton_map.png")
+```
+
+```{r}
+#| label: fig-oa-dist
+#| fig-cap: "Output Areas by children aged 0 to 4 per 1,000 residents aged 20 to 44, Brighton and Hove and England (OAs with 30 or more residents aged 20 to 44), Census 2021."
+#| fig-height: 3.4
+ocd2 <- copy(ocd)[, `:=`(band = factor(band, c("Under 60", "60-119", "120-179", "180-239", "240 and over")), area = factor(area, c("Brighton and Hove", "England")))]
+ggplot(ocd2, aes(band, pct, fill = area)) + geom_col(position = position_dodge(width = 0.75), width = 0.7) +
+  scale_fill_manual(values = c("Brighton and Hove" = DPURPLE, England = MPURPLE), name = NULL) +
+  labs(x = "Children 0-4 per 1,000 residents aged 20-44", y = "% of Output Areas") + theme_note(11) + theme(legend.position = "top")
+```
+
+```{r}
+#| label: fig-oa-drivers
+#| fig-cap: "Children 0 to 4 per 1,000 residents aged 20 to 44, England's Output Areas: the change with one standard deviation more of each measure, all six in one model, with 95% intervals (standard errors clustered by MSOA). Census 2021 (ONS TS002, TS004, TS007a, TS054, TS062, TS067)."
+#| fig-height: 4.2
+oc2 <- copy(OC$coefs)[, `:=`(lab = factor(mlab[var], rev(mlab)),
+                            model = factor(model, c("national", "within_la", "within_msoa"), c("Across England", "Within the same local authority", "Within the same MSOA")))]
+ggplot(oc2, aes(b, lab, colour = model)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge2(width = 0.6, reverse = TRUE), linewidth = 1.1) +
+  geom_point(position = position_dodge2(width = 0.6, reverse = TRUE), size = 2.4) +
+  scale_colour_manual(values = c(`Across England` = MPURPLE, `Within the same local authority` = BPURPLE, `Within the same MSOA` = DPURPLE), name = NULL) +
+  labs(x = "Children 0-4 per 1,000 aged 20-44, per standard deviation", y = NULL) + theme_note(11) + theme(legend.position = "top")
+```
+
+```{r}
+#| label: tbl-oa-drivers
+#| tbl-cap: "Output Areas: change in children 0 to 4 per 1,000 residents aged 20 to 44 per standard deviation of each measure, with 95% interval; all six measures together."
+knitr::kable(dcast(oc2[, cell := sprintf("%+.1f (%+.1f to %+.1f)", b, lo, hi)], lab ~ model, value.var = "cell")[order(-as.integer(lab))],
+      col.names = c("Measure", "Across England", "Within the same local authority", "Within the same MSOA"))
+```
+
+**Brighton and Hove at OA level.** The model accounts for
+`r pts(abs(ocg$explained), 0)` of the `r pts(ocg$eng_mean - ocg$bh_mean, 0)`-point
+gap between the average OA in the city and in England. The parts are:
+
+- graduates, `r sprintf("%+.0f", opart("level4"))`;
+- adults in their early twenties, `r sprintf("%+.0f", opart("young"))`;
+- private renting, `r sprintf("%+.0f", opart("privrent"))`;
+- few married couples, `r sprintf("%+.0f", opart("married"))`;
+- offset by students, `r sprintf("%+.0f", opart("students"))`.
+
+::: {.callout-note collapse="true"}
+## The model behind this section
+
+The same model as for MSOAs, on `r format(OC$n, big.mark = ",")` Output Areas,
+with standard errors clustered by MSOA. The third version adds MSOA fixed
+effects, so it compares OAs within the same neighbourhood of about 8,000
+people.
+
+```r
+feols(ratio ~ level4_z + students_z + young_z + married_z + privrent_z + abroad_z | msoa, data = D, cluster = ~msoa)   # R/56
+```
+
+- **House prices** are not published for OAs, so they are left out.
+- **Between neighbourhoods:** `r pts(100 * OC$share_between, 0)`% of the
+  variation in the ratio between OAs lies between MSOAs. The rest is within
+  them.
+:::
+
 ## Why did fertility fall? {#sec-fertility-fall}
 
 ```{r}
@@ -899,6 +1004,149 @@ lm(d_tfr ~ d_lr + d_young + d_internal + d_intl, data = LD)                     
   mid-year, per 1,000 such women a year earlier (ONS MYEB2).
 - **The revision:** ONS revised its international migration methods from
   mid-2022.
+:::
+
+## From neighbourhoods to school intakes {#sec-intakes}
+
+```{r}
+#| include: false
+SI <- readRDS(here::here("data", "school_intakes_children.rds"))
+sic <- SI$coef_A; sid <- SI$deciles; sip <- SI$pa_summary; sbn <- SI$bh_named; sbt <- SI$bh_tot
+sc <- function(m, v = "b") sic[model == m][[v]]
+nmd <- function(s, v) sbn[school_name == s][[v]]
+```
+
+Where young children are few is not the same as where school intakes are
+falling. To test the link, we gave each Output Area to its nearest state
+primary school. That gives each school a *home area* and a ratio of young
+children to adults there. We then compared that ratio with the change in each
+school's Reception class.
+
+**Across England, schools in low-child areas have not lost intake much faster.**
+
+- **The decile comparison:** among the tenth of
+  `r format(SI$n_A, big.mark = ",")` primaries with the fewest young children
+  around them, Reception fell `r pts(abs(sid[decile == 1, chg]), 0)`% from
+  January 2020 to January 2026. Among the tenth with the most, it fell
+  `r pts(abs(sid[decile == 10, chg]), 0)`%.
+- **Within the same local authority,** the difference disappears: a standard
+  deviation more young children in the home area goes with
+  `r sprintf("%+.1f", sc("change"))` points of change in Reception
+  (`r sprintf("%+.1f", sc("change", "lo"))` to `r sprintf("%+.1f", sc("change", "hi"))`). From 2023 to 2026 the sign even reverses slightly: schools with more young children nearby lost a little more.
+- **Unfilled places:** these schools have a few more unfilled places
+  (`r pts(sid[decile == 1, unfilled], 0)`% against `r pts(sid[decile == 10, unfilled], 0)`%),
+  but within the same authority that difference is not significant either.
+
+The fall in births is everywhere (see [above](#sec-fertility-fall)). A
+neighbourhood's make-up sets how many children it has, not how fast that number
+is falling. Parents also choose schools beyond the nearest, so a school's
+intake reflects preferences and admission numbers as well as its streets.
+
+```{r}
+#| label: fig-intakes-deciles
+#| fig-cap: "Change in Reception pupils, January 2020 to January 2026, England's state-funded primary schools by tenths of their home-area ratio (children 0 to 4 per 1,000 residents aged 20 to 44 in the Output Areas nearest to the school, Census 2021). DfE school census; GIAS; ONS Census 2021."
+knitr::include_graphics("writeup/figures/intakes_deciles.png")
+```
+
+```{r}
+#| label: fig-intakes-coef
+#| fig-cap: "The home-area ratio and school intakes: change with one standard deviation more young children in the home area, with 95% intervals (standard errors clustered by local authority)."
+#| fig-height: 2.8
+slab <- c(change_national = "Reception change 2020-26, across England", change = "Reception change 2020-26, same authority",
+          change_3yr = "Reception change 2023-26, same authority", unfilled = "Unfilled places 2024/25 (%), same authority")
+sic2 <- copy(sic)[, lab := factor(slab[model], rev(slab))]
+ggplot(sic2, aes(b, lab)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), colour = MPURPLE, linewidth = 1.2) + geom_point(colour = DPURPLE, size = 2.8) +
+  labs(x = "Percentage points per standard deviation of the home-area ratio", y = NULL) + theme_note(10)
+```
+
+```{r}
+#| label: tbl-intakes-coef
+#| tbl-cap: "The home-area ratio and school intakes: coefficient per standard deviation, with 95% interval."
+knitr::kable(sic2[order(-as.integer(lab)), .(Outcome = lab, Estimate = sprintf("%+.2f (%+.2f to %+.2f)", b, lo, hi), Schools = format(n, big.mark = ","))])
+```
+
+**Brighton and Hove's planning areas: the council's own forecasts point the
+same way.**
+
+- **The forecasts:** the council forecasts Reception in each of its eight
+  primary planning areas to 2029/30.
+- **Where places go emptiest:** the forecasts leave the most unfilled places
+  in the outer areas with plenty of young children: The Deans
+  (`r pts(sip[name == "The Deans", surplus_2930], 0)`% unfilled), West Blatchington and
+  North Hangleton (`r pts(sip[grepl("^West", name), surplus_2930], 0)`%) and Portslade
+  (`r pts(sip[name == "Portslade", surplus_2930], 0)`%).
+- **The central areas** with the fewest young children sit at 23 to 32%.
+- **Why:** the central schools already admit fewer pupils, so the further fall
+  there is smaller.
+
+```{r}
+#| label: fig-intakes-pa
+#| fig-cap: "Brighton and Hove primary planning areas: unfilled Reception places in 2029/30 on the council's forecast, against the planning area's home-area ratio (Census 2021). DfE School capacity 2024/25 (local authority forecasts and place planning estimates)."
+knitr::include_graphics("writeup/figures/intakes_bh_planning_areas.png")
+```
+
+```{r}
+#| label: tbl-intakes-pa
+#| tbl-cap: "Brighton and Hove primary planning areas: home-area ratio, Reception pupils in 2024/25 and the council's forecast for 2029/30, and estimated Reception places."
+knitr::kable(sip[order(ratio), .(`Planning area` = name, Schools = schools, `Home-area ratio` = round(ratio), `Reception 2024/25` = rec_2425,
+                           `Forecast 2029/30` = rec_2930, `Change %` = sprintf("%+.0f", fc_chg), `Places` = round(places), `Unfilled 2029/30 %` = round(surplus_2930))])
+```
+
+**Brighton and Hove's schools: no clear link either.**
+
+- **Across its `r SI$bh_tot$schools` state primaries,** the home-area ratio and
+  the change in Reception since 2020 are unrelated (correlation
+  `r sprintf("%.2f", SI$bh_cor)`).
+- **Brunswick and Coldean,** the two schools in the council's current
+  proposals, have home areas among the lowest in the city:
+  `r pts(nmd("Brunswick Primary School", "ratio"), 0)` and
+  `r pts(nmd("Coldean Primary School", "ratio"), 0)` young children per 1,000
+  adults.
+- **Their Reception classes have fallen steeply:**
+  - Brunswick from `r nmd("Brunswick Primary School", "r19")` to `r nmd("Brunswick Primary School", "r25")`,
+    partly because its admission number was cut in 2023 and again in 2025;
+  - Coldean from `r nmd("Coldean Primary School", "r19")` to `r nmd("Coldean Primary School", "r25")`.
+- **Other schools with low-child home areas** have held their intakes. They draw
+  pupils from beyond their nearest streets.
+
+```{r}
+#| label: fig-intakes-bh
+#| fig-cap: "Brighton and Hove state primary schools (10 or more Reception pupils in 2020 and 2026): change in Reception pupils against the home-area ratio. Only the two schools in the council's November 2026 admissions proposals are named. DfE school census; ONS Census 2021."
+knitr::include_graphics("writeup/figures/intakes_bh_schools.png")
+```
+
+**What this means.** Few young children nearby tells a council where demand is
+thin, not which schools will lose pupils next. For that, admission numbers,
+preferences and the council's own forecasts by planning area matter more than
+the make-up of the nearest streets.
+
+::: {.callout-note collapse="true"}
+## The model behind this section
+
+- **The home area:** each Output Area goes to the nearest state-funded
+  mainstream primary with Reception pupils in January 2026, in a straight line
+  from the OA's population-weighted centre. That is a stand-in for where pupils
+  come from, not an admissions catchment.
+- **The home-area ratio:** children 0 to 4 per 1,000 residents aged 20 to 44
+  across those OAs. The children aged 0 to 4 at the 2021 Census entered
+  Reception from September 2021 to September 2025.
+
+$$100\,\log\frac{\text{Reception}_{s,2026}}{\text{Reception}_{s,2020}} = \beta\, z(\text{ratio}_s) + \alpha_{\text{LA}(s)} + \varepsilon_s$$
+
+```r
+feols(chg ~ ratio_z | la_name, data = Ek, cluster = ~la_name)   # R/57
+```
+
+- **Schools included:** those with 10 or more Reception pupils in both years.
+- **Academy conversions:** schools that converted keep their history through
+  one-to-one predecessor links in Get Information about Schools.
+- **Planning areas:**
+  - **Forecasts and places:** the council's Reception forecasts and estimated
+    Reception places come from its 2024/25 School Capacity return, as
+    published by DfE.
+  - **Assigning schools:** each school's planning area comes from the same
+    publication.
 :::
 
 ## Sussex {#sec-demog-sussex}
