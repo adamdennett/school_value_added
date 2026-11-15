@@ -78,3 +78,34 @@ Code is in the private repo `school_house_prices` (R/01 to R/08).
   - Value added has no independent pricing power.
   - The premium needs attainment and an affluent intake together.
   - Our within-LSOA results agree. Next is to add their "gap" heterogeneity with our walking-time nearest pairs.
+
+## Progress (15 November 2026, afternoon)
+
+Steps 1 to 4 are done (R/09 to R/12). Findings are in `school_house_prices/report/findings.qmd`: private working notes, not on the public site yet.
+
+- **Quality gaps (R/09; walking-time analogue of Greaves and Venturin):**
+  - the better side of a split LSOA sells for +0.6%;
+  - by gap quartile: +0.1%, +0.6%, +0.8%, +1.1%;
+  - a premium only where higher results and fewer FSM pupils go together;
+  - value added −0.3%.
+- **Ofsted regrading event study (R/10):**
+  - upgrades +0.1–0.2% on average over three years;
+  - secondary upgrades build to about +0.8% by three and a half years;
+  - downgrades show no clear fall;
+  - some pre-trends.
+- **Admissions (R/11):**
+  - distance or catchment schools +1.5% per SD of Attainment 8; faith +0.95%; grammar +0.15%;
+  - in the split-LSOA design, no premium when the better school is a faith school.
+  - Brighton and Hove alone is too imprecise (23,600 sales).
+- **Region (R/11):** highest in Yorkshire and The Humber and Inner London; lowest in the South East. No deprivation gradient.
+- **Three pupil groups (R/12):**
+  - each group's Attainment 8 is priced about equally (+0.5–0.7% per SD);
+  - value added is zero or negative for every group;
+  - with the FSM share in the model, the FSM share carries the premium (−1.0% per 10 points).
+
+**Next:**
+
+- drop nearest-school lines that follow major roads, rivers and railways (OS Open Roads and Open Rivers; rail from OSM);
+- actual catchment boundaries where councils publish them (start with Brighton and Hove);
+- school measures as at the date of sale (KS4 by year);
+- decide whether a public page goes on the School Value Added site.
