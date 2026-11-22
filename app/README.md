@@ -6,7 +6,9 @@ pupils (with girls and boys), over four years (shrunk), a single year or a movin
 average. It replaces the v1.0 School Attainment Policy Simulator
 (`school_attainment_tool/app`), which ran on the original model.
 
-Deployed on Posit Connect Cloud from this folder (`manifest.json`). The methods and
+Served at <https://apps.adamdennett.co.uk/school_value_added/> from a Shiny Server in
+Docker on the NAS; the main README says how to deploy it (`manifest.json` is kept
+as a fallback for Posit Connect Cloud). The methods and
 findings are on the [School Value Added site](https://adamdennett.github.io/school_value_added).
 
 ## Tabs

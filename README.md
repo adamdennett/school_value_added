@@ -170,10 +170,8 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 
 `app/` is the School Information System v2.1, a Shiny version of the
 original v1.0 policy simulator app (`school_attainment_tool/app`) rebuilt
-on Value Added v2.1. It is deployed on Posit Connect Cloud
-(<https://apps.adamdennett.co.uk/school_value_added/>)
-from this repository's `app/app.R`, republishing on every push to `main`
-(the app can be unavailable for a minute while it swaps over), and is
+on Value Added v2.1. It is served from a self-hosted Shiny Server
+(<https://apps.adamdennett.co.uk/school_value_added/>) and is
 embedded in the site's `simulator.qmd`. It reads one bundle, `app/data/app_data.rds`, so it never
 needs `data/`:
 
@@ -181,11 +179,34 @@ needs `data/`:
 Rscript R/40_app_data.R                  # the app's data, from the files the site builds
 Rscript R/41_app_travel_national.R       # national walking routes by school, from ../school_active_travel
 Rscript R/46_app_v21_data.R               # pupils and places, school finances (after R/42, R/43, R/44)
-Rscript -e 'rsconnect::writeManifest("app")'   # only if packages or app files were added
 Rscript -e 'shiny::runApp("app")'        # run it locally
 ```
 
 `app/README.md` describes the tabs and the code.
+
+### Deploying the app
+
+The app runs on a Shiny Server in Docker on the NAS. A `rocker/shiny`
+container serves every folder in the NAS's `web/apps/` directory, mounted
+read-only, and a Cloudflare tunnel publishes it at `apps.adamdennett.co.uk`.
+Pushing to GitHub does **not** update the app. To deploy, copy `app/` over
+to the NAS share (mapped over Tailscale as `N:`), then touch `restart.txt`
+so Shiny Server reloads the app on the next visit:
+
+```powershell
+robocopy app N:\web\apps\school_value_added /MIR
+New-Item N:\web\apps\school_value_added\restart.txt -ItemType File -Force
+```
+
+`/MIR` makes the NAS copy match `app/` exactly, deleting files removed here.
+The container installs R packages from the list in `web/Dockerfile` on the
+NAS. If the app starts using a new package, add it there and rebuild the
+`shiny` service (`docker compose up -d --build` in `web/`) before copying the
+app across.
+
+`app/manifest.json` is kept as a fallback, for redeploying to Posit Connect
+Cloud. Refresh it with `rsconnect::writeManifest("app")` only if you go back
+to that host.
 
 ## Files
 
@@ -235,7 +256,7 @@ Rscript -e 'shiny::runApp("app")'        # run it locally
 | `R/13_neighbourhood_covariates.R` | the neighbourhood covariates experiment: ten Census 2021 measures over each school's 150 nearest OAs (nomis bulk tables) and the school's own White British share, added to v2.1 one at a time and in sets; effects, AIC, and the change in authority and region variance (`neighbourhood_covariates.qmd`) |
 | `R/11_oac_neighbourhoods.R` | neighbourhood types: the 2021/2 Output Area Classification (download from data.geods.ac.uk into `data-raw/oac2021/`) profiled over each school's 150 nearest OAs at three tiers, tested against results and value added out of sample, and against local authority effects (`neighbourhood_types.qmd`) |
 | `R/10_independent.R` | independent schools: GIAS, census and SEN coverage, KS4 Attainment 8 against KS5 A level results, a reduced specification tested on state schools, and DfE's A level value added by sector (`independent.qmd`); fetches the 2024/25 KS5 and vaqual files if missing |
-| `simulator.qmd` | the School Information System page: the Shiny app embedded from Posit Connect Cloud, and how its simulator works (it replaced the in-browser `simulator.js`) |
+| `simulator.qmd` | the School Information System page: the Shiny app embedded from apps.adamdennett.co.uk, and how its simulator works (it replaced the in-browser `simulator.js`) |
 | `R/47_briefing_checks.R` | pupil forecasts compared:
 - local authorities' forecasts (DfE school capacity 2024/25), scored against the January 2026 census by authority, beside this project's cohort roll-forward rerun from January 2025;
 - DfE's national pupil projections (July 2026) against the roll-forward;
@@ -250,7 +271,7 @@ Writes `data/briefing_checks.rds` |
 - a London robustness check.
 
 Writes `data/closure_extras.rds` (aggregates and coefficients only) |
-| `app/`, `R/40_app_data.R`, `R/41_app_travel_national.R`, `R/46_app_v21_data.R` | the School Information System v2.1 (Shiny, Posit Connect Cloud) and the scripts that build its data: `app_data.rds` (schools, value added and Attainment 8 by year and over four years, absence against intake, authority effects, the simulator's and twins' data, distance and journeys), `travel_national.rds` (walking catchments for every state secondary from the national routing, complete) and `v21.rds` (pupils by year group, the Year 7 roll-forward, openings and closures, finance aggregates and warning-sign counts; aggregates only) |
+| `app/`, `R/40_app_data.R`, `R/41_app_travel_national.R`, `R/46_app_v21_data.R` | the School Information System v2.1 (Shiny, self-hosted on the NAS) and the scripts that build its data: `app_data.rds` (schools, value added and Attainment 8 by year and over four years, absence against intake, authority effects, the simulator's and twins' data, distance and journeys), `travel_national.rds` (walking catchments for every state secondary from the national routing, complete) and `v21.rds` (pupils by year group, the Year 7 roll-forward, openings and closures, finance aggregates and warning-sign counts; aggregates only) |
 | `twins.qmd`, `twins.js` | Find a twin: a school's closest look-alikes in intake and setting (Gower-type distance, in the browser) and the anti-twins that do better on absence, attainment or value added; data from `R/08` |
 | `R/area_helpers.R` | the original area documents' charts, ported |
 | `R/site_helpers.R`, `R/map_js.R` | palette, charts, decomposition, map |
