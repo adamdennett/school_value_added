@@ -355,14 +355,14 @@ window.Quarto = {
 <li><strong>School Finances</strong> (new in 2.1): deficits, reserves and income per pupil against England, by authority, region and Sussex district, and counts of open schools showing the warning signs that came before closures, with no school named (<a href="./finance.html">the method</a>).</li>
 </ul>
 <p>
-<a class="btn btn-primary" href="https://adamdennett-school-information-system.share.connect.posit.cloud/" target="_blank">Open the School Information System in a new window</a>
+<a class="btn btn-primary" href="https://apps.adamdennett.co.uk/school_value_added/" target="_blank">Open the School Information System in a new window</a>
 </p>
 <style>
 .sis-frame { width: 100%; height: 900px; border: 1px solid #e3dcef; border-radius: 8px; margin: 6px 0 18px; }
 </style>
-<iframe class="sis-frame" src="https://adamdennett-school-information-system.share.connect.posit.cloud/" title="School Information System" loading="lazy">
+<iframe class="sis-frame" src="https://apps.adamdennett.co.uk/school_value_added/" title="School Information System" loading="lazy">
 </iframe>
-<p>The app runs on Posit Connect Cloud and may take a few seconds to wake up. Its code is in <a href="https://github.com/adamdennett/school_value_added/tree/main/app"><code>app/</code></a> and its data are built by <code>R/40_app_data.R</code> from the files behind this site.</p>
+<p>The app runs on a Shiny server at apps.adamdennett.co.uk and may take a few seconds to load. Its code is in <a href="https://github.com/adamdennett/school_value_added/tree/main/app"><code>app/</code></a> and its data are built by <code>R/40_app_data.R</code> from the files behind this site.</p>
 <section id="sec-how" class="level2">
 <h2 class="anchored" data-anchor-id="sec-how">How the simulator works</h2>
 <p>The simulator uses the fitted <a href="./method.html">Value Added v2.1</a> models, one for each group of pupils. Each model explains the log of a school’s Attainment 8 by its intake and setting, so every lever changes a school’s expected result by a <em>percentage</em>:</p>
@@ -382,7 +382,7 @@ window.Quarto = {
 </section>
 <section id="what-changed-from-the-original" class="level3">
 <h3 class="anchored" data-anchor-id="what-changed-from-the-original">What changed from the original</h3>
-<p>The <a href="https://adam-dennett.shinyapps.io/School_Attainment_Policy_Simulator/">original School Attainment Policy Simulator</a> (v1.0) ran on the first model. This version follows <a href="./review.html">the review’s</a> recommendations:</p>
+<p>The <a href="https://apps.adamdennett.co.uk/school_attainment_tool/">original School Attainment Policy Simulator</a> (v1.0) ran on the first model. This version follows <a href="./review.html">the review’s</a> recommendations:</p>
 <ul>
 <li><strong>No Ofsted grade or workforce levers.</strong> They are no longer in the expectation.</li>
 <li><strong>New levers:</strong> SEN support, EHC plans, pupil mobility and neighbourhood education.</li>

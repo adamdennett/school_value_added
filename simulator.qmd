@@ -9,7 +9,7 @@ page-layout: full
 #| include: false
 source(here::here("R", "site_helpers.R"))
 V <- load_va()
-APP <- "https://adamdennett-school-information-system.share.connect.posit.cloud/"
+APP <- "https://apps.adamdennett.co.uk/school_value_added/"
 # The simulator's schools, from the app's own data (R/40_app_data.R): each school's
 # latest model year, its inputs and its results
 S <- readRDS(here::here("app", "data", "app_data.rds"))$sim$schools
@@ -53,7 +53,7 @@ school in England. Its tabs:
 
 <iframe class="sis-frame" src="`r APP`" title="School Information System" loading="lazy"></iframe>
 
-The app runs on Posit Connect Cloud and may take a few seconds to wake up.
+The app runs on a Shiny server at apps.adamdennett.co.uk and may take a few seconds to load.
 Its code is in [`app/`](https://github.com/adamdennett/school_value_added/tree/main/app)
 and its data are built by `R/40_app_data.R` from the files behind this site.
 
@@ -105,7 +105,7 @@ pupils.
 
 ### What changed from the original
 
-The [original School Attainment Policy Simulator](https://adam-dennett.shinyapps.io/School_Attainment_Policy_Simulator/)
+The [original School Attainment Policy Simulator](https://apps.adamdennett.co.uk/school_attainment_tool/)
 (v1.0) ran on the first model. This version follows [the review's](review.qmd)
 recommendations:
 

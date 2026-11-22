@@ -263,7 +263,7 @@ dot_map <- function(p, lab = FALSE) {
 (dot_map(BH) / dot_map("Hastings")) + plot_layout(guides = "collect") & theme(legend.position = "bottom")
 ```
 
-In Brighton and Hove, the neighbourhoods furthest from a school are in the east of the city, around Whitehawk, between the central schools and Longhill. The [city's school system](https://adamdennett.github.io/bh-school-system/analysis.html) model finds the same in routed walk and bus times: in its [simulator](https://adamdennett-bh-school-system.share.connect.posit.cloud/), disadvantaged children travel about 4 minutes further each way than everyone else.
+In Brighton and Hove, the neighbourhoods furthest from a school are in the east of the city, around Whitehawk, between the central schools and Longhill. The [city's school system](https://adamdennett.github.io/bh-school-system/analysis.html) model finds the same in routed walk and bus times: in its [simulator](https://apps.adamdennett.co.uk/bh_school_system/), disadvantaged children travel about 4 minutes further each way than everyone else.
 
 ### Does it depend on how it is measured? {#sec-checks}
 

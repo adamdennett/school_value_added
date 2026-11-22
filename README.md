@@ -171,7 +171,7 @@ Rscript R/refresh_ofsted.R && Rscript R/03_area_pages.R && quarto render
 `app/` is the School Information System v2.1, a Shiny version of the
 original v1.0 policy simulator app (`school_attainment_tool/app`) rebuilt
 on Value Added v2.1. It is deployed on Posit Connect Cloud
-(<https://adamdennett-school-information-system.share.connect.posit.cloud/>)
+(<https://apps.adamdennett.co.uk/school_value_added/>)
 from this repository's `app/app.R`, republishing on every push to `main`
 (the app can be unavailable for a minute while it swaps over), and is
 embedded in the site's `simulator.qmd`. It reads one bundle, `app/data/app_data.rds`, so it never
