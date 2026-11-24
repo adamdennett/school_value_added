@@ -145,8 +145,12 @@ about the school.*
 
 ## 4. Why — fertility, not out-migration, not house prices
 
-- **Fertility 0.98 children per woman against England's 1.39 — 2nd lowest of 292
-  districts.** Births 2,952 in 2015 → about 2,100 a year since 2022.
+- **Fertility 0.98 children per woman in 2025 against England's 1.39** — about
+  70% of the national rate. On the three-year average (2023–25) it is 0.97,
+  **joint 2nd lowest of 292 comparable districts**, level with Westminster and
+  behind only Cambridge. (Quote the three-year basis. On 2025 alone the city is
+  5th of 318, behind Cambridge, Islington, Westminster and the City of London.)
+  Births 2,952 in 2015 → about 2,100 a year since 2022.
 - **Primary pupils fell 14% and births account for all of it.** Migration
   (+2.5) and state-school share (+1.4) slightly *offset* it. The city does lose
   children — 92% of a birth cohort remains at primary age against England's 105%

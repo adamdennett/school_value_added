@@ -35,19 +35,20 @@ toc-depth: 2
    England's average and the city moves to about **69th**; allow for intake and
    context as well and its authority effect for those pupils is **18th of 151**.
    All of these are true at once, and the gap between them is mostly absence.
-3. **Attainment 8 is not a measure of a good school, and the whole argument runs
-   on it.** Nationally it correlates with what a school actually adds at **0.27**,
+3. **Attainment 8 is not a measure of a good school - it's mainly a measure of who goes there.** Nationally it correlates with what a school actually adds at **0.27**,
    and intake alone predicts **81%** of it. The city needs to publish and lead on
-   a value-added measure.
+   a value-added measure (I have developed one), particularly to change perceptions of schools like BACA.
 4. **Absence is the biggest single lever in the city, and it is not poverty.**
    Disadvantage here is average; absence is the highest in England and rising.
-5. **Children in the city's poorest neighbourhoods live further from a school
-   than their better-off neighbours** --- almost uniquely in England. It traces
-   to the closure of CoMArt in 2005.
+5. **Children in the city's poorest neighbourhoods live further from a school than their better-off neighbours** --- almost uniquely in England. It traces back to the closure of CoMArt in 2005.
 6. **The looming demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
    and those children are already in the city's primary schools. Longhill has
    about 3.7 years of reserve. My new simulator can help us think of solutions. 
-7. **Decline in children is fertility, not families leaving, and not house prices keeping people out.**
+7. **Decline in children is driven by low fertility, not families leaving, and
+   not house prices keeping people out.** **0.98 children per woman in 2025
+   against England's 1.39** --- about 70% of the national rate --- and over
+   2023--25 the **joint second-lowest of 292 comparable districts**, level with
+   Westminster and behind only Cambridge.
 8. **Social mixing is the weakest lever for narrowing the attainment gap the council has - and with additional travel could make it worse.** Attendance and fixing easy access to schools in the east will improve attainment and address the double disadvantage in the city.
 9. **None of this needs new data collection.** I've been building tools on open data to assist with policy scenario testing - biggest barrier is awareness and open-mindedness.  
 
@@ -600,7 +601,13 @@ schools.** Their number is a count, not a forecast.
 ## 7. It is fertility --- not families leaving, and not house prices {#sec-fertility}
 
 - **The city's total fertility rate is 0.98 children per woman (2025) against
-  England's 1.39 --- the 2nd lowest of 292 districts**, after Cambridge.
+  England's 1.39** --- about 70% of the national rate.
+- **On the steadier three-year average (2023--25) it is 0.97, the joint
+  second-lowest of 292 comparable districts**, level with Westminster and behind
+  only Cambridge (0.92). Worth quoting on this basis rather than on one year: a
+  single year moves, and the three-year figure is what the analysis ranks.
+  On 2025 alone the city is 5th of all 318 districts, behind Cambridge,
+  Islington, Westminster and the City of London.
 - **Births fell from 2,952 in 2015 to about 2,100 a year since 2022.**
 
 ### Births, not migration
