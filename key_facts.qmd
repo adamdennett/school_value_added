@@ -81,7 +81,11 @@ needs, pupil mobility, English as an additional language, school structure,
 neighbourhood education and absence.
 
 - **The city's ten secondaries average +1.4 Attainment 8 points against England.**
-  Five are significantly above expectation and **none is below**
+  Five are **significantly** above expectation --- their 95% intervals sit
+  clear of zero --- and **none is significantly below**. Two do score below
+  expectation (Longhill -1.5, Patcham -2.0), but both intervals still cross
+  zero, Patcham's only barely (-4.0 to +0.1), so neither is distinguishable
+  from the schools it is being compared with
   ([Brighton and Hove](areas/brighton_and_hove.qmd)).
 - **The local authority's own effect is +3.7% of Attainment 8, the 6th largest of
   152 authorities.** It is +3.9% for disadvantaged pupils (18th of 151), +3.7%
