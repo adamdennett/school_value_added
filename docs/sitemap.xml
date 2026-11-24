@@ -2,138 +2,214 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://adamdennett.github.io/school_value_added/roadmap.html</loc>
-    <lastmod>2026-11-11T10:36:50.852Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.929Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/west_sussex.html</loc>
-    <lastmod>2026-11-05T22:28:05.136Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.883Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/rother.html</loc>
-    <lastmod>2026-11-05T22:28:05.153Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.916Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/lewes.html</loc>
-    <lastmod>2026-11-05T22:28:05.150Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.910Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/hastings.html</loc>
-    <lastmod>2026-11-05T22:28:05.146Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.903Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/east_sussex.html</loc>
-    <lastmod>2026-11-05T22:28:05.132Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.877Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/chichester.html</loc>
-    <lastmod>2026-11-05T22:28:05.167Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.945Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/arun.html</loc>
-    <lastmod>2026-11-05T22:28:05.164Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.937Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/trust_aldridge.html</loc>
-    <lastmod>2026-11-11T11:02:08.537Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.934Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/simulator.html</loc>
-    <lastmod>2026-11-05T22:27:54.400Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.931Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/absence_change.html</loc>
-    <lastmod>2026-11-06T17:17:31.063Z</lastmod>
+    <lastmod>2026-11-17T13:11:38.837Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/v22.html</loc>
-    <lastmod>2026-11-05T21:56:20.600Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.936Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/west_sussex.html</loc>
+    <lastmod>2026-11-17T13:11:39.908Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/rother.html</loc>
+    <lastmod>2026-11-17T13:11:39.907Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/lewes.html</loc>
+    <lastmod>2026-11-17T13:11:39.906Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/hastings.html</loc>
+    <lastmod>2026-11-17T13:11:39.905Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/east_sussex.html</loc>
+    <lastmod>2026-11-17T13:11:39.904Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/chichester.html</loc>
+    <lastmod>2026-11-17T13:11:39.902Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/arun.html</loc>
+    <lastmod>2026-11-17T13:11:39.900Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance.html</loc>
+    <lastmod>2026-11-17T13:11:39.899Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/demographics.html</loc>
+    <lastmod>2026-11-17T13:11:39.114Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/neighbourhood_covariates.html</loc>
-    <lastmod>2026-11-05T22:27:54.400Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.915Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/geography.html</loc>
-    <lastmod>2026-11-08T11:37:54.054Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.910Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/districts.html</loc>
-    <lastmod>2026-11-05T22:37:16.521Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.118Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/review.html</loc>
-    <lastmod>2026-11-04T07:44:08.333Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.928Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/method.html</loc>
-    <lastmod>2026-11-11T09:39:03.041Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.914Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/index.html</loc>
-    <lastmod>2026-11-05T22:09:26.543Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.912Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/key_facts.html</loc>
+    <lastmod>2026-11-24T12:43:26.382Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/explore.html</loc>
-    <lastmod>2026-11-11T10:58:19.021Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.898Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/sussex.html</loc>
-    <lastmod>2026-11-05T22:28:05.125Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.865Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/bh_effect.html</loc>
-    <lastmod>2026-11-04T09:46:11.366Z</lastmod>
+    <lastmod>2026-11-17T13:11:38.877Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/neighbourhood_types.html</loc>
-    <lastmod>2026-11-05T22:16:40.812Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.915Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/distance.html</loc>
-    <lastmod>2026-11-11T10:18:59.607Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.116Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/bh_births_note.html</loc>
+    <lastmod>2026-11-17T13:11:38.875Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/adur.html</loc>
+    <lastmod>2026-11-17T13:11:39.900Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/brighton_and_hove.html</loc>
+    <lastmod>2026-11-17T13:11:39.901Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/crawley.html</loc>
+    <lastmod>2026-11-17T13:11:39.903Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/eastbourne.html</loc>
+    <lastmod>2026-11-17T13:11:39.904Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/horsham.html</loc>
+    <lastmod>2026-11-17T13:11:39.906Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/mid_sussex.html</loc>
+    <lastmod>2026-11-17T13:11:39.907Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/wealden.html</loc>
+    <lastmod>2026-11-17T13:11:39.908Z</lastmod>
+  </url>
+  <url>
+    <loc>https://adamdennett.github.io/school_value_added/finance_areas/worthing.html</loc>
+    <lastmod>2026-11-17T13:11:39.909Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/absence_causes.html</loc>
-    <lastmod>2026-11-06T17:18:25.199Z</lastmod>
+    <lastmod>2026-11-17T13:11:38.835Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/twins.html</loc>
-    <lastmod>2026-11-05T22:16:40.804Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.935Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/independent.html</loc>
-    <lastmod>2026-11-05T21:12:53.212Z</lastmod>
+    <lastmod>2026-11-17T13:11:39.911Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/adur.html</loc>
-    <lastmod>2026-11-05T22:28:05.160Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.929Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/brighton_and_hove.html</loc>
-    <lastmod>2026-11-05T22:28:05.140Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.890Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/crawley.html</loc>
-    <lastmod>2026-11-05T22:28:05.170Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.951Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/eastbourne.html</loc>
-    <lastmod>2026-11-05T22:28:05.143Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.896Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/horsham.html</loc>
-    <lastmod>2026-11-05T22:28:05.174Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.958Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/mid_sussex.html</loc>
-    <lastmod>2026-11-05T22:28:05.178Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.964Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/wealden.html</loc>
-    <lastmod>2026-11-05T22:28:05.157Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.923Z</lastmod>
   </url>
   <url>
     <loc>https://adamdennett.github.io/school_value_added/areas/worthing.html</loc>
-    <lastmod>2026-11-05T22:28:05.181Z</lastmod>
+    <lastmod>2026-11-24T12:58:23.971Z</lastmod>
   </url>
 </urlset>
