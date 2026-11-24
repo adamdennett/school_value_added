@@ -155,6 +155,21 @@ about the school.*
   (+2.5) and state-school share (+1.4) slightly *offset* it. The city does lose
   children — 92% of a birth cohort remains at primary age against England's 105%
   — but that is long-standing: it explains the level, not the fall.
+- **Where we sit on child migration: 31st of 297 districts** (net −4.7 per 1,000
+  a year, ages 0–10, 2019–25). Only **45 of 297 lose children at all**; the
+  median district *gains* 14. We lose **12.1 per 1,000** within the UK and gain
+  **7.4** from abroad. **They go next door:** Lewes +19.6, Mid Sussex +25.5,
+  Wealden +33.5 — same house prices, fertility half again as high.
+- **Mild by city standards, and easing.** Lambeth loses 43 per 1,000, Wandsworth
+  42, Hackney 36. Our own net loss has roughly halved, from −12.9 in 2013–18 to
+  −4.7 in 2019–25. A shrinking loss cannot be what made the rolls fall.
+- **Careful — "births not migration" does NOT hold for Year 7.** The 2018→2025
+  Year 7 fall was **−7.1: births −4.4, migration −5.1.** Migration is the
+  *larger* half, and we are **33rd of 148** areas on it (median +2.1). The share
+  of a birth cohort still here at age 11 fell from **92% to 87%**. So: *few
+  children* is fertility; *falling secondary rolls* is both, about equally. For
+  secondary planning, families leaving before Year 7 does as much work as the
+  birth rate — and it is the half a council could in principle influence.
 - **House prices explain 7% of fertility differences between districts. Women's
   education alone explains 27%.** Housing is about a third of the city's gap and
   **none of the fall**.

@@ -44,11 +44,13 @@ toc-depth: 2
 6. **The looming demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
    and those children are already in the city's primary schools. Longhill has
    about 3.7 years of reserve. My new simulator can help us think of solutions. 
-7. **Decline in children is driven by low fertility, not families leaving, and
-   not house prices keeping people out.** **0.98 children per woman in 2025
-   against England's 1.39** --- about 70% of the national rate --- and over
-   2023--25 the **joint second-lowest of 292 comparable districts**, level with
-   Westminster and behind only Cambridge.
+7. **Decline in children is driven by low fertility, not house prices keeping
+   people out.** **0.98 children per woman in 2025 against England's 1.39** ---
+   about 70% of the national rate --- and over 2023--25 the **joint
+   second-lowest of 292 comparable districts**, level with Westminster and
+   behind only Cambridge. Families do also leave, for Lewes, Mid Sussex and
+   Wealden: that is **31st of 297 districts** on net child migration, and at
+   **Year 7 it is about half the recent fall**.
 8. **Social mixing is the weakest lever for narrowing the attainment gap the council has - and with additional travel could make it worse.** Attendance and fixing easy access to schools in the east will improve attainment and address the double disadvantage in the city.
 9. **None of this needs new data collection.** I've been building tools on open data to assist with policy scenario testing - biggest barrier is awareness and open-mindedness.  
 
@@ -624,6 +626,43 @@ the share of children in state mainstream schools:
 - For comparison, in the median London borough primary pupils fell 12.1, split
   roughly half births and half families leaving. Brighton and Hove is not that
   story.
+
+### Where the city sits on child migration {#sec-child-migration}
+
+- **It is in the losing minority, and near the wrong end of it.** Net migration
+  of children aged 0--10 runs at **-4.7 per 1,000 a year (2019--25): 31st of 297
+  districts**. Only **45 of the 297 lose children at all**, and the median
+  district *gains* **14 per 1,000**.
+- **It is the UK, not abroad.** Within the UK the city loses **12.1 per 1,000**;
+  from abroad it gains **7.4**, which cancels more than half of it. Adults aged
+  30--39 behave the same way: **-14.6** internal, **+11.9** international.
+- **They move next door.** Lewes gains **19.6** children per 1,000 a year, Mid
+  Sussex **25.5** and Wealden **33.5** --- the same districts with much the same
+  house prices and fertility half again as high
+  ([the fertility model](#sec-fertility)).
+- **But the loss is mild by city standards and it is easing.** Lambeth loses
+  **43** per 1,000, Wandsworth 42, Hackney 36. And the city's own net loss has
+  roughly halved, from **-12.9 in 2013--18 to -4.7 in 2019--25**. A loss that is
+  shrinking cannot be what made the rolls fall.
+
+::: {.callout-note}
+## One qualification, and it matters for secondary schools
+
+The "births, not migration" split holds for primary, and for the city's
+*shortage* of children overall. **It does not hold for Year 7.** On the same
+decomposition, the 2018 to 2025 fall in Year 7 was **-7.1 in total: births -4.4
+and migration -5.1**, so migration was the *larger* half, and the city ranks
+**33rd of 148 areas** on that term (the median area is +2.1). The reason is
+retention: the share of a birth cohort still living in the city at age 11 fell
+from **92% to 87%**.
+
+So the honest division is: **the city has few children because of fertility, and
+its secondary rolls are falling for both reasons about equally.** For primary
+planning, births are the story. For secondary planning --- which is what the
+rest of this page is about --- families leaving before Year 7 is doing as much
+work as the birth rate, and it is the half a council could in principle
+influence.
+:::
 
 ### House prices explain little
 
