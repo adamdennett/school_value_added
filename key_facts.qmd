@@ -34,7 +34,7 @@ toc-depth: 2
    122nd of 152** --- raw, with nothing allowed for. Bring absence alone to
    England's average and the city moves to about **69th**; allow for intake and
    context as well and its authority effect for those pupils is **18th of 151**.
-   Both facts are true at once, and the gap between them is mostly absence.
+   All of these are true at once, and the gap between them is mostly absence.
 3. **Attainment 8 is not a measure of a good school, and the whole argument runs
    on it.** Nationally it correlates with what a school actually adds at **0.27**,
    and intake alone predicts **81%** of it. The city needs to publish and lead on
@@ -44,14 +44,12 @@ toc-depth: 2
 5. **Children in the city's poorest neighbourhoods live further from a school
    than their better-off neighbours** --- almost uniquely in England. It traces
    to the closure of CoMArt in 2005.
-6. **The demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
+6. **The looming demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
    and those children are already in the city's primary schools. Longhill has
-   about 3.7 years of reserve.
-7. **It is fertility, not families leaving, and not house prices.**
-8. **Social mixing is the weakest lever the council has.** Attendance, access in
-   the east, and the number the council tells families to read are the strong ones.
-9. **None of this needs new data collection.** Ten tables the council already
-   holds would settle most of what is still open.
+   about 3.7 years of reserve. My new simulator can help us think of solutions. 
+7. **Decline in children is fertility, not families leaving, and not house prices keeping people out.**
+8. **Social mixing is the weakest lever for narrowing the attainment gap the council has - and with additional travel could make it worse.** Attendance and fixing easy access to schools in the east will improve attainment and address the double disadvantage in the city.
+9. **None of this needs new data collection.** I've been building tools on open data to assist with policy scenario testing - biggest barrier is awareness and open-mindedness.  
 
 ::: {.callout-important}
 ## The thread running through all of it
