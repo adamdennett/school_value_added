@@ -644,6 +644,12 @@ the share of children in state mainstream schools:
   **43** per 1,000, Wandsworth 42, Hackney 36. And the city's own net loss has
   roughly halved, from **-12.9 in 2013--18 to -4.7 in 2019--25**. A loss that is
   shrinking cannot be what made the rolls fall.
+- **And it did not turn up when the admissions changes came in.** The obvious
+  suspicion --- that the city's handling of admissions from 2023 pushed families
+  out before secondary school --- does not survive the test: the cohorts
+  entering Year 7 under the new map sit fractionally *above* the trend that was
+  already running, and child out-migration has improved. The tests and their
+  limits are in [section 8](#sec-exit-test).
 
 ::: {.callout-note}
 ## One qualification, and it matters for secondary schools
@@ -827,6 +833,76 @@ the published model.
   Fiveways and West Blatchington --- **among the least deprived neighbourhoods in
   the city** --- displaced from full schools. Longhill's catchment would have
   gained nothing.
+
+### Did the admissions changes drive families out of the city? No sign of it {#sec-exit-test}
+
+A reasonable suspicion, and one worth testing rather than asserting: if the
+city's handling of admissions from 2023 put families off, more of them should
+have left before secondary school. **Tested two ways, it did not happen.**
+
+**Test 1: the primary-to-secondary step.** Year 7 pupils as a share of the same
+cohort's Year 6 the year before --- the most direct measure available of
+children not continuing into a city secondary.
+
+| Entry year | Brighton and Hove | England | Gap |
+|---|---|---|---|
+| 2016 | 93.98 | 98.79 | -4.81 |
+| 2019 | 92.56 | 98.17 | -5.60 |
+| 2022 | 91.01 | 98.23 | -7.23 |
+| 2023 | 91.66 | 97.97 | -6.30 |
+| **2024** (first cohort under the new map) | 91.02 | 97.43 | **-6.41** |
+| **2025** | 90.13 | 96.98 | **-6.84** |
+
+Fitting the pre-policy trend in the Brighton-and-England gap on entry years to
+2023, and asking whether the post-map cohorts sit below it:
+
+- the gap was already widening at **-0.225 points a year** before the change
+  (standard error 0.134, p = 0.145 --- not significant on its own);
+- scatter about that trend is **0.87 points**;
+- **entry 2024 lands +0.26 points *above* the trend** (0.29 of a residual
+  standard deviation), and **entry 2025 +0.05 above** (0.06).
+
+Both post-map cohorts are fractionally *better* than the existing trend
+predicted --- the opposite sign to the suspicion, and far too small to read
+either way. 2022 was already as low as 2024. The slide begins around 2016 and
+simply continues.
+
+**Test 2: child migration, year by year.** Internal (within-UK) net migration of
+children aged 0--10 went from **-18.8 per 1,000 in 2015--19 to -10.9 in
+2023--25**, an improvement of 7.9. **Every year from 2020 to 2025 was better
+than the pre-pandemic norm**, and 2024 --- the first year of the new map --- had
+the **lowest outflow in the fourteen-year series**. The city sits at the **88th
+percentile of 297 districts** for that improvement, against a median district
+that barely moved.
+
+::: {.callout-important}
+## What this null result is, and is not
+
+**It is not an exoneration, and it is not evidence the policy was good.** It is
+evidence that one specific charge --- that the changes pushed families out of
+the city --- does not show up in the data that exists.
+
+Four limits, stated so the test is not oversold:
+
+- **Only two post-policy cohorts exist.** Against 0.87 points of scatter, an
+  effect of about a point would be invisible. This is a weak test.
+- **The measure is confounded.** A Year 6 pupil missing from Year 7 may have
+  moved house, gone independent, been home educated, moved to a special school,
+  or crossed into East Sussex or to Peacehaven. Nothing here separates them;
+  the council's admissions records would ([section 10](#sec-evidence),
+  release 3).
+- **The 10 and 11 year olds cannot be isolated.** The migration series is a
+  0--10 aggregate, so it is dominated by younger children; the age-specific
+  version needs ONS components of change by single year of age.
+- **The real test is 2026 entry**, published June 2027: the first cohort
+  applying with priority 6 live.
+
+**What is true, and predates all of this:** the city retains far fewer of its
+own Year 6 cohort than England does --- **90 to 94% against 98%**, so roughly
+one in ten does not appear in a city Year 7 --- and that gap has widened by
+about two points over a decade. That is a real and longstanding leak. It is not
+a post-2023 one.
+:::
 
 ::: {.callout-note}
 ## What this does not say

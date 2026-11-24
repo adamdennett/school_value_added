@@ -163,6 +163,15 @@ about the school.*
 - **Mild by city standards, and easing.** Lambeth loses 43 per 1,000, Wandsworth
   42, Hackney 36. Our own net loss has roughly halved, from −12.9 in 2013–18 to
   −4.7 in 2019–25. A shrinking loss cannot be what made the rolls fall.
+- **If asked "did the admissions row push families out?" — no evidence it did.**
+  Year 7 as a share of the cohort's Year 6: the 2024 and 2025 entry cohorts land
+  **+0.26 and +0.05 points ABOVE** the trend already running before the change
+  (scatter 0.87), and child out-migration *improved* (−18.8 → −10.9 per 1,000;
+  88th percentile of 297 districts). Don't claim the opposite — it doesn't hold.
+  Caveats: only two post-policy cohorts, the measure mixes moving house with
+  going independent, and **2026 entry (June 2027) is the real test**. What *is*
+  true and predates it: we retain **90–94%** of our Year 6 cohort against
+  England's **98%** — a long-standing leak, not a new one.
 - **Careful — "births not migration" does NOT hold for Year 7.** The 2018→2025
   Year 7 fall was **−7.1: births −4.4, migration −5.1.** Migration is the
   *larger* half, and we are **33rd of 148** areas on it (median +2.1). The share
