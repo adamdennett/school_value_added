@@ -733,7 +733,7 @@ another purpose answered a question that had been described as unanswerable.
 | Pupil numbers and places | [Pupil numbers and school places](demographics.qmd) |
 | Fertility and births | [Why so few young children](bh_births_note.qmd) |
 | School finances | [School finances before closure](finance.qmd), [Brighton and Hove](finance_areas/brighton_and_hove.qmd) |
-| Admissions, access, Longhill, the options | [The Brighton secondary school system](https://adamdennett.github.io/bh-school-system/analysis.html) and its [simulator](https://adamdennett-bh-school-system.share.connect.posit.cloud/) |
+| Admissions, access, Longhill, the options | [The Brighton secondary school system](https://adamdennett.github.io/bh-school-system/analysis.html) and its [simulator](https://apps.adamdennett.co.uk/bh_school_system/) |
 | Every school, every measure | [School Information System](simulator.qmd), [explore by area](explore.qmd), [find a twin](twins.qmd) |
 | The original national analysis | [How to Pull the Right Lever](https://adamdennett.github.io/school_attainment_tool/) |
 
