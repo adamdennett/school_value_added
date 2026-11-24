@@ -3,6 +3,7 @@ project:
   output-dir: docs
   render:
     - index.qmd
+    - in_brief.qmd
     - key_facts.qmd
     - method.qmd
     - explore.qmd
@@ -46,6 +47,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: in_brief.qmd
+        text: "In brief"
       - href: key_facts.qmd
         text: "Key facts"
       - href: review.qmd
