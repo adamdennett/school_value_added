@@ -31,7 +31,10 @@ toc-depth: 2
    local authorities --- and almost all of that is the city's schools holding
    up results against the worst absence in England.
 2. **And yet its disadvantaged children leave school with Attainment 8 ranked
-   122nd of 152.** Both facts are true at once, and the second is the problem.
+   122nd of 152** --- raw, with nothing allowed for. Bring absence alone to
+   England's average and the city moves to about **69th**; allow for intake and
+   context as well and its authority effect for those pupils is **18th of 151**.
+   Both facts are true at once, and the gap between them is mostly absence.
 3. **Absence is the biggest single lever in the city, and it is not poverty.**
    Disadvantage here is average; absence is the highest in England and rising.
 4. **Children in the city's poorest neighbourhoods live further from a school
@@ -125,6 +128,62 @@ often missing from the city's account of itself.
 | Attainment 8, non-disadvantaged | 49.6 | 49.9 | 68th |
 | **Disadvantage gap (points)** | **15.7** | **12.2** | **13th widest** |
 | Disadvantaged (FSM6) % | 28.8 | 28.4 | 74th |
+
+### What 122nd is, and what it is not {#sec-122nd}
+
+**Every figure in the table above is raw.** It is the Attainment 8 the city's
+disadvantaged pupils actually achieved, with no allowance for absence, intake or
+anything else. That is the right number for asking *how are these children
+doing?* --- and the wrong one for asking *how are these schools doing?* The two
+questions have different answers, and the distance between them is mostly
+absence.
+
+| What is allowed for | Disadvantaged pupils' standing |
+|---|---|
+| **Nothing** --- raw Attainment 8 | 33.9 points, **122nd of 152** |
+| **Absence only**, brought to England's average | 36.9 points, **69th** |
+| **Intake, context and absence** --- the authority effect on v2.1 | +3.9%, **18th of 151** |
+| *the same model with the absence term taken out* | *-0.0%, 78th of 151* |
+
+Read the middle row first. If every Brighton and Hove school's absence fell to
+England's school average of 8.6% in 2024/25 and **nothing else changed**, the
+model puts its disadvantaged pupils' Attainment 8 up by **3.0 points on
+average** --- and the city moves from **122nd to about 69th**. The gain is
+concentrated where absence is worst: **+6.7 points at Brighton Aldridge, +6.2 at
+Longhill, +5.3 at Hove Park**, and nothing at all at King's and Patcham, which
+already run at or below the national rate.
+
+**So absence is most of the shortfall, but not all of it.** Even with absence at
+England's average the city would sit at 36.9 against England's 38.0 --- still
+below, but a little over half a point rather than four points. What is left is
+the region, the disadvantage gap itself, and special educational needs.
+
+**The bottom two rows are the same point from the other end.** Once intake and
+context *and* absence are allowed for, the city's authority effect for
+disadvantaged pupils is +3.9%, 18th of 151. Strip just the absence term out of
+that model and it collapses to -0.0%, 78th. Absence is what separates 18th from
+78th.
+
+::: {.callout-important}
+## How to say this without overclaiming
+
+**"Our disadvantaged children are 122nd of 152 on raw results, and on the
+model's arithmetic absence accounts for most of that gap."** Not *"we would be
+69th if absence were fixed"* as a prediction.
+
+Three reasons. The middle row holds every other authority at today's absence, so
+it is "if Brighton alone closed its absence gap", not a league table anyone will
+ever see. The absence gradient is **associational**: it says what schools with
+less absence look like once intake is accounted for, not what these schools would
+gain by cutting absence by a given amount. And part of the gradient is
+standing in for things absence travels with --- family stress, poverty beyond
+free school meals, disengagement --- so some of that 3.0 points would not arrive
+just because attendance improved.
+
+What survives all three caveats is the direction and the order of magnitude: on
+every way of cutting it, absence is the largest single thing standing between
+the city's disadvantaged children and the results their intake predicts.
+:::
 
 - **The gap is the 13th widest in England** and three and a half points wider
   than England's.

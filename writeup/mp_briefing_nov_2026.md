@@ -13,6 +13,28 @@ on value added — and its disadvantaged children leave school with Attainment 8
 ranked 122nd of 152.** Both are true. The second is the problem, and absence is
 most of the explanation.
 
+**If he pushes on that, the ladder is the answer.** The 122nd is raw, with
+nothing allowed for:
+
+| What is allowed for | Disadvantaged pupils |
+|---|---|
+| Nothing — raw Attainment 8 | 33.9 points, **122nd of 152** |
+| Absence only, at England's average | 36.9 points, **69th** |
+| Intake, context and absence | +3.9%, **18th of 151** |
+| the same model without the absence term | -0.0%, 78th of 151 |
+
+Bring absence alone to England's 8.6% and the model adds **3.0 points on
+average** — **+6.7 at BACA, +6.2 at Longhill, +5.3 at Hove Park**, nothing at
+King's or Patcham. That moves the city 122nd → 69th, still a little below
+England's 38.0 but not four points below. And from the other end: strip just
+the absence term out of the full model and the city falls from 18th to 78th.
+**Absence is what separates 18th from 78th.**
+
+Say *"absence accounts for most of that gap on the model's arithmetic"* — not
+*"we'd be 69th if absence were fixed"*. It holds every other authority at
+today's absence, it is associational, and part of the gradient stands in for
+what absence travels with.
+
 ---
 
 ## 1. Absence — the biggest lever, and it is not poverty
