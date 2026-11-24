@@ -1,287 +1,132 @@
-# Brighton and Hove schools: one page
+# Brighton and Hove schools — crib sheet
 
-*For a short meeting. Every figure is on
-<https://adamdennett.github.io/school_value_added/key_facts.html>, which gives
-the source and the caveat for each one.*
+*One page, for a short meeting. Every figure, its source and its caveat:
+<https://adamdennett.github.io/school_value_added/key_facts.html>*
 
 ---
 
 ## The hook
 
-**Brighton and Hove has the 6th largest local authority effect of 152 in England
-on value added — and its disadvantaged children leave school with Attainment 8
-ranked 122nd of 152.** Both are true. The second is the problem, and absence is
-most of the explanation.
+**The city has the 6th largest local authority effect of 152 in England on value
+added — and its disadvantaged children leave school ranked 122nd of 152 on raw
+Attainment 8.** Both are true. The second is the problem; absence is most of the
+explanation.
 
-**If he pushes on that, the ladder is the answer.** The 122nd is raw, with
-nothing allowed for:
+## 1. We measure schools with the wrong number
 
-| What is allowed for | Disadvantaged pupils |
-|---|---|
-| Nothing — raw Attainment 8 | 33.9 points, **122nd of 152** |
-| Absence only, at England's average | 36.9 points, **69th** |
-| Intake, context and absence | +3.9%, **18th of 151** |
-| the same model without the absence term | -0.0%, 78th of 151 |
+- **Attainment 8 correlates with what a school adds at 0.27** nationally, **0.31**
+  here. **Intake alone predicts 81%** of it. **8 of our 10 schools move 4+ places**
+  between the two tables.
+- **The council's own admissions guide points parents at it.** Headline score
+  explains **84%** of how heavily a school is preferred; value added **20%**.
+  So: disadvantaged intake → lower score → chosen less → intake shrinks → score
+  falls. **It punishes the schools doing most for the poorest children.**
+- **Fixing it is free, needs no consultation, and is the largest change modelled
+  anywhere in my work.** Families reading value added instead: **BACA 90 → 174
+  children on 180 places** (50% → 97% full); empty Year 7 places concentrated in
+  three schools **93% → 75%**. The measure already exists.
 
-Bring absence alone to England's 8.6% and the model adds **3.0 points on
-average** — **+6.7 at BACA, +6.2 at Longhill, +5.3 at Hove Park**, nothing at
-King's or Patcham. That moves the city 122nd → 69th, still a little below
-England's 38.0 but not four points below. And from the other end: strip just
-the absence term out of the full model and the city falls from 18th to 78th.
-**Absence is what separates 18th from 78th.**
+## 2. Absence — the biggest lever, and it is not poverty
 
-Say *"absence accounts for most of that gap on the model's arithmetic"* — not
-*"we'd be 69th if absence were fixed"*. It holds every other authority at
-today's absence, it is associational, and part of the gradient stands in for
-what absence travels with.
+- **11.3% in 2024/25, the worst of 152 authorities** (2nd worst on the earlier
+  measure). Was 9th in 2021/22. **Getting worse.** Persistent absence **30.6%,
+  4th**.
+- **Not poverty:** FSM **28.8%** vs England's 28.4%. **Suspensions 13.0 per 100
+  vs 21.2.** Prior attainment 50th of 152.
+- **Not explained by intake:** absence runs **+1.7 points above what our own
+  pupils predict — 3rd of 152**. Of 1.9 points of extra absence, **1.4 is
+  authorised illness**; after intake our illness effect is **+27%, 2nd of 152**.
+- **Worth: −3.2 Attainment 8 points** for disadvantaged pupils, and the gradient
+  is **77% steeper** for them. Cutting absence a tenth is worth **3.5%** to them
+  against 1.9% to everyone else — the only big lever that narrows the gap.
+- **Bring us to England's average: disadvantaged Attainment 8 33.9 → 36.9,
+  122nd → 69th.** (+6.7 at BACA, +6.2 at Longhill, nil at King's and Patcham.)
 
-**Careful on one thing: the level moves a long way, the gap moves less.**
-Better attendance lifts everyone, just disadvantaged pupils more (the gradient
-is 77% steeper):
-
-| If absence fell to England's average | Now | After |
-|---|---|---|
-| Disadvantaged Attainment 8 | 33.9 | **36.9** (+3.0) |
-| Non-disadvantaged Attainment 8 | 49.6 | 51.9 (+2.3) |
-| The disadvantage gap | 15.7 | **15.0** (-0.7) |
-
-So absence closes about **19%** of the 3.6 points by which the city's gap
-exceeds England's — real, but not the whole story. **The argument to make is
-the level, not the gap**: a gap can be closed by the top doing worse, and it
-tells you nothing about whether a child learned more. Three points on
-disadvantaged attainment is worth more than a cosmetic narrowing.
-
----
-
-## 0. The message to get out: Attainment 8 is not a measure of a good school
-
-**Everyone in this argument — parents, councillors, campaigners — is using a
-number that is four-fifths intake.**
-
-- **Nationally, raw Attainment 8 and value added correlate at 0.27.** The
-  headline score accounts for about **7%** of what a school actually adds.
-- **Intake and context alone predict 81% of a school's headline Attainment 8.**
-- **38% of schools in the top quarter on the headline are below average on value
-  added; 28% of the bottom quarter are above it.** A parent choosing on the
-  published score has close to a coin-flip's information.
-- **In Brighton the two tables are nearly unrelated (correlation 0.31). Eight of
-  ten schools move four places or more:**
-
-| School | Att 8 | Rank | Value added | Rank |
-|---|---|---|---|---|
-| King's | 53.6 | 1st | +2.1 | 6th |
-| Varndean | 48.8 | 5th | +3.1 | **1st** |
-| Portslade Aldridge | 42.5 | 7th | +3.1 | **2nd** |
-| Brighton Aldridge | 36.1 | **10th** | +2.2 | 5th |
-| Longhill | 32.9 | 10th | -1.5 | 9th |
-
-- **Longhill is 20.7 points below the city's best on the headline, 4.6 points
-  below on value added.** Most of what separates it from the popular schools is
-  intake, not teaching.
-- **The council writes the admissions guide, and it points parents at exam
-  results.** Headline Attainment 8 explains **84%** of how heavily a school is
-  preferred; value added **20%**. So: disadvantaged intake → lower headline →
-  chosen less → intake shrinks → score falls again. **The schools the number
-  punishes are the ones doing most for the poorest children.**
-- **Fixing it is free.** Run the model with families reading value added: BACA
-  **90 → 174 children on 180 places** (50% → 97% full), empty Year 7 places
-  concentrated in three schools **93% → 75%**, journeys shorten. No places
-  created or removed. No consultation needed. **The measure already exists.**
-
-**One sentence:** *Attainment 8 measures who a school admits; value added
-measures what it does with them. Publish both, and lead with the one that is
-about the school.*
-
-## 1. Absence — the biggest lever, and it is not poverty
-
-- **11.3% absence in 2024/25: the worst of 152 local authorities** (second worst
-  on the earlier measure). 9th in 2021/22, 1st now. **Getting worse.**
-- **Persistent absence 30.6%, 4th of 152.** Disadvantaged pupils' absence
-  **18.0% against England's 13.2%**.
-- **Not poverty.** FSM 28.8% against England's 28.4% (74th of 152). Prior
-  attainment 50th of 152. **Suspensions 13.0 per 100 against England's 21.2.**
-- **Not explained by intake.** Absence runs **+1.7 percentage points above what
-  the city's own pupils predict — 3rd highest of 152.** Seven of ten schools are
-  more than a point above.
-- **It is authorised illness.** Of 1.9 points of extra absence, **1.4 is
-  authorised illness**; unauthorised is near England's. After intake, the city's
-  illness effect is **+27%, 2nd of 152**; unauthorised **-5%, 110th**.
-- **What it costs: -2.8 Attainment 8 points for all pupils, -3.2 for
-  disadvantaged pupils.** The gradient is **77% steeper** for disadvantaged
-  pupils. Cutting absence a tenth is worth **3.5%** of their Attainment 8 against
-  1.9% for everyone else — the only big lever that narrows the gap.
-- If Longhill's absence fell to England's average: **+6.2 points for its
-  disadvantaged pupils**.
-
-## 2. Travel — our poorest children travel furthest, almost uniquely in England
+## 3. Travel — our poorest children travel furthest, almost uniquely
 
 - **Across England deprived neighbourhoods are *closer* to a school — true in 81%
-  of 293 districts.** Here they are 1.57 km away against 1.18 km for everyone
-  else: **33% further, 5th largest gap of 293 districts, 2nd largest in km**.
-- **Of the 109 mostly urban authorities in England, none has its deprived
-  neighbourhoods further from a school.**
-- **4.7 minutes further by walk and bus** (next worst Tameside 3.7); **9.0
-  minutes walking**; **18% of those journeys need two or more buses — the most of
-  any authority in England**.
-- **29 of 179 neighbourhoods — about 385 children — can reach no secondary school
-  place within 30 minutes.** Access and child poverty correlate **-0.33**.
-- **Cause: CoMArt closed in 2005.** A school back on that site, or Longhill at
-  the top of Elm Grove, closes most of the gap.
+  of 293 districts.** Here they are **1.57 km vs 1.18 km: 33% further, 5th
+  largest gap of 293**. **Of the 109 mostly urban authorities, none is worse.**
+- **4.7 minutes further by walk and bus** (next worst Tameside 3.7); **18% of
+  those journeys need two or more buses — most of any authority in England**.
+- **29 of 179 neighbourhoods — 385 children — can reach no school place within 30
+  minutes.** Access and child poverty correlate **−0.33**.
+- **Cause: CoMArt closed in 2005.** A school back there closes most of the gap.
 
-## 3. Demographics — locked in, with a deadline
+## 4. Demographics — locked in, with a deadline
 
-- **Year 7 falls from 2,284 to about 1,825 by 2032/33 — a fifth, the 9th
-  steepest of 159 areas.** Those children are already in our primary schools: a
-  count, not a forecast. Reception is already down 20% since 2018/19.
-- **About 765 surplus Year 7 places by 2033 — two and a half average secondaries
-  — and 93% of today's empty Year 7 places sit in three schools.**
+- **Year 7: 2,284 → about 1,825 by 2032/33, a fifth, 9th steepest of 159 areas.**
+  Those children are already in our primary schools. **~765 surplus places by
+  2033**, and **93% of today's empty Year 7 places sit in three schools**.
 - **Longhill: roll 908 → 723 in four years; reserve £961k → £531k; about 3.7
-  years left.**
-- **45% of the city's 47 maintained schools were in deficit in 2025-26** against
-  England's 21% — 9th of 129 authorities. **In 2024-25 it was 58%, the worst in
-  England.** Typical reserve **0.2% of income** against England's 5.6%.
-- **Nine of ten secondaries are spending reserves, and the two deepest deficits
-  are not Longhill** — they are Hove Park and Cardinal Newman.
+  years left.** A decision with a deadline.
+- **45% of our 47 maintained schools were in deficit in 2025-26** (England 21%),
+  9th of 129 authorities. **In 2024-25 it was 58% — the worst in England.**
+  Nine of ten secondaries are spending reserves; the two deepest deficits are
+  **Hove Park and Cardinal Newman**, not Longhill.
 
-## 4. Why — fertility, not out-migration, not house prices
+## 5. Why — fertility, not house prices
 
-- **Fertility 0.98 children per woman in 2025 against England's 1.39** — about
-  70% of the national rate. On the three-year average (2023–25) it is 0.97,
-  **joint 2nd lowest of 292 comparable districts**, level with Westminster and
-  behind only Cambridge. (Quote the three-year basis. On 2025 alone the city is
-  5th of 318, behind Cambridge, Islington, Westminster and the City of London.)
-  Births 2,952 in 2015 → about 2,100 a year since 2022.
-- **Primary pupils fell 14% and births account for all of it.** Migration
-  (+2.5) and state-school share (+1.4) slightly *offset* it. The city does lose
-  children — 92% of a birth cohort remains at primary age against England's 105%
-  — but that is long-standing: it explains the level, not the fall.
-- **Where we sit on child migration: 31st of 297 districts** (net −4.7 per 1,000
-  a year, ages 0–10, 2019–25). Only **45 of 297 lose children at all**; the
-  median district *gains* 14. We lose **12.1 per 1,000** within the UK and gain
-  **7.4** from abroad. **They go next door:** Lewes +19.6, Mid Sussex +25.5,
-  Wealden +33.5 — same house prices, fertility half again as high.
-- **Mild by city standards, and easing.** Lambeth loses 43 per 1,000, Wandsworth
-  42, Hackney 36. Our own net loss has roughly halved, from −12.9 in 2013–18 to
-  −4.7 in 2019–25. A shrinking loss cannot be what made the rolls fall.
-- **If asked "did the admissions row push families out?" — no evidence it did.**
-  Year 7 as a share of the cohort's Year 6: the 2024 and 2025 entry cohorts land
-  **+0.26 and +0.05 points ABOVE** the trend already running before the change
-  (scatter 0.87), and child out-migration *improved* (−18.8 → −10.9 per 1,000;
-  88th percentile of 297 districts). Don't claim the opposite — it doesn't hold.
-  Caveats: only two post-policy cohorts, the measure mixes moving house with
-  going independent, and **2026 entry (June 2027) is the real test**. What *is*
-  true and predates it: we retain **90–94%** of our Year 6 cohort against
-  England's **98%** — a long-standing leak, not a new one.
-- **Careful — "births not migration" does NOT hold for Year 7.** The 2018→2025
-  Year 7 fall was **−7.1: births −4.4, migration −5.1.** Migration is the
-  *larger* half, and we are **33rd of 148** areas on it (median +2.1). The share
-  of a birth cohort still here at age 11 fell from **92% to 87%**. So: *few
-  children* is fertility; *falling secondary rolls* is both, about equally. For
-  secondary planning, families leaving before Year 7 does as much work as the
-  birth rate — and it is the half a council could in principle influence.
-- **House prices explain 7% of fertility differences between districts. Women's
-  education alone explains 27%.** Housing is about a third of the city's gap and
-  **none of the fall**.
-- **Lewes, Mid Sussex and Wealden have the same house prices and fertility of
-  1.45 to 1.58.**
-- **The fall is national**: the city -0.41, the typical district -0.39.
+- **0.98 children per woman vs England's 1.39** — ~70% of the national rate. On
+  the three-year average, **joint 2nd lowest of 292 comparable districts**, level
+  with Westminster, behind Cambridge.
+- **House prices explain 7% of fertility differences between districts; women's
+  education 27%.** Housing is a third of our gap and **none of the fall**.
+  **Lewes, Mid Sussex and Wealden: same prices, fertility 1.45–1.58.**
+- **Families do also leave — 31st of 297 districts on net child migration**, to
+  those same three districts. At **Year 7 that is about half the recent fall**
+  (births −4.4, migration −5.1). We retain **90–94%** of our Year 6 cohort
+  against England's **98%**.
 
-## 5. What would help — and what wouldn't
+## 6. What would help — and what wouldn't
 
-**Mixing is the weakest lever available.**
-
-- A school can reach **about 12%** of what separates its results; **42% arrives
-  with the intake**. Almost all of the 12% runs through **attendance**: the
-  workforce is **2.5%** (and **0.8%** for disadvantaged pupils). Redistribution
-  touches neither.
-- **Disadvantaged pupils do slightly *better* where more of their schoolmates are
-  disadvantaged** (+0.027, t = 7.0). Outside London their value added does **not**
-  rise with the school's neighbourhood. **Schools in more educated neighbourhoods
-  have *wider* gaps: 10.9 points to 14.9.**
-- **The 2024 map lengthened disadvantaged children's journeys by 0.3 minutes and
-  moved mixing by 0.011** — against a 4.7-minute gap caused by where the schools
-  are.
-- **Whitehawk paid for it: 78 children a year, 59 disadvantaged, IDACI 0.43.
-  Journeys +3.1 minutes (+4.5 for the disadvantaged), to 57. Share offered
-  Longhill: 22% → 5%.**
-- **The proposals that fell would have been worse:** children without a catchment
-  place **6 → 40**, journeys longer for everyone, and the segregation index
-  unchanged at 0.117. **Above about 15% priority 6 does nothing — demand runs
-  out at 117 places — so Class Divide's 30% would have done exactly what the
-  council's 20% did.**
-
-**Lean into what BACA is doing.** Most disadvantaged intake in the city (FSM
-52.6%), highest absence after Longhill — and **value added +2.4 for
-disadvantaged pupils, above expectation for both groups, gap of +0.2**. On the
-earlier panel a disadvantaged pupil leaving BACA in 2024/25 did about **5.7
-Attainment 8 points better than a comparable pupil at a similar school
-elsewhere in England**. Ofsted Good in every area, April 2025.
-
-**Three things that would move:**
-
-1. **Attendance**, treated as the city's first-order problem.
-2. **A school children in the east can reach.** Longhill at the top of Elm Grove
-   with catchments redrawn: neighbourhoods reaching nothing in 30 minutes
-   **29 → 15** (145 children gain a reachable place); the deprived journey gap
-   **3.9 → 0.4 minutes**; **Whitehawk's disadvantaged children 57 → 23 minutes**.
-   It raises the segregation index (0.111 → 0.151) — a cost under the council's
-   aim, not on the evidence about outcomes.
-3. **Stop pointing families at the headline score.** The council's own admissions
-   guide sends parents to exam results. **Headline Attainment 8 explains 84% of
-   how heavily a school is preferred; value added 20%.** Run the model with
-   families reading value added: **BACA goes from 90 children to 174 on 180
-   places, 50% → 97% full**, and the share of empty Year 7 places concentrated in
-   three schools falls **93% → 75%**. Costs nothing, needs no consultation.
+1. **Publish a value-added measure and point families at it.** Free, no
+   consultation, biggest modelled effect. *(See 1.)*
+2. **Attendance, as the city's first-order problem.** Biggest lever on results,
+   and the most progressive one.
+3. **A school children in the east can reach.** Longhill at Elm Grove, catchments
+   redrawn: neighbourhoods reaching nothing in 30 min **29 → 15**; deprived
+   journey gap **3.9 → 0.4 min**; **Whitehawk's disadvantaged children 57 → 23
+   min**. Raises the segregation index (0.111 → 0.151) — a cost under the
+   council's aim, not on the evidence about outcomes.
 4. **Treat the bus network as an admissions instrument** — the only lever that
-   widens choice without taking anything from anyone.
+   takes nothing from anyone.
 
-## 6. Why the city is a success story at all
+**And social mixing is the weakest lever available.** A school can reach **~12%**
+of what separates its results; **42% arrives with the intake**, and almost all the
+reachable part runs through **attendance** (workforce 2.5%, and **0.8%** for
+disadvantaged pupils). Given prior attainment, disadvantaged pupils do **slightly
+better** where more of their peers are disadvantaged. **BACA proves it**: FSM
+**52.6%**, highest absence bar Longhill, and **+2.4 points of value added for
+disadvantaged pupils**. The 2024 map lengthened disadvantaged journeys 0.3 min and
+moved mixing 0.011 — but **Whitehawk paid: 78 children a year, +4.5 min for the
+disadvantaged, offered Longhill 22% → 5%**. The proposals that fell would have
+displaced **6 → 40** children for **no gain in mixing** — and above ~15% priority
+6 does nothing, demand runs out at 117 places, so Class Divide's 30% = the
+council's 20%.
 
-- **44.5% of adults here hold a degree against England's 33.8%** — second only to
-  Oxford (48.1%) among South East cities. Around the city's schools, 43.4%
-  against 33.2% nationally.
-- **The model already credits that**, and it accounts for about **32%** of what
-  would otherwise look like a city effect. Drawing the neighbourhood more tightly
-  fits worse and leaves the effect *larger*: no Census measure takes more.
-- The likely rest is **family resources that keep learning going when a child
-  misses a day**. Free school meals cannot see it.
-- **Be careful with this one.** The right sentence is *"our schools achieve what
-  similar intakes achieve elsewhere, despite the worst absence in England"*. With
-  no allowance for absence at all, the city's schools average **-0.7 points,
-  102nd of 151**.
+## 7. Careful — four things not to overclaim
 
-## 7. The evidence gap
+- **"We'd be 69th if absence were fixed"** → say *"absence accounts for most of
+  that gap on the model's arithmetic."* It holds others fixed and is associational.
+- **The level moves, the gap less.** Gap 15.7 → 15.0, only **19%** of our excess
+  over England — attendance lifts everyone. **Argue the level, not the gap.**
+- **"The admissions row drove families out"** → **no evidence.** The 2024 and
+  2025 cohorts sit **above** the pre-existing trend; child out-migration
+  *improved*. 2026 entry (June 2027) is the real test.
+- **"Our schools add more than others"** → say *"our schools achieve what similar
+  intakes achieve elsewhere, despite the worst absence in England."* With no
+  allowance for absence we are **−0.7 points, 102nd of 151**.
 
-- **Absence was not mentioned** in the public engagement slides or published
-  materials for the 2024 admissions consultation, or the 2025 one.
-- **The free school meals priority cannot yet be judged on outcomes, in either
-  direction.** It began for September 2023 entry; those children sit GCSEs in
-  **summer 2028**. And year-to-year noise in disadvantaged results (3.6 points)
-  is larger than the real difference between schools (2.7): **two equally good
-  schools will differ by about 5 Attainment 8 points for no reason.**
-- **Ten tables the council already holds** would settle most of what is open —
-  no new collection, all aggregates. One of them already leaked out through the
-  Educational Equity Framework and showed the council's place planning uses a
-  single state-sector share of 0.85 city-wide where the real range is **0.66 to
-  1.21** — enough to change which schools look full.
+## The national ask
 
----
-
-## If he asks what the national ask is
-
-- **Attendance, especially authorised illness,** is where the disadvantage gap
-  actually sits. The 2026 White Paper target to halve the gap will not be met
-  through admissions policy: nationally, **absence explains 56% of the variation
-  in school-level Attainment 8; deprivation 21%.** Severe absence has gone from
-  **1.2% to 3.6% of pupils** and is still near its peak.
-- **Falling rolls are a national problem with no national framework.** England's
-  Year 7 will be about **10% smaller by 2032/33**, 15% or more in 28 areas.
-  **Rolls fall first, money follows — by the time the deficit shows, the pupils
-  have gone.** Closures have followed in inner London and almost nowhere else;
-  everywhere else carries surplus places. A published early-warning model on
-  schools' own returns catches **69% of closures in the riskiest 5% of returns**.
-- **DfE should publish a contextualised attainment measure.** This is the one with national reach. Families choose on
-  the headline score, which mostly describes the intake, and that loop
-  concentrates disadvantage in the schools made least attractive by the
-  published number. A national value added measure exists — it is on this site —
-  and it costs nothing to publish beside Attainment 8.
+1. **Attendance is where the disadvantage gap sits.** Nationally absence explains
+   **56%** of the variation in school Attainment 8, deprivation 21%. The White
+   Paper target will not be met through admissions policy. Severe absence has gone
+   **1.2% → 3.6%** of pupils.
+2. **Falling rolls need a national framework.** England's Year 7 will be ~**10%**
+   smaller by 2032/33, 15%+ in 28 areas. **Rolls fall first, money follows — by
+   the time the deficit shows, the pupils have gone.**
+3. **DfE should publish a contextualised measure beside Attainment 8.** Families
+   choose on a number that is four-fifths intake. One exists, free, for all 3,265
+   secondaries.
