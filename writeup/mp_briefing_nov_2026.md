@@ -35,7 +35,62 @@ Say *"absence accounts for most of that gap on the model's arithmetic"* — not
 today's absence, it is associational, and part of the gradient stands in for
 what absence travels with.
 
+**Careful on one thing: the level moves a long way, the gap moves less.**
+Better attendance lifts everyone, just disadvantaged pupils more (the gradient
+is 77% steeper):
+
+| If absence fell to England's average | Now | After |
+|---|---|---|
+| Disadvantaged Attainment 8 | 33.9 | **36.9** (+3.0) |
+| Non-disadvantaged Attainment 8 | 49.6 | 51.9 (+2.3) |
+| The disadvantage gap | 15.7 | **15.0** (-0.7) |
+
+So absence closes about **19%** of the 3.6 points by which the city's gap
+exceeds England's — real, but not the whole story. **The argument to make is
+the level, not the gap**: a gap can be closed by the top doing worse, and it
+tells you nothing about whether a child learned more. Three points on
+disadvantaged attainment is worth more than a cosmetic narrowing.
+
 ---
+
+## 0. The message to get out: Attainment 8 is not a measure of a good school
+
+**Everyone in this argument — parents, councillors, campaigners — is using a
+number that is four-fifths intake.**
+
+- **Nationally, raw Attainment 8 and value added correlate at 0.27.** The
+  headline score accounts for about **7%** of what a school actually adds.
+- **Intake and context alone predict 81% of a school's headline Attainment 8.**
+- **38% of schools in the top quarter on the headline are below average on value
+  added; 28% of the bottom quarter are above it.** A parent choosing on the
+  published score has close to a coin-flip's information.
+- **In Brighton the two tables are nearly unrelated (correlation 0.31). Eight of
+  ten schools move four places or more:**
+
+| School | Att 8 | Rank | Value added | Rank |
+|---|---|---|---|---|
+| King's | 53.6 | 1st | +2.1 | 6th |
+| Varndean | 48.8 | 5th | +3.1 | **1st** |
+| Portslade Aldridge | 42.5 | 7th | +3.1 | **2nd** |
+| Brighton Aldridge | 36.1 | **10th** | +2.2 | 5th |
+| Longhill | 32.9 | 10th | -1.5 | 9th |
+
+- **Longhill is 20.7 points below the city's best on the headline, 4.6 points
+  below on value added.** Most of what separates it from the popular schools is
+  intake, not teaching.
+- **The council writes the admissions guide, and it points parents at exam
+  results.** Headline Attainment 8 explains **84%** of how heavily a school is
+  preferred; value added **20%**. So: disadvantaged intake → lower headline →
+  chosen less → intake shrinks → score falls again. **The schools the number
+  punishes are the ones doing most for the poorest children.**
+- **Fixing it is free.** Run the model with families reading value added: BACA
+  **90 → 174 children on 180 places** (50% → 97% full), empty Year 7 places
+  concentrated in three schools **93% → 75%**, journeys shorten. No places
+  created or removed. No consultation needed. **The measure already exists.**
+
+**One sentence:** *Attainment 8 measures who a school admits; value added
+measures what it does with them. Publish both, and lead with the one that is
+about the school.*
 
 ## 1. Absence — the biggest lever, and it is not poverty
 
@@ -197,7 +252,7 @@ elsewhere in England**. Ofsted Good in every area, April 2025.
   have gone.** Closures have followed in inner London and almost nowhere else;
   everywhere else carries surplus places. A published early-warning model on
   schools' own returns catches **69% of closures in the riskiest 5% of returns**.
-- **DfE should publish a contextualised attainment measure.** Families choose on
+- **DfE should publish a contextualised attainment measure.** This is the one with national reach. Families choose on
   the headline score, which mostly describes the intake, and that loop
   concentrates disadvantage in the schools made least attractive by the
   published number. A national value added measure exists — it is on this site —

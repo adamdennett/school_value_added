@@ -20,7 +20,7 @@ toc-depth: 2
   page.
 - **Written to be argued with.** Where the evidence cuts against the way the
   city's schools are usually described --- in either direction --- that is said
-  plainly. Section 9 lists what would change these conclusions.
+  plainly. Section 10 lists what would change these conclusions.
 - **Vintage:** the figures are as at the November 2026 build. Value added covers
   2021/22 to 2024/25; absence is full-year 2024/25 unless stated.
 :::
@@ -35,19 +35,43 @@ toc-depth: 2
    England's average and the city moves to about **69th**; allow for intake and
    context as well and its authority effect for those pupils is **18th of 151**.
    Both facts are true at once, and the gap between them is mostly absence.
-3. **Absence is the biggest single lever in the city, and it is not poverty.**
+3. **Attainment 8 is not a measure of a good school, and the whole argument runs
+   on it.** Nationally it correlates with what a school actually adds at **0.27**,
+   and intake alone predicts **81%** of it. The city needs to publish and lead on
+   a value-added measure.
+4. **Absence is the biggest single lever in the city, and it is not poverty.**
    Disadvantage here is average; absence is the highest in England and rising.
-4. **Children in the city's poorest neighbourhoods live further from a school
+5. **Children in the city's poorest neighbourhoods live further from a school
    than their better-off neighbours** --- almost uniquely in England. It traces
    to the closure of CoMArt in 2005.
-5. **The demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
+6. **The demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
    and those children are already in the city's primary schools. Longhill has
    about 3.7 years of reserve.
-6. **It is fertility, not families leaving, and not house prices.**
-7. **Social mixing is the weakest lever the council has.** Attendance, access in
+7. **It is fertility, not families leaving, and not house prices.**
+8. **Social mixing is the weakest lever the council has.** Attendance, access in
    the east, and the number the council tells families to read are the strong ones.
-8. **None of this needs new data collection.** Ten tables the council already
+9. **None of this needs new data collection.** Ten tables the council already
    holds would settle most of what is still open.
+
+::: {.callout-important}
+## The thread running through all of it
+
+**The city is arguing about school quality using a number that is four-fifths
+intake.** Attainment 8 tells you who a school admits; value added tells you what
+it does with them. Nationally the two correlate at 0.27, and in Brighton and
+Hove at 0.31 --- eight of the ten schools move four places or more between the
+two tables.
+
+Almost every mistake on this page follows from conflating the two. It is why the
+city reads itself as 122nd when its schools are 18th
+([section 2](#sec-disadvantaged)). It is why the school doing most for
+disadvantaged children sits last in the published table and half empty
+([section 3](#sec-measurement)). It is why social mixing looks like the lever
+and attendance does not ([section 8](#sec-mixing)). And it is the one thing here
+the council could change at no cost, with no consultation, by next admissions
+round: **publish a value-added measure beside Attainment 8, and point families
+at it.**
+:::
 
 ---
 
@@ -185,6 +209,38 @@ every way of cutting it, absence is the largest single thing standing between
 the city's disadvantaged children and the results their intake predicts.
 :::
 
+### The level moves a long way. The gap moves less {#sec-level-not-gap}
+
+Worth separating, because the national target is written in terms of the gap and
+these two answers differ.
+
+| If absence fell to England's average | Now | After | Change |
+|---|---|---|---|
+| Disadvantaged pupils' Attainment 8 | 33.9 | 36.9 | **+3.0** |
+| Non-disadvantaged pupils' Attainment 8 | 49.6 | 51.9 | +2.3 |
+| **The disadvantage gap** | **15.7** | **15.0** | **-0.7** |
+| Rank on the gap (1 = widest) | 13th | 22nd | |
+
+- **The level is transformed: 122nd to 69th.** That is the number that matters
+  for a child, and it is the case for treating absence as the city's
+  first-order problem.
+- **The gap narrows by only 0.7 points**, because better attendance lifts
+  everyone. It closes about **19% of the 3.6 points by which the city's gap
+  exceeds England's** --- real, but not the whole story.
+- **Absence is still the most progressive lever available.** The gradient is
+  **77% steeper for disadvantaged pupils**, so they gain 3.0 points against 2.3.
+  Almost nothing else in the model helps them more than everyone else;
+  neighbourhood education, for instance, is worth +2.6% to a non-disadvantaged
+  pupil and +0.8% to a disadvantaged one ([section 8](#sec-mixing)).
+
+**The honest conclusion, and the better argument.** A gap can be closed by the
+top doing worse, and it tells you nothing about whether any child learned more.
+The level tells you that. Absence is the largest lever on the level for the
+city's poorest children by a wide margin, and a moderately progressive lever on
+the gap as well. If the choice is between a policy that narrows the gap on paper
+and one that raises disadvantaged children's results by three points, take the
+three points.
+
 - **The gap is the 13th widest in England** and three and a half points wider
   than England's.
 - **The region makes it worse.** For disadvantaged pupils the South East is the
@@ -199,7 +255,118 @@ the city's disadvantaged children and the results their intake predicts.
 
 ---
 
-## 3. Absence is the biggest lever, and it is not poverty {#sec-absence}
+## 3. Attainment 8 is not a measure of a good school --- and the whole debate runs on it {#sec-measurement}
+
+This is the measurement error underneath every other argument in the city, and
+it is the cheapest thing on this page to fix.
+
+### Nationally, the headline score barely tells you what a school adds
+
+- **Raw Attainment 8 and Value Added v2.1 correlate at 0.27** across England's
+  3,265 state secondaries. The headline score accounts for about **7%** of what
+  a school actually adds.
+- **Intake and context alone predict 81% of the variation in a school's headline
+  Attainment 8.** Four-fifths of the number published about a school is a
+  description of the children who walked through the door.
+- The spreads say the same thing. Headline Attainment 8 varies across schools
+  with a standard deviation of **9.3 points**; value added, **2.6 points**. Most
+  of what a league table displays is not the school.
+- **So the headline number actively misleads, in both directions.** Of the
+  schools in the top quarter on raw Attainment 8, **38% are below average on
+  value added**. Of those in the bottom quarter, **28% are above average**. A
+  parent choosing on the published score has close to a coin-flip's information
+  about whether the school is any good at teaching.
+
+### In Brighton and Hove the two tables are almost unrelated
+
+The city's ten schools, ranked by the number families are pointed at, and by
+what the schools add. Within the city the two correlate at **0.31**.
+
+| School | Attainment 8 | Rank | Value added | Rank | Moves |
+|---|---|---|---|---|---|
+| King's School | 53.6 | 1st | +2.1 | 6th | **-5** |
+| Dorothy Stringer | 53.2 | 2nd | +3.0 | 3rd | -1 |
+| Blatchington Mill | 50.8 | 3rd | +1.2 | 7th | **-4** |
+| Cardinal Newman | 50.3 | 4th | +0.6 | 8th | **-4** |
+| Varndean | 48.8 | 5th | +3.1 | **1st** | **+4** |
+| Patcham High | 45.5 | 6th | -2.0 | 10th | **-4** |
+| Portslade Aldridge | 42.5 | 7th | +3.1 | **2nd** | **+5** |
+| Hove Park | 41.0 | 8th | +2.6 | 4th | **+4** |
+| Brighton Aldridge | 36.1 | 9th | +2.2 | 5th | **+4** |
+| Longhill High | 32.9 | 10th | -1.5 | 9th | +1 |
+
+- **Eight of the ten schools move four places or more.** The school families are
+  told is best is 6th on what it adds; the 7th-placed school is 2nd.
+- **Longhill is 20.7 Attainment 8 points below the city's highest, and 4.6 points
+  below the best on value added.** Most of what separates it from the popular
+  schools is its intake, not its teaching.
+- **Brighton Aldridge is last of the ten on the headline score and 5th on value
+  added** --- while doing more for disadvantaged pupils than any school in the
+  city ([section 8](#sec-mixing)).
+
+### And it is the same error the city makes about itself
+
+[Section 2](#sec-disadvantaged) is this error at city scale. Brighton and Hove is
+**122nd of 152** on raw disadvantaged Attainment 8 and **18th of 151** once
+intake, context and absence are allowed for. Both numbers describe the same
+schools in the same year. Which one you quote decides whether the city looks
+like a failure or a success, and only one of them is about the schools.
+
+### The loop this creates, and who pays for it
+
+The council writes the admissions guide, and it tells parents to look at each
+school's exam results and Ofsted reports. Families do as advised: **headline
+Attainment 8 explains 84% of how heavily each school is preferred, and value
+added 20%**. Each point of headline score goes with about **7% more preferences
+per place**.
+
+That advice is self-defeating, and it runs in one direction only:
+
+> a school with a more disadvantaged intake posts a lower headline score →
+> it is chosen less → its roll shrinks and its intake becomes more
+> disadvantaged → its headline score falls again.
+
+**The schools the published number punishes are precisely the ones doing most
+for the city's poorest children.** Brighton Aldridge is the clearest case in
+England-wide terms, and it is the school the headline table puts last.
+
+### What changing the number would be worth
+
+Run the city's school system model with families reading the four-year value
+added measure as closely as they now read the headline score --- same places,
+same catchments, same rules, same journeys, only the number families are taken
+to be reading changes:
+
+- **Brighton Aldridge goes from 90 children to 174 on 180 places: half empty to
+  97% full.** Hove Park and Portslade Aldridge fill.
+- **The share of the city's empty Year 7 places sitting in just three schools
+  falls from 93% to 75%** --- the difference between a surplus that is a
+  budgeting problem and one that is a viability problem
+  ([section 6](#sec-demographics)).
+- Mean journeys shorten, and deprived children's extra travel falls from 3.5 to
+  2.6 minutes each way.
+- **It creates no places and removes none.** What changes is which schools are
+  empty.
+
+It is the largest single change modelled anywhere in this work, it costs
+nothing, and it needs no consultation --- only a different sentence in a guide
+the council already publishes, and a contextualised measure printed beside the
+headline one. **That measure exists**: it is on this site, for every state
+secondary in England.
+
+::: {.callout-important}
+## The one-sentence version
+
+**Attainment 8 measures who a school admits; value added measures what it does
+with them.** Parents, councillors and campaigners are arguing about school
+quality using a number that is four-fifths intake --- and the city's own
+admissions guide is what points them at it. Publish both, and lead with the one
+that is about the school.
+:::
+
+---
+
+## 4. Absence is the biggest lever, and it is not poverty {#sec-absence}
 
 ### How bad it is
 
@@ -281,7 +448,7 @@ the city's disadvantaged children and the results their intake predicts.
 
 ---
 
-## 4. Disadvantaged children here travel furthest --- almost uniquely in England {#sec-distance}
+## 5. Disadvantaged children here travel furthest --- almost uniquely in England {#sec-distance}
 
 - **Across England, children in deprived neighbourhoods usually live *closer* to
   a secondary school.** That holds in cities, towns and the countryside, and in
@@ -356,7 +523,7 @@ Stated carefully, because the number is easy to over-read.
 
 ---
 
-## 5. The demographic crisis is locked in {#sec-demographics}
+## 6. The demographic crisis is locked in {#sec-demographics}
 
 **The children who will enter Year 7 in 2033 are already in the city's primary
 schools.** Their number is a count, not a forecast.
@@ -428,7 +595,7 @@ schools.** Their number is a count, not a forecast.
 
 ---
 
-## 6. It is fertility --- not families leaving, and not house prices {#sec-fertility}
+## 7. It is fertility --- not families leaving, and not house prices {#sec-fertility}
 
 - **The city's total fertility rate is 0.98 children per woman (2025) against
   England's 1.39 --- the 2nd lowest of 292 districts**, after Cambridge.
@@ -490,7 +657,7 @@ the share of children in state mainstream schools:
 
 ---
 
-## 7. Social mixing is the weakest lever available {#sec-mixing}
+## 8. Social mixing is the weakest lever available {#sec-mixing}
 
 This section is the one that most directly contradicts recent policy, so it is
 set out with the arithmetic.
@@ -629,12 +796,38 @@ moving.
 
 ---
 
-## 8. Four things that would help {#sec-what-would-help}
+## 9. Four things that would help {#sec-what-would-help}
 
 In rough order of how much they would move, per pound and per year of political
-capital spent.
+capital spent. The first is free; the second is the largest lever on results.
 
-### 1. Attendance, treated as the city's first-order problem
+### 1. Publish a value-added measure, and point families at it
+
+**The cheapest large change available: no money, no consultation, and it could
+be in the next admissions guide.** The evidence is in
+[section 3](#sec-measurement); the action is three things.
+
+- **Change the sentence in the admissions guide.** It currently sends parents to
+  each school's exam results and Ofsted reports --- the numbers that are
+  four-fifths intake.
+- **Print a contextualised measure beside Attainment 8** wherever the council
+  publishes school results. One exists for every state secondary in England,
+  on this site, built from published data and free to reuse.
+- **Use it in the council's own papers.** Consultation documents, scrutiny
+  reports and the case made for or against any individual school currently lean
+  on the headline figure, which is the number least able to bear the weight.
+
+On the city's model this is the **largest single change modelled anywhere in
+this work**: Brighton Aldridge from 90 children to 174 on 180 places, the
+concentration of empty Year 7 places in three schools falling from 93% to 75%,
+and deprived children's journeys shortening --- without creating or removing a
+single place.
+
+It will not raise anyone's results by itself. It stops the city actively
+misdirecting families, and it stops the self-fulfilling loop that empties the
+schools doing most for its poorest children.
+
+### 2. Attendance, treated as the city's first-order problem
 
 The largest lever in the model and the only large one that narrows the gap: 3.5%
 of Attainment 8 per 10% cut in absence for disadvantaged pupils, against 1.9%
@@ -648,7 +841,7 @@ The published tables that would sharpen this are listed on the
 persistent absence and reasons over time, elective home education and children
 missing education, and attainment by prior-attainment band.
 
-### 2. A school children in the east can actually get to
+### 3. A school children in the east can actually get to
 
 A smaller Longhill at the top of Elm Grove, with the catchments redrawn around
 it, is the option that does most for access **and** most for Longhill's roll:
@@ -667,38 +860,12 @@ it, is the option that does most for access **and** most for Longhill's roll:
 
 It **raises** the segregation index, from 0.111 to 0.151. That counts against it
 under the council's stated aim of evening out intakes. On the evidence about
-disadvantaged pupils' outcomes in section 7, it is not a cost to those pupils. A
+disadvantaged pupils' outcomes in section 8, it is not a cost to those pupils. A
 review of how to even out disadvantaged children's chances has to choose between
 those two measures, and should do so knowing both halves. It also does not make
 Longhill break even --- about £0.7m a year at Elm Grove in 2030, £0.9m at
 Ovingdean --- and that gap should go to members as the price of keeping a school
 in the east.
-
-### 3. Stop pointing families at the headline score
-
-This is the cheapest large change available and it needs no consultation.
-
-- The council's own secondary admissions guide tells parents to look at each
-  school's exam results and Ofsted reports.
-- **Headline Attainment 8 explains 84% of the variation in how heavily each
-  school is preferred. Value added explains 20%.** Each point of headline score
-  goes with about 7% more preferences per place.
-- That advice works against the council's own position: a school with a more
-  disadvantaged intake posts a lower headline score, so it is chosen less, its
-  intake shrinks and becomes more disadvantaged, and its score falls again.
-  **Brighton Aldridge is last of the ten on the headline measure and fourth on
-  value added. Longhill's headline score is 20 points below the city's highest;
-  on value added it is 4.6 points below the best.**
-- Run the model with families reading the four-year value added measure as
-  closely as they now read the headline score --- same places, same catchments,
-  same rules --- and **Brighton Aldridge goes from 90 children to 174 on 180
-  places, from half empty to 97% full**; Hove Park and Portslade Aldridge fill;
-  mean journeys shorten; deprived children's extra travel falls from 3.5 to 2.6
-  minutes each way; and **the share of the city's empty Year 7 places sitting in
-  three schools falls from 93% to 75%**.
-- It creates no places and removes none. What changes is which schools are empty.
-  A contextualised measure for every school in England is already built and
-  published on this site.
 
 ### 4. Treat the bus network as an admissions instrument
 
@@ -717,7 +884,7 @@ is a reason to look at Longhill, not a general law.
 
 ---
 
-## 9. The evidence, and the gap in it {#sec-evidence}
+## 10. The evidence, and the gap in it {#sec-evidence}
 
 ### What has been published, and when
 
