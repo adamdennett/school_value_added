@@ -1,6 +1,6 @@
 ---
-title: "A value-added success, with a disadvantage problem"
-subtitle: "Brighton and Hove schools: six points, the figure behind each, and the national ask"
+title: "Brighton and Hove Schools - Key Facts Briefing"
+subtitle: "What the DfE data tell us - and what we need to focus on"
 author: "Adam Dennett, Bartlett Centre for Advanced Spatial Analysis, UCL"
 date: 2026-11-25
 title-slide-attributes:
@@ -16,15 +16,15 @@ format:
     footer: "[In brief](in_brief.html) · every figure, source and caveat: [Key facts](key_facts.html)"
 ---
 
-## 6th best in England for what schools add — 122nd for disadvantaged children's results
+## Brighton and Hove is a national success story - and a unique concern
 
 :::: {.columns}
 ::: {.column width="40%" .pts}
-**Value added: 6th of 152** local authorities.
+**GCSE Value added: 6th of 152** local authorities. 18th for Disadvantaged. 4th for Non.
 
-**Disadvantaged pupils' raw Attainment 8: 122nd of 152.**
+BUT **Disadvantaged pupils' raw Attainment 8: 122nd of 152.** - after controlling for factors we know affect attainment.
 
-Both are true. **The second is the problem**, and absence is most of the explanation.
+Both are true. **The second is the problem**, and **absence** is most of the explanation.
 
 Our schools add about **+1.4 points**; our absence takes away about **−2.8**.
 :::
@@ -41,15 +41,17 @@ Value Added v2.1 local authority effects; DfE KS4 and absence.
 The city has the 6th best local authority value-added effect of 152 in England, and its disadvantaged children leave school ranked 122nd of 152 on raw Attainment 8. Both are true. The second is the problem; absence is most of the explanation.
 :::
 
-## Our idea of a 'good school' is wrong
+## The popular idea of a 'good school' is wrong
 
 :::: {.columns}
 ::: {.column width="40%" .pts}
+Preference data shows parents in Brighton and Hove choose schools based on attainment. Attainment explains **84%** of how heavily a school is preferred; value added **20%**.
+
 Attainment 8 tracks what a school adds at only **0.27** nationally, **0.31** here.
 
 Schools explain about **15%** of the difference between schools at GCSE. The rest is who goes there.
 
-Attainment explains **84%** of how heavily a school is preferred; value added **20%**.
+Council guidance when applying for places encourages this.
 
 Point families to value added: **BACA 90 → 174** children on 180 places. Free, and no consultation.
 :::
@@ -66,17 +68,17 @@ DfE performance tables; How to Pull the Right Lever; Brighton and Hove school sy
 Parents in Brighton and Hove select schools on attainment, not on what the school adds. The council's admissions guide points parents to attainment, so disadvantaged intake leads to a lower score, the school is chosen less, the intake shrinks and the score falls. Fixing it is free, needs no consultation, and is the largest change modelled anywhere in this work: BACA 90 to 174 children on 180 places; empty Year 7 places concentrated in three schools 93% to 75%.
 :::
 
-## Absence: almost the worst in England, and beyond what poverty explains
+## Absence: B&H almost the worst in England, and beyond what poverty explains
 
 :::: {.columns}
 ::: {.column width="40%" .pts}
 Secondary absence **10.8%** vs England's 8.4% in 2024/25: **3rd of 152**. Easing to 6th in 2025/26 so far.
 
-Not poverty: free school meals **28.8%** vs 28.4%; suspensions low.
+Not poverty: free school meals ** B&H 28.8%** vs Eng 28.4%; suspensions low.
 
-**+1.7 points** above what our pupils predict: 3rd of 152, and **1st in 2024/25**. Mostly authorised illness.
+**Absence +1.7 points** above what our pupils predict: 3rd worst of 152, and **1st in 2024/25**. Mostly authorised illness.
 
-At England's average, disadvantaged Attainment 8 moves **122nd → 69th**.
+If B&H absence at England's average, raw disadvantaged Attainment 8 moves from **122nd → 69th**.
 :::
 ::: {.column width="60%" .fig}
 ![](writeup/figures/brief/2_absence_residual.png){fig-alt="Lollipop chart: 152 local authorities' absence above or below what their intake predicts; Brighton and Hove is third highest at +1.7 points."}
@@ -101,7 +103,9 @@ Across England, deprived areas are **closer** to a school in 81% of districts. H
 
 **29 of 179 neighbourhoods** (385 children) reach no school place within 30 minutes.
 
-The cause: **CoMArt closed in 2005**. A school back there closes most of the gap.
+The cause: **CoMArt closed in 2005**. 
+
+A school in the near-East of the city closes most of the gap.
 :::
 ::: {.column width="60%" .fig}
 ![](writeup/figures/brief/3_travel_gap.png){fig-alt="Scatter of mostly urban authorities: extra km against extra minutes by walking and bus for the deprived third; Brighton and Hove is the largest on both."}

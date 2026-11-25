@@ -238,12 +238,18 @@ comes next.
 #| fig-cap: "The 20 local authorities whose Year 7 intake falls most between 2025/26 and 2032/33, from the cohorts now in primary school rolled forward, and England."
 #| fig-height: 6
 t20 <- rbind(LA[order(y7_chg_2032)][1:20], eng, fill = TRUE)
-t20[, area := factor(area, rev(area))]
+t20[, `:=`(area = factor(area, rev(area)),
+           kind = fcase(area == "England", "England", area == "Brighton and Hove", "Brighton and Hove", default = "Other"))]
 ggplot(t20, aes(y7_chg_2032, area)) + geom_vline(xintercept = 0, colour = GREY) +
-  geom_segment(aes(x = 0, xend = y7_chg_2032, yend = area), colour = LPURPLE, linewidth = 1.3) +
-  geom_point(aes(colour = area == "England"), size = 2.8) +
-  scale_colour_manual(values = c(`TRUE` = INK, `FALSE` = DPURPLE), guide = "none") +
-  labs(x = "Year 7 intake, % change 2025/26 to 2032/33", y = NULL) + theme_note()
+  geom_segment(aes(x = 0, xend = y7_chg_2032, yend = area, colour = kind == "Brighton and Hove"), linewidth = 1.3) +
+  geom_point(aes(fill = kind), shape = 21, colour = "white", size = 3.4, stroke = 0.4) +
+  geom_text(data = t20[kind == "Brighton and Hove"], aes(label = sprintf("−%.0f%%", abs(y7_chg_2032))),
+            hjust = 1, nudge_x = -0.6, colour = BPURPLE, fontface = "bold", size = 3.8) +
+  scale_colour_manual(values = c(`TRUE` = BPURPLE, `FALSE` = LPURPLE), guide = "none") +
+  scale_fill_manual(values = c(England = INK, `Brighton and Hove` = BPURPLE, Other = DPURPLE), guide = "none") +
+  labs(x = "Year 7 intake, % change 2025/26 to 2032/33", y = NULL) + theme_note() +
+  theme(axis.text.y = element_text(face = ifelse(levels(t20$area) == "Brighton and Hove", "bold", "plain"),
+                                   colour = ifelse(levels(t20$area) == "Brighton and Hove", BPURPLE, INK)))
 ```
 
 In `r sum(LA$y7_chg_2032 <= -15, na.rm = TRUE)` areas Year 7 shrinks by 15% or
