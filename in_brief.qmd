@@ -46,10 +46,12 @@ and absence is most of the explanation for the distance between them.
 
 ## 2. Absence is the biggest lever, and it is not poverty
 
-- **11.3% overall absence in 2024/25 --- the highest of 152 authorities** on the
-  v2.1 school frame, and the second highest on the earlier one. The city was 9th
-  in 2021/22. **It is getting worse.** Persistent absence is **30.6%, 4th of
-  152**.
+- **10.8% overall absence in state-funded secondaries in 2024/25, against
+  England's 8.4% --- the 3rd highest of 152 authorities** (DfE official
+  figures). The city was 9th in 2021/22 and 7th in 2023/24, so it had been
+  getting worse. **The first two terms of 2025/26 show it easing: 9.8% against
+  England's 8.0%, 6th of 152.** Persistent absence was **29.4%, 6th of 152** in
+  2024/25.
 - **Disadvantage here is average**: free school meals **28.8%** against
   England's 28.4%, prior attainment 50th of 152. **Suspensions are low** ---
   13.0 episodes per 100 pupils against England's 21.2.
@@ -168,7 +170,7 @@ the form that the evidence actually supports.
 | "We would be 69th if absence were fixed" | Absence accounts for **most of that gap on the model's arithmetic**. The scenario holds every other authority at today's absence, and the gradient is associational. |
 | "Fixing absence closes the disadvantage gap" | It moves **the level** a long way and **the gap** much less: 15.7 to 15.0, about **19%** of the city's excess over England, because attendance lifts everyone. **The level is the better argument.** |
 | "The admissions changes drove families out" | **No evidence.** The first two cohorts under the new map sit slightly *above* the trend already running, and child out-migration has improved. 2026 entry is the first real test. |
-| "The city's schools add more than others" | **Its schools achieve what similar intakes achieve elsewhere, despite the worst absence in England.** With no allowance for absence at all they average **-0.7 points, 102nd of 151**. |
+| "The city's schools add more than others" | **Its schools achieve what similar intakes achieve elsewhere, despite some of the highest absence in England.** With no allowance for absence at all they average **-0.7 points, 102nd of 151**. |
 
 ## What this implies nationally
 
