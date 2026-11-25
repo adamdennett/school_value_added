@@ -22,7 +22,7 @@ format:
 ::: {.column width="40%" .pts}
 **GCSE Value added: 6th of 152** local authorities. 18th for Disadvantaged. 4th for Non.
 
-BUT **Disadvantaged pupils' raw Attainment 8: 122nd of 152.** - after controlling for factors we know affect attainment.
+BUT **Disadvantaged pupils' raw Attainment 8: 122nd of 152.** - before controlling for factors we know affect attainment.
 
 Both are true. **The second is the problem**, and **absence** is most of the explanation.
 
@@ -141,7 +141,7 @@ DfE school census, cohorts rolled forward; DfE consistent financial reporting.
 
 :::: {.columns}
 ::: {.column width="40%" .pts}
-**0.98 children per woman** vs England's 1.39: joint 2nd lowest of 292 districts.
+**0.98 children per woman** vs England's 1.39: joint **2nd lowest** of 292 districts.
 
 House prices explain **7%** of fertility differences between districts; women's education **27%**.
 
