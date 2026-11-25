@@ -74,8 +74,9 @@ explanation.
 - **House prices explain 7% of fertility differences between districts; women's
   education 27%.** Housing is a third of our gap and **none of the fall**.
   **Lewes, Mid Sussex and Wealden: same prices, fertility 1.45–1.58.**
-- **Families do also leave — 31st of 297 districts on net child migration**, to
-  those same three districts. At **Year 7 that is about half the recent fall**
+- **Families do also leave — 31st of 297 districts on net child migration**,
+  while neighbouring Lewes, Mid Sussex and Wealden all gain children, at much the
+  same house prices. At **Year 7 that is about half the recent fall**
   (births −4.4, migration −5.1). We retain **90–94%** of our Year 6 cohort
   against England's **98%**.
 

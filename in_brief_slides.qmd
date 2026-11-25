@@ -49,9 +49,9 @@ Preference data shows parents in Brighton and Hove choose schools based on attai
 
 Attainment 8 tracks what a school adds at only **0.27** nationally, **0.31** here.
 
-Schools explain about **15%** of the difference between schools at GCSE. The rest is who goes there.
+What Schools do explains about **15%** of the difference between GCSE scores at the school average level. The rest is who goes there.
 
-Council guidance when applying for places encourages this.
+Council guidance when applying for places encourages this. Narrative in the city around the perceived golden ticket from attending some central schools, misleading.
 
 Point families to value added: **BACA 90 → 174** children on 180 places. Free, and no consultation.
 :::
@@ -74,7 +74,7 @@ Parents in Brighton and Hove select schools on attainment, not on what the schoo
 ::: {.column width="40%" .pts}
 Secondary absence **10.8%** vs England's 8.4% in 2024/25: **3rd of 152**. Easing to 6th in 2025/26 so far.
 
-Not poverty: free school meals ** B&H 28.8%** vs Eng 28.4%; suspensions low.
+Not poverty: free school meals **B&H 28.8%** vs Eng 28.4%; suspensions low.
 
 **Absence +1.7 points** above what our pupils predict: 3rd worst of 152, and **1st in 2024/25**. Mostly authorised illness.
 
@@ -120,7 +120,7 @@ School active travel routing (Zenodo 10.5281/zenodo.24188820); Census 2021; IMD 
 
 :::: {.columns}
 ::: {.column width="40%" .pts}
-Year 7: **2,284 → about 1,825** by 2032/33, a fifth. 9th steepest of 159 areas.
+Year 7: **2,284 → about 1,825** by 2032/33, a fifth. 9th steepest decline of 159 LEAs.
 
 About **765 surplus places** by 2033; 93% of today's empty Year 7 places sit in three schools.
 
@@ -137,7 +137,7 @@ Longhill: roll 908 → 723; reserve £961k → £531k, about **3.7 years** left.
 DfE school census, cohorts rolled forward; DfE consistent financial reporting.
 :::
 
-## It's fertility, not house prices
+## Why the decline? It's fertility, not house prices
 
 :::: {.columns}
 ::: {.column width="40%" .pts}
@@ -147,7 +147,7 @@ House prices explain **7%** of fertility differences between districts; women's 
 
 Lewes, Mid Sussex and Wealden: **same prices**, fertility 1.45–1.58.
 
-Families do leave too: at Year 7 that is **about half** the recent fall.
+Families do leave too: at Year 7 that is **about half** the recent fall. The neighbouring districts gain children, at much the same prices.
 :::
 ::: {.column width="60%" .fig}
 ![](writeup/figures/brief/5_fertility.png){fig-alt="The lowest-fertility districts in England, with Brighton and Hove second, beside their house price to earnings ratios."}

@@ -44,9 +44,10 @@ toc-depth: 2
    people out.** **0.98 children per woman in 2025 against England's 1.39** ---
    about 70% of the national rate --- and over 2023--25 the **joint
    second-lowest of 292 comparable districts**, level with Westminster and
-   behind only Cambridge. Families do also leave, for Lewes, Mid Sussex and
-   Wealden: that is **31st of 297 districts** on net child migration, and at
-   **Year 7 it is about half the recent fall**.
+   behind only Cambridge. Families do also leave: the city is **31st of 297
+   districts** on net child migration, while neighbouring Lewes, Mid Sussex and
+   Wealden all gain children at much the same house prices. At **Year 7 it is
+   about half the recent fall**.
 8. **Social mixing is the weakest lever for narrowing the attainment gap the council has - and with additional travel could make it worse.** Attendance and fixing easy access to schools in the east will improve attainment and address the double disadvantage in the city.
 9. **None of this needs new data collection.** I've been building tools on open data to assist with policy scenario testing - biggest barrier is awareness and open-mindedness.  
 
@@ -657,10 +658,12 @@ the share of children in state mainstream schools:
 - **It is the UK, not abroad.** Within the UK the city loses **12.1 per 1,000**;
   from abroad it gains **7.4**, which cancels more than half of it. Adults aged
   30--39 behave the same way: **-14.6** internal, **+11.9** international.
-- **They move next door.** Lewes gains **19.6** children per 1,000 a year, Mid
-  Sussex **25.5** and Wealden **33.5** --- the same districts with much the same
-  house prices and fertility half again as high
-  ([the fertility model](#sec-fertility)).
+- **The neighbours gain children.** Lewes gains **19.6** children per 1,000 a
+  year, Mid Sussex **25.5** and Wealden **33.5** --- districts with much the
+  same house prices and fertility half again as high
+  ([the fertility model](#sec-fertility)). These are each district's net
+  figures, not flows between them: they do not show where the city's own
+  families go.
 - **But the loss is mild by city standards and it is easing.** Lambeth loses
   **43** per 1,000, Wandsworth 42, Hackney 36. And the city's own net loss has
   roughly halved, from **-12.9 in 2013--18 to -4.7 in 2019--25**. A loss that is
