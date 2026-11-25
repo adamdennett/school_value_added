@@ -9,6 +9,7 @@ format:
   revealjs:
     theme: [default, brief_slides.scss]
     slide-number: true
+    logo: writeup/figures/brief/ucl-logo-purple.png
     width: 1280
     height: 720
     margin: 0.05
@@ -41,6 +42,31 @@ Value Added v2.1 local authority effects; DfE KS4 and absence.
 The city has the 6th best local authority value-added effect of 152 in England, and its disadvantaged children leave school ranked 122nd of 152 on raw Attainment 8. Both are true. The second is the problem; absence is most of the explanation.
 :::
 
+## Absence: B&H almost the worst in England, and beyond what poverty explains
+
+:::: {.columns}
+::: {.column width="40%" .pts}
+Secondary absence **10.8%** vs England's 8.4% in 2024/25: **3rd of 152**. Easing to 6th in 2025/26 so far.
+
+Not poverty: free school meals **B&H 28.8%** vs Eng 28.4%; suspensions low.
+
+**Absence +1.7 points** above what our pupils predict: 3rd worst of 152, and **1st in 2024/25**. Mostly authorised illness.
+
+If B&H absence at England's average, raw disadvantaged Attainment 8 moves from **122nd → 69th**.
+:::
+::: {.column width="60%" .fig}
+![](writeup/figures/brief/2_absence_residual.png){fig-alt="Lollipop chart: 152 local authorities' absence above or below what their intake predicts; Brighton and Hove is third highest at +1.7 points."}
+:::
+::::
+
+::: {.src}
+DfE, Pupil absence in schools in England; Value Added v2.1 frame (R/04, R/58).
+:::
+
+::: {.notes}
+Persistent absence 29.4%, 6th, in 2024/25. Of 1.9 points of extra absence, 1.4 is authorised illness. It is worth −3.2 Attainment 8 points for disadvantaged pupils, on a gradient 77% steeper for them; cutting absence by a tenth is worth 3.5% to them against 1.9% to everyone else, the only big lever that narrows the gap.
+:::
+
 ## The popular idea of a 'good school' is wrong
 
 :::: {.columns}
@@ -66,31 +92,6 @@ DfE performance tables; How to Pull the Right Lever; Brighton and Hove school sy
 
 ::: {.notes}
 Parents in Brighton and Hove select schools on attainment, not on what the school adds. The council's admissions guide points parents to attainment, so disadvantaged intake leads to a lower score, the school is chosen less, the intake shrinks and the score falls. Fixing it is free, needs no consultation, and is the largest change modelled anywhere in this work: BACA 90 to 174 children on 180 places; empty Year 7 places concentrated in three schools 93% to 75%.
-:::
-
-## Absence: B&H almost the worst in England, and beyond what poverty explains
-
-:::: {.columns}
-::: {.column width="40%" .pts}
-Secondary absence **10.8%** vs England's 8.4% in 2024/25: **3rd of 152**. Easing to 6th in 2025/26 so far.
-
-Not poverty: free school meals **B&H 28.8%** vs Eng 28.4%; suspensions low.
-
-**Absence +1.7 points** above what our pupils predict: 3rd worst of 152, and **1st in 2024/25**. Mostly authorised illness.
-
-If B&H absence at England's average, raw disadvantaged Attainment 8 moves from **122nd → 69th**.
-:::
-::: {.column width="60%" .fig}
-![](writeup/figures/brief/2_absence_residual.png){fig-alt="Lollipop chart: 152 local authorities' absence above or below what their intake predicts; Brighton and Hove is third highest at +1.7 points."}
-:::
-::::
-
-::: {.src}
-DfE, Pupil absence in schools in England; Value Added v2.1 frame (R/04, R/58).
-:::
-
-::: {.notes}
-Persistent absence 29.4%, 6th, in 2024/25. Of 1.9 points of extra absence, 1.4 is authorised illness. It is worth −3.2 Attainment 8 points for disadvantaged pupils, on a gradient 77% steeper for them; cutting absence by a tenth is worth 3.5% to them against 1.9% to everyone else, the only big lever that narrows the gap.
 :::
 
 ## Our poorest children travel furthest — almost uniquely in England
