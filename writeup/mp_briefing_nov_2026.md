@@ -7,26 +7,26 @@
 
 ## The hook
 
-**The city has the 6th largest local authority effect of 152 in England on value
-added — and its disadvantaged children leave school ranked 122nd of 152 on raw
+**The city has the 6th best local authority value-added effect of 152 in England — and its disadvantaged children leave school ranked 122nd of 152 on raw
 Attainment 8.** Both are true. The second is the problem; absence is most of the
 explanation.
 
-## 1. We measure schools with the wrong number
+## 1. Our perception of a 'good school' is wrong
 
+- Data shows parents in Brighton and Hove select schools on attainment, not what the school adds
 - **Attainment 8 correlates with what a school adds at 0.27** nationally, **0.31**
-  here. **Intake alone predicts 81%** of it. **8 of our 10 schools move 4+ places**
-  between the two tables.
-- **The council's own admissions guide points parents at it.** Headline score
+  here. 
+- My analysis of last 4 years of national data (confirming what's been known for decades in the school effectiveness literature) is **schools themselve only contribute to about 15% of the variation between schools at GSCE** - the rest is who goes to those schools and where they come from
+- **But The council's admissions guide points parents to attainment.** Headline attainment score
   explains **84%** of how heavily a school is preferred; value added **20%**.
   So: disadvantaged intake → lower score → chosen less → intake shrinks → score
-  falls. **It punishes the schools doing most for the poorest children.**
+  falls. **Council guidance punishes the schools doing most for the poorest children.**
 - **Fixing it is free, needs no consultation, and is the largest change modelled
   anywhere in my work.** Families reading value added instead: **BACA 90 → 174
   children on 180 places** (50% → 97% full); empty Year 7 places concentrated in
   three schools **93% → 75%**. The measure already exists.
 
-## 2. Absence — the biggest lever, and it is not poverty
+## 2. Absence — the biggest lever. Brighton and Hove's absence is almost the worst in England and this is over and above what poverty explains
 
 - **Secondary absence 10.8% in 2024/25 vs England's 8.4%: 3rd worst of 152
   authorities** (DfE official; behind Knowsley and Bradford). Was 9th in
@@ -54,7 +54,7 @@ explanation.
   minutes.** Access and child poverty correlate **−0.33**.
 - **Cause: CoMArt closed in 2005.** A school back there closes most of the gap.
 
-## 4. Demographics — locked in, with a deadline
+## 4. A demographic time-bomb for schools in the city — locked in, with a deadline
 
 - **Year 7: 2,284 → about 1,825 by 2032/33, a fifth, 9th steepest of 159 areas.**
   Those children are already in our primary schools. **~765 surplus places by
@@ -66,7 +66,7 @@ explanation.
   Nine of ten secondaries are spending reserves; the two deepest deficits are
   **Hove Park and Cardinal Newman**, not Longhill.
 
-## 5. Why — fertility, not house prices
+## 5. Why? — It's fertility, not house prices
 
 - **0.98 children per woman vs England's 1.39** — ~70% of the national rate. On
   the three-year average, **joint 2nd lowest of 292 comparable districts**, level
@@ -83,15 +83,14 @@ explanation.
 
 1. **Publish a value-added measure and point families at it.** Free, no
    consultation, biggest modelled effect. *(See 1.)*
-2. **Attendance, as the city's first-order problem.** Biggest lever on results,
+2. **Attendance, as the city's first-order problem.** Biggest lever on results, particularly for disadvantaged children,
    and the most progressive one.
 3. **A school children in the east can reach.** Longhill at Elm Grove, catchments
    redrawn: neighbourhoods reaching nothing in 30 min **29 → 15**; deprived
    journey gap **3.9 → 0.4 min**; **Whitehawk's disadvantaged children 57 → 23
    min**. Raises the segregation index (0.111 → 0.151) — a cost under the
    council's aim, not on the evidence about outcomes.
-4. **Treat the bus network as an admissions instrument** — the only lever that
-   takes nothing from anyone.
+4. **Consider how to improve secondary school accessibility and arrest terminal numbers issues in the East** — my new B&H school system school simulator allows us to test policies - such as school relocation - and the impacts on numbers and accessibility
 
 **And social mixing is the weakest lever available.** A school can reach **~12%**
 of what separates its results; **42% arrives with the intake**, and almost all the

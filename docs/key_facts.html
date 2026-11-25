@@ -374,10 +374,10 @@ gtag('config', 'G-9Y5VT5P0NE', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="sec-five-minutes">If you have five minutes</h2>
 <ol type="1">
 <li><strong>Brighton and Hove is a national success story on attainment</strong> — On value-added, it’s 6th of 152 local authorities (all children) — and almost all of that is the city’s schools holding up results against some of the highest absence in England (3rd of 152 for secondaries in 2024/25).</li>
-<li><strong>Absence is the biggest single issue for schools in the city, and it is not poverty.</strong> Disadvantage here is average; secondary absence was the 3rd highest in England in 2024/25, though the first two terms of 2025/26 show it easing (6th).</li>
+<li><strong>Absence is the biggest single issue for schools in the city, and it is not poverty.</strong> Disadvantage here is average; secondary absence was the 3rd highest in England in 2024/25. Other LEAs with deeper disadvantage have better attendance.</li>
 <li><strong>In raw-terms (with nothing allowed for) its disadvantaged children leave school with Attainment 8 ranked 122nd of 152</strong>. Bring absence alone to England’s average and the city moves to about <strong>69th</strong>; allow for intake and context as well and its authority effect for those pupils is <strong>18th of 151</strong>. All of these are true at once, and the gap between them is mostly absence.</li>
-<li><strong>Attainment 8 is not a measure of a good school - it’s mainly a measure of who goes there.</strong> Nationally it correlates with what a school actually adds at <strong>0.27</strong>, and intake alone predicts <strong>81%</strong> of it. The city needs to publish and lead on a value-added measure (I have developed one), particularly to change perceptions of schools like BACA.</li>
-<li><strong>Children in the city’s poorest neighbourhoods live further from a school than their better-off neighbours</strong> — almost uniquely in England. It traces back to the closure of CoMArt in 2005.</li>
+<li><strong>Our perception of a ‘good school’ is wrong. Attainment 8 is not a measure of a good school - it’s mainly a measure of who goes there. But is is what parents in Brighton select on</strong> Nationally it correlates with what a school actually adds at <strong>0.27</strong>, and intake alone predicts <strong>81%</strong> of it. The city needs to change its messaging, publish and lead on a value-added measure (I have developed one), particularly to change perceptions of schools like BACA.</li>
+<li><strong>Brighton has a problem with accessibility. Children in the city’s poorest neighbourhoods live further from a school than their better-off neighbours</strong> — almost uniquely in England. It traces back to the closure of CoMArt in 2005.</li>
 <li><strong>The looming demographic crisis is locked in.</strong> Year 7 falls by a fifth by 2032/33, and those children are already in the city’s primary schools. Longhill has about 3.7 years of reserve. My new simulator can help us think of solutions.</li>
 <li><strong>Decline in children is driven by low fertility, not house prices keeping people out.</strong> <strong>0.98 children per woman in 2025 against England’s 1.39</strong> — about 70% of the national rate — and over 2023–25 the <strong>joint second-lowest of 292 comparable districts</strong>, level with Westminster and behind only Cambridge. Families do also leave, for Lewes, Mid Sussex and Wealden: that is <strong>31st of 297 districts</strong> on net child migration, and at <strong>Year 7 it is about half the recent fall</strong>.</li>
 <li><strong>Social mixing is the weakest lever for narrowing the attainment gap the council has - and with additional travel could make it worse.</strong> Attendance and fixing easy access to schools in the east will improve attainment and address the double disadvantage in the city.</li>
@@ -761,8 +761,21 @@ gtag('config', 'G-9Y5VT5P0NE', { 'anonymize_ip': true});
 <li><strong>Disadvantage in the city is average</strong>: FSM6 28.8% against England’s 28.4%, 74th of 152. Mean prior attainment (KS2) is 50th of 152.</li>
 <li><strong>Suspensions are low</strong>: 13.0 episodes per 100 pupils against England’s 21.2; 5.9 pupils per 100 suspended at least once against 7.3. This is not a discipline problem.</li>
 <li><strong>It is above what the intake predicts.</strong> On the v2.1 intake terms the city’s schools ran <strong>+1.7 percentage points above the absence their pupils’ profiles predict — 3rd highest of 152 authorities</strong>. Of the 2.7-point gap with England, about 1.7 points is not explained by who lives here.</li>
+<li><strong>That residual is genuinely unusual, and growing.</strong>
+<ul>
+<li><strong>Against other authorities:</strong> 2.2 standard deviations above their average, in the top 2%. Newcastle (+2.2) and Bradford (+1.9) are above it; York and Gateshead (+1.7, +1.6) are level with it.</li>
+<li><strong>Not chance:</strong> a random set of ten English secondaries averages this much above prediction about 1 time in 250.</li>
+<li><strong>By year:</strong> 5th in 2021/22, 7th in 2022/23, 6th in 2023/24 and <strong>1st in 2024/25 (+2.1)</strong>.</li>
+<li><strong>What it can’t say:</strong> this is absence the model does not explain, not proof of worse practice. Recording practice, health and journeys to school all sit in it.</li>
+</ul></li>
 <li><strong>Seven of the ten schools run more than a point above their predicted absence.</strong> Longhill is +4.2, Brighton Aldridge +3.7, Blatchington Mill +2.3. Only King’s runs more than a point below.</li>
 </ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="writeup/figures/absence_residual_la.png" class="img-fluid figure-img"></p>
+<figcaption>Each local authority’s secondary absence above or below what its pupils’ intake predicts, 2021/22 to 2024/25 (percentage points; the mean of its schools’ residuals). Value Added v2.1 school frame; model: log absence on intake with year and region effects (<a href="./bh_effect.html">absence model</a>). <code>R/04</code>, <code>R/58</code>.</figcaption>
+</figure>
+</div>
 </section>
 <section id="what-kind-of-absence" class="level3">
 <h3 class="anchored" data-anchor-id="what-kind-of-absence">What kind of absence</h3>

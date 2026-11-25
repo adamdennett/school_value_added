@@ -29,15 +29,14 @@ toc-depth: 2
 1. **Brighton and Hove is a national success story on attainment** --- On value-added, it's 6th of 152 local authorities (all children) --- and almost all of that is the city's schools holding up results against some of the highest absence in England (3rd of 152 for secondaries in 2024/25).
 2. **Absence is the biggest single issue for schools in the city, and it is not poverty.**
    Disadvantage here is average; secondary absence was the 3rd highest in England
-   in 2024/25, though the first two terms of 2025/26 show it easing (6th).
+   in 2024/25. Other LEAs with deeper disadvantage have better attendance. 
 3. **In raw-terms (with nothing allowed for) its disadvantaged children leave school with Attainment 8 ranked 122nd of 152**. Bring absence alone to
    England's average and the city moves to about **69th**; allow for intake and
    context as well and its authority effect for those pupils is **18th of 151**.
    All of these are true at once, and the gap between them is mostly absence.
-4. **Attainment 8 is not a measure of a good school - it's mainly a measure of who goes there.** Nationally it correlates with what a school actually adds at **0.27**,
-   and intake alone predicts **81%** of it. The city needs to publish and lead on
-   a value-added measure (I have developed one), particularly to change perceptions of schools like BACA.
-5. **Children in the city's poorest neighbourhoods live further from a school than their better-off neighbours** --- almost uniquely in England. It traces back to the closure of CoMArt in 2005.
+4. **Our perception of a 'good school' is wrong. Attainment 8 is not a measure of a good school - it's mainly a measure of who goes there. But is is what parents in Brighton select on** Nationally it correlates with what a school actually adds at **0.27**,
+   and intake alone predicts **81%** of it. The city needs to change its messaging, publish and lead on a value-added measure (I have developed one), particularly to change perceptions of schools like BACA.
+5. **Brighton has a problem with accessibility. Children in the city's poorest neighbourhoods live further from a school than their better-off neighbours** --- almost uniquely in England. It traces back to the closure of CoMArt in 2005.
 6. **The looming demographic crisis is locked in.** Year 7 falls by a fifth by 2032/33,
    and those children are already in the city's primary schools. Longhill has
    about 3.7 years of reserve. My new simulator can help us think of solutions. 
@@ -405,9 +404,22 @@ that is about the school.
   schools ran **+1.7 percentage points above the absence their pupils' profiles
   predict --- 3rd highest of 152 authorities**. Of the 2.7-point gap with
   England, about 1.7 points is not explained by who lives here.
+- **That residual is genuinely unusual, and growing.**
+  - **Against other authorities:** 2.2 standard deviations above their
+    average, in the top 2%. Newcastle (+2.2) and Bradford (+1.9) are above it;
+    York and Gateshead (+1.7, +1.6) are level with it.
+  - **Not chance:** a random set of ten English secondaries averages this much
+    above prediction about 1 time in 250.
+  - **By year:** 5th in 2021/22, 7th in 2022/23, 6th in 2023/24 and **1st in
+    2024/25 (+2.1)**.
+  - **What it can't say:** this is absence the model does not explain, not
+    proof of worse practice. Recording practice, health and journeys to school
+    all sit in it.
 - **Seven of the ten schools run more than a point above their predicted
   absence.** Longhill is +4.2, Brighton Aldridge +3.7, Blatchington Mill +2.3.
   Only King's runs more than a point below.
+
+![Each local authority's secondary absence above or below what its pupils' intake predicts, 2021/22 to 2024/25 (percentage points; the mean of its schools' residuals). Value Added v2.1 school frame; model: log absence on intake with year and region effects ([absence model](bh_effect.qmd)). `R/04`, `R/58`.](writeup/figures/absence_residual_la.png)
 
 ### What kind of absence
 
