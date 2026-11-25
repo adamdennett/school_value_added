@@ -1369,7 +1369,7 @@
     "href": "in_brief.html",
     "title": "In brief",
     "section": "",
-    "text": "NoteAbout this page\n\n\n\nThis is the short version. Key facts gives every figure here with its source, its ranking and its caveat, and links to the pages that carry the models. Everything is built from published DfE, Ofsted and ONS data; nothing uses pupil-level records."
+    "text": "NoteAbout this page\n\n\n\nThis is the short version. Key facts gives every figure here with its source, its ranking and its caveat, and links to the pages that carry the models. The same points are also a slide deck. Everything is built from published DfE, Ofsted and ONS data; nothing uses pupil-level records."
   },
   {
     "objectID": "in_brief.html#the-two-facts-to-hold-together",
@@ -2581,5 +2581,61 @@
     "title": "In brief",
     "section": "6. What would help — and what wouldn’t",
     "text": "6. What would help — and what wouldn’t\n\nPublish a value-added measure and point families at it. Free, no consultation, biggest modelled effect. (See 1.)\nAttendance, as the city’s first-order problem. Biggest lever on results, particularly for disadvantaged children, and the most progressive one.\nA school children in the east can reach. Longhill at Elm Grove, catchments redrawn: neighbourhoods reaching nothing in 30 min 29 → 15; deprived journey gap 3.9 → 0.4 min; Whitehawk’s disadvantaged children 57 → 23 min. Raises the segregation index (0.111 → 0.151) — a cost under the council’s aim, not on the evidence about outcomes.\nConsider how to improve secondary school accessibility and arrest terminal numbers issues in the East. My new Brighton and Hove school system simulator allows us to test policies — such as school relocation — and their impacts on numbers and accessibility.\n\nAnd social mixing is the weakest lever available. A school can reach ~12% of what separates its results; 42% arrives with the intake, and almost all the reachable part runs through attendance (workforce 2.5%, and 0.8% for disadvantaged pupils). Given prior attainment, disadvantaged pupils do slightly better where more of their peers are disadvantaged. BACA proves it: FSM 52.6%, highest absence bar Longhill, and +2.4 points of value added for disadvantaged pupils. The 2024 map lengthened disadvantaged journeys 0.3 min and moved mixing 0.011 — but Whitehawk paid: 78 children a year, +4.5 min for the disadvantaged, offered Longhill 22% → 5%. The proposals that fell would have displaced 6 → 40 children for no gain in mixing — and above ~15% priority 6 does nothing, demand runs out at 117 places, so Class Divide’s 30% = the council’s 20%.\n\n\n\nSeven futures for Longhill: Year 7 fill rate against each option’s admission number, from today’s site and catchments to a smaller school at Elm Grove with redrawn catchments. Median and range across the model’s parameters. From the Brighton and Hove school system model.\n\n\nMore: Key facts, sections 8 and 9."
+  },
+  {
+    "objectID": "in_brief_slides.html#th-best-in-england-for-what-schools-add-122nd-for-disadvantaged-childrens-results",
+    "href": "in_brief_slides.html#th-best-in-england-for-what-schools-add-122nd-for-disadvantaged-childrens-results",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "6th best in England for what schools add — 122nd for disadvantaged children’s results",
+    "text": "6th best in England for what schools add — 122nd for disadvantaged children’s results\n\n\nValue added: 6th of 152 local authorities.\nDisadvantaged pupils’ raw Attainment 8: 122nd of 152.\nBoth are true. The second is the problem, and absence is most of the explanation.\nOur schools add about +1.4 points; our absence takes away about −2.8.\n\n\n\n\nValue Added v2.1 local authority effects; DfE KS4 and absence.\n\n\nThe city has the 6th best local authority value-added effect of 152 in England, and its disadvantaged children leave school ranked 122nd of 152 on raw Attainment 8. Both are true. The second is the problem; absence is most of the explanation."
+  },
+  {
+    "objectID": "in_brief_slides.html#our-idea-of-a-good-school-is-wrong",
+    "href": "in_brief_slides.html#our-idea-of-a-good-school-is-wrong",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "Our idea of a ‘good school’ is wrong",
+    "text": "Our idea of a ‘good school’ is wrong\n\n\nAttainment 8 tracks what a school adds at only 0.27 nationally, 0.31 here.\nSchools explain about 15% of the difference between schools at GCSE. The rest is who goes there.\nAttainment explains 84% of how heavily a school is preferred; value added 20%.\nPoint families to value added: BACA 90 → 174 children on 180 places. Free, and no consultation.\n\n\n\n\nDfE performance tables; How to Pull the Right Lever; Brighton and Hove school system model.\n\n\nParents in Brighton and Hove select schools on attainment, not on what the school adds. The council’s admissions guide points parents to attainment, so disadvantaged intake leads to a lower score, the school is chosen less, the intake shrinks and the score falls. Fixing it is free, needs no consultation, and is the largest change modelled anywhere in this work: BACA 90 to 174 children on 180 places; empty Year 7 places concentrated in three schools 93% to 75%."
+  },
+  {
+    "objectID": "in_brief_slides.html#absence-almost-the-worst-in-england-and-beyond-what-poverty-explains",
+    "href": "in_brief_slides.html#absence-almost-the-worst-in-england-and-beyond-what-poverty-explains",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "Absence: almost the worst in England, and beyond what poverty explains",
+    "text": "Absence: almost the worst in England, and beyond what poverty explains\n\n\nSecondary absence 10.8% vs England’s 8.4% in 2024/25: 3rd of 152. Easing to 6th in 2025/26 so far.\nNot poverty: free school meals 28.8% vs 28.4%; suspensions low.\n+1.7 points above what our pupils predict: 3rd of 152, and 1st in 2024/25. Mostly authorised illness.\nAt England’s average, disadvantaged Attainment 8 moves 122nd → 69th.\n\n\n\n\nDfE, Pupil absence in schools in England; Value Added v2.1 frame (R/04, R/58).\n\n\nPersistent absence 29.4%, 6th, in 2024/25. Of 1.9 points of extra absence, 1.4 is authorised illness. It is worth −3.2 Attainment 8 points for disadvantaged pupils, on a gradient 77% steeper for them; cutting absence by a tenth is worth 3.5% to them against 1.9% to everyone else, the only big lever that narrows the gap."
+  },
+  {
+    "objectID": "in_brief_slides.html#our-poorest-children-travel-furthest-almost-uniquely-in-england",
+    "href": "in_brief_slides.html#our-poorest-children-travel-furthest-almost-uniquely-in-england",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "Our poorest children travel furthest — almost uniquely in England",
+    "text": "Our poorest children travel furthest — almost uniquely in England\n\n\nAcross England, deprived areas are closer to a school in 81% of districts. Here they are 33% further: 1.57 km vs 1.18 km.\n4.7 minutes further by walk and bus — worst in England. 18% of those journeys need two or more buses.\n29 of 179 neighbourhoods (385 children) reach no school place within 30 minutes.\nThe cause: CoMArt closed in 2005. A school back there closes most of the gap.\n\n\n\n\nSchool active travel routing (Zenodo 10.5281/zenodo.24188820); Census 2021; IMD 2025."
+  },
+  {
+    "objectID": "in_brief_slides.html#a-demographic-time-bomb-locked-in-with-a-deadline",
+    "href": "in_brief_slides.html#a-demographic-time-bomb-locked-in-with-a-deadline",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "A demographic time-bomb — locked in, with a deadline",
+    "text": "A demographic time-bomb — locked in, with a deadline\n\n\nYear 7: 2,284 → about 1,825 by 2032/33, a fifth. 9th steepest of 159 areas.\nAbout 765 surplus places by 2033; 93% of today’s empty Year 7 places sit in three schools.\nLonghill: roll 908 → 723; reserve £961k → £531k, about 3.7 years left.\n45% of maintained schools in deficit in 2025-26 (England 21%); 58% in 2024-25, the worst in England.\n\n\n\n\nDfE school census, cohorts rolled forward; DfE consistent financial reporting."
+  },
+  {
+    "objectID": "in_brief_slides.html#its-fertility-not-house-prices",
+    "href": "in_brief_slides.html#its-fertility-not-house-prices",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "It’s fertility, not house prices",
+    "text": "It’s fertility, not house prices\n\n\n0.98 children per woman vs England’s 1.39: joint 2nd lowest of 292 districts.\nHouse prices explain 7% of fertility differences between districts; women’s education 27%.\nLewes, Mid Sussex and Wealden: same prices, fertility 1.45–1.58.\nFamilies do leave too: at Year 7 that is about half the recent fall.\n\n\n\n\nONS birth rates by local authority; ONS housing affordability; Census 2021. More in the note for the council."
+  },
+  {
+    "objectID": "in_brief_slides.html#what-would-help-and-what-wouldnt",
+    "href": "in_brief_slides.html#what-would-help-and-what-wouldnt",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "What would help — and what wouldn’t",
+    "text": "What would help — and what wouldn’t\n\n\nPublish a value-added measure and point families at it. Free, no consultation, biggest modelled effect.\nTreat attendance as the city’s first-order problem: the biggest and most progressive lever.\nA school the east can reach: Longhill at Elm Grove cuts neighbourhoods with no school in 30 minutes from 29 to 15.\nSocial mixing is the weakest lever available: a school can reach only about 12% of what separates its results.\n\n\n\n\nBrighton and Hove school system model and simulator."
+  },
+  {
+    "objectID": "in_brief_slides.html#the-national-ask",
+    "href": "in_brief_slides.html#the-national-ask",
+    "title": "A value-added success, with a disadvantage problem",
+    "section": "The national ask",
+    "text": "The national ask\n\n\nAttendance is where the disadvantage gap sits. Nationally absence explains 56% of school Attainment 8, deprivation 21%. Severe absence: 1.2% → 3.6% of pupils.\nFalling rolls need a national framework. England’s Year 7 will be about 10% smaller by 2032/33. Rolls fall first; money follows.\nPublish a contextualised measure beside Attainment 8. One exists, free, for all 3,265 secondaries.\n\n\n\n\nDfE school census, cohorts rolled forward; How to Pull the Right Lever; Value Added v2.1."
   }
 ]

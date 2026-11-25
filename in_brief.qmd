@@ -11,8 +11,9 @@ toc-depth: 2
 
 This is the short version. [Key facts](key_facts.qmd) gives every figure here
 with its source, its ranking and its caveat, and links to the pages that carry
-the models. Everything is built from published DfE, Ofsted and ONS data;
-nothing uses pupil-level records.
+the models. The same points are also [a slide deck](in_brief_slides.html).
+Everything is built from published DfE, Ofsted and ONS data; nothing uses
+pupil-level records.
 :::
 
 ## The hook
