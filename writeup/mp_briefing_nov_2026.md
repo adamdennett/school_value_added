@@ -28,9 +28,10 @@ explanation.
 
 ## 2. Absence — the biggest lever, and it is not poverty
 
-- **11.3% in 2024/25, the worst of 152 authorities** (2nd worst on the earlier
-  measure). Was 9th in 2021/22. **Getting worse.** Persistent absence **30.6%,
-  4th**.
+- **Secondary absence 10.8% in 2024/25 vs England's 8.4%: 3rd worst of 152
+  authorities** (DfE official; behind Knowsley and Bradford). Was 9th in
+  2021/22, 7th in 2023/24. **Easing in 2025/26:** 9.8% vs 8.0% over autumn and
+  spring, **6th**. Persistent absence **29.4%, 6th** in 2024/25.
 - **Not poverty:** FSM **28.8%** vs England's 28.4%. **Suspensions 13.0 per 100
   vs 21.2.** Prior attainment 50th of 152.
 - **Not explained by intake:** absence runs **+1.7 points above what our own
@@ -115,7 +116,7 @@ council's 20%.
   2025 cohorts sit **above** the pre-existing trend; child out-migration
   *improved*. 2026 entry (June 2027) is the real test.
 - **"Our schools add more than others"** → say *"our schools achieve what similar
-  intakes achieve elsewhere, despite the worst absence in England."* With no
+  intakes achieve elsewhere, despite some of the highest absence in England."* With no
   allowance for absence we are **−0.7 points, 102nd of 151**.
 
 ## The national ask
