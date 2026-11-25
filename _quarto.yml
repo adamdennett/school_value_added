@@ -47,10 +47,6 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: in_brief.qmd
-        text: "In brief"
-      - href: key_facts.qmd
-        text: "Key facts"
       - href: review.qmd
         text: "The review"
       - text: "Methodology"
@@ -69,8 +65,15 @@ website:
         menu:
           - href: sussex.qmd
             text: "Sussex overview"
+          - text: "---"
+          - text: "Brighton and Hove"
           - href: areas/brighton_and_hove.qmd
-            text: "Brighton and Hove"
+            text: "Area profile"
+          - href: in_brief.qmd
+            text: "In brief"
+          - href: key_facts.qmd
+            text: "Key facts"
+          - text: "---"
           - href: areas/east_sussex.qmd
             text: "East Sussex"
           - href: areas/west_sussex.qmd

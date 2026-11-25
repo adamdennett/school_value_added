@@ -16,8 +16,7 @@ toc-depth: 2
   model](https://adamdennett.github.io/bh-school-system/analysis.html). Each
   fact links to the page that computes it, so anything here can be checked.
 - **Data:** published data only --- DfE, Ofsted and ONS. No pupil-level record
-  is used anywhere. The one exception is noted on the school system model's own
-  page.
+  is used anywhere.
 - **Written to be argued with.** Where the evidence cuts against the way the
   city's schools are usually described --- in either direction --- that is said
   plainly. Section 10 lists what would change these conclusions.
