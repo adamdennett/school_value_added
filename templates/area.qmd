@@ -728,6 +728,86 @@ abs_sources_table(c(AC$cont, AC$fact, region = "Region"))
 ```
 :::
 
+```{r abs-autism-setup}
+#| include: false
+IS_BH <- NAME == "Brighton and Hove"
+if (IS_BH) {
+  SA <- AC$local$schools
+  ap <- autism_provision(AC, w$URN)
+  sh_ill <- abs_local_share(AC, w$URN, "illness")
+  asd_share <- sh_ill$area[sh_ill$var == "asd"]; asd_share_eng <- sh_ill$england[sh_ill$var == "asd"]
+  asd_of <- function(urns) { s <- abs_local_share(AC, urns, "illness"); s$area[s$var == "asd"] }
+  loo <- sapply(seq_along(ap$URN), function(k) asd_of(ap$URN[-k]))
+  set.seed(2026); rnd <- replicate(500, asd_of(sample(SA$URN, nrow(ap))))
+  la_asd <- sapply(split(SA$URN, SA$la), function(x) if (length(x) >= 8) asd_of(x) else NA)
+  la_asd <- sort(la_asd[!is.na(la_asd)], decreasing = TRUE); names(la_asd) <- sub("[.]asd$", "", names(la_asd))
+  prov_n <- sum(ap$asd_prov)
+  hi_none <- ap |> filter(asd >= 10, !asd_prov)
+  NUMW <- c("No", "One", "Two", "Three", "Four", "Five")
+}
+```
+
+```{r abs-autism-text}
+#| output: asis
+#| eval: !expr IS_BH
+cat(sprintf('
+### Autism and illness absence {#absence-autism}
+
+The dropdown above shows that, for illness, autism is what the national
+model\'s expected absence varies on most across the city\'s schools
+(%.0f%%, against %.0f%% across England). That needs reading carefully.
+
+- **The city\'s schools have far more pupils with autism than England\'s, and
+  differ widely.** On average %.1f%% of each school\'s pupils have autism as
+  their primary special educational need (EHC plans and SEN support), against
+  %.1f%% in England\'s average school, from %.1f%% at %s to %.1f%% at %s.
+- **That spread is what drives the %.0f%%, not a large effect of autism.**
+  Nationally, a standard deviation more autism goes with only %s more illness
+  absence. The city\'s schools differ so much on it that it becomes the biggest
+  source of differences in what the model expects.
+- **It is not an artefact of having ten schools.** Leaving out any one school,
+  the share stays between %.0f%% and %.0f%%. Random sets of ten English schools
+  give a median of %.0f%%, and none of %d reached it. Among the %d authorities
+  with eight or more secondaries, Brighton and Hove is the highest; the next is
+  %s (%.0f%%).
+- **Actual illness absence does not follow autism share.** Across the ten
+  schools the correlation is %+.2f, and the model\'s expected illness varies
+  only about %.0f%% as much as actual illness does. What separates the city\'s
+  schools on illness lies mostly outside the published data.
+',
+  asd_share, asd_share_eng, mean(ap$asd), mean(SA$asd), min(ap$asd), ap$SCHNAME[which.min(ap$asd)], max(ap$asd), ap$SCHNAME[which.max(ap$asd)],
+  asd_share, sprintf("%+.1f%%", AC$effects$pct[AC$effects$outcome == "illness" & AC$effects$term == "asd"]),
+  min(loo), max(loo), median(rnd), length(rnd), length(la_asd), names(la_asd)[2], la_asd[2],
+  cor(ap$asd, ap$illness), 100 * sh_ill$r2_area[1]))
+```
+
+```{r tbl-abs-autism}
+#| eval: !expr IS_BH
+#| tbl-cap: "Brighton and Hove's secondary schools: pupils with autism as their primary SEN need (% of roll, January 2026), illness absence (autumn and spring 2025/26), and resourced provision or SEN units recorded in Get Information about Schools, with the autism share left if every resourced place were a pupil with autism."
+kt(ap |> transmute(School = SCHNAME, `Autism (% of roll)` = sprintf("%.1f", asd), `Illness absence (%)` = sprintf("%.1f", illness),
+                   `Provision in GIAS` = provision,
+                   `Autism share without the places` = ifelse(is.na(asd_if_all), "", sprintf("%.1f%%", asd_if_all))), align = "lrrlr")
+```
+
+```{r abs-autism-after}
+#| output: asis
+#| eval: !expr IS_BH
+cat(sprintf('
+- **Specialist provision explains only a small part.** %s of the city\'s
+  secondaries have resourced provision that includes autism. Even if every
+  place were taken by a pupil with autism, both would still be well above
+  England. And %s, with %s of pupils with autism, have no provision recorded.
+- **So the high and uneven shares are mostly in the mainstream intake.** That
+  points to differences in identification and diagnosis, to where families of
+  autistic children choose to send them, or both.
+- **Sources:** [DfE, *Special educational needs in England*](https://explore-education-statistics.service.gov.uk/find-statistics/special-educational-needs-in-england),
+  January 2026, school level (primary need); [Get Information about
+  Schools](https://get-information-schools.service.gov.uk/), 10 June 2026
+  (resourced provision and SEN units, which depend on records being kept up to
+  date). Percentages are of each school\'s whole roll, as DfE publishes them.
+', NUMW[prov_n + 1], and_list(sub(" School$| High School$", "", hi_none$SCHNAME)), and_list(sprintf("%.1f%%", hi_none$asd))))
+```
+
 ### For heads and governors {#absence-heads}
 
 ```{r abs-heads-setup}

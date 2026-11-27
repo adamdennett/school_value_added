@@ -403,3 +403,30 @@ fig_abs_decomp <- function(dec, title) {
 }
 ABS_GROUP_ORDER <- c("Poverty" = 1, "SEND" = 2, "Young carers" = 3, "Ethnicity and language" = 4,
                      "Prior attainment and neighbourhood" = 5, "Mobility and sex" = 6, "The school" = 7, "Place" = 8)
+
+#' Autism and specialist provision for a set of schools: each school's share of
+#' pupils whose primary SEN need is autism (EHC plans and SEN support, January
+#' 2026 SEN file, via the absence models), its illness absence (autumn and
+#' spring 2025/26), and any resourced provision or SEN unit recorded in Get
+#' Information about Schools (types of need, places), with the share of the
+#' roll left if every resourced place were a pupil with autism
+autism_provision <- function(AC, urns) {
+  G <- data.table::fread(here::here("data-raw", "gias", "edubasealldata20260610.csv"),
+                         select = c("URN", paste0("SEN", 1:13, " (name)"), "TypeOfResourcedProvision (name)",
+                                    "ResourcedProvisionCapacity", "SenUnitCapacity"))
+  sen <- paste0("SEN", 1:13, " (name)")
+  NEED <- c(ASD = "autism", SpLD = "specific learning difficulty", SLCN = "speech, language and communication", MLD = "moderate learning difficulty", SEMH = "social, emotional and mental health", HI = "hearing impairment", VI = "visual impairment", PD = "physical disability", SLD = "severe learning difficulty", PMLD = "profound and multiple learning difficulty", MSI = "multi-sensory impairment", OTH = "other")
+  G[, codes := apply(.SD, 1, function(r) paste(unique(sub(" - .*", "", r[r != "" & !is.na(r)])), collapse = ";")), .SDcols = sen]
+  G[, needs := sapply(strsplit(codes, ";"), function(k) paste(ifelse(k %in% names(NEED), NEED[k], k), collapse = ", "))]
+  G[, places := rowSums(cbind(ResourcedProvisionCapacity, SenUnitCapacity), na.rm = TRUE)]
+  G[, has := `TypeOfResourcedProvision (name)` %in% c("Resourced provision", "SEN unit", "Resourced provision and SEN unit")]
+  S <- AC$local$schools
+  out <- S[S$URN %in% urns, c("URN", "SCHNAME", "asd", "illness", "size")] |>
+    dplyr::left_join(as.data.frame(G[, .(URN, codes, needs, places, has)]), by = "URN") |>
+    dplyr::mutate(roll = exp(size), autism_n = asd / 100 * roll,
+                  provision = ifelse(has %in% TRUE, paste0(needs, " (", places, " places)"), "none recorded"),
+                  asd_prov = has %in% TRUE & grepl("ASD", codes),
+                  asd_if_all = ifelse(asd_prov, 100 * pmax(autism_n - places, 0) / roll, NA_real_)) |>
+    dplyr::arrange(dplyr::desc(asd))
+  out
+}
