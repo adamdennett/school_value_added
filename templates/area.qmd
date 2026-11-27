@@ -667,6 +667,56 @@ asch |> transmute(School = SCHNAME, Overall = f2(overall_obs, overall_exp), `Abo
   kt(align = "lrrrrr")
 ```
 
+### What separates schools here, against England {#absence-local}
+
+```{r abs-local-setup}
+#| include: false
+sh_loc <- abs_local_share(AC, w$URN, "overall")
+n_loc <- sh_loc$n[1]
+ok_loc <- n_loc >= 5
+top_e <- sh_loc |> arrange(desc(england)) |> slice(1:2)
+if (ok_loc) {
+  top_a <- sh_loc |> arrange(desc(area)) |> slice(1)
+  more <- sh_loc |> mutate(d = area - england) |> arrange(desc(d)) |> filter(d >= 3) |> slice(1:2)
+  less <- sh_loc |> mutate(d = area - england) |> arrange(d) |> filter(d <= -3) |> slice(1:2)
+}
+lw <- function(x) { x <- sub(" \\(%\\)$", "", x)
+  ifelse(grepl("^(KS2|White|English|Gypsy|EHC)", x), x, paste0(tolower(substr(x, 1, 1)), substring(x, 2))) }
+```
+
+The national model says which characteristics separate England's schools
+in expected overall absence: most of all `r lw(top_e$label[1])`
+(`r sprintf("%.0f%%", top_e$england[1])` of the differences between schools'
+expected absence) and `r lw(top_e$label[2])` (`r sprintf("%.0f%%", top_e$england[2])`).
+The same split, made for `r NAME`'s schools alone, shows whether the same
+characteristics separate them here, or others.
+
+`r if (!ok_loc) paste0("With ", n_loc, " schools, ", NAME, " has too few to split reliably; the ", if (TIER == "district") paste0(PARENT, " page") else "Sussex page", " shows the wider picture.") else paste0("- **Among ", NAME, "'s ", n_loc, " schools, ", lw(top_a$label), " separates them most** (", sprintf("%.0f%%", top_a$area), " of the differences in their expected absence; ", sprintf("%.0f%%", top_a$england), " across England).")`
+`r if (ok_loc && nrow(more)) paste0("- **Matters more here than nationally:** ", and_list(paste0(lw(more$label), " (", sprintf("%.0f%%", more$area), " against ", sprintf("%.0f%%", more$england), ")")), ".") else ""`
+`r if (ok_loc && nrow(less)) paste0("- **Matters less here:** ", and_list(paste0(lw(less$label), " (", sprintf("%.0f%%", less$area), " against ", sprintf("%.0f%%", less$england), ")")), ".") else ""`
+`r if (ok_loc && n_loc >= 8) paste0("- **How far the characteristics go here:** across ", NAME, "'s schools the national model's expected absence varies ", if (sh_loc$r2_area[1] >= 1) "at least as much as" else paste0("about ", sprintf("%.0f%%", 100 * sh_loc$r2_area[1]), " as much as"), " their actual absence does (log scale). The rest is what the characteristics do not capture: the schools themselves, and chance.") else ""`
+
+```{r fig-abs-local}
+#| eval: !expr ok_loc
+#| fig-cap: !expr paste0("What separates ", NAME, "'s schools in expected overall absence against England, as each characteristic's share of the differences between schools in the national model's prediction (its coefficients times the school's values), autumn and spring 2025/26. Hollow, England; filled, ", NAME, ". Characteristics with a share of 1.5% or more in either.")
+#| fig-height: 4.8
+#| fig-width: 10
+fig_abs_local_share(sh_loc, NAME)
+```
+
+- **How the share is worked out:** each characteristic's part of a school's
+  expected absence is its national coefficient times the school's value. Its
+  share is how much that part moves with the whole prediction across the
+  schools (the covariance over the variance), so shared variation is split
+  between characteristics and the shares add up to 100%. A characteristic
+  that pulls against the others has a negative share.
+- **Why it can differ from the national Shapley shares:** this uses the
+  multilevel model's coefficients and a covariance split, the [Shapley
+  chart](@@ROOT@@absence_causes.qmd#sec-shap-vars) OLS and an average over
+  orders of entry, so the two can rank close characteristics differently.
+- **Small numbers:** with a handful of schools one unusual school can move a
+  share a long way.
+
 ### For heads and governors {#absence-heads}
 
 ```{r abs-heads-setup}

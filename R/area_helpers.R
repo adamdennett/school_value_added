@@ -270,6 +270,44 @@ abs_decomp <- function(AC, urns, outcomes = names(ABS_SHOW)) {
   }))
 }
 
+#' Which characteristics separate a set of schools, on the national model:
+#' each characteristic's part of the fixed-effect prediction (its national
+#' coefficients times the school's values, summed over a category's levels),
+#' and its share of the variation in that prediction across the set, as
+#' cov(part, prediction) / var(prediction). The shares add up to 100%; a
+#' characteristic that offsets others has a negative share. Returned for the
+#' set and for every school in England, with the set's within-set R² (the
+#' variation in the prediction over the variation in log absence).
+abs_local_share <- function(AC, urns, o = "overall") {
+  L <- AC$local; b <- AC$coefs |> filter(outcome == o, term != "(Intercept)")
+  vars <- c(names(AC$cont), names(AC$fact))
+  var_of <- sapply(b$term, function(t) { hit <- vars[t == vars | startsWith(t, vars)]; hit[which.max(nchar(hit))] })
+  C <- sapply(vars, function(v) { tt <- b$term[var_of == v]; if (!length(tt)) return(rep(0, nrow(L$mm)))
+    as.vector(L$mm[, tt, drop = FALSE] %*% b$b[match(tt, b$term)]) })
+  F <- rowSums(C)
+  share <- function(i) apply(C[i, , drop = FALSE], 2, function(cc) cov(cc, F[i]) / var(F[i]))
+  i <- which(L$schools$URN %in% urns)
+  lab <- c(AC$cont, AC$fact)
+  tibble::tibble(var = vars, label = unname(lab[vars]), england = 100 * share(seq_len(nrow(C))),
+                 area = if (length(i) >= 5) 100 * share(i) else NA_real_,
+                 n = length(i), r2_area = if (length(i) >= 5) var(F[i]) / var(L$ly[i, o]) else NA_real_)
+}
+
+#' The two sets of shares as a dot chart: England hollow, the area filled
+fig_abs_local_share <- function(sh, name, min_share = 1.5) {
+  d <- sh |> filter(abs(area) >= min_share | abs(england) >= min_share) |>
+    mutate(label = factor(label, label[order(area)]))
+  long <- tidyr::pivot_longer(d, c(england, area), names_to = "who", values_to = "share") |>
+    mutate(who = factor(who, c("england", "area"), c("England", name)))
+  ggplot(long, aes(share, label)) + geom_vline(xintercept = 0, colour = GREY) +
+    geom_line(aes(group = label), colour = LIGHT, linewidth = 1) +
+    geom_point(aes(shape = who, colour = who), size = 3) +
+    scale_shape_manual(values = c(1, 16), name = NULL) +
+    scale_colour_manual(values = setNames(c(GREY, BPURPLE), c("England", name)), name = NULL) +
+    labs(x = "Share of the differences between schools in expected absence (%)", y = NULL) +
+    theme_note(11) + theme(legend.position = "top")
+}
+
 #' For each area: its absence against England's (%), and the part its
 #' schools' characteristics do not account for (%), kind by kind
 abs_vs_england <- function(AC, sets, outcomes = names(ABS_SHOW)) {

@@ -13,8 +13,8 @@ OUT_SHORT <- c(overall = "Overall", illness = "Illness", appointments = "Medical
                severe = "Severe\n(50%+)")
 TERM_LAB <- c(A$cont,
   sixthTRUE = "Has a sixth form (vs 11-16)",
-  ADMPOL_PTSEL = "Selective (vs non-selective, selective area)",
-  `ADMPOL_PTOTHER NON SEL` = "Non-selective elsewhere (vs same)",
+  ADMPOL_PTSEL = "Selective (vs comprehensive, selective area)",
+  `ADMPOL_PTOTHER NON SEL` = "Comprehensive elsewhere (vs comprehensive, selective area)",
   `matMulti-academy trust` = "Multi-academy trust (vs maintained)",
   `matSingle-academy trust or not recorded` = "Single-academy trust (vs maintained)",
   faithTRUE = "Religious character (vs none)",
@@ -901,18 +901,19 @@ subplot(p_e, p_s, nrows = 2, heights = c(0.56, 0.44), margin = 0.07, titleX = TR
 
 **What "Admissions" is.** The school's admissions policy, in three groups:
 selective (grammar schools, `r A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "SEL"]`
-schools), non-selective schools in highly selective areas (in effect
-secondary moderns, `r A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "NON SEL IN HIGHLY SEL AREA"]`;
-the reference), and non-selective schools elsewhere (comprehensives,
-`r format(A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "OTHER NON SEL"], big.mark = ",")`).
+schools), comprehensive schools in areas that still have grammar schools
+(`r A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "NON SEL IN HIGHLY SEL AREA"]`;
+the reference), and comprehensive schools elsewhere
+(`r format(A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "OTHER NON SEL"], big.mark = ",")`).
 
 - **Grammar schools have much lower absence than their intake predicts.**
-  Against secondary moderns, with prior attainment, free school meals, SEN and
+  Against comprehensive schools in the same selective areas, with prior
+  attainment, free school meals, SEN and
   the rest held equal: overall absence `r sg(e("ADMPOL_PTSEL", "overall"))`,
   unauthorised `r sg(e("ADMPOL_PTSEL", "unauth"))`, persistent
   `r sg(e("ADMPOL_PTSEL", "persistent"))` and severe
   `r sg(e("ADMPOL_PTSEL", "severe"))`.
-- **Comprehensives and secondary moderns do not differ** once intake is
+- **Comprehensive schools in selective areas and elsewhere do not differ** once intake is
   allowed for (overall `r sg(e("ADMPOL_PTOTHER NON SEL", "overall"))`, not
   significant).
 - **This is an association, not proof that selection improves attendance.**
@@ -921,6 +922,73 @@ the reference), and non-selective schools elsewhere (comprehensives,
   support at home. Grammar schools are few (about one in twenty secondaries),
   which is why admissions has a large effect but a modest share of the
   explained variation.
+
+#### Why the two panels rank characteristics differently {#sec-why-differ}
+
+```{r}
+#| include: false
+Lx <- A$local$schools; yo <- A$local$ly[, "overall"]
+r2_alone <- function(v) summary(lm(yo ~ Lx[[v]]))$r.squared
+pick <- c("ks2_c", "fsm", "ADMPOL_PT", "semh", "wbri", "mobile", "sixth")
+eff_lab <- function(v) {
+  t <- if (v == "ADMPOL_PT") "ADMPOL_PTSEL" else if (v == "sixth") "sixthTRUE" else v
+  sprintf("%+.1f%%", A$effects$pct[A$effects$outcome == "overall" & A$effects$term == t])
+}
+spread <- function(v) {
+  if (v == "ADMPOL_PT") return(sprintf("%.0f%% of schools selective", 100 * mean(Lx$ADMPOL_PT == "SEL")))
+  if (v == "sixth") return(sprintf("%.0f%% of schools have a sixth form", 100 * mean(Lx$sixth)))
+  "every school, along a scale"
+}
+why <- tibble(var = pick) |>
+  mutate(Characteristic = c("KS2 prior attainment (per SD)", "Free school meals (per SD)", "Selective (vs comprehensive, selective area)",
+                            "SEMH need (per SD)", "White British (per SD)", "Joined mid-phase (per SD)", "Has a sixth form (vs 11-16)"),
+         Effect = sapply(var, eff_lab), `Who it separates` = sapply(var, spread),
+         `R² on its own` = sprintf("%.2f", sapply(var, r2_alone)),
+         `Shapley share` = sprintf("%.0f%%", SV$share[SV$outcome == "overall"][match(var, SV$var[SV$outcome == "overall"])]))
+```
+
+The top panel ranks characteristics by **effect**: how much expected absence
+changes when one characteristic moves and every other is held still. The
+bottom panel ranks them by **importance**: how much of the actual
+difference between England's schools each one accounts for. They answer
+different questions, and three things separate them.
+
+1. **The effects are on different scales.** For a measured characteristic
+   the top panel shows one standard deviation; for a category, the whole
+   difference between yes and no. Being a grammar school rather than a
+   comprehensive in the same area is a much bigger step than one standard deviation of
+   prior attainment. Grammar schools' pupils average far higher prior
+   attainment and far fewer on free school meals, several standard deviations
+   apart.
+2. **Overlap.** Prior attainment, free school meals, neighbourhood education
+   and selection move together. On its own, prior attainment lines up with
+   `r why$"R² on its own"[1]` of the variation between schools in (log)
+   absence, and selection with `r why$"R² on its own"[3]`, because grammar
+   schools have far lower absence than anyone else. But much of that is the
+   same variation counted twice. The top panel shows only what each adds
+   *with the others held equal*. The Shapley share gives each its own part
+   plus a fair split of what it shares. Prior attainment overlaps with almost
+   everything, so it keeps the largest share
+   (`r why$"Shapley share"[1]`) though its separate effect is moderate;
+   selection keeps `r why$"Shapley share"[3]`.
+3. **How many schools a characteristic reaches.** About one school in twenty
+   is selective, so even a large effect moves expected absence for few
+   schools. Every school sits somewhere on prior attainment, so a moderate
+   effect moves all of them.
+4. **Different models.** The effects come from the multilevel model, which
+   also allows for each authority; the Shapley shares from OLS with region,
+   which is what makes the split over orders of entry possible.
+
+```{r}
+#| label: tbl-why-differ
+#| tbl-cap: "Overall absence: each characteristic's effect (top panel), which schools it separates, how much of the variation between schools it accounts for on its own, and its Shapley share (bottom panel). Selected characteristics."
+kt(why |> select(-var), align = "lrlrr")
+```
+
+So both are right, and both are useful. For a single school, **the effect**
+says what a characteristic does to its expected absence. For England's
+schools taken together, **the importance** says which characteristics most
+of the differences between them line up with.
 
 
 ```{r}
