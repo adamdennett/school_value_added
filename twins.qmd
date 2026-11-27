@@ -209,3 +209,94 @@ to ask what it does differently, not proof that copying it would work.
   [How school absence changes](absence_change.qmd).
 
 All of it is published school-level data.
+
+## Our twins and DfE's similar schools {#sec-dfe}
+
+```{r}
+#| include: false
+TV <- readRDS(here::here("data", "twins_vs_dfe.rds"))
+ts <- TV$summ
+p1 <- function(x) sprintf("%.1f", x); p2 <- function(x) sprintf("%.2f", x)
+```
+
+DfE also groups schools with "statistically similar schools". Every school
+now receives a *similar schools comparison report* on its attendance, which
+sets it against **20 statistically similar schools in the same phase**, and
+each school's attendance baseline improvement expectation (ABIE) is based on
+the progress of those schools (see [Our model and DfE's attendance
+expectations](attendance_expectations.qmd)). DfE's financial benchmarking
+tool uses its own set of similar schools again. Our twins and DfE's similar
+schools answer the same question --- which schools face a task like yours?
+--- but they are built differently.
+
+### How they are made
+
+| | Our twins | DfE's similar schools (attendance) |
+|---|---|---|
+| **Purpose** | Compare a school's absence, attainment or value added with schools facing a similar task | Benchmark a school's attendance, and set its ABIE |
+| **How many** | As many as you want to see, ranked by similarity | 20 |
+| **Pupils** | Free school meals, KS2 prior attainment, EAL, White British, joining mid-phase, girls | Free school meals, EAL, Gypsy, Roma and Traveller pupils |
+| **Needs** | SEN support, EHC plans, SEMH need | SEN support, including SEMH need |
+| **Neighbourhood and place** | Neighbourhood education; rural or urban | IDACI deprivation of pupils' home postcodes; region; rural or urban; pupils' average travel distance |
+| **The school** | Size, admissions (selective or not), sixth form, religious character | Pupils on roll; funding per pupil |
+| **Distance** | Gower distance: gaps in SDs capped at 3, categories 0 or 1 | Not published |
+| **Weights** | By default, how much each characteristic moves the measure you chose; or equal | Not published |
+| **Area** | England, the same region, or outside the school's own authority: your choice | Mainly the same region; "may include schools from other regions" |
+| **Uses results or attendance to choose?** | No: only to compare, once chosen | No (DfE does not say otherwise) |
+| **Can you see the list?** | Yes, every twin and its similarity | No: "We do not provide a complete list of comparison schools" |
+
+- **The biggest differences in what is matched:** ours matches on **prior
+  attainment, mobility, neighbourhood education and admissions**, which matter
+  most for results and a good deal for absence. DfE's matches on
+  **deprivation of pupils' homes, Gypsy, Roma and Traveller pupils, funding per
+  pupil and travel distance**, which are about circumstances and resources.
+- **The biggest difference in method:** ours is open and weighted to the
+  measure. DfE's weights, distance and lists are not published.
+
+### Do they pick the same schools?
+
+To compare them we rebuilt DfE's set for every school from published data,
+on every factor DfE lists except travel distance (the method is on the
+[attendance expectations page](attendance_expectations.qmd#sec-rebuild)), and
+set it against each school's 20 closest twins in England on our
+overall-absence weights. Across `r format(ts$schools, big.mark = ",")`
+secondary schools:
+
+- **They share few schools.** On average the two sets of 20 have
+  **`r p1(ts$shared_mean)`** schools in common; for
+  `r round(100 * ts$shared_none)`% of schools they share none, and almost no
+  school (`r p1(100 * ts$shared_half)`%) shares half.
+- **Our twins are more alike, as they are built to be.** On our similarity
+  score our 20 twins average `r round(ts$sim_ours)`%, DfE's similar schools
+  `r round(ts$sim_dfe)`%.
+- **Our twins say more about a school's own results.** The average of a
+  school's 20 twins tracks its own overall absence at r =
+  `r p2(ts$r_abs_ours)` (DfE's set: `r p2(ts$r_abs_dfe)`) and its Attainment 8
+  at r = `r p2(ts$r_att_ours)` (DfE's set: `r p2(ts$r_att_dfe)`). DfE's set is
+  not built for results, and leaves out prior attainment.
+
+```{r}
+#| label: fig-twins-dfe-shared
+#| fig-cap: "How many schools a school's 20 closest twins (ours, overall-absence weights) share with its 20 statistically similar schools (DfE's factors, rebuilt from published data). State-funded secondary schools in England."
+#| fig-height: 3.4
+ggplot(TV$R, aes(shared)) + geom_bar(fill = DPURPLE, width = 0.8) +
+  scale_x_continuous(breaks = 0:20) +
+  labs(x = "Schools in common, of 20", y = "Schools") + theme_note(11)
+```
+
+```{r}
+#| label: tbl-twins-dfe-bh
+#| tbl-cap: "Brighton and Hove's secondary schools: schools in common between our 20 twins and DfE's 20 similar schools (rebuilt), and how alike each set is on our similarity score."
+kt(as.data.frame(TV$bh) |> transmute(School = name, `In common, of 20` = shared, `Our twins: similarity` = paste0(round(sim_ours), "%"),
+                                      `DfE set: similarity` = paste0(round(sim_dfe), "%")), align = "lrrr")
+```
+
+**Why it matters.** A school's benchmark depends on whose similar schools it
+is measured against. On the attendance page, two of the city's schools look
+quite different against the two: Brighton Aldridge and Hove Park run at or
+below our model's expectation, but above the median of their DfE-style
+similar schools.
+
+The DfE set here is our rebuild, not DfE's own list, which is not published;
+DfE's also uses pupils' travel distance and home-postcode deprivation, which
+the published data cannot match exactly.

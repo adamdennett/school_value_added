@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-11-27">
+
+<title>Our model and DfE’s attendance expectations – School Value Added</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-74b9967882a099e5bc8124866f82741d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9Y5VT5P0NE"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9Y5VT5P0NE', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">School Value Added</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./review.html"> 
+<span class="menu-text">The review</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="./method.html">
+ <span class="dropdown-text">Value Added v2.1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./v22.html">
+ <span class="dropdown-text">v2.2 candidates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./method.html#sec-twins-method">
+ <span class="dropdown-text">Find a twin: the matching</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./method.html#sec-finance-method">
+ <span class="dropdown-text">School finances: the early-warning model</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.html"> 
+<span class="menu-text">Explore by area</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sussex" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sussex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sussex">    
+        <li>
+    <a class="dropdown-item" href="./sussex.html">
+ <span class="dropdown-text">Sussex overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Brighton and Hove</li>
+        <li>
+    <a class="dropdown-item" href="./areas/brighton_and_hove.html">
+ <span class="dropdown-text">Area profile</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./in_brief.html">
+ <span class="dropdown-text">In brief</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./key_facts.html">
+ <span class="dropdown-text">Key facts</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./districts.html">
+ <span class="dropdown-text">All twelve districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-geographical-effects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Geographical effects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-geographical-effects">    
+        <li>
+    <a class="dropdown-item" href="./geography.html">
+ <span class="dropdown-text">Across England</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bh_effect.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_types.html">
+ <span class="dropdown-text">Neighbourhood types (OAC)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./neighbourhood_covariates.html">
+ <span class="dropdown-text">Neighbourhood covariates (experiment)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./distance.html">
+ <span class="dropdown-text">Distance to school</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-absence" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Absence</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-absence">    
+        <li>
+    <a class="dropdown-item" href="./absence_causes.html">
+ <span class="dropdown-text">What goes with absence</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./absence_change.html">
+ <span class="dropdown-text">How absence changes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./attendance_expectations.html">
+ <span class="dropdown-text">Attendance expectations (ABIE)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pupils-and-places" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pupils and places</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pupils-and-places">    
+        <li>
+    <a class="dropdown-item" href="./demographics.html">
+ <span class="dropdown-text">Pupil numbers and school places</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bh_births_note.html">
+ <span class="dropdown-text">Brighton and Hove: why so few young children (note)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://adamdennett.github.io/school_house_prices/">
+ <span class="dropdown-text">House prices near good schools (separate site)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./finance.html">
+ <span class="dropdown-text">School finances before closure</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">School finances by area</li>
+        <li>
+    <a class="dropdown-item" href="./finance_areas/brighton_and_hove.html">
+ <span class="dropdown-text">Brighton and Hove</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./finance_areas/east_sussex.html">
+ <span class="dropdown-text">East Sussex and its districts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./finance_areas/west_sussex.html">
+ <span class="dropdown-text">West Sussex and its districts</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./twins.html"> 
+<span class="menu-text">Find a twin</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./simulator.html"> 
+<span class="menu-text">Information system</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./independent.html"> 
+<span class="menu-text">Independent schools</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-trusts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Trusts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-trusts">    
+        <li>
+    <a class="dropdown-item" href="./trust_aldridge.html">
+ <span class="dropdown-text">Aldridge Education</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./roadmap.html"> 
+<span class="menu-text">Roadmap</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://adamdennett.github.io/school_attainment_tool/"> 
+<span class="menu-text">The original work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/adamdennett/school_value_added"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#in-short" id="toc-in-short" class="nav-link active" data-scroll-target="#in-short">In short</a></li>
+  <li><a href="#sec-what" id="toc-sec-what" class="nav-link" data-scroll-target="#sec-what">What an ABIE is</a></li>
+  <li><a href="#sec-rebuild" id="toc-sec-rebuild" class="nav-link" data-scroll-target="#sec-rebuild">Rebuilding the comparison</a></li>
+  <li><a href="#sec-agree" id="toc-sec-agree" class="nav-link" data-scroll-target="#sec-agree">Does it agree with our model?</a></li>
+  <li><a href="#sec-bh" id="toc-sec-bh" class="nav-link" data-scroll-target="#sec-bh">Brighton and Hove</a></li>
+  <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next">What a direct comparison needs</a></li>
+  <li><a href="#sec-sources" id="toc-sec-sources" class="nav-link" data-scroll-target="#sec-sources">Sources</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Our model and DfE’s attendance expectations</h1>
+<p class="subtitle lead">How DfE sets each school’s attendance baseline improvement expectation (ABIE), and how a rebuild of its similar-schools comparison lines up with our model of absence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 27, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this page
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>The question:</strong> DfE now gives every school an <em>attendance baseline improvement expectation</em> (ABIE). How is it set, and does it agree with what our model says a school’s absence should be, given its pupils?</li>
+<li><strong>The limit:</strong> ABIE values are not published. Schools see their own, and local authorities receive school-level workbooks. So this page rebuilds the similar-schools comparison that ABIEs are based on, from published data, and compares that with our model. The real ABIEs can be added once we have a workbook.</li>
+<li><strong>Data:</strong> published DfE school absence, census, SEN, finance and GIAS files, and the English Indices of Deprivation. No pupil-level records are used.</li>
+</ul>
+</div>
+</div>
+<section id="in-short" class="level2">
+<h2 class="anchored" data-anchor-id="in-short">In short</h2>
+<ul>
+<li><strong>ABIEs are set against 20 statistically similar schools.</strong> DfE says each school’s expectation is based on its previous attendance and “the progress of similar schools”, matched on free school meals, SEN, deprivation, EAL, location, funding and size. The formula is not published.</li>
+<li><strong>Rebuilt from published data, that comparison agrees closely with our model.</strong> Across 2,906 secondary schools, the median absence of each school’s 20 similar schools and our model’s expected absence correlate at <strong>0.86</strong> in 2025/26, and at 0.84–0.86 in every year since 2021/22. On average they differ by 0.7 percentage points.</li>
+<li><strong>Our model predicts actual absence better</strong> (r = 0.75 against 0.67), because it uses more of what a school’s intake is like, including prior attainment, mobility and neighbourhood education.</li>
+<li><strong>Brighton and Hove’s secondaries sit above both benchmarks.</strong> In autumn and spring 2025/26 they averaged <strong>10.1%</strong> absence. Our model expects 9.4%; their similar schools’ median is 9.0%, and the similar schools’ top quarter 8.1%.</li>
+</ul>
+</section>
+<section id="sec-what" class="level2">
+<h2 class="anchored" data-anchor-id="sec-what">What an ABIE is</h2>
+<ul>
+<li><strong>What it is:</strong> a school-level expectation of how far attendance should improve. DfE describes it as “the level of improvement expected from a school over time”, and as a minimum, “intended to support ambition, not limit it”.</li>
+<li><strong>How it is set:</strong> from the school’s previous attendance and the attendance of schools most like it. Each school’s similar schools comparison report sets it against <strong>20 statistically similar schools in the same phase</strong>, matched on:
+<ul>
+<li>free school meals;</li>
+<li>SEN support, including social, emotional and mental health (SEMH) need;</li>
+<li>Gypsy, Roma and Traveller pupils;</li>
+<li>IDACI deprivation of pupils’ home postcodes;</li>
+<li>region, urban or rural setting, and average travel distance;</li>
+<li>English as an additional language;</li>
+<li>funding per pupil;</li>
+<li>number of pupils on roll.</li>
+</ul></li>
+<li><strong>The benchmarks in those reports:</strong> each school is compared with the <strong>median</strong> of its 20 similar schools, and DfE uses <strong>the top quarter</strong> of similar schools as “a realistic target” when it identifies a school’s areas of focus.</li>
+<li><strong>The time frame:</strong> schools received an indicative one-year ABIE for 2025/26. From September 2026 ABIEs are multi-year, setting the improvement expected <strong>by the end of 2028/29</strong>, and a school’s ABIE does not change between reports.</li>
+<li><strong>Its status:</strong> not an accountability measure, and not shared with Ofsted.</li>
+<li><strong>What is not public:</strong> the formula, which attendance measure it is set on, and how the “progress of similar schools” becomes a school’s expectation. Press reports of the Minister’s letter describe the expectations as calibrated with AI; DfE’s guidance does not say how.</li>
+<li><strong>Who has the numbers:</strong> each school, in its own reports through DfE’s <em>Monitor your school attendance</em> service; and each local authority, in separate primary and secondary <strong>ABIE workbooks</strong> holding school-level attendance and multi-year ABIEs for every school in its area.</li>
+</ul>
+</section>
+<section id="sec-rebuild" class="level2">
+<h2 class="anchored" data-anchor-id="sec-rebuild">Rebuilding the comparison</h2>
+<p>For every state-funded secondary school in the absence models (2,906 of 3,147 have every factor), we found the 20 most similar schools on the factors DfE lists that are published:</p>
+<ul>
+<li><strong>Matched on:</strong> free school meals, SEN support, SEMH need, Gypsy, Roma and Traveller pupils and EAL (January 2026 census and SEN files); IDACI score of the school’s own neighbourhood (DfE uses pupils’ home postcodes); income per pupil in 2024-25 (CFR and academies’ accounts); pupils on roll; and urban or rural setting. Each is standardised, and a school in another region counts as one standard unit further away.</li>
+<li><strong>Not matched on:</strong> average travel distance, which is not published.</li>
+<li><strong>How this differs from our own twins:</strong> see <a href="./twins.html#sec-dfe">Our twins and DfE’s similar schools</a>. The two sets share only a few schools.</li>
+<li><strong>Result:</strong> 55% of each school’s similar schools are in its own region.</li>
+<li><strong>Benchmarks, each year:</strong> the median overall absence of the 20, and their top quarter (the 25th percentile), for 2021/22 to 2024/25 (full years) and the autumn and spring terms of 2025/26. The same 20 schools are used every year.</li>
+<li><strong>Our model, each year:</strong> the overall-absence model on <a href="./absence_causes.html#sec-full">What goes with school absence</a>, refitted to each year, giving each school’s expected absence from its intake and region (no local authority effect, as the similar-schools comparison has none).</li>
+</ul>
+</section>
+<section id="sec-agree" class="level2">
+<h2 class="anchored" data-anchor-id="sec-agree">Does it agree with our model?</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-abie-scatter" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-abie-scatter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="writeup/figures/abie_model_vs_similar.png" class="img-fluid figure-img" width="567">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-abie-scatter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Expected overall absence from our model (intake and region) against the median of each school’s 20 similar schools, state-funded secondaries, autumn and spring 2025/26. Brighton and Hove’s schools in purple; dashed line: the two agree.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-abie-agree" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-abie-agree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Our model’s expected absence and the similar-schools median, by year: agreement with each other, and with what schools actually recorded. Overall absence, state-funded secondaries; 2025/26 is autumn and spring only.
+</figcaption>
+<div aria-describedby="tbl-abie-agree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Year</th>
+<th style="text-align: right;">Schools</th>
+<th style="text-align: right;">Model vs similar: r</th>
+<th style="text-align: right;">Mean gap (points)</th>
+<th style="text-align: right;">Mean, model (%)</th>
+<th style="text-align: right;">Mean, similar median (%)</th>
+<th style="text-align: right;">Mean, actual (%)</th>
+<th style="text-align: right;">Actual vs model: r</th>
+<th style="text-align: right;">Actual vs similar: r</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2021/22</td>
+<td style="text-align: right;">2,819</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2022/23</td>
+<td style="text-align: right;">2,865</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.68</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023/24</td>
+<td style="text-align: right;">2,906</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">8.4</td>
+<td style="text-align: right;">8.6</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">0.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2024/25</td>
+<td style="text-align: right;">2,906</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.67</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2025/26</td>
+<td style="text-align: right;">2,906</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>They agree closely</strong>, as they should: both ask what absence is usual for schools with pupils like these.</li>
+<li><strong>Our model is the better predictor of what schools actually record.</strong> It uses prior attainment, mobility, neighbourhood education and the full mix of SEN need. The similar-schools median rests on 20 schools, so it is noisier.</li>
+<li><strong>The similar-schools median runs a little lower</strong> than our model’s expectation (by 0.12 points in 2025/26), because a median of skewed absence sits below the mean.</li>
+</ul>
+</section>
+<section id="sec-bh" class="level2">
+<h2 class="anchored" data-anchor-id="sec-bh">Brighton and Hove</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-abie-bh" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-abie-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="attendance_expectations_files/figure-html/fig-abie-bh-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-abie-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Brighton and Hove’s secondary schools, autumn and spring 2025/26: actual overall absence, our model’s expectation, and the median and top quarter of each school’s 20 similar schools.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-abie-bh-years" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-abie-bh-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="attendance_expectations_files/figure-html/fig-abie-bh-years-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-abie-bh-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Brighton and Hove’s secondary schools, average of the ten schools: actual overall absence against our model’s expectation and the similar-schools benchmarks, 2021/22 to 2025/26 (2025/26 autumn and spring only, so lower in every series).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-abie-bh" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-abie-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Brighton and Hove’s secondary schools, autumn and spring 2025/26: overall absence (%), actual and against the three benchmarks.
+</figcaption>
+<div aria-describedby="tbl-abie-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">School</th>
+<th style="text-align: right;">Actual</th>
+<th style="text-align: right;">Our model</th>
+<th style="text-align: right;">Similar median</th>
+<th style="text-align: right;">Similar top quarter</th>
+<th style="text-align: right;">Actual minus model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Longhill High School</td>
+<td style="text-align: right;">13.9</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">11.2</td>
+<td style="text-align: right;">9.9</td>
+<td style="text-align: right;">+2.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brighton Aldridge Community Academy</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">11.1</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">-0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blatchington Mill School</td>
+<td style="text-align: right;">10.7</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">+2.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dorothy Stringer School</td>
+<td style="text-align: right;">10.5</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">7.9</td>
+<td style="text-align: right;">+2.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hove Park School and Sixth Form Centre</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">7.1</td>
+<td style="text-align: right;">-1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Portslade Aldridge Community Academy</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">9.5</td>
+<td style="text-align: right;">9.7</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Patcham High School</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">-0.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Varndean School</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">+0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cardinal Newman Catholic School</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">7.3</td>
+<td style="text-align: right;">7.2</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">+1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">King’s School</td>
+<td style="text-align: right;">6.4</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">-0.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>The city’s schools have run above both benchmarks in every year.</strong> The gap to our model’s expectation was 0.8 points in 2021/22, 1.3 in 2024/25 and 0.7 in the first two terms of 2025/26.</li>
+<li><strong>The two benchmarks mostly agree on which schools run above what their pupils predict:</strong> Longhill, Blatchington Mill, Dorothy Stringer and Cardinal Newman are above both.</li>
+<li><strong>They disagree on two schools.</strong> Our model expects much of Brighton Aldridge’s and Hove Park’s absence from their intakes, so on our model both sit at or below expectation. Their 20 similar schools have lower absence, so against the similar-schools median both look high. Which an ABIE follows matters for what is asked of these two schools.</li>
+<li><strong>An ABIE set from the similar-schools median or top quarter would ask the city’s schools for more improvement than our model</strong> does, because the similar-schools benchmarks run lower than our model’s expectation.</li>
+</ul>
+</section>
+<section id="sec-next" class="level2">
+<h2 class="anchored" data-anchor-id="sec-next">What a direct comparison needs</h2>
+<ul>
+<li><strong>The ABIE workbook.</strong> Brighton and Hove City Council’s attendance team holds the secondary ABIE workbook for the city’s schools: school-level attendance and multi-year expectations to 2028/29. With it, each school’s ABIE can be plotted against our model’s expectation and the rebuilt similar-schools benchmarks above, and we can test which the ABIEs follow.</li>
+<li><strong>Travel distance.</strong> DfE matches on pupils’ average travel distance, which is not published. The routing data behind <a href="./distance.html">Distance to school</a> could stand in for it.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The method
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Similar schools.</strong> For school <span class="math inline">\(i\)</span>, the distance to school <span class="math inline">\(j\)</span> is</p>
+<p><span class="math display">\[d_{ij} = \sum_{k} (z_{ik} - z_{jk})^2 + \mathbb{1}[\text{region}_i \neq \text{region}_j],\]</span></p>
+<p>over the standardised factors <span class="math inline">\(z_k\)</span>: FSM %, SEN support %, SEMH need %, Gypsy, Roma and Traveller %, IDACI score of the school’s LSOA (IoD 2019), EAL %, income per pupil 2024-25, log pupils on roll, and urban/rural band (three levels). The 20 smallest <span class="math inline">\(d_{ij}\)</span> are its similar schools. Equal weights are an assumption: DfE does not publish its weights.</p>
+<p><strong>Our model.</strong> For each year <span class="math inline">\(t\)</span>, log overall absence on the absence model’s school characteristics, with region and local authority random effects; the expectation is</p>
+<p><span class="math display">\[\hat y_{it} = \exp\left(x_i'\hat\beta_t + \hat u_{\text{region}(i),t}\right)\cdot \bar s_t - 0.1,\]</span></p>
+<p>where <span class="math inline">\(\bar s_t\)</span> is the mean of the exponentiated residuals (a smearing factor). The characteristics are those of January 2026 in every year.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lmer</span>(<span class="fu">log</span>(overall <span class="sc">+</span> <span class="fl">0.1</span>) <span class="sc">~</span> fsm <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> semh <span class="sc">+</span> ... <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> region <span class="sc">/</span> la), <span class="at">data =</span> dd)   <span class="co"># R/59</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="at">re.form =</span> <span class="sc">~</span> (<span class="dv">1</span> <span class="sc">|</span> region))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Caveats.</strong> The IDACI score is for the school’s own neighbourhood, not pupils’ homes. Using the same 20 schools and the same characteristics every year ignores changes in intake. DfE’s own comparison uses daily attendance data from the start of the year to the latest term, which can differ from the published termly statistics.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-sources" class="level2">
+<h2 class="anchored" data-anchor-id="sec-sources">Sources</h2>
+<ul>
+<li>DfE (2026) <a href="https://www.gov.uk/government/publications/monitor-your-school-attendance-user-guide/monitor-your-school-attendance-user-guide"><em>Monitor your school attendance: user guide</em></a>, updated 23 November 2026: the similar schools comparison and ABIEs.</li>
+<li>DfE, <a href="https://explore-education-statistics.service.gov.uk/find-statistics/pupil-attendance-in-schools"><em>Pupil attendance in schools</em></a> and its <a href="https://explore-education-statistics.service.gov.uk/methodology/pupil-attendance-in-schools">methodology</a>.</li>
+<li>Reports of the Minister’s letter on ABIEs: <a href="https://www.sec-ed.co.uk/content/news/schools-ai-powered-student-attendance-targets-absence">SecEd</a>; <a href="https://www.tes.com/magazine/news/general/dfe-sets-ai-attendance-targets-for-schools">Tes</a>; <a href="https://www.brownejacobson.com/insights/school-attendance-targets-2026-what-your-abie-means">Browne Jacobson</a>; <a href="https://www.nga.org.uk/knowledge-centre/improving-school-attendance/">NGA</a>.</li>
+<li>Data: DfE <em>Pupil absence in schools in England</em> (school level, 2021/22 to 2024/25; autumn and spring 2025/26); <em>Schools, pupils and their characteristics</em> and <em>Special educational needs in England</em>, January 2026; consistent financial reporting and academies accounts return, 2024-25; Get Information about Schools; English Indices of Deprivation 2019 (IDACI).</li>
+<li>Ours: <code>R/08_absence_causes.R</code> (the absence models), <code>R/59_abie_benchmark.R</code> (this page).</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/adamdennett\.github\.io\/school_value_added");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adam Dennett · Bartlett Centre for Advanced Spatial Analysis, UCL</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built from published DfE and Ofsted data. Nothing uses pupil-level records.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

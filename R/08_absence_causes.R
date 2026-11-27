@@ -160,7 +160,17 @@ fit_one <- function(y) {
                 r2_marginal = vfix / (vfix + sum(v1)), r2_conditional = (vfix + v1[["region"]] + v1[["la:region"]]) / (vfix + sum(v1)),
                 loglik = as.numeric(logLik(ml)), aic = AIC(ml), bic = BIC(ml),
                 loglik_null = as.numeric(logLik(update(null, REML = FALSE))))
-  list(eff = eff, la = la, part = part, coefs = coefs, random = random, fit = fit)
+  # Each school's observed outcome and what the model expects, back on the
+  # outcome's own scale (exp(log prediction) - 0.1, times a smearing factor so
+  # the expectations average to the observed mean): with every random effect
+  # (the full fit), with the region effect only (intake and region, as DfE's
+  # similar-schools comparison sees it), and from the fixed part alone
+  bt <- function(lp, resid) (exp(lp) * mean(exp(resid))) - 0.1
+  lp_full <- fitted(full); lp_reg <- predict(full, re.form = ~ (1 | region)); lp_fix <- predict(full, re.form = NA)
+  pred <- tibble(outcome = y, URN = dd$URN, obs = dd[[y]],
+                 fit_full = bt(lp_full, dd$.y - lp_full), fit_region = bt(lp_reg, dd$.y - lp_reg),
+                 fit_fixed = bt(lp_fix, dd$.y - lp_fix))
+  list(eff = eff, la = la, part = part, coefs = coefs, random = random, fit = fit, pred = pred)
 }
 message("Fitting the multilevel models ...")
 fits <- lapply(names(OUTCOMES), fit_one)
@@ -170,6 +180,7 @@ partition <- bind_rows(lapply(fits, `[[`, "part"))
 coefs <- bind_rows(lapply(fits, `[[`, "coefs"))
 random <- bind_rows(lapply(fits, `[[`, "random"))
 fit_stats <- bind_rows(lapply(fits, `[[`, "fit"))
+pred <- bind_rows(lapply(fits, `[[`, "pred"))
 # What one SD is in each characteristic's own units, and how common each category is
 x_desc <- tibble(var = names(CONT), mean = sapply(dat[, names(CONT)], mean), sd = sapply(dat[, names(CONT)], sd))
 cat_desc <- bind_rows(lapply(names(FACT), function(f) {
@@ -209,6 +220,33 @@ shapley_groups <- function(y) {
 }
 message("Shapley decomposition ...")
 shap <- bind_rows(lapply(names(OUTCOMES), shapley_groups))
+
+# Shapley shares of R-squared for each characteristic on its own (OLS, the
+# same terms with region as one more player). Twenty-one players are too many
+# for the full subset lattice (2^21 models), so the values are estimated from
+# random orders of entry: each order adds the players one at a time and
+# credits each with the rise in R-squared when it enters; the Shapley value is
+# the mean over orders (Castro, Gomez and Tejada 2009). 600 orders per
+# outcome; the Monte Carlo standard error is saved beside each value.
+PLAYERS <- c(setNames(as.list(names(CONT)), names(CONT)), setNames(as.list(names(FACT)), names(FACT)), list(region = "region"))
+shapley_vars <- function(y, n_perm = 600, seed = 8) {
+  dd <- Z |> mutate(.y = ly(y))
+  X <- model.matrix(as.formula(paste("~", paste(unlist(PLAYERS), collapse = " + "))), data = dd)
+  asg <- attr(X, "assign"); labs <- attr(terms(as.formula(paste("~", paste(unlist(PLAYERS), collapse = " + ")))), "term.labels")
+  cols <- lapply(names(PLAYERS), function(p) which(asg %in% match(PLAYERS[[p]], labs)))
+  yy <- dd$.y; tss <- sum((yy - mean(yy))^2)
+  r2 <- function(cc) { if (!length(cc)) return(0); f <- lm.fit(X[, c(1, cc), drop = FALSE], yy); 1 - sum(f$residuals^2) / tss }
+  set.seed(seed); p <- length(PLAYERS)
+  contrib <- matrix(NA_real_, n_perm, p, dimnames = list(NULL, names(PLAYERS)))
+  for (k in seq_len(n_perm)) {
+    ord <- sample(p); cc <- integer(0); prev <- 0
+    for (j in ord) { cc <- c(cc, cols[[j]]); now <- r2(cc); contrib[k, j] <- now - prev; prev <- now }
+  }
+  tibble(outcome = y, var = names(PLAYERS), shapley = colMeans(contrib), mc_se = apply(contrib, 2, sd) / sqrt(n_perm),
+         r2_full = r2(unlist(cols)))
+}
+message("Shapley by characteristic (Monte Carlo) ...")
+shap_vars <- bind_rows(lapply(names(OUTCOMES), shapley_vars))
 
 # ---- 5. the school's part ------------------------------------------------------
 # (a) "The school" split into its five terms: Shapley values with the other
@@ -305,7 +343,8 @@ saveRDS(list(trend = trend, effects = effects, la_effects = la_effects, partitio
              outcomes = OUTCOMES, cont = CONT, fact = FACT, groups = GROUPS_X, desc = desc, cors = cors,
              n_schools = nrow(dat), n_absence = nrow(ab), sds = sapply(dat[, names(CONT)], sd),
              coefs = coefs, random = random, fit = fit_stats, x_desc = x_desc, cat_desc = cat_desc,
-             local = local, shap_school = shap_school, school_spread = school_spread, resid = resid_both),
+             local = local, shap_school = shap_school, school_spread = school_spread, resid = resid_both,
+             pred = pred, shap_vars = shap_vars),
         here::here("data", "absence_causes.rds"))
 message("Saved data/absence_causes.rds")
 print(partition)

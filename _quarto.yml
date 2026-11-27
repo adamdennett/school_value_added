@@ -23,6 +23,7 @@ project:
     - v22.qmd
     - absence_causes.qmd
     - absence_change.qmd
+    - attendance_expectations.qmd
     - twins.qmd
     - simulator.qmd
     - independent.qmd
@@ -99,6 +100,8 @@ website:
             text: "What goes with absence"
           - href: absence_change.qmd
             text: "How absence changes"
+          - href: attendance_expectations.qmd
+            text: "Attendance expectations (ABIE)"
       - text: "Pupils and places"
         menu:
           - href: demographics.qmd

@@ -764,6 +764,112 @@ $$u_k \sim N(0, \sigma^2_{\text{region}}), \quad v_{jk} \sim N(0, \sigma^2_{\tex
   Schielzeth). "Explained by the characteristics" is the fall in total
   variance from the model with no characteristics.
 
+### How well each model fits {#sec-fit-scatter}
+
+```{r}
+#| label: fit-data
+#| include: false
+library(plotly)
+PR <- A$pred |> left_join(A$local$schools |> select(URN, SCHNAME, la), by = "URN") |>
+  mutate(bh = la == "Brighton and Hove")
+fit_r <- PR |> group_by(outcome) |> summarise(r = cor(obs, fit_full), n = n(), .groups = "drop")
+fr <- function(o) fit_r$r[fit_r$outcome == o]
+```
+
+Each point is a school: what the full model expects (its characteristics,
+region and local authority) against what was observed in the autumn and
+spring terms of 2025/26. Choose an outcome from the menu. Points on the dashed
+line are exactly as expected; Brighton and Hove's schools are in purple.
+
+- **Close fits:** overall absence (r = `r sprintf("%.2f", fr("overall"))`),
+  unauthorised (`r sprintf("%.2f", fr("unauth"))`), persistent
+  (`r sprintf("%.2f", fr("persistent"))`) and severe
+  (`r sprintf("%.2f", fr("severe"))`).
+- **Looser fits:** illness (`r sprintf("%.2f", fr("illness"))`), medical
+  appointments (`r sprintf("%.2f", fr("appointments"))`) and other authorised
+  absence (`r sprintf("%.2f", fr("auth_other"))`). Much of what separates
+  schools on these codes is not in the published characteristics, which is
+  why the school-level spread in them is the interesting part.
+- **These r values include the region and local authority effects.** The
+  fixed characteristics alone explain less: see the R² in the tables below.
+
+```{r}
+#| label: fig-fit-scatter
+#| fig-cap: "Observed against expected absence, state-funded secondary schools, autumn and spring 2025/26. Expected: the full multilevel model for that outcome, back-transformed from the log scale with a smearing factor. Brighton and Hove's schools in purple."
+outs <- names(OUT)
+p <- plot_ly()
+for (o in outs) {
+  d <- PR |> filter(outcome == o)
+  for (b in c(FALSE, TRUE)) {
+    dd <- d |> filter(bh == b)
+    p <- add_trace(p, data = dd, x = ~fit_full, y = ~obs, type = "scatter", mode = "markers",
+                   marker = list(color = if (b) BPURPLE else "#c9c2d6", size = if (b) 9 else 5, opacity = if (b) 1 else 0.6),
+                   text = ~sprintf("%s<br>%s<br>Observed %.1f%%<br>Expected %.1f%%", SCHNAME, la, obs, fit_full),
+                   hoverinfo = "text", name = if (b) "Brighton and Hove" else "Other schools",
+                   showlegend = (o == outs[1]), visible = (o == outs[1]))
+  }
+}
+diag <- function(o) { m <- max(PR$obs[PR$outcome == o], PR$fit_full[PR$outcome == o]) * 1.02
+  list(list(type = "line", x0 = 0, y0 = 0, x1 = m, y1 = m, line = list(dash = "dash", color = GREY, width = 1))) }
+lab <- function(o) gsub("\n", " ", OUT_SHORT[[o]])
+unit <- function(o) if (o %in% c("persistent", "severe")) "% of pupils" else "% of sessions"
+btn <- lapply(seq_along(outs), function(k) {
+  o <- outs[k]
+  list(method = "update", label = lab(o),
+       args = list(list(visible = rep(seq_along(outs) == k, each = 2)),
+                   list(shapes = diag(o), title = list(text = sprintf("%s: r = %.2f", OUT[[o]], fr(o)), x = 0.02),
+                        xaxis = list(title = paste("Expected,", unit(o)), rangemode = "tozero"),
+                        yaxis = list(title = paste("Observed,", unit(o)), rangemode = "tozero"))))
+})
+p |> layout(shapes = diag(outs[1]), title = list(text = sprintf("%s: r = %.2f", OUT[[outs[1]]], fr(outs[1])), x = 0.02),
+            xaxis = list(title = paste("Expected,", unit(outs[1])), rangemode = "tozero"),
+            yaxis = list(title = paste("Observed,", unit(outs[1])), rangemode = "tozero"),
+            updatemenus = list(list(type = "dropdown", x = 1, xanchor = "right", y = 1.12, buttons = btn)),
+            legend = list(orientation = "h", y = -0.15), margin = list(t = 60)) |>
+  config(displaylogo = FALSE)
+```
+
+### Which characteristics matter most, outcome by outcome {#sec-shap-vars}
+
+@fig-shapley splits each model's R² between eight groups of
+characteristics. Here the same split is made for every characteristic on
+its own: each one's average contribution to R² over random orders of entry
+(Shapley values, estimated from 600 orders per outcome; the Monte Carlo
+standard error is in the hover). The shares add up to the OLS R² of the
+model, with region as one more characteristic. Choose an outcome from the
+menu.
+
+```{r}
+#| label: fig-shap-vars
+#| fig-cap: "Shapley share of R² for each school characteristic, by outcome: OLS on log absence, autumn and spring 2025/26. Bars add up to the R² in the title."
+VL <- c(A$cont, A$fact, region = "Region")
+SV <- A$shap_vars |> mutate(label = unname(VL[var]))
+q <- plot_ly(height = 640)
+ord <- list()
+for (o in outs) {
+  d <- SV |> filter(outcome == o) |> arrange(shapley)
+  ord[[o]] <- d$label
+  q <- add_trace(q, data = d, x = ~100 * shapley, y = ~label, type = "bar", orientation = "h",
+                 marker = list(color = DPURPLE), visible = (o == outs[1]), showlegend = FALSE,
+                 text = ~sprintf("%s<br>%.1f points of R² (MC s.e. %.2f)", label, 100 * shapley, 100 * mc_se),
+                 hoverinfo = "text", textposition = "none")
+}
+r2v <- function(o) SV$r2_full[SV$outcome == o][1]
+btn2 <- lapply(seq_along(outs), function(k) {
+  o <- outs[k]
+  list(method = "update", label = lab(o),
+       args = list(list(visible = seq_along(outs) == k),
+                   list(title = list(text = sprintf("%s: R² = %.2f", OUT[[o]], r2v(o)), x = 0.02),
+                        yaxis = list(categoryorder = "array", categoryarray = ord[[o]], title = ""))))
+})
+q |> layout(title = list(text = sprintf("%s: R² = %.2f", OUT[[outs[1]]], r2v(outs[1])), x = 0.02),
+            xaxis = list(title = "Share of R² (percentage points)"),
+            yaxis = list(categoryorder = "array", categoryarray = ord[[outs[1]]], title = ""),
+            updatemenus = list(list(type = "dropdown", x = 1, xanchor = "right", y = 1.12, buttons = btn2)),
+            margin = list(l = 260, t = 60)) |>
+  config(displaylogo = FALSE)
+```
+
 ```{r}
 #| label: model-helpers
 #| include: false
@@ -868,6 +974,9 @@ A$cat_desc |> transmute(Characteristic = unname(CAT_LAB[var]),
 
 ## Next steps {#sec-next}
 
+0. **DfE's attendance expectations.** Started: [Our model and DfE's attendance
+   expectations](attendance_expectations.qmd) rebuilds the similar-schools
+   comparison behind each school's ABIE and sets it against these models.
 1. **Within-school change.** Started: [How school absence
    changes](absence_change.qmd) follows every school from 2016/17 to
    2025/26, tests whether absence moves when intake does, and looks at
