@@ -831,44 +831,97 @@ p |> layout(shapes = diag(outs[1]), title = list(text = sprintf("%s: r = %.2f", 
 
 ### Which characteristics matter most, outcome by outcome {#sec-shap-vars}
 
-@fig-shapley splits each model's R² between eight groups of
-characteristics. Here the same split is made for every characteristic on
-its own: each one's average contribution to R² over random orders of entry
-(Shapley values, estimated from 600 orders per outcome; the Monte Carlo
-standard error is in the hover). The shares add up to the OLS R² of the
-model, with region as one more characteristic. Choose an outcome from the
-menu.
+Two ways of asking which characteristics matter most, for each outcome
+(choose it from the menu):
+
+- **Strength and direction** (top): each characteristic's effect on expected
+  absence in the multilevel model, with its 95% interval. For a measured
+  characteristic it is a move of one standard deviation across schools; for a
+  category, the difference from its reference. **Green lowers absence, purple
+  raises it.**
+- **Importance** (bottom): each characteristic's Shapley share of the
+  variation the model explains, as in @fig-shapley but for every
+  characteristic on its own. It is the average gain in R² when the
+  characteristic is added, over 600 random orders of entry (OLS, region as one
+  more characteristic), so variation that two characteristics share is split
+  between them. The hover gives the Monte Carlo standard error.
+
+A characteristic can be important without a large effect of its own, when it
+varies a lot between schools, and can have a large effect but little
+importance, when few schools have it: a selective admissions policy is the
+clearest case.
 
 ```{r}
 #| label: fig-shap-vars
-#| fig-cap: "Shapley share of R² for each school characteristic, by outcome: OLS on log absence, autumn and spring 2025/26. Bars add up to the R² in the title."
+#| fig-height: 18
+#| fig-cap: "Strength and direction (top): each characteristic's effect on expected absence, % per SD or against the category's reference, with 95% intervals, from the multilevel model. Importance (bottom): each characteristic's Shapley share of the explained variation (OLS on log absence, region included). State-funded secondary schools, autumn and spring 2025/26."
+GOOD <- "#1b7837"; BADC <- "#762a83"
 VL <- c(A$cont, A$fact, region = "Region")
-SV <- A$shap_vars |> mutate(label = unname(VL[var]))
-q <- plot_ly(height = 640)
-ord <- list()
-for (o in outs) {
-  d <- SV |> filter(outcome == o) |> arrange(shapley)
-  ord[[o]] <- d$label
-  q <- add_trace(q, data = d, x = ~100 * shapley, y = ~label, type = "bar", orientation = "h",
-                 marker = list(color = DPURPLE), visible = (o == outs[1]), showlegend = FALSE,
-                 text = ~sprintf("%s<br>%.1f points of R² (MC s.e. %.2f)", label, 100 * shapley, 100 * mc_se),
-                 hoverinfo = "text", textposition = "none")
-}
+SV <- A$shap_vars |> group_by(outcome) |> mutate(share = 100 * shapley / sum(shapley), label = unname(VL[var])) |> ungroup()
 r2v <- function(o) SV$r2_full[SV$outcome == o][1]
-btn2 <- lapply(seq_along(outs), function(k) {
+EF <- A$effects |> mutate(label = unname(TERM_LAB[term]),
+                          label = ifelse(term %in% names(A$cont), paste0(label, " (per SD)"), label),
+                          dir = ifelse(pct < 0, "Lowers absence", "Raises absence"))
+p_e <- plot_ly(); p_s <- plot_ly(); ord_e <- list(); ord_s <- list()
+for (o in outs) {
+  ef <- EF |> filter(outcome == o) |> arrange(abs(pct)); ord_e[[o]] <- ef$label
+  for (dd in c("Lowers absence", "Raises absence")) {
+    ee <- ef |> filter(dir == dd)
+    p_e <- add_trace(p_e, data = ee, x = ~pct, y = ~label, type = "scatter", mode = "markers",
+                     error_x = list(type = "data", symmetric = FALSE, array = ee$hi - ee$pct, arrayminus = ee$pct - ee$lo,
+                                    color = if (dd == "Lowers absence") GOOD else BADC, thickness = 1.5, width = 0),
+                     marker = list(color = if (dd == "Lowers absence") GOOD else BADC, size = 8),
+                     text = ~sprintf("%s<br>%+.1f%% (%+.1f to %+.1f)", label, pct, lo, hi), hoverinfo = "text",
+                     name = dd, legendgroup = dd, showlegend = (o == outs[1]), visible = (o == outs[1]))
+  }
+  s <- SV |> filter(outcome == o) |> arrange(share); ord_s[[o]] <- s$label
+  p_s <- add_trace(p_s, data = s, x = ~share, y = ~label, type = "bar", orientation = "h", marker = list(color = DPURPLE),
+                   text = ~sprintf("%s<br>%.1f%% of the explained variation<br>(%.1f points of R², MC s.e. %.2f)", label, share, 100 * shapley, 100 * mc_se),
+                   hoverinfo = "text", textposition = "none", showlegend = FALSE, visible = (o == outs[1]))
+}
+vis <- function(k) c(rep(seq_along(outs) == k, each = 2), seq_along(outs) == k)
+ttl <- function(o) sprintf("%s (R² = %.2f)", OUT[[o]], r2v(o))
+btn3 <- lapply(seq_along(outs), function(k) {
   o <- outs[k]
   list(method = "update", label = lab(o),
-       args = list(list(visible = seq_along(outs) == k),
-                   list(title = list(text = sprintf("%s: R² = %.2f", OUT[[o]], r2v(o)), x = 0.02),
-                        yaxis = list(categoryorder = "array", categoryarray = ord[[o]], title = ""))))
+       args = list(list(visible = vis(k)),
+                   list(title = list(text = ttl(o), x = 0.02, font = list(size = 14)),
+                        `yaxis.categoryarray` = ord_e[[o]], `yaxis2.categoryarray` = ord_s[[o]])))
 })
-q |> layout(title = list(text = sprintf("%s: R² = %.2f", OUT[[outs[1]]], r2v(outs[1])), x = 0.02),
-            xaxis = list(title = "Share of R² (percentage points)"),
-            yaxis = list(categoryorder = "array", categoryarray = ord[[outs[1]]], title = ""),
-            updatemenus = list(list(type = "dropdown", x = 1, xanchor = "right", y = 1.12, buttons = btn2)),
-            margin = list(l = 260, t = 60)) |>
+subplot(p_e, p_s, nrows = 2, heights = c(0.56, 0.44), margin = 0.07, titleX = TRUE) |>
+  layout(title = list(text = ttl(outs[1]), x = 0.02, font = list(size = 14)),
+         xaxis = list(title = "Change in expected absence (%)", zeroline = TRUE, zerolinecolor = GREY),
+         xaxis2 = list(title = "Share of the explained variation (%)"),
+         yaxis = list(categoryorder = "array", categoryarray = ord_e[[outs[1]]], title = "", automargin = TRUE),
+         yaxis2 = list(categoryorder = "array", categoryarray = ord_s[[outs[1]]], title = "", automargin = TRUE),
+         updatemenus = list(list(type = "dropdown", x = 1, xanchor = "right", y = 1.06, buttons = btn3)),
+         legend = list(orientation = "h", x = 0, xanchor = "left", y = 1.035), margin = list(t = 110)) |>
   config(displaylogo = FALSE)
 ```
+
+**What "Admissions" is.** The school's admissions policy, in three groups:
+selective (grammar schools, `r A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "SEL"]`
+schools), non-selective schools in highly selective areas (in effect
+secondary moderns, `r A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "NON SEL IN HIGHLY SEL AREA"]`;
+the reference), and non-selective schools elsewhere (comprehensives,
+`r format(A$cat_desc$n[A$cat_desc$var == "ADMPOL_PT" & A$cat_desc$level == "OTHER NON SEL"], big.mark = ",")`).
+
+- **Grammar schools have much lower absence than their intake predicts.**
+  Against secondary moderns, with prior attainment, free school meals, SEN and
+  the rest held equal: overall absence `r sg(e("ADMPOL_PTSEL", "overall"))`,
+  unauthorised `r sg(e("ADMPOL_PTSEL", "unauth"))`, persistent
+  `r sg(e("ADMPOL_PTSEL", "persistent"))` and severe
+  `r sg(e("ADMPOL_PTSEL", "severe"))`.
+- **Comprehensives and secondary moderns do not differ** once intake is
+  allowed for (overall `r sg(e("ADMPOL_PTOTHER NON SEL", "overall"))`, not
+  significant).
+- **This is an association, not proof that selection improves attendance.**
+  Selection picks pupils, and families, on more than the published
+  characteristics measure: a test passed at 10 also reflects engagement and
+  support at home. Grammar schools are few (about one in twenty secondaries),
+  which is why admissions has a large effect but a modest share of the
+  explained variation.
+
 
 ```{r}
 #| label: model-helpers
