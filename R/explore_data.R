@@ -42,6 +42,7 @@ dat <- w |>
             gov_nat, ofsted_combined, ofsted_rc, ofsted = ofsted_model, religion, ofsted_latest,
             up = va_lo_all > 0, down = va_hi_all < 0) |>   # flags before rounding
   mutate(across(where(is.double) & !c(lat, lon), ~round(.x, 2)))
+if (!is.null(att_bench_cols())) dat <- dat |> left_join(att_bench_cols(), by = "URN")   # expected absence, two ways (R/62)
 
 # Value added year by year, one array per group in YEARS order (null where
 # the school had no result), for the trajectories and moving averages
@@ -104,6 +105,9 @@ measures <- tibble::tribble(
   "ofsted_rc", "Ofsted report card, achievement (since November 2025)", "Report card", "The school", "cat", "", 0, "", NA,
   "ofsted", "Ofsted rating, last graded inspection before September 2024", "Ofsted (to Aug 2024)", "The school", "cat", "", 0, "", NA,
   "religion", "Religious character", "Religious character", "The school", "cat", "", 0, "", NA)
+i_att <- max(which(measures$grp == "Attendance"))
+measures <- bind_rows(measures[seq_len(i_att), ], att_bench_vars() |> select(-src) |> rename(grp = group) |> mutate(group = NA_character_),
+                      measures[-seq_len(i_att), ])
 CATS <- c(MAP_CATS, list(gov_nat = MAP_CATS$gov))
 NONE <- c(as.list(MAP_NONE), list(gov_nat = "not recorded"))
 levels <- tibble::tibble(key = c("region", "ca", "la"),

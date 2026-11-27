@@ -121,7 +121,7 @@ colour_caps <- function() {
       left_join(pa$va_m2 |> filter(group == "all") |> select(URN, va_m2), by = "URN")
   }
   vars <- intersect(c(grep("^va_shrunk_|^va_2526_|^va_kind_", names(w), value = TRUE), "v1_all", "abs_excess", "va_m2"), names(w))
-  sapply(vars, function(v) round(unname(quantile(abs(w[[v]]), 0.975, na.rm = TRUE)), 1))
+  c(sapply(vars, function(v) round(unname(quantile(abs(w[[v]]), 0.975, na.rm = TRUE)), 1)), att_bench_caps())
 }
 
 #' Provisional 2025/26 value added, or NULL before it has been built
@@ -330,6 +330,9 @@ map_extra <- function(w, X) {
 map_schools <- function(w, lads, height = 520, X = NULL) {
   COLOUR_CAPS <- colour_caps()
   if (!is.null(X)) w <- map_extra(w, X)
+  AB <- att_bench_cols()
+  if (!is.null(AB)) w <- w |> select(-any_of(setdiff(names(AB), "URN"))) |> left_join(AB, by = "URN")
+  MV <- map_vars_all()
   lad_c <- suppressWarnings(sf::st_coordinates(sf::st_point_on_surface(lads)))
   bb <- sf::st_bbox(lads)
   dat <- w |>
@@ -347,10 +350,10 @@ map_schools <- function(w, lads, height = 520, X = NULL) {
                            sprintf(" (%s pp against intake)", sgn(abs_excess))) else "",
                          coalesce(ofsted_latest, "not known"),
                          ifelse(is.na(run_by), "", paste0("<br>Run by (2024/25): ", run_by)))) |>
-    select(SCHNAME, lon, lat, pupils, tip, any_of(MAP_VARS$var))
+    select(SCHNAME, lon, lat, pupils, tip, any_of(MV$var))
   payload <- list(
     schools = jsonlite::toJSON(dat, dataframe = "rows", na = "null", digits = 4),
-    vars = jsonlite::toJSON(MAP_VARS |> filter(var %in% names(dat)) |>
+    vars = jsonlite::toJSON(MV |> filter(var %in% names(dat)) |>
                               mutate(cap = unname(COLOUR_CAPS[var])), dataframe = "rows", na = "null"),
     cats = cats_json()$cats, cats_s = cats_json()$cats_s,
     heads = jsonlite::toJSON(lapply(MAP_CAT_HEADS, as.list), auto_unbox = TRUE),
@@ -434,4 +437,69 @@ abs_sources_table <- function(labels) {
   ABS_VAR_SOURCES |> dplyr::mutate(Characteristic = unname(labels[var]), Measures = measures, Source = md2html(source)) |>
     dplyr::filter(!is.na(Characteristic)) |> dplyr::select(Characteristic, Measures, Source) |>
     kt(escape = FALSE, align = "lll")
+}
+
+# ---- Expected absence, two ways (R/62), for every map ------------------------------------------
+# Each school's recorded absence in autumn and spring 2025/26, what our model expects from its
+# intake and region, and the median and top quarter of its 20 rebuilt DfE-style similar schools,
+# for the seven measures; and the differences between them. Columns are prefixed ab_ on the maps.
+# A note template may replace a diverging measure's legend note: {bad} and {good} become the
+# colour scheme's words.
+ATT_BENCH_OUT <- c(overall = "Overall absence", illness = "Illness absence", appointments = "Medical appointments",
+                   auth_other = "Other authorised absence", unauth = "Unauthorised absence",
+                   persistent = "Persistent absence", severe = "Severe absence")
+ATT_BENCH_SHORT <- c(overall = "Overall", illness = "Illness", appointments = "Appointments", auth_other = "Other auth.",
+                     unauth = "Unauth.", persistent = "Persistent", severe = "Severe")
+att_bench_vars <- function() {
+  G1 <- "Expected absence, autumn and spring 2025/26"; G2 <- "Absence against expectation, 2025/26"
+  dp <- function(o) if (o == "appointments") 2 else 1
+  a <- bind_rows(lapply(names(ATT_BENCH_OUT), function(o) {
+    L <- ATT_BENCH_OUT[[o]]; S <- ATT_BENCH_SHORT[[o]]; q <- o %in% c("overall", "persistent")
+    tibble(var = paste0("ab_", o, c("_actual", "_model", "_similar_median", if (q) c("_model_q1", "_similar_q1"))),
+           label = paste0(L, c(": recorded", ": expected from the intake (our model)", ": similar schools' median (DfE-style, rebuilt)",
+                               if (q) c(": top quarter for this intake (our model's target)", ": similar schools' top quarter (DfE-style target, rebuilt)"))),
+           short = paste0(S, c(" recorded", " expected (model)", " similar median", if (q) c(" target (model)", " target (similar)"))),
+           group = G1, scale = "seq", good = "low", dp = dp(o), unit = "%", note = NA_character_)
+  }))
+  hard <- "{bad}: the similar schools ask for less absence than the intake predicts (harder); {good}: more (easier)"
+  b <- bind_rows(lapply(names(ATT_BENCH_OUT), function(o) {
+    L <- ATT_BENCH_OUT[[o]]; S <- ATT_BENCH_SHORT[[o]]
+    tibble(var = paste0("ab_", o, c("_actual_vs_model", "_actual_vs_similar", "_similar_vs_model")),
+           label = paste0(L, c(": recorded against our model's expectation", ": recorded against similar schools' median",
+                               ": DfE-style benchmark against our model's expectation")),
+           short = paste0(S, c(" vs model", " vs similar", " similar vs model")),
+           group = G2, scale = "div", good = c("low", "low", "high"), dp = dp(o), unit = " pp",
+           note = c(NA, "{bad} above the similar schools' median, {good} below", hard))
+  }))
+  b <- bind_rows(b, tibble(var = "ab_overall_similar_q1_vs_model_q1", label = "Overall absence: DfE-style target against our model's target",
+                           short = "Overall target, similar vs model", group = G2, scale = "div", good = "high", dp = 1, unit = " pp",
+                           note = "{bad}: the similar schools' top quarter asks for less absence than this intake's top quarter (harder); {good}: more (easier)"))
+  # short keys on the maps (each is repeated for every school in the page's data): src is the
+  # R/62 column, var the key, e.g. overall_similar_median -> b_ov_s
+  OC <- c(overall = "ov", illness = "il", appointments = "ap", auth_other = "ao", unauth = "ua", persistent = "pa", severe = "sa")
+  SC <- c(actual = "a", model = "m", similar_median = "s", model_q1 = "mq", similar_q1 = "sq", actual_vs_model = "am",
+          actual_vs_similar = "as", similar_vs_model = "sm", similar_q1_vs_model_q1 = "tg")
+  bind_rows(a, b) |>
+    mutate(src = sub("^ab_", "", var),
+           o = sapply(src, function(s) names(OC)[startsWith(s, paste0(names(OC), "_"))][1]),
+           var = paste0("b_", OC[o], "_", SC[substring(src, nchar(o) + 2)])) |>
+    select(-o)
+}
+#' The R/62 columns under their short map keys, by URN (NULL before R/62 has run)
+att_bench_cols <- function() {
+  f <- here::here("data", "attendance_benchmarks.rds")
+  if (!file.exists(f)) return(NULL)
+  V <- att_bench_vars(); W <- readRDS(f)$W
+  W <- as.data.frame(W)[, c("URN", V$src)]; names(W) <- c("URN", V$var); tibble::as_tibble(W)
+}
+#' Colour caps for the diverging R/62 measures: the 97.5th percentile of |difference| nationally
+att_bench_caps <- function() {
+  W <- att_bench_cols(); if (is.null(W)) return(numeric(0))
+  v <- att_bench_vars() |> filter(scale == "div") |> pull(var)
+  sapply(setNames(v, v), function(x) { q <- unname(quantile(abs(W[[x]]), 0.975, na.rm = TRUE)); if (q < 1) round(q, 2) else round(q, 1) })
+}
+#' MAP_VARS with the R/62 measures after the attendance ones
+map_vars_all <- function() {
+  i <- max(which(MAP_VARS$group == "Attendance"))
+  bind_rows(MAP_VARS[seq_len(i), ], att_bench_vars() |> select(-short, -src), MAP_VARS[-seq_len(i), ])
 }

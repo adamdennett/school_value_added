@@ -61,6 +61,11 @@ short <- function(x) sub(" School and Sixth Form Centre| Catholic School| Commun
   almost half the gap between the benchmark and what a school's whole intake
   predicts. And similar schools' progress, which ABIEs rest on, barely
   predicts a school's own.
+- **Every figure is in an open dataset** ([download](#sec-data)): for every
+  secondary and all seven kinds of absence, what it recorded, what our model
+  expects and our target, and the rebuilt DfE-style median and target, with
+  the differences. They are estimates to check with schools, not DfE's ABIEs,
+  and they are now on every map on the site.
 
 ## What an ABIE is {#sec-what}
 
@@ -87,6 +92,15 @@ short <- function(x) sub(" School and Sixth Form Centre| Catholic School| Commun
   2025/26. From September 2026 ABIEs are multi-year, setting the improvement
   expected **by the end of 2028/29**, and a school's ABIE does not change
   between reports.
+- **What it does not match on:** prior attainment, pupil mobility,
+  admissions policy, or any ethnicity other than Gypsy, Roma and Traveller.
+  DfE's own [similar schools model for
+  attainment](https://www.gov.uk/government/publications/similar-schools-model-for-attainment/similar-schools-model-for-attainment-overview)
+  does use **KS2 prior attainment** and **stability** (the share of pupils
+  admitted at the standard time, the inverse of mobility), with pupil premium,
+  IDACI, POLAR4, size, SEN support, EHC plans and EAL. The attendance
+  comparison is a separate model and uses neither. DfE says it updated how it
+  identifies similar schools for 2026/27 but has not said what changed.
 - **Its status:** not an accountability measure, and not shared with Ofsted.
 - **What is not public:** the formula, which attendance measure it is set on,
   and how the "progress of similar schools" becomes a school's expectation.
@@ -406,6 +420,10 @@ kable(FA$bh[, .(School = SCHNAME, Actual = f1(actual), `Our model` = f1(model), 
 - **Basing expectations on similar schools' progress does not fix it.** A
   school's own progress barely follows its similar schools', and the
   characteristics the matching omits predict it.
+- **DfE already does this for attainment.** Its similar schools model for
+  attainment matches on KS2 prior attainment and pupil stability; its
+  attendance comparison does not, although both turn out to matter for
+  absence as well.
 - **A fairer benchmark would match on, or adjust for, the whole intake:**
   add KS2 prior attainment, mobility and admissions policy to the matching,
   or set each school's expectation from a model of its full intake, as ours
@@ -418,6 +436,153 @@ kable(FA$bh[, .(School = SCHNAME, Actual = f1(actual), `Our model` = f1(model), 
   - **ABIEs are not an accountability measure.** But they frame each
     school's conversations about attendance, so a biased starting point
     matters.
+
+## The data: expected absence for every secondary, two ways {#sec-data}
+
+```{r data-setup}
+#| include: false
+ATB <- readRDS(here::here("data", "attendance_benchmarks.rds"))
+AW <- ATB$W
+OUTS <- names(ATT_BENCH_OUT)
+abs_sum <- rbindlist(lapply(OUTS, function(o) {
+  a <- AW[[paste0(o, "_actual")]]; m <- AW[[paste0(o, "_model")]]; s <- AW[[paste0(o, "_similar_median")]]; ok <- !is.na(s)
+  data.table(o = o, measure = ATT_BENCH_OUT[[o]], unit = if (o %in% c("persistent", "severe")) "% of pupils" else "% of sessions",
+             actual = mean(a[ok]), model = mean(m[ok]), similar = mean(s[ok]),
+             r_ms = cor(m[ok], s[ok]), r_am = cor(a[ok], m[ok]), r_as = cor(a[ok], s[ok]),
+             harder = mean(s[ok] - m[ok] <= -0.1 * mean(a[ok])), easier = mean(s[ok] - m[ok] >= 0.1 * mean(a[ok])))
+}))
+n_all <- nrow(AW); n_sim <- sum(!is.na(AW$overall_similar_median))
+mb <- function(f) sprintf("%.1f MB", file.size(here::here("data", f)) / 1e6)
+pc <- function(x) sprintf("%.0f%%", 100 * x)
+shift <- ATB$model_q1_shift
+```
+
+For anyone who wants to check, challenge or use these figures, every number
+on this page is in an open dataset: one row for each of the
+**`r format(n_all, big.mark = ",")` state-funded secondaries** in our absence
+model, for each of the seven absence measures in autumn and spring 2025/26.
+
+- **[attendance_benchmarks_2025-26.csv](data/attendance_benchmarks_2025-26.csv)**
+  (`r mb("attendance_benchmarks_2025-26.csv")`): the schools and their figures.
+- **[attendance_benchmarks_dictionary.csv](data/attendance_benchmarks_dictionary.csv)**:
+  what every column means, its unit and where it comes from.
+- **[attendance_similar_schools.csv](data/attendance_similar_schools.csv)**
+  (`r mb("attendance_similar_schools.csv")`): each school's 20 rebuilt similar
+  schools, nearest first.
+
+**What each row holds, for each measure:**
+
+| Column ending | What it is | Method |
+|---|---|---|
+| `_actual` | What the school recorded | DfE published statistics |
+| `_model` | What its whole intake and region predict | Our model |
+| `_model_q1` | Our target: what a school in the best quarter of schools with this intake records | Our model |
+| `_similar_median` | The median of its 20 similar schools: DfE's comparison | DfE-style, rebuilt |
+| `_similar_q1` | The top quarter of its similar schools: DfE's "realistic target" | DfE-style, rebuilt |
+| `_actual_vs_model` | Recorded minus our expectation | Difference |
+| `_actual_vs_similar` | Recorded minus the similar schools' median | Difference |
+| `_similar_vs_model` | The similar-schools median minus our expectation (negative: the DfE-style benchmark is harder) | Difference |
+
+: The columns for each absence measure (for example `overall_model`, `illness_similar_median`). Differences are in percentage points. Overall absence also has the 2024/25 full-year figures. {.striped}
+
+::: {.callout-warning}
+## Estimates, to be checked with schools
+- **These are not DfE's ABIEs.** They rebuild the similar-schools comparison
+  that DfE describes, from published data. DfE does not publish its similar
+  schools, its weights or its ABIE formula.
+- **The quickest check:** a school can set the 20 schools listed for it in
+  `attendance_similar_schools.csv` beside those in its own *similar schools
+  comparison report* in DfE's Monitor your school attendance service. The
+  more of them match, the closer this rebuild is for that school.
+- **Our target** (`_model_q1`) is our model's expectation moved down to the
+  best quarter of schools with the same intake: by
+  `r pc(1 - exp(shift[outcome == "overall", q25]))` for overall absence and
+  `r pc(1 - exp(shift[outcome == "persistent", q25]))` for persistent absence
+  (the 25th percentile of the model's residuals, on the log scale). It is a
+  comparison with DfE's top-quarter target, not a proposal for one.
+:::
+
+### The two methods, measure by measure
+
+```{r data-sum}
+#| echo: false
+#| tbl-cap: "Our model and the rebuilt similar-schools benchmark, for each absence measure: averages across the schools with both, how closely each tracks what schools recorded, and how often the DfE-style median is at least a tenth harder or easier than our model's expectation. Autumn and spring 2025/26."
+fd <- function(x, o) ifelse(o == "appointments", sprintf("%.2f", x), sprintf("%.1f", x))
+kable(abs_sum[, .(Measure = measure, Unit = unit, Recorded = fd(actual, o), `Our model` = fd(model, o), `Similar schools` = fd(similar, o),
+                  `r: model and similar` = f2(r_ms), `r: recorded and model` = f2(r_am), `r: recorded and similar` = f2(r_as),
+                  `Similar a tenth harder` = pc(harder), `A tenth easier` = pc(easier))], align = "llrrrrrrrr")
+```
+
+```{r fig-data-r}
+#| echo: false
+#| fig-height: 3.8
+#| fig-width: 8.5
+#| fig-cap: "How closely each method's expectation tracks the absence schools recorded, for each measure (correlation across schools). Our model is closer for every kind of absence."
+#| fig-alt: "Dumbbell chart of seven absence measures: correlation of recorded absence with our model's expectation (0.49 to 0.77) is higher than with the similar-schools median (0.39 to 0.72) for every measure."
+dd <- melt(abs_sum[, .(measure, `Our model` = r_am, `Similar schools (DfE-style)` = r_as)], id.vars = "measure")
+dd[, measure := factor(measure, rev(abs_sum$measure))]
+ggplot(dd, aes(value, measure)) +
+  geom_line(aes(group = measure), colour = "#c9c2d6", linewidth = 1.2) +
+  geom_point(aes(colour = variable), size = 3.2) +
+  scale_colour_manual(values = c("Our model" = DPURPLE, "Similar schools (DfE-style)" = BLUE), name = NULL) +
+  labs(x = "Correlation with recorded absence", y = NULL) + theme_note(11) + theme(legend.position = "top")
+```
+
+- **They agree on the level.** On average the two methods expect almost the
+  same absence for every measure, and they correlate at
+  `r f2(min(abs_sum$r_ms))`–`r f2(max(abs_sum$r_ms))` across schools.
+- **Our model tracks what schools record more closely, for every kind of
+  absence**, because it sees more of the intake (prior attainment, mobility,
+  neighbourhood education, autism and other needs).
+- **The DfE-style benchmark is harder than our model more often than easier**,
+  most of all for other authorised (`r pc(abs_sum[o == "auth_other", harder])`
+  of schools at least a tenth harder), severe
+  (`r pc(abs_sum[o == "severe", harder])`) and unauthorised absence
+  (`r pc(abs_sum[o == "unauth", harder])`).
+
+### Brighton and Hove
+
+```{r data-bh}
+#| echo: false
+#| tbl-cap: "Brighton and Hove's secondaries, overall absence, autumn and spring 2025/26 (% of sessions): what each recorded, what our model expects and its target for this intake, and the rebuilt similar-schools median and top quarter. Every measure is in the dataset."
+bhw <- AW[la == "Brighton and Hove"][order(-overall_actual)]
+kable(bhw[, .(School = short(school), Recorded = f1(overall_actual), `Our model: expected` = f1(overall_model), `Our model: target` = f1(overall_model_q1),
+              `Similar: median` = f1(overall_similar_median), `Similar: top quarter` = f1(overall_similar_q1),
+              `Similar vs model` = sprintf("%+.1f", overall_similar_vs_model))], align = "lrrrrrr")
+```
+
+### Every school
+
+Search for a school, local authority or region; the table sorts by any column.
+
+```{r data-dt}
+#| echo: false
+DT::datatable(AW[, .(School = school, LA = la, Region = region,
+                     `Overall: recorded` = overall_actual, `Overall: our model` = overall_model, `Overall: similar median` = overall_similar_median,
+                     `Overall: similar top quarter` = overall_similar_q1, `Overall: similar vs model` = overall_similar_vs_model,
+                     `Persistent: recorded` = persistent_actual, `Persistent: our model` = persistent_model, `Persistent: similar median` = persistent_similar_median,
+                     `Illness: recorded` = illness_actual, `Illness: our model` = illness_model, `Illness: similar median` = illness_similar_median)],
+              rownames = FALSE, filter = "none", extensions = "Buttons",
+              options = list(pageLength = 10, scrollX = TRUE, dom = "Bfrtip", buttons = c("csv"),
+                             columnDefs = list(list(className = "dt-right", targets = 3:13))),
+              caption = "Autumn and spring 2025/26. Overall, illness: % of sessions; persistent: % of pupils missing 10% or more. Similar schools: rebuilt DfE-style comparison; blank where fewer than 10 of the 20 have a figure.")
+```
+
+### On every map
+
+Every map on the site now carries these figures. In the **Colour by** menu of
+the [Explore](explore.qmd) map, the [Aldridge trust page](trust_aldridge.qmd)
+and each [Sussex area page](areas/brighton_and_hove.qmd), two groups follow
+*Attendance*:
+
+- **Expected absence, autumn and spring 2025/26:** for each of the seven
+  measures, what the school recorded, what our model expects from its intake,
+  and the similar schools' median; for overall and persistent absence, both
+  targets as well.
+- **Absence against expectation, 2025/26:** recorded against our model,
+  recorded against similar schools, and the DfE-style benchmark against our
+  model, so you can see where a similar-schools target would be harder or
+  easier than the intake suggests.
 
 ## What a direct comparison needs {#sec-next}
 
@@ -467,7 +632,8 @@ published termly statistics.
 ## Sources {#sec-sources}
 
 - DfE (2026) [*Monitor your school attendance: user guide*](https://www.gov.uk/government/publications/monitor-your-school-attendance-user-guide/monitor-your-school-attendance-user-guide), updated 23 November 2026: the similar schools comparison and ABIEs.
+- DfE [*Similar schools model for attainment: overview*](https://www.gov.uk/government/publications/similar-schools-model-for-attainment/similar-schools-model-for-attainment-overview): the separate attainment model, which matches on KS2 prior attainment and stability.
 - DfE, [*Pupil attendance in schools*](https://explore-education-statistics.service.gov.uk/find-statistics/pupil-attendance-in-schools) and its [methodology](https://explore-education-statistics.service.gov.uk/methodology/pupil-attendance-in-schools).
 - Reports of the Minister's letter on ABIEs: [SecEd](https://www.sec-ed.co.uk/content/news/schools-ai-powered-student-attendance-targets-absence); [Tes](https://www.tes.com/magazine/news/general/dfe-sets-ai-attendance-targets-for-schools); [Browne Jacobson](https://www.brownejacobson.com/insights/school-attendance-targets-2026-what-your-abie-means); [NGA](https://www.nga.org.uk/knowledge-centre/improving-school-attendance/).
 - Data: DfE *Pupil absence in schools in England* (school level, 2021/22 to 2024/25; autumn and spring 2025/26); *Schools, pupils and their characteristics* and *Special educational needs in England*, January 2026; consistent financial reporting and academies accounts return, 2024-25; Get Information about Schools; English Indices of Deprivation 2019 (IDACI).
-- Ours: `R/08_absence_causes.R` (the absence models), `R/59_abie_benchmark.R` (this page).
+- Ours: `R/08_absence_causes.R` (the absence models), `R/59_abie_benchmark.R` (this page), `R/61_abie_fairness.R` (the fairness tests), `R/62_attendance_benchmarks.R` (the [open dataset](#sec-data)).

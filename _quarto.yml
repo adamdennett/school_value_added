@@ -36,6 +36,9 @@ project:
     - twins.js
     - data/va_v2_schools.csv
     - data/va_2526_provisional.csv
+    - data/attendance_benchmarks_2025-26.csv
+    - data/attendance_benchmarks_dictionary.csv
+    - data/attendance_similar_schools.csv
 
 website:
   title: "School Value Added"

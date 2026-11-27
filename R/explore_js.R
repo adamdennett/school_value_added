@@ -318,7 +318,7 @@ function(el, x, data) {
       h += "<div class=\\"bar\\" style=\\"background:linear-gradient(to right," + gradC(C, m.good === "low") + ")\\"></div>" +
            "<span>" + (m.scale === "div" ? "&le; " : "") + fmtM(sc.lo, m) + "</span><span style=\\"float:right\\">" +
            (m.scale === "div" ? "&ge; " : "") + fmtM(sc.hi, m) + "</span>";
-      if (m.scale === "div") h += "<div class=\\"note\\">" + (m.good === "low" ? badWord() + " above what the intake predicts, " + PALS[scheme].good + " below"
+      if (m.scale === "div") h += "<div class=\\"note\\">" + (m.note ? m.note.replace("{bad}", badWord()).replace("{good}", PALS[scheme].good) : m.good === "low" ? badWord() + " above what the intake predicts, " + PALS[scheme].good + " below"
                                                                               : badWord() + " below expectation, " + PALS[scheme].good + " above") + "</div>";
       else if (m.good) h += "<div class=\\"note\\">" + PALS[scheme].good + " is better, " + badWord() + " worse</div>";
       else h += "<div class=\\"note\\">no better or worse: shading only</div>";

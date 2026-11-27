@@ -113,7 +113,8 @@ function(el, x, data) {
         (m.scale === "div" ? "<span style=\\"position:absolute;left:50%;transform:translateX(-50%)\\">0</span>" : "") +
         "<span style=\\"float:right\\">" + (m.cap ? "&ge; " : "") + fmt(hi, m) + "</span>";
       if (m.scale === "div") h += "<div style=\\"font-size:11px;color:#666\\">" +
-        (m.good === "high" ? wd[0] + " below expectation, " + wd[1] + " above"
+        (m.note ? m.note.replace("{bad}", wd[0]).replace("{good}", wd[1]) :
+         m.good === "high" ? wd[0] + " below expectation, " + wd[1] + " above"
                            : wd[0] + " above what the intake predicts, " + wd[1] + " below") + "</div>";
       else if (m.good) h += "<div style=\\"font-size:11px;color:#666\\">" + wd[1] + " is better, " + wd[0] + " worse</div>";
     }
