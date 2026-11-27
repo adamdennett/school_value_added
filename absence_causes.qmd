@@ -1061,11 +1061,22 @@ A$x_desc |> transmute(Characteristic = unname(A$cont[var]), Mean = sprintf("%.2f
 #| tbl-cap: "Categories: schools in each, with the reference category first."
 CAT_LAB <- c(sixth = "Sixth form", ADMPOL_PT = "Admissions", mat = "Governance", faith = "Religious character",
              place = "Rural or urban")
-LEVEL_LAB <- c(`FALSE` = "No", `TRUE` = "Yes", `OTHER NON SEL` = "Non-selective elsewhere",
-               SEL = "Selective", `NON SEL IN HIGHLY SEL AREA` = "Non-selective in a selective area")
+LEVEL_LAB <- c(`FALSE` = "No", `TRUE` = "Yes", `OTHER NON SEL` = "Comprehensive, elsewhere",
+               SEL = "Selective (grammar)", `NON SEL IN HIGHLY SEL AREA` = "Comprehensive, in a selective area")
 A$cat_desc |> transmute(Characteristic = unname(CAT_LAB[var]),
                         Category = coalesce(unname(LEVEL_LAB[level]), level), Schools = n) |>
   kt(align = "llr")
+```
+
+## Sources
+
+The outcomes: `r ABS_OUTCOME_SOURCE`. Every characteristic is published,
+school-level data; none uses pupil-level records.
+
+```{r}
+#| label: tbl-abs-sources
+#| tbl-cap: "Where each characteristic in the absence models comes from."
+abs_sources_table(c(A$cont, A$fact, region = "Region"))
 ```
 :::
 

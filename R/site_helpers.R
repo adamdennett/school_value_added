@@ -390,3 +390,48 @@ ci_plot <- function(d, xlab, ncol = 2, free_x = FALSE, wrap = 46) {
   if (!is.null(d$panel)) { p$data$panel <- factor(p$data$panel, if (is.factor(d$panel)) levels(d$panel) else unique(as.character(d$panel))); p <- p + facet_wrap(~panel, ncol = ncol, scales = if (free_x) "free_x" else "fixed") }
   p
 }
+
+# ---- where each absence-model characteristic comes from -----------------------------
+# One row per characteristic in the absence models (R/08_absence_causes.R), with
+# what it measures and its published source; used by absence_causes.qmd and the
+# area pages (templates/area.qmd).
+EES <- "https://explore-education-statistics.service.gov.uk/find-statistics/"
+SRC_SPC <- sprintf("[DfE, *Schools, pupils and their characteristics*](%sschool-pupils-and-their-characteristics), January 2026, school level", EES)
+SRC_SEN <- sprintf("[DfE, *Special educational needs in England*](%sspecial-educational-needs-in-england), January 2026, school level", EES)
+SRC_KS4 <- sprintf("[DfE, *Key stage 4 performance*](%skey-stage-4-performance), school level, latest year", EES)
+ABS_VAR_SOURCES <- tibble::tribble(
+  ~var,        ~measures,                                                                                   ~source,
+  "fsm",       "Pupils known to be eligible for free school meals (%)",                                     SRC_SPC,
+  "sen_sup",   "Pupils on SEN support (%)",                                                                 SRC_SEN,
+  "ehcp",      "Pupils with an education, health and care plan (%)",                                       SRC_SEN,
+  "semh",      "Pupils whose primary need is social, emotional and mental health, EHC plans and SEN support together (%)", SRC_SEN,
+  "asd",       "Pupils whose primary need is autistic spectrum disorder, EHC plans and SEN support together (%)", SRC_SEN,
+  "learning",  "Pupils whose primary need is a moderate or specific learning difficulty (%)",               SRC_SEN,
+  "carer",     "Pupils recorded as young carers (%)",                                                       SRC_SPC,
+  "eal",       "Pupils whose first language is known or believed to be other than English (%)",            SRC_SPC,
+  "wbri",      "Pupils of White British ethnic origin (%)",                                                 SRC_SPC,
+  "grt",       "Pupils of Gypsy/Roma or Traveller of Irish heritage ethnic origin (%)",                     SRC_SPC,
+  "girls",     "Girls (%)",                                                                                 SRC_SPC,
+  "mobile",    "Pupils in the KS4 cohort who joined the school mid-phase (100 minus the % not mobile)",     SRC_KS4,
+  "ks2_c",     "Average KS2 prior attainment of the KS4 cohort (centred)",                                  SRC_KS4,
+  "z_l4",      "Share of adults with Level 4+ qualifications in the 150 Output Areas nearest the school (standardised)",
+               "[ONS, Census 2021, TS067](https://www.nomisweb.co.uk/datasets/c2021ts067), Output Areas",
+  "size",      "Pupils on roll (log headcount)",                                                            SRC_SPC,
+  "sixth",     "Whether the school has a sixth form",                                                       SRC_KS4,
+  "ADMPOL_PT", "Admissions policy: selective, or non-selective in or outside a selective area",            SRC_KS4,
+  "mat",       "Governance: maintained, multi-academy trust, or single-academy trust",                      "[DfE, *Get Information about Schools*](https://get-information-schools.service.gov.uk/)",
+  "faith",     "Religious character",                                                                       SRC_SPC,
+  "place",     "Rural-urban classification of the school's location (three bands)",                         SRC_SPC,
+  "region",    "Region",                                                                                    SRC_SPC)
+ABS_OUTCOME_SOURCE <- sprintf("[DfE, *Pupil absence in schools in England: autumn and spring terms*](%spupil-absence-in-schools-in-england-autumn-and-spring-terms), 2025/26, school level", EES)
+# Markdown links and italics to HTML, for sources shown inside kable tables
+md2html <- function(x) {
+  x <- gsub("[[]([^]]+)[]][(]([^)]+)[)]", "<a href=\"\\2\">\\1</a>", x)
+  gsub("[*]([^*]+)[*]", "<i>\\1</i>", x)
+}
+#' The source table for the absence characteristics, as an HTML kable
+abs_sources_table <- function(labels) {
+  ABS_VAR_SOURCES |> dplyr::mutate(Characteristic = unname(labels[var]), Measures = measures, Source = md2html(source)) |>
+    dplyr::filter(!is.na(Characteristic)) |> dplyr::select(Characteristic, Measures, Source) |>
+    kt(escape = FALSE, align = "lll")
+}

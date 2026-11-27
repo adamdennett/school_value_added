@@ -308,6 +308,41 @@ fig_abs_local_share <- function(sh, name, min_share = 1.5) {
     theme_note(11) + theme(legend.position = "top")
 }
 
+
+#' The local shares for every kind of absence, as one interactive chart with a
+#' menu: England hollow, the area filled, joined by a line; each kind's
+#' characteristics ordered by the area's share
+fig_abs_local_share_all <- function(AC, urns, name, min_share = 1.5) {
+  OUTS <- names(AC$outcomes)
+  p <- plotly::plot_ly(); ord <- list()
+  for (o in OUTS) {
+    s <- abs_local_share(AC, urns, o) |> filter(abs(area) >= min_share | abs(england) >= min_share) |> arrange(area)
+    ord[[o]] <- s$label
+    ln <- tibble::tibble(x = as.vector(rbind(s$england, s$area, NA)), y = as.vector(rbind(s$label, s$label, NA)))
+    p <- p |>
+      plotly::add_trace(data = ln, x = ~x, y = ~y, type = "scatter", mode = "lines", line = list(color = LIGHT, width = 3),
+                        hoverinfo = "skip", showlegend = FALSE, visible = (o == OUTS[1])) |>
+      plotly::add_trace(data = s, x = ~england, y = ~label, type = "scatter", mode = "markers",
+                        marker = list(symbol = "circle-open", color = GREY, size = 11, line = list(width = 2)),
+                        text = ~sprintf("%s<br>England: %.0f%%", label, england), hoverinfo = "text",
+                        name = "England", legendgroup = "e", showlegend = (o == OUTS[1]), visible = (o == OUTS[1])) |>
+      plotly::add_trace(data = s, x = ~area, y = ~label, type = "scatter", mode = "markers",
+                        marker = list(color = BPURPLE, size = 11), text = ~sprintf("%s<br>%s: %.0f%%", label, name, area),
+                        hoverinfo = "text", name = name, legendgroup = "a", showlegend = (o == OUTS[1]), visible = (o == OUTS[1]))
+  }
+  btn <- lapply(seq_along(OUTS), function(k) {
+    o <- OUTS[k]
+    list(method = "update", label = unname(AC$outcomes[[o]]),
+         args = list(list(visible = rep(seq_along(OUTS) == k, each = 3)),
+                     list(title = list(text = unname(AC$outcomes[[o]]), x = 0.02), `yaxis.categoryarray` = ord[[o]])))
+  })
+  p |> plotly::layout(title = list(text = unname(AC$outcomes[[OUTS[1]]]), x = 0.02),
+                      xaxis = list(title = "Share of the differences between schools in expected absence (%)", zeroline = TRUE, zerolinecolor = GREY),
+                      yaxis = list(title = "", categoryorder = "array", categoryarray = ord[[OUTS[1]]], automargin = TRUE),
+                      updatemenus = list(list(type = "dropdown", x = 1, xanchor = "right", y = 1.12, buttons = btn)),
+                      legend = list(orientation = "h", x = 0, y = -0.15), margin = list(t = 60)) |>
+    plotly::config(displaylogo = FALSE)
+}
 #' For each area: its absence against England's (%), and the part its
 #' schools' characteristics do not account for (%), kind by kind
 abs_vs_england <- function(AC, sets, outcomes = names(ABS_SHOW)) {
