@@ -65,3 +65,11 @@ overall_2425_actual,Overall absence,% of sessions,"Recorded overall absence, ful
 overall_2425_model,Overall absence,% of sessions,"Our model's expectation for 2024/25 (R/08 specification refitted to 2024/25, R/59)."
 overall_2425_similar_median,Overall absence,% of sessions,"Median of the 20 rebuilt similar schools, 2024/25."
 overall_2425_similar_q1,Overall absence,% of sessions,"Top quarter of the 20 rebuilt similar schools, 2024/25."
+overall_1819_actual,Overall absence,% of sessions,"Before the pandemic: recorded by the school (or its predecessor under an earlier URN), autumn and spring 2018/19, the same basis as 2025/26 (R/09)."
+overall_1819_similar_median,Overall absence,% of sessions,"Before the pandemic: median of the same 20 rebuilt similar schools, autumn and spring 2018/19 (at least 10 with a value)."
+overall_1819_similar_q1,Overall absence,% of sessions,"Before the pandemic: top quarter of the same 20 rebuilt similar schools, autumn and spring 2018/19."
+persistent_1819_actual,Persistent absence,% of pupils,"Before the pandemic: recorded by the school (or its predecessor under an earlier URN), autumn and spring 2018/19, the same basis as 2025/26 (R/09)."
+persistent_1819_similar_median,Persistent absence,% of pupils,"Before the pandemic: median of the same 20 rebuilt similar schools, autumn and spring 2018/19 (at least 10 with a value)."
+persistent_1819_similar_q1,Persistent absence,% of pupils,"Before the pandemic: top quarter of the same 20 rebuilt similar schools, autumn and spring 2018/19."
+overall_similar_q1_vs_1819,Overall absence,percentage points,The similar schools' top quarter in 2025/26 (DfE-style target) minus their median before the pandemic (2018/19): how far today's target sits above what these schools typically recorded then.
+persistent_similar_q1_vs_1819,Persistent absence,percentage points,The similar schools' top quarter in 2025/26 (DfE-style target) minus their median before the pandemic (2018/19): how far today's target sits above what these schools typically recorded then.

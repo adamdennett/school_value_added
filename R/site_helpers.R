@@ -455,10 +455,10 @@ att_bench_vars <- function() {
   dp <- function(o) if (o == "appointments") 2 else 1
   a <- bind_rows(lapply(names(ATT_BENCH_OUT), function(o) {
     L <- ATT_BENCH_OUT[[o]]; S <- ATT_BENCH_SHORT[[o]]; q <- o %in% c("overall", "persistent")
-    tibble(var = paste0("ab_", o, c("_actual", "_model", "_similar_median", if (q) c("_model_q1", "_similar_q1"))),
+    tibble(var = paste0("ab_", o, c("_actual", "_model", "_similar_median", if (q) c("_model_q1", "_similar_q1", "_1819_actual", "_1819_similar_median"))),
            label = paste0(L, c(": recorded", ": expected from the intake (our model)", ": similar schools' median (DfE-style, rebuilt)",
-                               if (q) c(": top quarter for this intake (our model's target)", ": similar schools' top quarter (DfE-style target, rebuilt)"))),
-           short = paste0(S, c(" recorded", " expected (model)", " similar median", if (q) c(" target (model)", " target (similar)"))),
+                               if (q) c(": top quarter for this intake (our model's target)", ": similar schools' top quarter (DfE-style target, rebuilt)", ": recorded before the pandemic (autumn and spring 2018/19)", ": similar schools' median before the pandemic (2018/19)"))),
+           short = paste0(S, c(" recorded", " expected (model)", " similar median", if (q) c(" target (model)", " target (similar)", " 2018/19", " similar median 2018/19"))),
            group = G1, scale = "seq", good = "low", dp = dp(o), unit = "%", note = NA_character_)
   }))
   hard <- "{bad}: the similar schools ask for less absence than the intake predicts (harder); {good}: more (easier)"
@@ -474,11 +474,15 @@ att_bench_vars <- function() {
   b <- bind_rows(b, tibble(var = "ab_overall_similar_q1_vs_model_q1", label = "Overall absence: DfE-style target against our model's target",
                            short = "Overall target, similar vs model", group = G2, scale = "div", good = "high", dp = 1, unit = " pp",
                            note = "{bad}: the similar schools' top quarter asks for less absence than this intake's top quarter (harder); {good}: more (easier)"))
+  b <- bind_rows(b, tibble(var = paste0("ab_", c("overall", "persistent"), "_similar_q1_vs_1819"),
+                           label = paste0(c("Overall absence", "Persistent absence"), ": DfE-style target (2025/26) above the same schools' median before the pandemic (2018/19)"),
+                           short = paste0(c("Overall", "Persistent"), " target above 2018/19"), group = G2, scale = "seq", good = "", dp = 1, unit = " pp",
+                           note = NA_character_))
   # short keys on the maps (each is repeated for every school in the page's data): src is the
   # R/62 column, var the key, e.g. overall_similar_median -> b_ov_s
   OC <- c(overall = "ov", illness = "il", appointments = "ap", auth_other = "ao", unauth = "ua", persistent = "pa", severe = "sa")
   SC <- c(actual = "a", model = "m", similar_median = "s", model_q1 = "mq", similar_q1 = "sq", actual_vs_model = "am",
-          actual_vs_similar = "as", similar_vs_model = "sm", similar_q1_vs_model_q1 = "tg")
+          actual_vs_similar = "as", similar_vs_model = "sm", similar_q1_vs_model_q1 = "tg", "1819_actual" = "pa", "1819_similar_median" = "ps", similar_q1_vs_1819 = "tp")
   bind_rows(a, b) |>
     mutate(src = sub("^ab_", "", var),
            o = sapply(src, function(s) names(OC)[startsWith(s, paste0(names(OC), "_"))][1]),

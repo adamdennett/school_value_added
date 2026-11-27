@@ -70,10 +70,28 @@ W[, overall_similar_q1_vs_model_q1 := overall_similar_q1 - overall_model_q1]
 b24 <- AB$B[year == "2024/25", .(URN, overall_2425_actual = actual, overall_2425_model = model,
                                   overall_2425_similar_median = sim_median, overall_2425_similar_q1 = sim_q1)]
 W <- merge(W, b24, by = "URN", all.x = TRUE)
+# Before the pandemic: autumn and spring 2018/19, on the same basis as 2025/26 (R/09's panel, schools
+# followed through changes of URN), for the school and the same 20 similar schools
+A9 <- readRDS(here::here("data", "absence_change.rds"))
+Y9 <- merge(as.data.table(A9$series)[tp == 201819L], as.data.table(A9$now)[, .(cid, URN_now)], by = "cid")
+pre <- rbindlist(lapply(c("overall", "persistent"), function(o) {
+  v <- setNames(Y9[[o]], Y9$URN_now)
+  rbindlist(lapply(names(sim), function(u) {
+    s <- v[as.character(sim[[u]])]; s <- s[!is.na(s)]; ok <- length(s) >= 10
+    data.table(URN = as.integer(u), o = o, own = unname(v[u]), med = if (ok) median(s) else NA_real_,
+               q1 = if (ok) unname(quantile(s, 0.25)) else NA_real_)
+  }))
+}))
+pre <- dcast(pre, URN ~ o, value.var = c("own", "med", "q1"))
+pre <- pre[, .(URN, overall_1819_actual = own_overall, overall_1819_similar_median = med_overall, overall_1819_similar_q1 = q1_overall,
+               persistent_1819_actual = own_persistent, persistent_1819_similar_median = med_persistent, persistent_1819_similar_q1 = q1_persistent)]
+W <- merge(W, pre, by = "URN", all.x = TRUE)
+W[, `:=`(overall_similar_q1_vs_1819 = overall_similar_q1 - overall_1819_similar_median,
+         persistent_similar_q1_vs_1819 = persistent_similar_q1 - persistent_1819_similar_median)]
 ord <- c("URN", "school", "la", "region", "n_similar",
          unlist(lapply(OUT, function(o) paste0(o, c("_actual", "_model", "_model_q1", "_similar_median", "_similar_q1",
                                                     "_actual_vs_model", "_actual_vs_similar", "_similar_vs_model")))),
-         "overall_similar_q1_vs_model_q1", names(b24)[-1])
+         "overall_similar_q1_vs_model_q1", names(b24)[-1], names(pre)[-1], "overall_similar_q1_vs_1819", "persistent_similar_q1_vs_1819")
 setcolorder(W, ord)
 num <- names(W)[sapply(W, is.numeric) & !names(W) %in% c("URN", "n_similar")]
 W[, (num) := lapply(.SD, round, 2), .SDcols = num]
@@ -105,7 +123,15 @@ dict <- rbind(
                              "Recorded overall absence, full year 2024/25.",
                              "Our model's expectation for 2024/25 (R/08 specification refitted to 2024/25, R/59).",
                              "Median of the 20 rebuilt similar schools, 2024/25.",
-                             "Top quarter of the 20 rebuilt similar schools, 2024/25.")))
+                             "Top quarter of the 20 rebuilt similar schools, 2024/25.")),
+  data.table(column = names(pre)[-1], measure = rep(c("Overall absence", "Persistent absence"), each = 3),
+             unit = rep(c("% of sessions", "% of pupils"), each = 3),
+             description = rep(c("Before the pandemic: recorded by the school (or its predecessor under an earlier URN), autumn and spring 2018/19, the same basis as 2025/26 (R/09).",
+                                 "Before the pandemic: median of the same 20 rebuilt similar schools, autumn and spring 2018/19 (at least 10 with a value).",
+                                 "Before the pandemic: top quarter of the same 20 rebuilt similar schools, autumn and spring 2018/19."), 2)),
+  data.table(column = c("overall_similar_q1_vs_1819", "persistent_similar_q1_vs_1819"), measure = c("Overall absence", "Persistent absence"),
+             unit = "percentage points",
+             description = "The similar schools' top quarter in 2025/26 (DfE-style target) minus their median before the pandemic (2018/19): how far today's target sits above what these schools typically recorded then."))
 stopifnot(identical(dict$column, names(W)))
 
 # ---- the similar-school sets ------------------------------------------------------------------------

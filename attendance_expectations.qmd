@@ -61,6 +61,17 @@ short <- function(x) sub(" School and Sixth Form Centre| Catholic School| Commun
   almost half the gap between the benchmark and what a school's whole intake
   predicts. And similar schools' progress, which ABIEs rest on, barely
   predicts a school's own.
+- **A similar-schools target does not point back to before the pandemic**
+  ([see below](#sec-precovid)). The top quarter of a school's similar
+  schools today closes only about a third of the gap to what the same
+  schools recorded in 2018/19. Getting back by 2028/29 would mean cutting
+  absence by about a seventh every year.
+- **Most of the post-pandemic rise is beyond any one school**
+  ([see below](#sec-reach)). It came in every kind of school and pupil
+  group, and it is about five times what separates a typical school from
+  the best quarter of schools with the same intake. Schools still matter at
+  the margin, but a target to undo the national rise would put on each
+  school a change the data say is mostly national.
 - **Every figure is in an open dataset** ([download](#sec-data)): for every
   secondary and all seven kinds of absence, what it recorded, what our model
   expects and our target, and the rebuilt DfE-style median and target, with
@@ -437,6 +448,291 @@ kable(FA$bh[, .(School = SCHNAME, Actual = f1(actual), `Our model` = f1(model), 
     school's conversations about attendance, so a biased starting point
     matters.
 
+## Back to before the pandemic? {#sec-precovid}
+
+```{r cv-setup}
+#| include: false
+CV <- readRDS(here::here("data", "covid_shift.rds"))
+ctr <- as.data.table(CV$trend)
+tv <- function(t, v) ctr[tp == t][[v]]
+bsum <- CV$back_sum; bk <- function(o, v) bsum[outcome == o][[v]]
+pc0 <- function(x) sprintf("%.0f%%", 100 * x)
+yr_cut <- function(v, a = 202223L, b = 202526L) 100 * (1 - (tv(b, v) / tv(a, v))^(1 / 3))
+MAG <- as.data.table(CV$mag); mg <- function(o, i) MAG[outcome == o][i, pct]
+FT <- as.data.table(CV$fits); ft <- function(o, t, v) FT[outcome == o & tp == t][[v]]
+PR <- as.data.table(CV$prop); pr <- function(o, v) PR[outcome == o][[v]]
+rq <- function(o, q) PR[outcome == o]$rise_q[[1]][as.integer(q), rise]
+CM <- as.data.table(CV$comp)
+OUT_LAB <- c(overall = "Overall absence", persistent = "Persistent absence", unauth = "Unauthorised", severe = "Severe absence", illness = "Illness")
+```
+
+Secondary absence in the autumn and spring terms rose from
+**`r f1(tv(201819L, "overall"))`%** of sessions in 2018/19 to
+`r f1(tv(202223L, "overall"))`% in 2022/23, and was still
+**`r f1(tv(202526L, "overall"))`%** in 2025/26. Persistent absence rose
+from `r f1(tv(201819L, "persistent"))`% of pupils to
+`r f1(tv(202526L, "persistent"))`%, severe absence from
+`r f1(tv(201819L, "severe"))`% to `r f1(tv(202526L, "severe"))`%
+([Absence over time](absence_change.qmd#sec-trend)). DfE may well want
+ABIEs to pull attendance back towards where it was. Do similar-schools
+benchmarks point there?
+
+For each school we take the same 20 rebuilt similar schools and look at
+them twice: before the pandemic (autumn and spring 2018/19) and now
+(autumn and spring 2025/26), on the same basis, following schools through
+changes of URN.
+
+```{r fig-precovid}
+#| echo: false
+#| fig-height: 4.2
+#| fig-width: 8.5
+#| fig-cap: "The same 20 similar schools, before the pandemic and now. Each school's similar schools' median before the pandemic is 100; dots show, on average across schools, their median now and their top quarter now (the DfE-style 'realistic target'). Autumn and spring terms."
+#| fig-alt: "Dot chart for five kinds of absence. For every kind, today's similar-schools median and today's top quarter are both far above the same schools' pre-pandemic median of 100: overall 154 and 136, persistent 174 and 146, unauthorised 195 and 148, severe 310 and 227, illness 131 and 111."
+B <- as.data.table(CV$back)[, .(now_med = 100 * mean(now_med / pre_med), now_q1 = 100 * mean(now_q1 / pre_med)), by = outcome]
+B[, measure := factor(OUT_LAB[outcome], rev(OUT_LAB[c("overall", "persistent", "unauth", "severe", "illness")]))]
+BL <- melt(B, id.vars = c("outcome", "measure"))
+BL[, what := factor(c(now_med = "Similar schools' median now", now_q1 = "Their top quarter now (the target)")[as.character(variable)],
+                    c("Similar schools' median now", "Their top quarter now (the target)"))]
+ggplot(B, aes(y = measure)) +
+  geom_vline(xintercept = 100, colour = GREY, linewidth = 0.5) +
+  annotate("text", x = 100, y = 5.45, label = "Their median before the pandemic", hjust = 0, nudge_x = 3, size = 3.1, colour = GREY) +
+  geom_segment(aes(x = 100, xend = now_med, yend = measure), colour = "#e4dcef", linewidth = 2.2) +
+  geom_point(data = BL, aes(x = value, colour = what), size = 3.3) +
+  geom_text(data = BL, aes(x = value, label = round(value), colour = what), vjust = -1.1, size = 3, show.legend = FALSE) +
+  scale_colour_manual(values = c("Similar schools' median now" = DPURPLE, "Their top quarter now (the target)" = BLUE), name = NULL) +
+  scale_x_continuous(limits = c(90, NA), expand = expansion(mult = c(0, 0.06))) +
+  scale_y_discrete(expand = expansion(add = c(0.6, 0.9))) +
+  labs(x = "Before the pandemic = 100", y = NULL) + theme_note(11) + theme(legend.position = "top", panel.grid.major.y = element_blank())
+```
+
+- **A target from today's similar schools stays in the post-pandemic
+  world.** The top quarter of a school's similar schools closes only about a
+  third of the gap between their median now and their median before the
+  pandemic: `r pc0(bk("overall", "share_back_median"))` for overall absence
+  and `r pc0(bk("persistent", "share_back_median"))` for persistent absence
+  (the median school).
+- **Almost no school is set a target as low as its similar schools
+  managed before the pandemic.** For `r pc0(bk("overall", "q1_below_pre"))`
+  of schools the top quarter now is at or below their similar schools'
+  pre-pandemic median, and only `r pc0(bk("overall", "own_now_at_pre"))` of
+  schools already record no more overall absence than that.
+- **Getting back by 2028/29 would mean cutting absence by about
+  `r round(bk("overall", "annual_cut_pct"))`% a year, three years running**
+  (persistent absence, `r round(bk("persistent", "annual_cut_pct"))`% a
+  year). Since the 2022/23 peak England has managed about
+  `r round(yr_cut("overall"))`% a year for overall absence and
+  `r round(yr_cut("persistent"))`% for persistent.
+- **So if ABIEs aim at pre-pandemic attendance, they cannot come from a
+  similar-schools comparison alone.** Whether DfE's multi-year ABIEs to
+  2028/29 go further than their similar schools' current top quarter is not
+  public. The test is simple once a school's ABIE is in hand: the
+  [dataset](#sec-data) now has each school's own and its similar schools'
+  2018/19 absence beside today's.
+
+## How much of the rise is within a school's reach? {#sec-reach}
+
+ABIEs are expectations of *schools*, so they put the post-pandemic rise in
+absence on what schools do. The data cannot say what schools could do in
+principle, but they can compare the size of the rise with how much schools
+demonstrably differ, and show where the rise came from.
+
+### The rise is several times what separates schools
+
+```{r fig-reach-mag}
+#| echo: false
+#| fig-height: 3.9
+#| fig-width: 8.5
+#| fig-cap: "Four magnitudes, as % of a school's absence: England's rise from 2018/19 to 2025/26; what separates a school in the best quarter for its intake from one in the middle (our model, 2025/26); what follows a change of trust (event study, Absence over time); and the difference made by intake, a school at the upper quartile of expected absence against one at the lower quartile. Autumn and spring terms."
+#| fig-alt: "Bar chart for overall and persistent absence. England's rise since before the pandemic is +54% and +69%; the best quarter of schools for their intake are 11% and 13% below the middle; a change of trust is followed by 6% and 16% less; intake differences between the quartiles are 29% and 39%."
+MP <- copy(MAG)[, what := factor(c("England's rise since before the pandemic", "Best quarter of schools for their intake, against the middle",
+                                     "After a change of trust", "Intake: upper against lower quartile of expected absence")[rep(1:4, 2)],
+                                   rev(c("England's rise since before the pandemic", "Intake: upper against lower quartile of expected absence",
+                                         "Best quarter of schools for their intake, against the middle", "After a change of trust")))]
+MP[, panel := factor(OUT_LAB[outcome], OUT_LAB[c("overall", "persistent")])]
+MP[, kind := fifelse(grepl("rise|Intake", what), "Outside the school", "What schools show")]
+ggplot(MP, aes(pct, what, fill = kind)) +
+  geom_col(width = 0.62) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_text(aes(label = sprintf("%+.0f%%", pct), hjust = ifelse(pct > 0, -0.15, 1.15)), size = 3.2, colour = INK) +
+  facet_wrap(~ panel) + scale_fill_manual(values = c("Outside the school" = MPURPLE, "What schools show" = BLUE), name = NULL) +
+  scale_x_continuous(expand = expansion(mult = c(0.25, 0.22)), labels = function(x) paste0(x, "%")) +
+  scale_y_discrete(labels = function(x) stringr::str_wrap(x, 34)) +
+  labs(x = "% of a school's absence", y = NULL) + theme_note(11) + theme(legend.position = "top", panel.grid.major.y = element_blank())
+```
+
+- **England's rise, `r sprintf("+%.0f%%", mg("overall", 1))` in overall
+  absence and `r sprintf("+%.0f%%", mg("persistent", 1))` in persistent
+  absence, is about five times what separates a typical school from one in
+  the best quarter for its intake** (`r sprintf("%.0f%%", mg("overall", 2))`
+  and `r sprintf("%.0f%%", mg("persistent", 2))`).
+- **What schools do does show.** A school in the best quarter for its
+  intake has a tenth less absence than one in the middle, and that standing
+  is stable from year to year. A change of trust is followed by
+  `r sprintf("%.0f%%", -mg("persistent", 3))` less persistent absence
+  ([Absence over time](absence_change.qmd#sec-events)). But each is a
+  fraction of the national rise.
+
+### It came in every kind of school, and in every pupil group
+
+```{r fig-reach-r2}
+#| echo: false
+#| fig-height: 3.4
+#| fig-width: 8.5
+#| fig-cap: "How much of the difference between schools their intake explains, each year: the share of the variance in log absence explained by the model's characteristics (marginal R², our model with region and local-authority effects, January 2026 characteristics). Autumn and spring terms; no 2019/20 or 2020/21."
+#| fig-alt: "Line chart, 2016/17 to 2025/26: intake explains about half of the variation between schools in overall and persistent absence before the pandemic, and about three-fifths to two-thirds after it."
+F2 <- FT[outcome %in% c("overall", "persistent")][, `:=`(x = tp %/% 100, measure = OUT_LAB[outcome], era = fifelse(tp < 202000, "pre", "post"))]
+ggplot(F2, aes(x, 100 * r2_intake, colour = measure)) +
+  annotate("rect", xmin = 2018.5, xmax = 2020.5, ymin = -Inf, ymax = Inf, fill = "#f3eef9") +
+  geom_line(aes(group = interaction(measure, era)), linewidth = 0.9) + geom_point(size = 2.2) +
+  scale_colour_manual(values = c("Overall absence" = DPURPLE, "Persistent absence" = BLUE), name = NULL) +
+  scale_x_continuous(breaks = c(2016:2018, 2021:2025), labels = function(x) paste0(x, "/", substr(x + 1, 3, 4))) +
+  scale_y_continuous(limits = c(40, 70), labels = function(x) paste0(x, "%")) +
+  labs(x = NULL, y = "Explained by intake") + theme_note(11) + theme(legend.position = "top")
+```
+
+```{r tbl-reach-comp}
+#| echo: false
+#| tbl-cap: "England's secondary absence, full years 2018/19 and 2024/25, by pupil group (DfE, Pupil absence in schools in England: by characteristics), and the rise split into the change within each group, the change in the groups' shares, and both together. Overall absence, % of sessions."
+g <- CM[topic == "FSM" & outcome == "overall"]$groups[[1]]
+gs <- CM[topic == "SEN provision" & outcome == "overall"]$groups[[1]]
+grp <- rbind(g, gs)[, .(Group = breakdown, `Share of sessions 2018/19` = pc0(w0), `2024/25` = pc0(w1),
+                        `Absence 2018/19` = f1(r0), `Absence 2024/25` = f1(r1), Rise = sprintf("%+.0f%%", 100 * (r1 / r0 - 1)))]
+kable(grp, align = "lrrrrr")
+co <- CM[outcome == "overall"]
+```
+
+- **Intake explains more of the difference between schools now, not
+  less.** Before the pandemic our model's characteristics explained about
+  `r round(100 * mean(FT[outcome == "overall" & tp < 202000, r2_intake]))`%
+  of the variation in overall absence between schools; since 2022/23, about
+  `r round(100 * mean(FT[outcome == "overall" & tp >= 202223, r2_intake]))`%
+  (persistent absence: `r round(100 * mean(FT[outcome == "persistent" & tp < 202000, r2_intake]))`%
+  to `r round(100 * mean(FT[outcome == "persistent" & tp >= 202223, r2_intake]))`%).
+  The rise loaded onto the characteristics of pupils and places.
+- **Absence rose within every pupil group.** Pupils not eligible for free
+  school meals missed `r grp[Group == "FSM not eligible", Rise]` more
+  sessions, eligible pupils `r grp[Group == "FSM eligible", Rise]` more, and
+  pupils with no identified SEN `r grp[Group == "No identified SEN", Rise]` more.
+  Of England's rise of `r f1(co[topic == "FSM", total1 - total0])` points,
+  `r f1(co[topic == "FSM", within])` came within the two free school meals
+  groups and `r f1(co[topic == "FSM", composition + interaction])` from the
+  larger share of pupils eligible (much of it Universal Credit's transitional
+  protection, not more poverty). The growth in SEN accounts for only
+  `r f1(co[topic == "SEN provision", composition + interaction])` points.
+- **Local authorities and regions explain little of how schools changed:**
+  `r pc0(pr("overall", "share_la"))` and `r pc0(pr("overall", "share_region"))`
+  of the variation in each school's change in overall absence.
+
+### What worked before the pandemic did not protect a school from it
+
+```{r fig-reach-quart}
+#| echo: false
+#| fig-height: 3.6
+#| fig-width: 8.5
+#| fig-cap: "The rise in absence from before the pandemic (2016/17 to 2018/19) to now (2023/24 to 2025/26), by how a school's absence compared with what its intake predicts before the pandemic, in quarters. Autumn and spring terms; schools with all six years."
+#| fig-alt: "Bar chart: schools with the least absence for their intake before the pandemic saw the largest rises (overall +70%, persistent +115%); those with the most saw the smallest (+35% and +40%)."
+RQ <- rbindlist(lapply(c("overall", "persistent", "unauth"), function(o) cbind(outcome = o, PR[outcome == o]$rise_q[[1]])))
+RQ[, measure := factor(OUT_LAB[outcome], OUT_LAB[c("overall", "persistent", "unauth")])]
+RQ[, q := factor(q, c("Best quarter", "Second", "Third", "Worst quarter"),
+                 c("Least\nfor intake", "2nd", "3rd", "Most\nfor intake"))]
+ggplot(RQ, aes(q, rise, fill = q)) + geom_col(width = 0.65) +
+  geom_text(aes(label = sprintf("+%.0f%%", rise)), vjust = -0.4, size = 3.1, colour = INK) +
+  facet_wrap(~ measure) + scale_fill_manual(values = c(BLUE, "#8fa9d9", MPURPLE, DPURPLE), guide = "none") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)), labels = function(x) paste0(x, "%")) +
+  labs(x = "Before the pandemic, against what the intake predicts", y = "Rise in absence") + theme_note(11)
+```
+
+```{r fig-reach-ci}
+#| echo: false
+#| fig-height: 3
+#| fig-width: 8.5
+#| fig-cap: "How much a school's standing before the pandemic carried into its change: the coefficient on its pre-pandemic residual in a regression of the change in log absence (dots, 95% intervals, robust standard errors), against what noise alone would give (crosses). 0 would mean every school rose by the same proportion; −1 that pre-pandemic differences vanished entirely."
+#| fig-alt: "Dot-and-interval chart for four kinds of absence: coefficients between −0.60 and −0.70, far below the −0.08 to −0.13 that noise alone would give."
+CI <- PR[, .(row = unname(OUT_LAB[outcome]), b = b_rpre, se = se_rpre, b_noise)]
+rows <- CI$row
+ci_plot(CI, "Coefficient on the pre-pandemic residual") +
+  geom_point(data = CI[, .(x = b_noise, y = match(row, rev(rows)))], aes(x = x, y = y), inherit.aes = FALSE, shape = 4, size = 3, stroke = 1.1, colour = GREY) +
+  scale_x_continuous(limits = c(-1, 0.05))
+```
+
+```{r tbl-reach-ci}
+#| echo: false
+#| tbl-cap: "The regression behind the chart, by kind of absence: the coefficient on the pre-pandemic residual with its 95% interval; what regression to the mean from noise alone would give; how reliably the residual measures a school within each period (three-year means); and how well the residual before predicts the residual after, corrected for that noise."
+kable(PR[, .(`Kind of absence` = OUT_LAB[outcome], Schools = format(schools, big.mark = ","),
+             Coefficient = f2(b_rpre), `95% interval` = paste0(f2(b_rpre - 1.96 * se_rpre), " to ", f2(b_rpre + 1.96 * se_rpre)),
+             `Noise alone` = f2(b_noise), `Reliability before` = f2(rel_pre), `Reliability after` = f2(rel_post),
+             `Before predicts after (corrected r)` = f2(r_persist_true))], align = "lrrrrrrr")
+```
+
+$$\Delta\log y_i = \alpha + \beta\,\bar r_i^{\,\text{pre}} + x_i'\gamma + \varepsilon_i$$
+
+where $\Delta\log y_i$ is the change in a school's mean log absence from
+2016/17–2018/19 to 2023/24–2025/26, $\bar r_i^{\,\text{pre}}$ its mean
+residual before the pandemic (log absence minus our model's prediction
+from intake and region), and $x_i$ its intake.
+
+```r
+lm(dlog ~ r_pre + fsm + sen_sup + ehcp + semh + ..., data = ab)   # R/63, HC1 standard errors
+```
+
+- **Schools that did best for their intake before the pandemic rose the
+  most.** Absence rose by `r sprintf("%.0f%%", rq("overall", 1))` in the
+  quarter of schools with the least absence for their intake, against
+  `r sprintf("%.0f%%", rq("overall", 4))` in the quarter with the most;
+  persistent absence by `r sprintf("%.0f%%", rq("persistent", 1))` against
+  `r sprintf("%.0f%%", rq("persistent", 4))`.
+- **This is not just noise.** Within each period a school's standing is
+  very stable (three-year reliability about
+  `r f2(mean(PR$rel_pre))`). Noise alone would pull the coefficient to
+  about `r f2(pr("overall", "b_noise"))`; it is
+  `r f2(pr("overall", "b_rpre"))`. Corrected for noise, a school's standing
+  before the pandemic predicts its standing now at only
+  r = `r f2(pr("overall", "r_persist_true"))`.
+- **So the pandemic reshuffled schools.** Whatever let some schools beat
+  their intake before 2020 mostly did not survive it, and a new pattern,
+  just as stable, has formed since 2021/22. That suggests what drives
+  absence changed, not just how much of it there is. These data cannot say
+  what changed, whether in pupils and families or in what works in school.
+
+::: {.callout-important}
+## An answer, of sorts
+- **The rise is mostly a national shift, not something individual schools
+  did or can undo alone.** It came in every kind of school, every pupil
+  group, every region; intake explains more of absence than before; and it
+  is about five times what separates a typical school from the best quarter
+  of schools with the same intake.
+- **What the data cannot separate** is a change in society from a change
+  across the whole school system (how every school records, follows up or
+  tolerates absence). Both would look the same here.
+- **Schools still matter at the margin.** A school can move about a tenth
+  either way from what its intake predicts, and a change of trust is
+  followed by lower persistent absence. A target set against similar
+  schools *now* asks for that, and is within reach.
+- **A target that asks a school to return to pre-pandemic absence asks it
+  to undo a national shift on its own**: about five times more than the
+  best quarter of schools manage for their intakes. If ABIEs go that far,
+  they load onto schools a change that the data say is mostly beyond them.
+:::
+
+::: {.callout-tip collapse="true"}
+## The method and caveats
+- **Data:** R/09's panel of secondary schools, autumn and spring terms,
+  2016/17 to 2025/26, on the same basis every year, schools followed
+  through changes of URN (GIAS links). 2019/20 was not collected and
+  2020/21 is left out.
+- **Intake:** January 2026 characteristics for every year, as in R/59.
+  Intake changes little within a school ([Absence over
+  time](absence_change.qmd#sec-within)), but a school whose intake changed
+  a lot will have its pre-pandemic standing measured with error, and that
+  error is not removed by the noise correction.
+- **The magnitudes** compare a national change with differences between
+  schools. A national rise could still be reversed by changes in every
+  school at once; the data show only that no group of schools, of any kind,
+  avoided it.
+- **Pupil groups:** full years 2018/19 and 2024/25 from DfE's absence by
+  characteristics; shares weighted by possible sessions.
+- **Code:** `R/63_covid_shift_control.R`.
+:::
+
 ## The data: expected absence for every secondary, two ways {#sec-data}
 
 ```{r data-setup}
@@ -636,4 +932,4 @@ published termly statistics.
 - DfE, [*Pupil attendance in schools*](https://explore-education-statistics.service.gov.uk/find-statistics/pupil-attendance-in-schools) and its [methodology](https://explore-education-statistics.service.gov.uk/methodology/pupil-attendance-in-schools).
 - Reports of the Minister's letter on ABIEs: [SecEd](https://www.sec-ed.co.uk/content/news/schools-ai-powered-student-attendance-targets-absence); [Tes](https://www.tes.com/magazine/news/general/dfe-sets-ai-attendance-targets-for-schools); [Browne Jacobson](https://www.brownejacobson.com/insights/school-attendance-targets-2026-what-your-abie-means); [NGA](https://www.nga.org.uk/knowledge-centre/improving-school-attendance/).
 - Data: DfE *Pupil absence in schools in England* (school level, 2021/22 to 2024/25; autumn and spring 2025/26); *Schools, pupils and their characteristics* and *Special educational needs in England*, January 2026; consistent financial reporting and academies accounts return, 2024-25; Get Information about Schools; English Indices of Deprivation 2019 (IDACI).
-- Ours: `R/08_absence_causes.R` (the absence models), `R/59_abie_benchmark.R` (this page), `R/61_abie_fairness.R` (the fairness tests), `R/62_attendance_benchmarks.R` (the [open dataset](#sec-data)).
+- Ours: `R/08_absence_causes.R` (the absence models), `R/09_absence_change.R` (the panel over time), `R/59_abie_benchmark.R` (this page), `R/61_abie_fairness.R` (the fairness tests), `R/62_attendance_benchmarks.R` (the [open dataset](#sec-data)), `R/63_covid_shift_control.R` (before the pandemic and within reach).
