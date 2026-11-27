@@ -377,6 +377,13 @@ window.Quarto = {
   <li><a href="#sec-rebuild" id="toc-sec-rebuild" class="nav-link" data-scroll-target="#sec-rebuild">Rebuilding the comparison</a></li>
   <li><a href="#sec-agree" id="toc-sec-agree" class="nav-link" data-scroll-target="#sec-agree">Does it agree with our model?</a></li>
   <li><a href="#sec-bh" id="toc-sec-bh" class="nav-link" data-scroll-target="#sec-bh">Brighton and Hove</a></li>
+  <li><a href="#sec-fair" id="toc-sec-fair" class="nav-link" data-scroll-target="#sec-fair">Is a similar-schools benchmark fair?</a>
+  <ul class="collapse">
+  <li><a href="#the-level-how-demanding-is-the-benchmark-given-the-whole-intake" id="toc-the-level-how-demanding-is-the-benchmark-given-the-whole-intake" class="nav-link" data-scroll-target="#the-level-how-demanding-is-the-benchmark-given-the-whole-intake">The level: how demanding is the benchmark, given the whole intake?</a></li>
+  <li><a href="#the-progress-does-what-similar-schools-achieve-predict-what-a-school-will" id="toc-the-progress-does-what-similar-schools-achieve-predict-what-a-school-will" class="nav-link" data-scroll-target="#the-progress-does-what-similar-schools-achieve-predict-what-a-school-will">The progress: does what similar schools achieve predict what a school will?</a></li>
+  <li><a href="#brighton-and-hove" id="toc-brighton-and-hove" class="nav-link" data-scroll-target="#brighton-and-hove">Brighton and Hove</a></li>
+  <li><a href="#what-this-says-about-abies" id="toc-what-this-says-about-abies" class="nav-link" data-scroll-target="#what-this-says-about-abies">What this says about ABIEs</a></li>
+  </ul></li>
   <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next">What a direct comparison needs</a></li>
   <li><a href="#sec-sources" id="toc-sec-sources" class="nav-link" data-scroll-target="#sec-sources">Sources</a></li>
   </ul>
@@ -435,10 +442,11 @@ window.Quarto = {
 <section id="in-short" class="level2">
 <h2 class="anchored" data-anchor-id="in-short">In short</h2>
 <ul>
-<li><strong>ABIEs are set against 20 statistically similar schools.</strong> DfE says each school’s expectation is based on its previous attendance and “the progress of similar schools”, matched on free school meals, SEN, deprivation, EAL, location, funding and size. The formula is not published.</li>
-<li><strong>Rebuilt from published data, that comparison agrees closely with our model.</strong> Across 2,906 secondary schools, the median absence of each school’s 20 similar schools and our model’s expected absence correlate at <strong>0.86</strong> in 2025/26, and at 0.84–0.86 in every year since 2021/22. On average they differ by 0.7 percentage points.</li>
-<li><strong>Our model predicts actual absence better</strong> (r = 0.75 against 0.67), because it uses more of what a school’s intake is like, including prior attainment, mobility and neighbourhood education.</li>
-<li><strong>Brighton and Hove’s secondaries sit above both benchmarks.</strong> In autumn and spring 2025/26 they averaged <strong>10.1%</strong> absence. Our model expects 9.4%; their similar schools’ median is 9.0%, and the similar schools’ top quarter 8.1%.</li>
+<li><p><strong>ABIEs are set against 20 statistically similar schools.</strong> DfE says each school’s expectation is based on its previous attendance and “the progress of similar schools”, matched on free school meals, SEN, deprivation, EAL, location, funding and size. The formula is not published.</p></li>
+<li><p><strong>Rebuilt from published data, that comparison agrees closely with our model.</strong> Across 2,906 secondary schools, the median absence of each school’s 20 similar schools and our model’s expected absence correlate at <strong>0.86</strong> in 2025/26, and at 0.84–0.86 in every year since 2021/22. On average they differ by 0.7 percentage points.</p></li>
+<li><p><strong>Our model predicts actual absence better</strong> (r = 0.75 against 0.67), because it uses more of what a school’s intake is like, including prior attainment, mobility and neighbourhood education.</p></li>
+<li><p><strong>Brighton and Hove’s secondaries sit above both benchmarks.</strong> In autumn and spring 2025/26 they averaged <strong>10.1%</strong> absence. Our model expects 9.4%; their similar schools’ median is 9.0%, and the similar schools’ top quarter 8.1%.</p></li>
+<li><p><strong>But the comparison leaves out prior attainment, mobility and admissions, and that makes it unfair</strong> (<a href="#sec-fair">see below</a>). It is too demanding of schools whose pupils arrive with lower prior attainment than their deprivation suggests, and of comprehensives in selective areas; too easy on grammar schools and high-attaining intakes. What it leaves out accounts for almost half the gap between the benchmark and what a school’s whole intake predicts. And similar schools’ progress, which ABIEs rest on, barely predicts a school’s own.</p></li>
 </ul>
 </section>
 <section id="sec-what" class="level2">
@@ -745,6 +753,431 @@ Table&nbsp;2: Brighton and Hove’s secondary schools, autumn and spring 2025/26
 <li><strong>An ABIE set from the similar-schools median or top quarter would ask the city’s schools for more improvement than our model</strong> does, because the similar-schools benchmarks run lower than our model’s expectation.</li>
 </ul>
 </section>
+<section id="sec-fair" class="level2">
+<h2 class="anchored" data-anchor-id="sec-fair">Is a similar-schools benchmark fair?</h2>
+<p>DfE’s similar schools are matched on deprivation, SEN, ethnicity, EAL, place, funding and size, but <strong>not on prior attainment, pupil mobility or admissions policy</strong>. In our models these are among the strongest predictors of absence: prior attainment carries the largest Shapley share of all (see <a href="./absence_causes.html#sec-shap-vars">What goes with school absence</a>). If they matter, a school can be set against similar schools whose pupils are, in ways the matching cannot see, easier or harder to get into school. We tested this in two ways.</p>
+<section id="the-level-how-demanding-is-the-benchmark-given-the-whole-intake" class="level3">
+<h3 class="anchored" data-anchor-id="the-level-how-demanding-is-the-benchmark-given-the-whole-intake">The level: how demanding is the benchmark, given the whole intake?</h3>
+<p>For each school in 2025/26 we took the gap between its similar-schools benchmark and our model’s expectation from its full intake:</p>
+<ul>
+<li><strong>Negative:</strong> the benchmark asks for lower absence than the school’s pupils predict, so it is harder than the intake warrants.</li>
+<li><strong>Positive:</strong> it is easier.</li>
+</ul>
+<p>The model’s own errors average out across schools. So if its adjustment for the whole intake is right, a gap that follows a characteristic is bias in the benchmark, not noise.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-fair-ks2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fair-ks2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="attendance_expectations_files/figure-html/fig-fair-ks2-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fair-ks2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Gap between the similar-schools benchmark and our model’s expectation (percentage points of absence), by schools’ prior attainment relative to what their deprivation and EAL predict, in fifths. State-funded secondaries, autumn and spring 2025/26. Means with 95% intervals; negative means the benchmark is harder than the intake warrants.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-fair-ks2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fair-ks2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: The gap by prior attainment relative to deprivation, with 95% intervals (percentage points of absence).
+</figcaption>
+<div aria-describedby="tbl-fair-ks2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 27%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Prior attainment, given deprivation</th>
+<th style="text-align: right;">Against the median</th>
+<th style="text-align: right;">Against the top quarter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Lowest fifth</td>
+<td style="text-align: right;">-0.37 (-0.45 to -0.29)</td>
+<td style="text-align: right;">-1.36 (-1.44 to -1.27)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Second</td>
+<td style="text-align: right;">-0.20 (-0.27 to -0.13)</td>
+<td style="text-align: right;">-1.15 (-1.22 to -1.08)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Middle</td>
+<td style="text-align: right;">-0.08 (-0.15 to -0.01)</td>
+<td style="text-align: right;">-1.05 (-1.12 to -0.97)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fourth</td>
+<td style="text-align: right;">-0.09 (-0.16 to -0.02)</td>
+<td style="text-align: right;">-1.05 (-1.13 to -0.98)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Highest fifth</td>
+<td style="text-align: right;">+0.13 (+0.05 to +0.22)</td>
+<td style="text-align: right;">-0.84 (-0.93 to -0.76)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>Schools whose pupils arrive with lower prior attainment than their deprivation would suggest get a harder benchmark.</strong> In the lowest fifth the similar-schools median sits 0.37 points below what their intake predicts. In the highest fifth it sits 0.13 points above, an easier ride.</li>
+<li><strong>Against DfE’s “realistic target”, the top quarter of similar schools,</strong> every school is asked to do better than its intake predicts, as a target should. But the lowest fifth is asked for 1.4 points, the highest fifth for 0.8.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-fair-adm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fair-adm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="attendance_expectations_files/figure-html/fig-fair-adm-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fair-adm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The same gap by admissions policy. Means with 95% intervals (percentage points of absence).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Grammar schools get an easier benchmark</strong> (+0.51 points against the median): their similar schools are comprehensives with few disadvantaged pupils but without a selected intake.</li>
+<li><strong>Comprehensives in the same selective areas get a harder one</strong> (-0.60): their similar schools do not have their highest attainers removed.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-fair-coef" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fair-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="attendance_expectations_files/figure-html/fig-fair-coef-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fair-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: What the matching leaves out, and the gap it leaves: OLS of the gap (similar-schools median minus our expectation) on characteristics the matching omits, all together; per SD for a measure, yes against no for a category. 95% intervals, robust standard errors.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-fair-coef" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fair-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: The gap on what the matching omits: coefficients with 95% intervals (percentage points of absence).
+</figcaption>
+<div aria-describedby="tbl-fair-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Characteristic</th>
+<th style="text-align: right;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">KS2 prior attainment (per SD)</td>
+<td style="text-align: right;">+0.44 (+0.39 to +0.49)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Joined mid-phase (per SD)</td>
+<td style="text-align: right;">-0.40 (-0.43 to -0.36)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbourhood education (per SD)</td>
+<td style="text-align: right;">-0.04 (-0.07 to -0.01)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">White British (per SD)</td>
+<td style="text-align: right;">-0.32 (-0.35 to -0.29)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Autism (per SD)</td>
+<td style="text-align: right;">-0.06 (-0.09 to -0.03)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EHC plans (per SD)</td>
+<td style="text-align: right;">+0.03 (-0.01 to +0.06)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Grammar school</td>
+<td style="text-align: right;">-1.22 (-1.45 to -0.99)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Comprehensive in a selective area</td>
+<td style="text-align: right;">-0.03 (-0.15 to +0.09)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Has a sixth form</td>
+<td style="text-align: right;">-0.41 (-0.47 to -0.36)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>What the matching leaves out accounts for 46% of the gap</strong> between a school’s similar-schools benchmark and what its intake predicts.
+<ul>
+<li><strong>Prior attainment:</strong> one standard deviation higher makes the benchmark 0.44 points easier.</li>
+<li><strong>Mobility:</strong> one standard deviation more pupils joining mid-phase makes it 0.40 points harder.</li>
+</ul></li>
+<li><strong>For 14% of schools</strong> the median of their similar schools is more than a point below what their intake predicts. For 10% it is more than a point above.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The model
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{gap}_i = (\text{similar median}_i - \hat y_i) = \alpha + \sum_k \gamma_k\, z_{ki} + \varepsilon_i\]</span></p>
+<p><span class="math inline">\(\hat y_i\)</span> is our model’s expected overall absence from intake and region (autumn and spring 2025/26). The <span class="math inline">\(z_k\)</span> are characteristics the similar-schools matching does not use, standardised for measures. Prior attainment relative to deprivation is the residual of KS2 on FSM, IDACI and EAL across schools.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(gap_median <span class="sc">~</span> ks2 <span class="sc">+</span> mobile <span class="sc">+</span> z_l4 <span class="sc">+</span> wbri <span class="sc">+</span> asd <span class="sc">+</span> ehcp <span class="sc">+</span> grammar <span class="sc">+</span> comp_sel <span class="sc">+</span> sixth, <span class="at">data =</span> Z)   <span class="co"># R/61</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(m, <span class="at">vcov =</span> <span class="fu">vcovHC</span>(m, <span class="at">type =</span> <span class="st">"HC1"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-progress-does-what-similar-schools-achieve-predict-what-a-school-will" class="level3">
+<h3 class="anchored" data-anchor-id="the-progress-does-what-similar-schools-achieve-predict-what-a-school-will">The progress: does what similar schools achieve predict what a school will?</h3>
+<p>ABIEs are based on “the progress of similar schools”. For 2023/24 to 2024/25 we asked whether a school’s change in absence follows its similar schools’ change, given where it started, and whether the characteristics the matching leaves out matter too.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-fair-prog" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fair-prog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="attendance_expectations_files/figure-html/fig-fair-prog-1.png" class="img-fluid figure-img" width="972">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fair-prog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: A school’s change in overall absence, 2023/24 to 2024/25 (percentage points), on its similar schools’ median change, its starting absence, and characteristics the matching leaves out: OLS, 95% intervals, robust standard errors. Negative means a larger fall in absence.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-fair-prog" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fair-prog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: A school’s change in absence, 2023/24 to 2024/25: coefficients with 95% intervals.
+</figcaption>
+<div aria-describedby="tbl-fair-prog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: right;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Similar schools’ median change (per point)</td>
+<td style="text-align: right;">+0.00 (-0.16 to +0.16)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KS2 prior attainment (per SD)</td>
+<td style="text-align: right;">-0.19 (-0.26 to -0.13)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Joined mid-phase (per SD)</td>
+<td style="text-align: right;">+0.01 (-0.04 to +0.06)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbourhood education (per SD)</td>
+<td style="text-align: right;">+0.05 (+0.01 to +0.09)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">White British (per SD)</td>
+<td style="text-align: right;">-0.06 (-0.11 to -0.01)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Grammar school</td>
+<td style="text-align: right;">-0.14 (-0.34 to +0.05)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Comprehensive in a selective area</td>
+<td style="text-align: right;">-0.08 (-0.23 to +0.07)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>Similar schools’ progress says almost nothing about a school’s own.</strong> Given its starting point, a school’s change follows its similar schools’ median change by +0.00 points per point (95% interval -0.16 to +0.16).</li>
+<li><strong>Prior attainment does predict it.</strong> Schools with a standard deviation higher prior attainment cut absence by 0.19 points more over the year. Together the omitted characteristics add significantly to the fit (F test p &lt; 0.001).</li>
+<li><strong>One year is a short window.</strong> ABIEs run to 2028/29, and a single year’s changes are noisy, so this is a first test, not the last word.</li>
+</ul>
+</section>
+<section id="brighton-and-hove" class="level3">
+<h3 class="anchored" data-anchor-id="brighton-and-hove">Brighton and Hove</h3>
+<div class="cell">
+<div id="tbl-fair-bh" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fair-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Brighton and Hove’s secondaries, autumn and spring 2025/26: overall absence, our expectation, the similar-schools benchmarks, and the gap (benchmark minus our expectation; negative is harder than the intake warrants). Prior attainment relative to deprivation in SDs.
+</figcaption>
+<div aria-describedby="tbl-fair-bh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">School</th>
+<th style="text-align: right;">Actual</th>
+<th style="text-align: right;">Our model</th>
+<th style="text-align: right;">Similar median</th>
+<th style="text-align: right;">Gap, median</th>
+<th style="text-align: right;">Gap, top quarter</th>
+<th style="text-align: right;">KS2 given deprivation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Hove Park School and Sixth Form Centre</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">-2.44</td>
+<td style="text-align: right;">-4.30</td>
+<td style="text-align: right;">-0.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brighton Aldridge Community Academy</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">11.1</td>
+<td style="text-align: right;">-2.28</td>
+<td style="text-align: right;">-3.50</td>
+<td style="text-align: right;">-0.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Patcham High School</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">-0.71</td>
+<td style="text-align: right;">-1.42</td>
+<td style="text-align: right;">+0.77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blatchington Mill School</td>
+<td style="text-align: right;">10.7</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">-0.41</td>
+<td style="text-align: right;">-0.99</td>
+<td style="text-align: right;">+0.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Longhill High School</td>
+<td style="text-align: right;">13.9</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">11.2</td>
+<td style="text-align: right;">-0.12</td>
+<td style="text-align: right;">-1.44</td>
+<td style="text-align: right;">+0.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cardinal Newman Catholic School</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">7.3</td>
+<td style="text-align: right;">7.2</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">-0.63</td>
+<td style="text-align: right;">+0.10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Varndean School</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">+0.13</td>
+<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">+0.86</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Portslade Aldridge Community Academy</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">9.5</td>
+<td style="text-align: right;">9.7</td>
+<td style="text-align: right;">+0.20</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">+0.21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dorothy Stringer School</td>
+<td style="text-align: right;">10.5</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">+0.53</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">+1.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">King’s School</td>
+<td style="text-align: right;">6.4</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">+1.14</td>
+<td style="text-align: right;">-0.19</td>
+<td style="text-align: right;">+0.41</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>Hove Park and Brighton Aldridge get the hardest benchmarks in the city,</strong> about 2.3 to 2.4 points below what their intakes predict. Both take pupils with lower prior attainment than their deprivation suggests.</li>
+<li><strong>King’s and Dorothy Stringer get the easiest.</strong></li>
+</ul>
+</section>
+<section id="what-this-says-about-abies" class="level3">
+<h3 class="anchored" data-anchor-id="what-this-says-about-abies">What this says about ABIEs</h3>
+<ul>
+<li><strong>On published data, a similar-schools comparison that leaves out prior attainment, mobility and admissions is systematically unfair.</strong> It is too demanding of schools whose pupils arrive with lower prior attainment than their deprivation suggests, of schools with more pupils joining mid-phase, and of comprehensives in selective areas. It is too easy on grammar schools and schools with high-attaining intakes.</li>
+<li><strong>Basing expectations on similar schools’ progress does not fix it.</strong> A school’s own progress barely follows its similar schools’, and the characteristics the matching omits predict it.</li>
+<li><strong>A fairer benchmark would match on, or adjust for, the whole intake:</strong> add KS2 prior attainment, mobility and admissions policy to the matching, or set each school’s expectation from a model of its full intake, as ours does, and let the similar schools show what is achievable from there.</li>
+<li><strong>The caveats:</strong>
+<ul>
+<li><strong>This is our rebuild.</strong> DfE’s matching may handle some of this in ways its guidance does not describe, such as through its “AI” calibration.</li>
+<li><strong>What would settle it:</strong> the real ABIEs for a group of schools, such as one trust’s.</li>
+<li><strong>ABIEs are not an accountability measure.</strong> But they frame each school’s conversations about attendance, so a biased starting point matters.</li>
+</ul></li>
+</ul>
+</section>
+</section>
 <section id="sec-next" class="level2">
 <h2 class="anchored" data-anchor-id="sec-next">What a direct comparison needs</h2>
 <ul>
@@ -752,7 +1185,7 @@ Table&nbsp;2: Brighton and Hove’s secondary schools, autumn and spring 2025/26
 <li><strong>Travel distance.</strong> DfE matches on pupils’ average travel distance, which is not published. The routing data behind <a href="./distance.html">Distance to school</a> could stand in for it.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -761,7 +1194,7 @@ Table&nbsp;2: Brighton and Hove’s secondary schools, autumn and spring 2025/26
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Similar schools.</strong> For school <span class="math inline">\(i\)</span>, the distance to school <span class="math inline">\(j\)</span> is</p>
 <p><span class="math display">\[d_{ij} = \sum_{k} (z_{ik} - z_{jk})^2 + \mathbb{1}[\text{region}_i \neq \text{region}_j],\]</span></p>
@@ -769,8 +1202,8 @@ Table&nbsp;2: Brighton and Hove’s secondary schools, autumn and spring 2025/26
 <p><strong>Our model.</strong> For each year <span class="math inline">\(t\)</span>, log overall absence on the absence model’s school characteristics, with region and local authority random effects; the expectation is</p>
 <p><span class="math display">\[\hat y_{it} = \exp\left(x_i'\hat\beta_t + \hat u_{\text{region}(i),t}\right)\cdot \bar s_t - 0.1,\]</span></p>
 <p>where <span class="math inline">\(\bar s_t\)</span> is the mean of the exponentiated residuals (a smearing factor). The characteristics are those of January 2026 in every year.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lmer</span>(<span class="fu">log</span>(overall <span class="sc">+</span> <span class="fl">0.1</span>) <span class="sc">~</span> fsm <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> semh <span class="sc">+</span> ... <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> region <span class="sc">/</span> la), <span class="at">data =</span> dd)   <span class="co"># R/59</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="at">re.form =</span> <span class="sc">~</span> (<span class="dv">1</span> <span class="sc">|</span> region))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lmer</span>(<span class="fu">log</span>(overall <span class="sc">+</span> <span class="fl">0.1</span>) <span class="sc">~</span> fsm <span class="sc">+</span> sen_sup <span class="sc">+</span> ehcp <span class="sc">+</span> semh <span class="sc">+</span> ... <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> region <span class="sc">/</span> la), <span class="at">data =</span> dd)   <span class="co"># R/59</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="at">re.form =</span> <span class="sc">~</span> (<span class="dv">1</span> <span class="sc">|</span> region))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Caveats.</strong> The IDACI score is for the school’s own neighbourhood, not pupils’ homes. Using the same 20 schools and the same characteristics every year ignores changes in intake. DfE’s own comparison uses daily attendance data from the start of the year to the latest term, which can differ from the published termly statistics.</p>
 </div>
 </div>

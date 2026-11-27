@@ -103,6 +103,7 @@ bh <- B[bh == TRUE][order(year, SCHNAME)]
 bh_sum <- B[bh == TRUE & !is.na(sim_median), .(actual = mean(actual), model = mean(model), sim_median = mean(sim_median), sim_q1 = mean(sim_q1)), by = year]
 res <- list(B = B, agree = agree, bh = bh, bh_sum = bh_sum, n_match = nrow(M), n_frame = nrow(D), same_region = same_region,
             similar = setNames(lapply(nbr, function(ix) M$URN[ix]), M$URN),
+            features = M[, c("URN", feat, "region"), with = FALSE],
             features = feat, k = K, built = Sys.Date())
 saveRDS(res, here::here("data", "abie_benchmark.rds"))
 options(width = 160); print(agree); print(bh_sum); cat("share of similar schools in the same region:", round(same_region, 3), "\n")

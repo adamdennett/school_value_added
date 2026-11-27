@@ -53,6 +53,15 @@ short <- function(x) sub(" School and Sixth Form Centre| Catholic School| Commun
   median is `r f1(b("2025/26", "sim_median"))`%, and the similar schools' top
   quarter `r f1(b("2025/26", "sim_q1"))`%.
 
+- **But the comparison leaves out prior attainment, mobility and admissions,
+  and that makes it unfair** ([see below](#sec-fair)). It is too demanding of
+  schools whose pupils arrive with lower prior attainment than their
+  deprivation suggests, and of comprehensives in selective areas; too easy on
+  grammar schools and high-attaining intakes. What it leaves out accounts for
+  almost half the gap between the benchmark and what a school's whole intake
+  predicts. And similar schools' progress, which ABIEs rest on, barely
+  predicts a school's own.
+
 ## What an ABIE is {#sec-what}
 
 - **What it is:** a school-level expectation of how far attendance should
@@ -199,6 +208,216 @@ kable(AB$bh[year == "2025/26"][order(-actual), .(School = SCHNAME, Actual = f1(a
 - **An ABIE set from the similar-schools median or top quarter would ask the
   city's schools for more improvement than our model** does, because the
   similar-schools benchmarks run lower than our model's expectation.
+
+## Is a similar-schools benchmark fair? {#sec-fair}
+
+```{r}
+#| include: false
+FA <- readRDS(here::here("data", "abie_fairness.rds"))
+q <- function(g, k, v = "mean") FA$by_q[gap == g & ks2_q == k][[v]]
+ad <- function(g, k, v = "mean") FA$by_adm[gap == g & adm_lab == k][[v]]
+cg <- function(t, v = "b") FA$coef_gap[term == t][[v]]
+cp <- function(t, v = "b") FA$coef_prog[term == t][[v]]
+sgn <- function(x) sprintf("%+.2f", x)
+```
+
+DfE's similar schools are matched on deprivation, SEN, ethnicity, EAL, place,
+funding and size, but **not on prior attainment, pupil mobility or
+admissions policy**. In our models these are among the strongest predictors
+of absence: prior attainment carries the largest Shapley share of all (see
+[What goes with school absence](absence_causes.qmd#sec-shap-vars)). If they
+matter, a school can be set against similar schools whose pupils are, in
+ways the matching cannot see, easier or harder to get into school. We tested
+this in two ways.
+
+### The level: how demanding is the benchmark, given the whole intake?
+
+For each school in 2025/26 we took the gap between its similar-schools
+benchmark and our model's expectation from its full intake:
+
+- **Negative:** the benchmark asks for lower absence than the school's pupils
+  predict, so it is harder than the intake warrants.
+- **Positive:** it is easier.
+
+The model's own errors average out across schools. So if its adjustment for
+the whole intake is right, a gap that follows a characteristic is bias in the
+benchmark, not noise.
+
+```{r}
+#| label: fig-fair-ks2
+#| fig-cap: "Gap between the similar-schools benchmark and our model's expectation (percentage points of absence), by schools' prior attainment relative to what their deprivation and EAL predict, in fifths. State-funded secondaries, autumn and spring 2025/26. Means with 95% intervals; negative means the benchmark is harder than the intake warrants."
+#| fig-height: 4.2
+G <- copy(FA$by_q)[, gap := factor(gap, c("gap_median", "gap_target"), c("Similar-schools median", "Similar schools' top quarter (DfE's 'realistic target')"))]
+G[, ks2_q := factor(ks2_q, c("Lowest fifth", "Second", "Middle", "Fourth", "Highest fifth"))]
+ggplot(G, aes(mean, ks2_q, colour = gap)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge(width = 0.5), linewidth = 1.1) +
+  geom_point(position = position_dodge(width = 0.5), size = 2.8) +
+  scale_colour_manual(values = c(MPURPLE, DPURPLE), name = NULL) +
+  labs(x = "Benchmark minus our expectation (percentage points)", y = "Prior attainment, given deprivation") +
+  theme_note(11) + theme(legend.position = "top", legend.direction = "vertical")
+```
+
+```{r}
+#| label: tbl-fair-ks2
+#| tbl-cap: "The gap by prior attainment relative to deprivation, with 95% intervals (percentage points of absence)."
+kable(dcast(copy(FA$by_q)[, cell := sprintf("%s (%s to %s)", sgn(mean), sgn(lo), sgn(hi))][, ks2_q := factor(ks2_q, c("Lowest fifth", "Second", "Middle", "Fourth", "Highest fifth"))],
+            ks2_q ~ gap, value.var = "cell")[, .(`Prior attainment, given deprivation` = ks2_q, `Against the median` = gap_median, `Against the top quarter` = gap_target)],
+      align = "lrr")
+```
+
+- **Schools whose pupils arrive with lower prior attainment than their
+  deprivation would suggest get a harder benchmark.** In the lowest fifth the
+  similar-schools median sits `r sprintf("%.2f", abs(q("gap_median", "Lowest fifth")))`
+  points below what their intake predicts. In the highest fifth it sits
+  `r sprintf("%.2f", q("gap_median", "Highest fifth"))` points above, an easier
+  ride.
+- **Against DfE's "realistic target", the top quarter of similar schools,**
+  every school is asked to do better than its intake predicts, as a target
+  should. But the lowest fifth is asked for
+  `r sprintf("%.1f", abs(q("gap_target", "Lowest fifth")))` points, the
+  highest fifth for `r sprintf("%.1f", abs(q("gap_target", "Highest fifth")))`.
+
+```{r}
+#| label: fig-fair-adm
+#| fig-cap: "The same gap by admissions policy. Means with 95% intervals (percentage points of absence)."
+#| fig-height: 3.4
+G2 <- copy(FA$by_adm)[, gap := factor(gap, c("gap_median", "gap_target"), c("Similar-schools median", "Similar schools' top quarter"))]
+ggplot(G2, aes(mean, adm_lab, colour = gap)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), position = position_dodge(width = 0.5), linewidth = 1.1) +
+  geom_point(position = position_dodge(width = 0.5), size = 2.8) +
+  scale_colour_manual(values = c(MPURPLE, DPURPLE), name = NULL) +
+  labs(x = "Benchmark minus our expectation (percentage points)", y = NULL) + theme_note(11) + theme(legend.position = "top")
+```
+
+- **Grammar schools get an easier benchmark**
+  (`r sgn(ad("gap_median", "Grammar school"))` points against the median): their
+  similar schools are comprehensives with few disadvantaged pupils but
+  without a selected intake.
+- **Comprehensives in the same selective areas get a harder one**
+  (`r sgn(ad("gap_median", "Comprehensive, selective area"))`): their
+  similar schools do not have their highest attainers removed.
+
+```{r}
+#| label: fig-fair-coef
+#| fig-cap: "What the matching leaves out, and the gap it leaves: OLS of the gap (similar-schools median minus our expectation) on characteristics the matching omits, all together; per SD for a measure, yes against no for a category. 95% intervals, robust standard errors."
+#| fig-height: 3.8
+CL <- c(ks2 = "KS2 prior attainment (per SD)", mobile = "Joined mid-phase (per SD)", z_l4 = "Neighbourhood education (per SD)",
+        wbri = "White British (per SD)", asd = "Autism (per SD)", ehcp = "EHC plans (per SD)", grammar = "Grammar school",
+        comp_sel = "Comprehensive in a selective area", sixthTRUE = "Has a sixth form")
+C <- copy(FA$coef_gap)[, lab := factor(CL[term], rev(CL))]
+ggplot(C, aes(b, lab)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), colour = MPURPLE, linewidth = 1.2) + geom_point(colour = DPURPLE, size = 2.8) +
+  labs(x = "Change in the gap (percentage points)", y = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: tbl-fair-coef
+#| tbl-cap: "The gap on what the matching omits: coefficients with 95% intervals (percentage points of absence)."
+kable(C[order(-as.integer(lab)), .(Characteristic = lab, Estimate = sprintf("%s (%s to %s)", sgn(b), sgn(lo), sgn(hi)))], align = "lr")
+```
+
+- **What the matching leaves out accounts for `r round(100 * FA$r2_gap)`% of
+  the gap** between a school's similar-schools benchmark and what its
+  intake predicts.
+  - **Prior attainment:** one standard deviation higher makes the benchmark
+    `r sprintf("%.2f", cg("ks2"))` points easier.
+  - **Mobility:** one standard deviation more pupils joining mid-phase makes
+    it `r sprintf("%.2f", abs(cg("mobile")))` points harder.
+- **For `r round(100 * FA$share_hard$harder_1pt)`% of schools** the median
+  of their similar schools is more than a point below what their intake
+  predicts. For `r round(100 * FA$share_hard$easier_1pt)`% it is more than a
+  point above.
+
+::: {.callout-tip collapse="true"}
+## The model
+
+$$\text{gap}_i = (\text{similar median}_i - \hat y_i) = \alpha + \sum_k \gamma_k\, z_{ki} + \varepsilon_i$$
+
+$\hat y_i$ is our model's expected overall absence from intake and region
+(autumn and spring 2025/26). The $z_k$ are characteristics the similar-schools
+matching does not use, standardised for measures. Prior attainment relative to
+deprivation is the residual of KS2 on FSM, IDACI and EAL across schools.
+
+```r
+lm(gap_median ~ ks2 + mobile + z_l4 + wbri + asd + ehcp + grammar + comp_sel + sixth, data = Z)   # R/61
+coeftest(m, vcov = vcovHC(m, type = "HC1"))
+```
+:::
+
+### The progress: does what similar schools achieve predict what a school will?
+
+ABIEs are based on "the progress of similar schools". For 2023/24 to 2024/25
+we asked whether a school's change in absence follows its similar schools'
+change, given where it started, and whether the characteristics the matching
+leaves out matter too.
+
+```{r}
+#| label: fig-fair-prog
+#| fig-cap: "A school's change in overall absence, 2023/24 to 2024/25 (percentage points), on its similar schools' median change, its starting absence, and characteristics the matching leaves out: OLS, 95% intervals, robust standard errors. Negative means a larger fall in absence."
+#| fig-height: 3.4
+PL <- c(sim_chg = "Similar schools' median change (per point)", ks2 = "KS2 prior attainment (per SD)", mobile = "Joined mid-phase (per SD)",
+        z_l4 = "Neighbourhood education (per SD)", wbri = "White British (per SD)", grammar = "Grammar school", comp_sel = "Comprehensive in a selective area")
+PC <- copy(FA$coef_prog)[, lab := factor(PL[term], rev(PL))]
+ggplot(PC, aes(b, lab)) + geom_vline(xintercept = 0, colour = GREY) +
+  geom_linerange(aes(xmin = lo, xmax = hi), colour = MPURPLE, linewidth = 1.2) + geom_point(colour = DPURPLE, size = 2.8) +
+  labs(x = "Change in the school's change in absence (percentage points)", y = NULL) + theme_note(11)
+```
+
+```{r}
+#| label: tbl-fair-prog
+#| tbl-cap: "A school's change in absence, 2023/24 to 2024/25: coefficients with 95% intervals."
+kable(PC[order(-as.integer(lab)), .(Term = lab, Estimate = sprintf("%s (%s to %s)", sgn(b), sgn(lo), sgn(hi)))], align = "lr")
+```
+
+- **Similar schools' progress says almost nothing about a school's own.**
+  Given its starting point, a school's change follows its similar schools'
+  median change by `r sgn(cp("sim_chg"))` points per point (95% interval
+  `r sgn(cp("sim_chg", "lo"))` to `r sgn(cp("sim_chg", "hi"))`).
+- **Prior attainment does predict it.** Schools with a standard deviation
+  higher prior attainment cut absence by `r sprintf("%.2f", abs(cp("ks2")))`
+  points more over the year. Together the omitted characteristics add
+  significantly to the fit (F test p < 0.001).
+- **One year is a short window.** ABIEs run to 2028/29, and a single year's
+  changes are noisy, so this is a first test, not the last word.
+
+### Brighton and Hove
+
+```{r}
+#| label: tbl-fair-bh
+#| tbl-cap: "Brighton and Hove's secondaries, autumn and spring 2025/26: overall absence, our expectation, the similar-schools benchmarks, and the gap (benchmark minus our expectation; negative is harder than the intake warrants). Prior attainment relative to deprivation in SDs."
+kable(FA$bh[, .(School = SCHNAME, Actual = f1(actual), `Our model` = f1(model), `Similar median` = f1(sim_median),
+                `Gap, median` = sgn(gap_median), `Gap, top quarter` = sgn(gap_target), `KS2 given deprivation` = sprintf("%+.2f", ks2_rel))],
+      align = "lrrrrrr")
+```
+
+- **Hove Park and Brighton Aldridge get the hardest benchmarks in the city,**
+  about 2.3 to 2.4 points below what their intakes predict. Both take
+  pupils with lower prior attainment than their deprivation suggests.
+- **King's and Dorothy Stringer get the easiest.**
+
+### What this says about ABIEs
+
+- **On published data, a similar-schools comparison that leaves out prior
+  attainment, mobility and admissions is systematically unfair.** It is too
+  demanding of schools whose pupils arrive with lower prior attainment than
+  their deprivation suggests, of schools with more pupils joining mid-phase,
+  and of comprehensives in selective areas. It is too easy on grammar
+  schools and schools with high-attaining intakes.
+- **Basing expectations on similar schools' progress does not fix it.** A
+  school's own progress barely follows its similar schools', and the
+  characteristics the matching omits predict it.
+- **A fairer benchmark would match on, or adjust for, the whole intake:**
+  add KS2 prior attainment, mobility and admissions policy to the matching,
+  or set each school's expectation from a model of its full intake, as ours
+  does, and let the similar schools show what is achievable from there.
+- **The caveats:**
+  - **This is our rebuild.** DfE's matching may handle some of this in ways
+    its guidance does not describe, such as through its "AI" calibration.
+  - **What would settle it:** the real ABIEs for a group of schools, such as
+    one trust's.
+  - **ABIEs are not an accountability measure.** But they frame each
+    school's conversations about attendance, so a biased starting point
+    matters.
 
 ## What a direct comparison needs {#sec-next}
 
